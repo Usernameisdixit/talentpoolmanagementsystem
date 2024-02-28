@@ -8,7 +8,6 @@ public class TpmsApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TpmsApplication.class, args);
-		System.out.println("Hallo...");
 	}
 
 }
