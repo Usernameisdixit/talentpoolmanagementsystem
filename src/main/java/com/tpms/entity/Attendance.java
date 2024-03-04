@@ -17,7 +17,7 @@ public class Attendance {
 	@Id
 	@Column(name="intAtendanceId")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer intAtendanceId;
+	private Integer atendanceId;
 
 	@Column(name="intResourceId")
 	private Integer resourceId;
