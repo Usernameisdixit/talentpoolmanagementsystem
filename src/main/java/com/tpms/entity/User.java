@@ -40,7 +40,7 @@ public class User {
 	private String email;
 
 	@Column(name="bitFirstLogin")
-	private Byte firstLogin;
+	private Boolean firstLogin;
 
 	@Column(name="intCreatedBy")
 	private Integer createdBy;
@@ -49,6 +49,6 @@ public class User {
 	Integer updatedBy;
 
 	@Column(name="bitDeletedFlag")
-	private Byte deletedFlag;
+	private Boolean deletedFlag;
 
 }

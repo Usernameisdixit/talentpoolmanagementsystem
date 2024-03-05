@@ -24,6 +24,9 @@ public class Attendance {
 	
 	@Column(name="intActivityAllocateId")
 	private Integer activityAllocateId;
+
+	@Column(name="intActivityAllocateDetId")
+	private Integer activityAllocateDetId;
 	
 	@Column(name="dtmAtendanceDate")
 	private LocalDate atendanceDate;
