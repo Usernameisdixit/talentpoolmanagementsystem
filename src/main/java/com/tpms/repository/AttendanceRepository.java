@@ -16,14 +16,14 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Integer>
     List<Attendance> findByActivityAllocateDetId(int activityAllocateDetId);
     
     //Previously used to check attendance data for fetched condition
-    @Query(value = "SELECT * FROM tbl_attendance WHERE dtmAtendanceDate = :finaldate", nativeQuery = true)
+    @Query(value = "SELECT * FROM attendance WHERE atendanceDate = :finaldate", nativeQuery = true)
 	List<Attendance> findByAttendanceDate(Date finaldate);
 
 	List<Attendance> findByActivityAllocateDetIdAndDtmAtendanceDate(Integer intActivityAllocateDetId, Date finaldate);
 	
-	 @Query(value = "SELECT * FROM tbl_attendance att " +
-	           "INNER JOIN tbl_resource_pool resourcep ON resourcep.intResourceId = att.intResourceId " +
-	           "WHERE att.dtmAtendanceDate = :finaldate AND resourcep.vchPlatform = :platformName",nativeQuery = true)
+	 @Query(value = "SELECT * FROM attendance att " +
+	           "INNER JOIN resource_pool resourcep ON resourcep.resourceId = att.resourceId " +
+	           "WHERE att.atendanceDate = :finaldate AND resourcep.platform = :platformName",nativeQuery = true)
 	List<Attendance> findByAttendanceDateAndPlatform(Date finaldate, String platformName);
 
 

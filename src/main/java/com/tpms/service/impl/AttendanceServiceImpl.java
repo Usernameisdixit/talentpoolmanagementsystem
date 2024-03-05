@@ -194,7 +194,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 							attendance.setCreatedBy(1);
 							attendance.setUpdatedBy(1);
 							attendance.setDtmAtendanceDate(finaldate);
-							attendance.setIntAtendanceFor(firstHalfObject.getInt("intActivityFor"));
+							attendance.setAtendanceFor(firstHalfObject.getInt("intActivityFor"));
 						}
 						if(firstHalfObject.getInt("chrPresent")==1) {
 							flag=true;
@@ -222,7 +222,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 							attendance.setCreatedBy(1);
 							attendance.setUpdatedBy(1);
 							attendance.setDtmAtendanceDate(finaldate);
-							attendance.setIntAtendanceFor(secondHalfObject.getInt("intActivityFor"));
+							attendance.setAtendanceFor(secondHalfObject.getInt("intActivityFor"));
 						}
 						if(secondHalfObject.getInt("chrPresent")==1) {
 							flag2=true;
