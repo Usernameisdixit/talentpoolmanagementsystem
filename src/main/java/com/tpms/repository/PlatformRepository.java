@@ -11,6 +11,6 @@ import com.tpms.entity.Platform;
 @Repository
 public interface PlatformRepository extends JpaRepository<Platform, Integer> {
 	
-	 @Query(value = "SELECT * FROM tbl_mst_platforms", nativeQuery = true)
+	 @Query(value = "SELECT * FROM platforms", nativeQuery = true)
 	    List<Platform> getAllPlatform();
 }
