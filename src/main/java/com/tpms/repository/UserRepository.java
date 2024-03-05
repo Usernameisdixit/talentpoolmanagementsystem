@@ -23,5 +23,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query(value = "select count(1) from tbl_user where vchUserName=:userName and bitDeletedFlag=0;",nativeQuery = true)
 	Integer getDuplicateCount(String userName);
 
+	User findByUserName(String userName);
+
+	User findByEmail(String email);
 
 }
