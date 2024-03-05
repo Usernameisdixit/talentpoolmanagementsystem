@@ -1,6 +1,8 @@
 package com.tpms.entity;
 
 import java.time.LocalDate;
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +31,10 @@ public class Attendance {
 	private Integer activityAllocateDetId;
 	
 	@Column(name="dtmAtendanceDate")
-	private LocalDate atendanceDate;
+	private Date dtmAtendanceDate;
+	
+	@Column(name = "intAtendanceFor")
+	private int intAtendanceFor;
 	
 	@Column(name="isPresent")
 	private Boolean isPresent;
