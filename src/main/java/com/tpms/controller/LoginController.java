@@ -42,7 +42,7 @@ public class LoginController {
 	    public ResponseEntity<?> loginUser(@RequestBody FormData formData) {		 
 	        User user = userRepository.findByUserName(formData.getUsername());
 	        if (user != null && BCrypt.checkpw(formData.getPassword(), user.getPassword())) {
-	        	if(user.getFirstLogin()) {
+	        	if(user.getIsFirstLogin()) {
 	        		return ResponseEntity.ok(Map.of("status", "firstlogin", "message", "First time user logged in.","email",user.getEmail()));
 	        	}
 	        	else {
@@ -97,7 +97,7 @@ public class LoginController {
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String pwd = encoder.encode(formData.getConfirmpassword());
 			user.setPassword(pwd);
-			user.setFirstLogin(false);
+			user.setIsFirstLogin(false);
 			userRepository.save(user);
 			return ResponseEntity.ok(Map.of("status", "success", "message", "Password Verified successfully"));
 		} else {
