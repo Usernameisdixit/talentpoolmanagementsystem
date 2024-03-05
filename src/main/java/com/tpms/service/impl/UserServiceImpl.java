@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService{
 	public User saveUser(User user) {
 	
 		if(user.getUserId() != 0) {
-			User existingUser = userRepository.findById(user.getUserId()).orElseThrow();
+			
 			user.setUserId(user.getUserId());
 			user.setFirstLogin(true);
 		}
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public List<User> getUserDetails() {
-		return userRepository.getUserDetails();
+		return userRepository.findByDeletedFlagFalse();
 	}
 
 	@Override
@@ -68,7 +68,6 @@ public class UserServiceImpl implements UserService{
 		
 		String result="";
 		Integer count=userRepository.getDuplicateCount(userName);
-		System.out.println(count);
 		if(count>0) {
 			result="Exist";
 		}
