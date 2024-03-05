@@ -1,6 +1,8 @@
 package com.tpms.entity;
 
 import java.time.LocalDate;
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,36 +13,29 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "tbl_attendance")
+@Table(name = "attendance")
 public class Attendance {
 
 	@Id
-	@Column(name="intAtendanceId")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer atendanceId;
 
-	@Column(name="intResourceId")
 	private Integer resourceId;
 	
-	@Column(name="intActivityAllocateId")
 	private Integer activityAllocateId;
 
-	@Column(name="intActivityAllocateDetId")
 	private Integer activityAllocateDetId;
 	
-	@Column(name="dtmAtendanceDate")
-	private LocalDate atendanceDate;
+	private Date dtmAtendanceDate;
 	
-	@Column(name="isPresent")
+	private int atendanceFor;
+	
 	private Boolean isPresent;
 	
-	@Column(name="intCreatedBy")
 	private Integer createdBy;
 
-	@Column(name="intUpdatedBy")
 	private Integer updatedBy;
 
-	@Column(name="bitDeletedFlag")
 	private Boolean deletedFlag;
 
 }

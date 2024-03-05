@@ -10,26 +10,20 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="tbl_mst_platforms")
+@Table(name="platforms")
 public class Platform {
 
 	@Id
-	@Column(name="intPlatformId")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer platformId;
 	
-	@Column(name="vchPlatform")
-	private String platformName;
+	private String platform;
 
-	@Column(name="vchUserName")
 	private String platformCode;
 	
-	@Column(name="intCreatedBy")
 	private Integer createdBy;
 	
-	@Column(name="intUpdatedBy")
 	private Integer updatedBy;
 	
-	@Column(name="bitDeletedFlag")
 	private Byte deletedFlag;
 }
