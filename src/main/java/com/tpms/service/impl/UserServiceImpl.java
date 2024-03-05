@@ -21,6 +21,7 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private RoleService roleService;
 	
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@Override
@@ -29,11 +30,11 @@ public class UserServiceImpl implements UserService{
 		if(user.getUserId() != 0) {
 			
 			user.setUserId(user.getUserId());
-			user.setFirstLogin(true);
+			user.setIsFirstLogin(true);
 		}
 		
 		else {
-			user.setFirstLogin(true);
+			user.setIsFirstLogin(true);
 		}
 		user.setDeletedFlag(false);
 	        List<Role> roleDetails=roleService.getRoleList();
