@@ -2,7 +2,7 @@ package com.tpms.entity;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,22 +16,21 @@ import lombok.Data;
 public class ExcelUploadHistory {
 
 	@Id
-	@Column(name="intExcelFileId")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer excelFileId;
 
-	@Column(name="vchFileName")
+
 	private String fileName;
 
-	@Column(name="dtmAllocationDate")
+	
 	private LocalDate allocationDate;
 
-	@Column(name="intCreatedBy")
+
 	private Integer createdBy;
 
-	@Column(name="intUpdatedBy")
+
 	private Integer updatedBy;
 
-	@Column(name="bitDeletedFlag")
+
 	private Byte deletedFlag;
 }
