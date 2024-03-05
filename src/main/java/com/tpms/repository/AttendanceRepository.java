@@ -19,9 +19,9 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Integer>
     @Query(value = "SELECT * FROM attendance WHERE atendanceDate = :finaldate", nativeQuery = true)
 	List<Attendance> findByAttendanceDate(Date finaldate);
 
-	List<Attendance> findByActivityAllocateDetIdAndDtmAtendanceDate(Integer intActivityAllocateDetId, Date finaldate);
+	List<Attendance> findByActivityAllocateDetIdAndAtendanceDate(Integer intActivityAllocateDetId, Date finaldate);
 	
-	 @Query(value = "SELECT * FROM attendance att " +
+	 @Query(value = "SELECT att.* FROM attendance att " +
 	           "INNER JOIN resource_pool resourcep ON resourcep.resourceId = att.resourceId " +
 	           "WHERE att.atendanceDate = :finaldate AND resourcep.platform = :platformName",nativeQuery = true)
 	List<Attendance> findByAttendanceDateAndPlatform(Date finaldate, String platformName);

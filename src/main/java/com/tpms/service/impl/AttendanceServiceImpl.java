@@ -79,18 +79,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 						Map<String, Object> attendance = null;
 						while (rs.next()) {
 							attendance = new HashMap<>();
-							attendance.put("intActivityFor", rs.getString("intActivityFor"));
-							attendance.put("intResourceId", rs.getString("intResourceId"));
-							attendance.put("vchResourceName", rs.getString("vchResourceName"));
-							attendance.put("txtActivityDetails", rs.getString("txtActivityDetails"));
-							attendance.put("vchFromHours", rs.getString("vchFromHours"));
-							attendance.put("vchToHours", rs.getString("vchToHours"));
-							attendance.put("vchActivityName", rs.getString("vchActivityName"));
-							attendance.put("intActivityAllocateDetId", rs.getString("intActivityAllocateDetId"));
-							attendance.put("vchPlatform", rs.getString("vchPlatform"));
-							attendance.put("intActivityAllocateId", rs.getString("intActivityAllocateId"));
-							attendance.put("intActivityAllocateDetId", rs.getString("intActivityAllocateDetId"));
-							attendance.put("chrPresent", rs.getString("chrPresent"));
+							attendance.put("activityFor", rs.getString("activityFor"));
+							attendance.put("resourceId", rs.getString("resourceId"));
+							attendance.put("resourceName", rs.getString("resourceName"));
+							attendance.put("activityDetails", rs.getString("activityDetails"));
+							attendance.put("fromHours", rs.getString("fromHours"));
+							attendance.put("toHours", rs.getString("toHours"));
+							attendance.put("activityName", rs.getString("activityName"));
+							attendance.put("activityAllocateDetId", rs.getString("activityAllocateDetId"));
+							attendance.put("platform", rs.getString("platform"));
+							attendance.put("activityAllocateId", rs.getString("activityAllocateId"));
+							attendance.put("activityAllocateDetId", rs.getString("activityAllocateDetId"));
+							attendance.put("isPresent", rs.getString("isPresent"));
 							attendanceDetails.add(attendance);
 						}
 					}
@@ -102,8 +102,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 					JSONArray firstHalfArray = new JSONArray();
 					JSONArray secondHalfArray = new JSONArray();
 					for (Map<String, Object> mapObject : attendanceDetails) {
-						Integer mapResourceId = Integer.valueOf((String) mapObject.get("intResourceId"));
-						Integer intActivityFor = Integer.valueOf((String) mapObject.get("intActivityFor"));
+						Integer mapResourceId = Integer.valueOf((String) mapObject.get("resourceId"));
+						Integer intActivityFor = Integer.valueOf((String) mapObject.get("activityFor"));
 						if (resourceId == 0) {
 							resourceId = mapResourceId;
 						} else if (resourceId != mapResourceId) {
@@ -116,20 +116,20 @@ public class AttendanceServiceImpl implements AttendanceService {
 							secondHalfArray = new JSONArray();
 						}
 						if (resource.length() == 0) {
-							resource.put("vchResourceName", mapObject.get("vchResourceName"));
-							resource.put("intResourceId", mapResourceId);
-							resource.put("domain", mapObject.get("vchPlatform"));
-							resource.put("intActivityAllocateId", mapObject.get("intActivityAllocateId"));
+							resource.put("resourceName", mapObject.get("resourceName"));
+							resource.put("resourceId", mapResourceId);
+							resource.put("domain", mapObject.get("platform"));
+							resource.put("activityAllocateId", mapObject.get("activityAllocateId"));
 							resource.put("check", atteldanceListPresentNew.size() == 0 ? "s" : "u");
 						}
 						JSONObject detailObject = new JSONObject();
-						detailObject.put("txtActivityDetails", mapObject.get("txtActivityDetails"));
-						detailObject.put("vchFromHours", mapObject.get("vchFromHours"));
-						detailObject.put("vchToHours", mapObject.get("vchToHours"));
-						detailObject.put("vchActivityName", mapObject.get("vchActivityName"));
-						detailObject.put("intActivityAllocateDetId", mapObject.get("intActivityAllocateDetId"));
-						detailObject.put("chrPresent", mapObject.get("chrPresent"));
-						detailObject.put("intActivityFor", mapObject.get("intActivityFor"));
+						detailObject.put("activityDetails", mapObject.get("activityDetails"));
+						detailObject.put("fromHours", mapObject.get("fromHours"));
+						detailObject.put("toHours", mapObject.get("toHours"));
+						detailObject.put("activityName", mapObject.get("activityName"));
+						detailObject.put("activityAllocateDetId", mapObject.get("activityAllocateDetId"));
+						detailObject.put("isPresent", mapObject.get("isPresent"));
+						detailObject.put("activityFor", mapObject.get("activityFor"));
 						if (intActivityFor == 1) {
 							firstHalfArray.put(detailObject);
 						} else if (intActivityFor == 2) {
@@ -178,25 +178,25 @@ public class AttendanceServiceImpl implements AttendanceService {
 				if (firstHalfArray.length() != 0) {
 					for (int j = 0; j < firstHalfArray.length(); j++) {
 						JSONObject firstHalfObject = firstHalfArray.getJSONObject(j);
-						Integer intActivityAllocateDetId = firstHalfObject.getInt("intActivityAllocateDetId");
+						Integer intActivityAllocateDetId = firstHalfObject.getInt("activityAllocateDetId");
 //						List<Attendance> findByActivityAllocateDetId = attendanceRepository
 //								.findByActivityAllocateDetId(intActivityAllocateDetId);
 						List<Attendance> findByActivityAllocateDetId = attendanceRepository
-								.findByActivityAllocateDetIdAndDtmAtendanceDate(intActivityAllocateDetId, finaldate);
+								.findByActivityAllocateDetIdAndAtendanceDate(intActivityAllocateDetId, finaldate);
 						Attendance attendance = null;
 						if (findByActivityAllocateDetId.size() != 0) {
 							attendance = findByActivityAllocateDetId.get(0);
 						} else {
 							attendance = new Attendance();
-							attendance.setResourceId(resourceObject.getInt("intResourceId"));
-							attendance.setActivityAllocateId(resourceObject.getInt("intActivityAllocateId"));
-							attendance.setActivityAllocateDetId(firstHalfObject.getInt("intActivityAllocateDetId"));
+							attendance.setResourceId(resourceObject.getInt("resourceId"));
+							attendance.setActivityAllocateId(resourceObject.getInt("activityAllocateId"));
+							attendance.setActivityAllocateDetId(firstHalfObject.getInt("activityAllocateDetId"));
 							attendance.setCreatedBy(1);
 							attendance.setUpdatedBy(1);
-							attendance.setDtmAtendanceDate(finaldate);
-							attendance.setAtendanceFor(firstHalfObject.getInt("intActivityFor"));
+							attendance.setAtendanceDate(finaldate);
+							attendance.setAtendanceFor(firstHalfObject.getInt("activityFor"));
 						}
-						if(firstHalfObject.getInt("chrPresent")==1) {
+						if(firstHalfObject.getInt("isPresent")==1) {
 							flag=true;
 						}else {
 							flag=false;
@@ -208,27 +208,28 @@ public class AttendanceServiceImpl implements AttendanceService {
 				if (secondHalfArray.length() != 0) {
 					for (int k = 0; k < secondHalfArray.length(); k++) {
 						JSONObject secondHalfObject = secondHalfArray.getJSONObject(k);
-						Integer intActivityAllocateDetId = secondHalfObject.getInt("intActivityAllocateDetId");
+						Integer intActivityAllocateDetId = secondHalfObject.getInt("activityAllocateDetId");
 						List<Attendance> findByActivityAllocateDetId = attendanceRepository
-								.findByActivityAllocateDetIdAndDtmAtendanceDate(intActivityAllocateDetId, finaldate);
+								.findByActivityAllocateDetIdAndAtendanceDate(intActivityAllocateDetId, finaldate);
 						Attendance attendance = null;
 						if (findByActivityAllocateDetId.size() != 0) {
 							attendance = findByActivityAllocateDetId.get(0);
 						} else {
 							attendance = new Attendance();
-							attendance.setResourceId(resourceObject.getInt("intResourceId"));
-							attendance.setActivityAllocateId(resourceObject.getInt("intActivityAllocateId"));
-							attendance.setActivityAllocateDetId(secondHalfObject.getInt("intActivityAllocateDetId"));
+							attendance.setResourceId(resourceObject.getInt("resourceId"));
+							attendance.setActivityAllocateId(resourceObject.getInt("activityAllocateId"));
+							attendance.setActivityAllocateDetId(secondHalfObject.getInt("activityAllocateDetId"));
 							attendance.setCreatedBy(1);
 							attendance.setUpdatedBy(1);
-							attendance.setDtmAtendanceDate(finaldate);
-							attendance.setAtendanceFor(secondHalfObject.getInt("intActivityFor"));
+							attendance.setAtendanceDate(finaldate);
+							attendance.setAtendanceFor(secondHalfObject.getInt("activityFor"));
 						}
-						if(secondHalfObject.getInt("chrPresent")==1) {
+						if(secondHalfObject.getInt("isPresent")==1) {
 							flag2=true;
 						}else {
 							flag2=false;
 						}
+						attendance.setIsPresent(flag2);
 						attendanceRepository.save(attendance);
 					}
 				}
