@@ -26,7 +26,7 @@ public class Attendance {
 
 	private Integer activityAllocateDetId;
 	
-	private Date dtmAtendanceDate;
+	private Date atendanceDate;
 	
 	private int atendanceFor;
 	
