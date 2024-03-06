@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ResourceMgmtComponent } from './ResourceMgmt/Components/resource-mgmt/resource-mgmt.component';
+
 
 import { AttendanceMgmtComponent } from './AttendanceMgmt/Components/attendance-mgmt/attendance-mgmt.component';
 import { AssessmentMgmtComponent } from './AssessmentMgmt/Components/assessment-mgmt/assessment-mgmt.component';
@@ -36,11 +36,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatOptionModule } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { FileUploadComponent } from './ResourceMgmt/Components/file-upload/file-upload.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ResourceMgmtComponent,
     AttendanceMgmtComponent,
     AssessmentMgmtComponent,
     UsermgmtComponent,
@@ -50,7 +50,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     RestpasswordComponent,
     SidenavComponent,
     LoginComponent,
-    NavBarComponent
+    NavBarComponent,
+    FileUploadComponent
 
     
 

@@ -9,6 +9,7 @@ import { SidenavComponent } from './UserMgmt/Component/sidenav/sidenav.component
 import { UserComponent } from './UserMgmt/Component/user/user.component';
 import { UserViewComponent } from './UserMgmt/Component/user-view/user-view.component';
 import { NavBarComponent } from './UserMgmt/Component/nav-bar/nav-bar.component';
+import { FileUploadComponent } from './ResourceMgmt/Components/file-upload/file-upload.component';
 
 const routes: Routes = [
 
@@ -32,9 +33,10 @@ const routes: Routes = [
 },
   {path:"addUser",component:UserComponent},
   {path:"viewUser",component:UserViewComponent},
-  {path:"",redirectTo:"addUser",pathMatch:'full'},
+  {path:"",redirectTo:"login",pathMatch:'full'},
   {path:"editUser/:userId",component:UserComponent},
-  {path:"deleteUser/:userId",component:UserViewComponent}
+  {path:"deleteUser/:userId",component:UserViewComponent},
+  {path:"uploadExcel",component:FileUploadComponent}
 
 ];
 

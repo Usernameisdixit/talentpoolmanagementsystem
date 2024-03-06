@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+    <link rel="stylesheet" href="file-upload.component.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Upload File</h2>
+        <div class="form-group">
+            <label for="fileInput">Choose File:</label>
+            <input type="file" id="fileInput" (change)="onFileSelected($event)" accept=".xlsx">
+        </div>
+        <div *ngIf="selectedFile" class="file-name">
+            {{ selectedFile.name }}
+        </div>
+            <div class="form-group">
+                <label for="allocationDate">Allocation Date:</label>
+                <input type="date" id="allocationDate" [(ngModel)]="allocationDate" name="allocationDate" class="bold-black">
+            </div>
+
+
+        
+        <button (click)="onUpload()" [disabled]="isUploading" class="upload-btn">
+            <span *ngIf="isUploading" class="spinner"></span>
+            Upload
+        </button>
+        <div *ngIf="fileError" class="error-message">
+            {{ fileError }}
+        </div>
+    </div>
+</body>
+
+</html>
