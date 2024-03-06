@@ -133,7 +133,7 @@ public class ResourceExcelController {
 	        Platform platform = new Platform(); 
 	        platform.setPlatform(technologyName);
 	        platform.setPlatformCode(platformCode);
-	        platform.setCreatedBy(2);
+	        platform.setCreatedBy(1);
 	        platform.setDeletedFlag((byte) 0);
 	        
 	        platformRepository.save(platform);

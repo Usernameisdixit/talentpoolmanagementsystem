@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="tbl_excel_upload_history")
+@Table(name="excel_upload_history")
 public class ExcelUploadHistory {
 
 	@Id

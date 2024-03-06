@@ -55,42 +55,34 @@ public class ResourcePoolServiceImpl {
 				for(int j=0;j<tbl_resource_pool.size();j++) {
 				
 					
-				if(ExcelEmp.get(i).getResourceCode().equalsIgnoreCase(tbl_resource_pool.get(j).getResourceCode())) {
+					if (ExcelEmp.get(i).getResourceCode() != null && tbl_resource_pool.get(j).getResourceCode() != null &&
+					            ExcelEmp.get(i).getResourceCode().equalsIgnoreCase(tbl_resource_pool.get(j).getResourceCode())) {
 					
-					//tbl_resource_poolNotMatch.remove(i);
+
 					
-					String ResourceCodeExcel=ExcelEmp.get(i).getResourceCode();
-					String ResourceCodepool=tbl_resource_pool.get(j).getResourceCode();
+						String ResourceCodeExcel = ExcelEmp.get(i).getResourceCode();
+						String ResourceCodepool = tbl_resource_pool.get(j).getResourceCode();
+
+						/*************************Updated Data that is not Present in Excel (Tagged Resources)******************/
+						if (ResourceCodepool != null) {
+						    tbl_resource_poolMatch.removeIf(obj -> {
+						        String resourceCode = obj.getResourceCode();
+						        return resourceCode != null && resourceCode.equalsIgnoreCase(ResourceCodepool);
+						    });
+						}
+
+						/***************Excel Data Uploaded that is not Matched Current Data(New Resources)******************/				
+						if (ResourceCodeExcel != null) {
+						    tbl_resource_poolNotMatch.removeIf(obj -> {
+						        String resourceCode = obj.getResourceCode();
+						        return resourceCode != null && resourceCode.equalsIgnoreCase(ResourceCodeExcel);
+						    });
+						}
+
 					
-					/*************************Updated Data that is not Present in Excel (Tagged Resources)******************/
-					
-					tbl_resource_poolMatch.removeIf(obj->obj.getResourceCode().equalsIgnoreCase(ResourceCodepool));
-					
-					/***************Excel Data Uploaded that is not Matched Current Data(New Resources)******************/				
-					
-					tbl_resource_poolNotMatch.removeIf(obj->obj.getResourceCode().equalsIgnoreCase(ResourceCodeExcel));
-					
-				} //else {
-					
-					/*
-					 * NotMatch.setVchResourceName(ExcelEmp.get(i).getVchResourceName());
-					 * NotMatch.setVchResourceCode(ExcelEmp.get(i).getVchResourceCode());
-					 * NotMatch.setVchPlatform(ExcelEmp.get(i).getVchPlatform());
-					 * NotMatch.setVchEmail(ExcelEmp.get(i).getVchEmail());
-					 * NotMatch.setVchPhoneNo(ExcelEmp.get(i).getVchPhoneNo());
-					 * NotMatch.setVchLocation(ExcelEmp.get(i).getVchLocation());
-					 * NotMatch.setVchEngagementPlan(ExcelEmp.get(i).getVchEngagementPlan());
-					 * NotMatch.setVchExperience(ExcelEmp.get(i).getVchExperience());
-					 * NotMatch.setDtmAllocationDate(ExcelEmp.get(i).getDtmAllocationDate());
-					 * NotMatch.setBitDeletedFlag("0"); NotMatch.setVchStatus("A");
-					 */
-					
-					//tbl_resource_poolNotMatch.add(NotMatch);
-					
-				//}
+						} 
 				
-				
-				}
+					}
 			
 				
 				}
@@ -122,7 +114,7 @@ public class ResourcePoolServiceImpl {
 					Emp.setResourceCode(tbl_resource_poolNotMatch.get(j).getResourceCode());
 					Emp.setPlatform(tbl_resource_poolNotMatch.get(j).getPlatform());
 					Emp.setEmail(tbl_resource_poolNotMatch.get(j).getEmail());
-					Emp.setPhone(tbl_resource_poolNotMatch.get(j).getPhone());
+					Emp.setPhoneNo(tbl_resource_poolNotMatch.get(j).getPhoneNo());
 					Emp.setLocation(tbl_resource_poolNotMatch.get(j).getLocation());
 					Emp.setEngagementPlan(tbl_resource_poolNotMatch.get(j).getEngagementPlan());
 					Emp.setExperience(tbl_resource_poolNotMatch.get(j).getExperience());
@@ -147,7 +139,7 @@ public class ResourcePoolServiceImpl {
 					Emp.setResourceCode(ExcelEmp.get(j).getResourceCode());
 					Emp.setPlatform(ExcelEmp.get(j).getPlatform());
 					Emp.setEmail(ExcelEmp.get(j).getEmail());
-					Emp.setPhone(ExcelEmp.get(j).getPhone());
+					Emp.setPhoneNo(ExcelEmp.get(j).getPhoneNo());
 					Emp.setLocation(ExcelEmp.get(j).getLocation());
 					Emp.setEngagementPlan(ExcelEmp.get(j).getEngagementPlan());
 					Emp.setExperience(ExcelEmp.get(j).getExperience());

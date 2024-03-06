@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="resourcepool")
+@Table(name="resource_pool")
 public class ResourcePool {
 
 	@Id
@@ -39,7 +39,7 @@ public class ResourcePool {
 	private LocalDate allocationDate;
 
 	
-	private String phone;
+	private String phoneNo;
 
 	
 	private String email;

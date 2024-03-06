@@ -87,7 +87,7 @@ public static List<ResourcePoolHistory> convertExceltoListofEmployee(InputStream
 			break;
 			case 4: 
 				//ExcelEmp.setEmp_location(cell.getStringCellValue())
-				tbl_resource_pool_history.setPhone(cell.getStringCellValue());
+				tbl_resource_pool_history.setPhoneNo(cell.getStringCellValue());
 			break;
 			case 5: 
 				//ExcelEmp.setEmp_location(cell.getStringCellValue())

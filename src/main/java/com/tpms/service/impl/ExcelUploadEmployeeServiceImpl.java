@@ -62,7 +62,7 @@ public class ExcelUploadEmployeeServiceImpl {
 	        ExcelUploadHistory history = new ExcelUploadHistory();
 	        history.setFileName(renamedFileName);
 	        history.setAllocationDate(allocationDate);
-	        history.setCreatedBy(2);
+	        history.setCreatedBy(1);
 	        history.setDeletedFlag((byte) 0);
 	        exceluploadrepo.save(history);
 	    }
