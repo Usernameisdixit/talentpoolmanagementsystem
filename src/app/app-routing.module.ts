@@ -10,6 +10,7 @@ import { UserComponent } from './UserMgmt/Component/user/user.component';
 import { UserViewComponent } from './UserMgmt/Component/user-view/user-view.component';
 import { NavBarComponent } from './UserMgmt/Component/nav-bar/nav-bar.component';
 import { FileUploadComponent } from './ResourceMgmt/Components/file-upload/file-upload.component';
+import { TalentlistComponent } from './ResourceMgmt/Components/talentlist/talentlist.component';
 
 const routes: Routes = [
 
@@ -36,7 +37,8 @@ const routes: Routes = [
   {path:"",redirectTo:"login",pathMatch:'full'},
   {path:"editUser/:userId",component:UserComponent},
   {path:"deleteUser/:userId",component:UserViewComponent},
-  {path:"uploadExcel",component:FileUploadComponent}
+  {path:"uploadExcel",component:FileUploadComponent},
+  {path:'talents',       component:TalentlistComponent}
 
 ];
 

@@ -37,6 +37,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatOptionModule } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { FileUploadComponent } from './ResourceMgmt/Components/file-upload/file-upload.component';
+import { TalentlistComponent } from './ResourceMgmt/Components/talentlist/talentlist.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { FileUploadComponent } from './ResourceMgmt/Components/file-upload/file-
     SidenavComponent,
     LoginComponent,
     NavBarComponent,
-    FileUploadComponent
+    FileUploadComponent,
+    TalentlistComponent
 
     
 
