@@ -1,0 +1,69 @@
+<mat-sidenav-container class="sidenav-container">
+    <mat-sidenav mode="side" opened class="sidenav">
+      <mat-nav-list>
+  
+        <a mat-list-item routerLink="/dashboard" routerLinkActive="active" class="custom-list-item">
+          <h4>
+            <mat-icon class="custom-icon">dashboard</mat-icon>
+            <span class="custom-text">Dashboard</span>
+          </h4>
+        </a>
+  
+        <a mat-list-item routerLink="/addUser" routerLinkActive="active" class="custom-list-item">
+          <h4>
+            <mat-icon class="custom-icon">person_add</mat-icon>
+            <span class="custom-text">User Registration</span>
+          </h4>
+        </a>
+  
+        <a mat-list-item routerLink="/uploadExcel" routerLinkActive="active" class="custom-list-item">
+          <h4>
+            <mat-icon class="custom-icon">people</mat-icon>
+            <span class="custom-text">Resource Management</span>
+          </h4>
+        </a>
+  
+        <a mat-list-item routerLink="/settings" routerLinkActive="active" class="custom-list-item">
+          <h4>
+            <mat-icon class="custom-icon">assignment_ind</mat-icon>
+            <span class="custom-text">Activity Management</span>
+          </h4>
+        </a>
+  
+        <a mat-list-item routerLink="/settings" routerLinkActive="active" class="custom-list-item">
+          <h4>
+            <mat-icon class="custom-icon">checklist</mat-icon>
+            <span class="custom-text">Attendance Management</span>
+          </h4>
+        </a>
+  
+        <a mat-list-item routerLink="/settings" routerLinkActive="active" class="custom-list-item">
+          <h4>
+            <mat-icon class="custom-icon">assessment</mat-icon>
+            <span class="custom-text">Assessment Management</span>
+          </h4>
+        </a>
+  
+        <a mat-list-item routerLink="/settings" routerLinkActive="active" class="custom-list-item">
+          <h4>
+            <mat-icon class="custom-icon">email</mat-icon>
+            <span class="custom-text">Email Activity</span>
+          </h4>
+        </a>
+  
+        <a mat-list-item routerLink="/settings" routerLinkActive="active" class="custom-list-item">
+          <h4>
+            <mat-icon class="custom-icon">assignment</mat-icon>
+            <span class="custom-text">Reports</span>
+          </h4>
+        </a>
+  
+      </mat-nav-list>
+    </mat-sidenav>
+  
+    <mat-sidenav-content>
+      <!-- Your main content goes here -->
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  
