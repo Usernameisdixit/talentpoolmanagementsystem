@@ -7,6 +7,7 @@ import { ResourceMgmtComponent } from './ResourceMgmt/resource-mgmt/resource-mgm
 import { UserMgmtComponent } from './UserMgmt/user-mgmt/user-mgmt.component';
 import { AttendanceMgmtComponent } from './AttendanceMgmt/attendance-mgmt/attendance-mgmt.component';
 import { AssessmentMgmtComponent } from './AssessmentMgmt/assessment-mgmt/assessment-mgmt.component';
+import { UsermgmtComponent } from './UserMgmt/Component/usermgmt/usermgmt.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { AssessmentMgmtComponent } from './AssessmentMgmt/assessment-mgmt/assess
     ResourceMgmtComponent,
     UserMgmtComponent,
     AttendanceMgmtComponent,
-    AssessmentMgmtComponent
+    AssessmentMgmtComponent,
+    UsermgmtComponent
   ],
   imports: [
     BrowserModule,
