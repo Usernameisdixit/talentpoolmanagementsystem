@@ -1,0 +1,60 @@
+.sidenav-container {
+    height: 100%;
+  }
+  
+  .sidenav {
+    width: 250px; /* Adjust the width as needed */
+    height: 100%; 
+    background-color: rgba(226, 230, 231, 0.986); /* Set your preferred background color */
+    color: white; /* Set your preferred text color */
+  }
+  
+  
+
+  .mat-nav-list {
+    max-height: 100%; /* Set a value that fits your design */
+    overflow-y: auto;
+    white-space: normal;
+  }
+  
+  
+  .active {
+    background-color: rgb(255, 255, 255); /* Style for active menu item */
+  }
+  
+  .content {
+    padding: 20px; /* Add padding for the main content area */
+  }
+  
+  mat-sidenav {
+    margin-top: 0px; /* Adjust the margin-top value as needed */
+    height: calc(100% - 64px); /* Adjust the height accordingly */
+  }
+  .mat-list-item {
+    white-space: nowrap;
+    overflow: hidden;
+    /* text-overflow: ellipsis; */
+    max-width: 100%;
+    font-size: 50px;  }
+
+    .custom-list-item {
+      display: flex;
+      align-items: center;
+      padding: 8px 16px; /* Adjust padding as needed */
+      transition: background-color 0.3s ease-in-out; /* Smooth background color transition on hover */
+    }
+    
+    .custom-list-item:hover {
+      background-color: #f0f0f0; /* Background color on hover */
+    }
+    
+    .custom-icon {
+      margin-right: 8px; /* Adjust margin as needed */
+    }
+    
+    .custom-text {
+      font-size: 15px; /* Adjust font size as needed */
+      font-weight: bold; /* Adjust font weight as needed */
+      color: #333; /* Adjust text color as needed */
+    }
+    

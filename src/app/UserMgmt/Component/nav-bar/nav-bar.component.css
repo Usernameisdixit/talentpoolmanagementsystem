@@ -1,0 +1,19 @@
+.example-spacer{
+    flex: 1 1 auto;
+}
+/* .custom-text-color {
+    color: white;
+  } */
+
+  .toolbar-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .spacer {
+    flex: 1;
+  }
+  
+
+  
+  

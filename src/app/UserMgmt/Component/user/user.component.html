@@ -1,0 +1,100 @@
+<div class="container mt-3">
+  
+  <h2 style="text-align: center; background: #5c8de7;">User Registration</h2><hr>
+
+  <nav class="navbar navbar-expand-lg mt-4">
+    <div class="container">
+       
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="nav nav-tabs nav-pills custum-tab">
+            <li class="nav-item"><a class="nav-item nav-link active" href="addUser">Add</a></li>
+            <li><a class="nav-item nav-link" href="viewUser">View</a></li>
+      
+          </ul>
+            
+        </div>
+    </div>
+</nav>
+
+<form class=" g-3 mt-3" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+ 
+  <div class="col-md-6">
+    <label for="validationDefault01" class="form-label text-primary">User Full name</label><span class="text-danger font-weight-bold">*</span>
+
+    <input type="text" class="form-control" id="userFullName" formControlName="userFullName" (blur)="duplicateCheck()"/>
+    <div *ngIf="userForm.get('userFullName')?.invalid && userForm.get('userFullName')?.touched">
+      <p class="text-danger">Please Enter The User Full Name.</p>
+    </div>
+   
+  </div>
+
+  <div class="col-md-6">
+    <label for="validationDefault01" class="form-label text-primary">User name</label><span class="text-danger font-weight-bold">*</span>
+
+    <input type="text" class="form-control" id="userName" formControlName="userName" (blur)="duplicateCheck()"/>
+    <div *ngIf="userForm.get('userName')?.invalid && userForm.get('userName')?.touched">
+      <p class="text-danger">Please Enter The User Name.</p>
+    </div>
+   
+  </div>
+
+  <div class="col-md-6">
+    <label for="validationDefault02" class="form-label text-primary">Role Name</label><span class="text-danger font-weight-bold">*</span>
+
+    <select class="form-select" id="roleId"  formControlName="roleId">
+      <option value="0">Select Role Name</option>
+      <option *ngFor="let role of roleDetails" value="{{role.roleId}}">{{role.roleName}}</option>
+      <div *ngIf="userForm.get('roleId')?.invalid && userForm.get('roleId')?.touched">
+        <p class="text-danger font-weight-bold">Please Select Role Name</p>
+     </div>
+    </select>
+  </div>
+
+  <div class="col-md-6">
+    <label for="validationDefault03" class="form-label text-primary">Mobile No.</label><span class="text-danger font-weight-bold">*</span>
+
+    <input type="text" class="form-control" id="phoneNo" formControlName="phoneNo"/>
+    <div *ngIf="userForm.get('phoneNo')?.invalid && userForm.get('phoneNo')?.touched">
+       <p class="text-danger font-weight-bold">Please Enter Mobile No.</p>
+    </div>
+    <!-- <div *ngIf="userForm.get('phoneNo')?.hasError('minlength') && userForm.get('phoneNo')?.hasError('maxlength')">
+      <p class="text-danger font-weight-bold">Please Enter Valid Mobile No.</p>
+    </div> -->
+    
+  </div>
+
+  <div class="col-md-6">
+    <label for="validationDefault04" class="form-label text-primary">Email</label><span class="text-danger font-weight-bold">*</span>
+
+    <input type="email" class="form-control" id="email" formControlName="email"/>
+    <!-- <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+      <p class="text-danger font-weight-bold">Please Enter A Valid Email Address.</p>
+   </div> -->
+    
+  </div>
+
+  <div class="col-md-4" [hidden]="isHidden">
+    <label for="validationDefault05" class="form-label">Password</label>
+
+    <input type="password" class="form-control" id="password" formControlName="password"/>
+    
+  </div>
+
+<div>
+  <div class="gap-2 col-3 mx-auto mt-3" *ngIf="userId === 0">
+    <button class="btn btn-primary" type="submit">Create</button> &nbsp;&nbsp;
+
+    <button class="btn btn-danger" type="reset"> Reset </button>
+  </div>
+
+   <div class="gap-2 col-3 mx-auto mt-3" *ngIf="userId > 0">
+    <button class="btn btn-primary" type="submit">Update</button> &nbsp;&nbsp;
+
+    <button class="btn btn-warning" type="button" (click)="cancelData()"> Cancel </button>
+  </div>
+</div>
+</form>
+</div>

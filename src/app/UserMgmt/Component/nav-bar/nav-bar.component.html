@@ -1,0 +1,36 @@
+<!-- <mat-toolbar color="primary">
+<span class="example-spacer"><a mat-icon-button routerLink="/">Login App</a></span>
+<span class="example-spacer"></span>
+<a mat-icon-button routerLink="/login">Logout</a>
+</mat-toolbar> -->
+
+<!-- <mat-toolbar color="primary">
+    <span class="fill-remaining-space"></span> -->
+    <!-- <button mat-button>Menu Option 01</button>
+    <button mat-button>Menu Option 02</button> -->
+    <!-- <button mat-button >Login App</button>
+    <span class="fill-remaining-space"></span>
+    <button mat-button routerLink="login" class="mat-right">Logout</button>  (click)="onLogout()" 
+  </mat-toolbar> -->
+
+
+
+  <mat-toolbar  color="grey" class="toolbar-container">
+    <!-- <div class="spacer"></div> -->
+    <button mat-button>
+      <div class="logo py-4 mt-3">
+            <img src="/assets/csm.png" alt="company logo">
+            <div  class="mb-1" style="font-size: 10px;">Talent Pool Management System</div>
+        </div>
+    </button>
+    <div class="spacer"></div>
+    <div *ngIf="successMessage">
+      <button mat-button >{{this.credentials.username}}</button>
+      <span class='material-icons-outlined'>
+      <button mat-button routerLink="login"  (onclick)="logout()">Logout</button>
+      </span>
+    <!-- <button mat-button >{{successMessage}}</button> -->
+    
+   
+  </div>
+</mat-toolbar>

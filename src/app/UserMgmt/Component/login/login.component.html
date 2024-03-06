@@ -1,0 +1,42 @@
+<div class="bootstrap-wrapper">
+
+<div class="container mt">
+<div class="row">
+
+    <div class="col-md-6 offset-md-3">
+
+        <div class="container text-center">
+            <img class="img-fluid" style="width: 100px;" src="/assets/login.png" alt="">
+        </div>
+        <h1 class="text-center">Login Here!!</h1>
+        <div class="error-container" style="text-align: center">
+            <div *ngIf="errorMessage" class="error-message" style="color: red;">{{ errorMessage }}</div>
+          </div>
+        <!-- Form code start from here -->
+        <!-- [formGroup]="loginForm" -->
+        <form  > <!--(ngSubmit)="onSubmit()"-->
+            <mat-form-field class="full-width" >
+                <mat-label>UserName</mat-label>
+                <input [(ngModel)]="credentials.username" required type="text" name="username" matInput>
+            </mat-form-field>
+            <mat-form-field class="full-width">
+                <mat-label>Password</mat-label>
+                <input [(ngModel)]="credentials.password" required type="password" name="password" matInput>
+            </mat-form-field>
+            <div class="container text-center">
+                <button  mat-raised-button color="primary" (click)="onSubmit()">Login</button>
+                <button type="reset" style="margin-left: 10px;" mat-raised-button color="accent">Reset</button>
+            </div>
+            <div class="container text-center">
+                <a routerLink="/forgotPassword">Forgot Your Password?</a> &nbsp;
+              </div>
+        </form>
+        
+          
+        <!-- {{credentials | json}} -->
+    </div>
+</div>
+
+</div>
+
+</div>

@@ -1,0 +1,9 @@
+.full-width{
+    width: 100%;
+}
+.container.text-center a {
+    display: inline-block;
+    margin-top: 10px; /* Adjust the top margin as needed */
+  }
+
+  
