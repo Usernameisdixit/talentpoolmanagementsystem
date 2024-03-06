@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.tpms.entity.Role;
 import com.tpms.entity.User;
+import com.tpms.exception.ResourceNotFoundException;
 import com.tpms.repository.UserRepository;
 import com.tpms.service.RoleService;
 import com.tpms.service.UserService;
@@ -55,7 +56,7 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public User getUserById(Integer userId) {
-		return userRepository.findById(userId).orElseThrow();
+		return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User Not found with id = " + userId));
 	}
 
 	@Override
