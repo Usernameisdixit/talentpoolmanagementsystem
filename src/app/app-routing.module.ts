@@ -7,6 +7,7 @@ import { RestpasswordComponent } from './UserMgmt/Component/restpassword/restpas
 import { UserComponent } from './UserMgmt/Component/user/user.component';
 import { UserViewComponent } from './UserMgmt/Component/user-view/user-view.component';
 import { FileUploadComponent } from './ResourceMgmt/Components/file-upload/file-upload.component';
+import { TalentlistComponent } from './ResourceMgmt/Components/talentlist/talentlist.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,7 @@ const routes: Routes = [
       { path: 'editUser/:userId', component: UserComponent },
       { path: 'deleteUser/:userId', component: UserViewComponent },
       { path: 'uploadExcel', component: FileUploadComponent },
+      {path:'talents',component:TalentlistComponent}
     ]
   }
 ];
