@@ -8,6 +8,7 @@ import { UserComponent } from './UserMgmt/Component/user/user.component';
 import { UserViewComponent } from './UserMgmt/Component/user-view/user-view.component';
 import { FileUploadComponent } from './ResourceMgmt/Components/file-upload/file-upload.component';
 import { TalentlistComponent } from './ResourceMgmt/Components/talentlist/talentlist.component';
+import { AttendanceComponent } from './AttendanceMgmt/Components/attendance/attendance.component';
 
 const routes: Routes = [
   {
@@ -23,7 +24,8 @@ const routes: Routes = [
       { path: 'editUser/:userId', component: UserComponent },
       { path: 'deleteUser/:userId', component: UserViewComponent },
       { path: 'uploadExcel', component: FileUploadComponent },
-      {path:'talents',component:TalentlistComponent}
+      {path:'talents',component:TalentlistComponent},
+      {path: "attendance", component:AttendanceComponent}
     ]
   }
 ];

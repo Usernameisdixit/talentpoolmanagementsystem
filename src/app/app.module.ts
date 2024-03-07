@@ -39,8 +39,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { FileUploadComponent } from './ResourceMgmt/Components/file-upload/file-upload.component';
 import { AppLayoutComponent } from './Layout/app-layout/app-layout.component';
 import { TalentlistComponent } from './ResourceMgmt/Components/talentlist/talentlist.component';
-
-
+import { AttendanceComponent } from './AttendanceMgmt/Components/attendance/attendance.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { enGbLocale } from 'ngx-bootstrap/locale';
+import { defineLocale } from 'ngx-bootstrap/chronos';
+defineLocale('en-gb', enGbLocale); //
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,7 +59,8 @@ import { TalentlistComponent } from './ResourceMgmt/Components/talentlist/talent
     NavBarComponent,
     FileUploadComponent,
     AppLayoutComponent,
-    TalentlistComponent
+    TalentlistComponent,
+    AttendanceComponent
 
     
 
@@ -82,7 +86,8 @@ import { TalentlistComponent } from './ResourceMgmt/Components/talentlist/talent
     MatExpansionModule,
     MatSlideToggleModule,
     MatOptionModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    BsDatepickerModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]
