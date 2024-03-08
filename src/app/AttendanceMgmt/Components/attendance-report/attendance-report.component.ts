@@ -30,6 +30,8 @@ export class AttendanceReportComponent {
   attendanceDetails: any[] = [];
   months: { value: string; name: string; }[] = [];
   platforms: any[] = [];
+  isPresent: boolean = false;
+
   ngOnInit() {
     this.loadPlatforms();
     this.platform = '0';
@@ -58,26 +60,25 @@ export class AttendanceReportComponent {
         text: 'Please choose a month before generating the PDF!',
       });
     } else {
-      const year = this.year;
-      const month = this.month;
-      console.log(this.year, this.month, this.platform,this.selectedDate);
-      const platform = 'JAVA';
-      const selectedDate = '2022-01-01';
-
       this.attendanceService.getAttendanceReportData(this.year, this.month, this.platform, this.selectedDate?.toLocaleString())
         .subscribe(data => {
-          this.attendanceGeneratedService.generateAttendanceReport(data);
-          console.log("arr" + data);
-          this.attendanceDetails = data;
-          console.log(this.attendanceDetails);
+          this.isPresent = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
+          if (this.isPresent) {
+            this.attendanceGeneratedService.generateAttendanceReport(data);
+            Swal.fire({
+              icon: 'success',
+              title: 'PDF Generated',
+              text: 'Your PDF has been successfully generated!',
+            });
+          } else {
+            Swal.fire({
+              icon: 'info',
+              title: 'No Data Found',
+              text: 'No attendance data found for the selected year and month!',
+            });
+          }
         });
-      console.log(this.attendanceDetails);
 
-      Swal.fire({
-        icon: 'success',
-        title: 'PDF Generated',
-        text: 'Your PDF has been successfully generated!',
-      });
     }
   }
 
@@ -88,6 +89,12 @@ export class AttendanceReportComponent {
       },
 
     );
+  }
+
+  resetForm() {
+    this.month = '0';
+    this.platform = '0';
+    this.selectedDate = null;
   }
 
 }
