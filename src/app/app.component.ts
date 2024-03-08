@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
       this.idleService.userInactive.subscribe(() => {
         this.router.navigate(['login']);
-        sessionStorage.clear();
+        localStorage.clear();
       });
     }
 }
