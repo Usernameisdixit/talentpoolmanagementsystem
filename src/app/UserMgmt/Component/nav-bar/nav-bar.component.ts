@@ -24,6 +24,7 @@ export class NavBarComponent implements OnInit{
     if (storedUserString) {
       const storedUser = JSON.parse(storedUserString);
       this.credentials.username = storedUser.userName;
+      console.log("navbar session name="+this.credentials.username);
     } else {
       console.error('User not found in sessionStorage.');
     }
