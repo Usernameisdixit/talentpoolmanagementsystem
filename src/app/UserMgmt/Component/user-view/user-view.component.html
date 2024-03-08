@@ -2,7 +2,7 @@
 
   <form class="row g-3" [formGroup]="userViewForm">
    
-   <h2 class="mt-4" style="text-align: center; background: #4eb7f3;">User Details</h2> <hr>
+   <h1 class="mt-4" style="text-align: center;">User Details</h1> <hr>
    <nav class="navbar navbar-expand-lg">
     <div class="container">
        
@@ -20,8 +20,8 @@
     </div>
 </nav>
 
-  <table class="table table-primary table-striped mt-3">
-      <thead>
+  <table class="table table-striped mt-3">
+      <thead style="background-color:rgb(156, 221, 241);">
        <tr>
          <th>Sl No</th>
          <th>User Full Name</th>
@@ -34,13 +34,18 @@
        </tr>
       </thead>
       <tbody>
-          <tr *ngFor="let user of userDetails; let i = index">
+         
+        <tr *ngFor="let user of userDetails | paginate :{
+          itemsPerPage : tableSize,
+          currentPage : page ,
+          totalItems: count
+          }; let i = index;">
               <td>{{i+1}}</td>
               <td>{{user.userFullName}}</td>
               <td>{{user.userName}}</td>
               <td>{{user.roleName}}</td>
               <td>{{user.email}}</td>
-              <td>{{user.email}}</td>
+              <td>{{user.phoneNo}}</td>
   
               <td>
                   <button class="btn btn-primary" (click)="editUser(user.userId);">Edit</button>&nbsp;
@@ -48,12 +53,16 @@
                  
               </td>
            </tr> 
+           <tr *ngIf="!userDetails || userDetails.length === 0" >
+            <td colspan="7" class="text-center">
+                <span id="lblMessage" class="no-content">No record(s) found!</span>
+
+            </td>
+        </tr>
       </tbody>
     </table>
-    <mat-paginator [length]="100"
-            [pageSize]="10"
-            [pageSizeOptions]="[5, 10, 25, 100]"
-            aria-label="Select page">
-    </mat-paginator>
+    <div class="d-flex justify-content-end" id="pagination" *ngIf="userDetails.length!=0">
+      <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)= "getTableDataChange($event)"></pagination-controls>
+    </div>
   </form>
   </div>

@@ -68,4 +68,19 @@ export class UserViewComponent {
 
   }
 
+  // for pagination
+indexNumber : number = 0;
+page : number = 1;
+tableSize : number = 10;
+count : number = 0;
+pageSizes = [10,20,30,40,50];
+
+//pagination functionality
+getTableDataChange(event : any){
+  
+  this.page = event;
+  this.indexNumber = (this.page - 1) * this.tableSize;
+  this.getUserDetails();
+}
+
 }

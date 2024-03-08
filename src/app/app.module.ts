@@ -43,8 +43,8 @@ import { AttendanceComponent } from './AttendanceMgmt/Components/attendance/atte
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { enGbLocale } from 'ngx-bootstrap/locale';
 import { defineLocale } from 'ngx-bootstrap/chronos';
-
 import { DashboardComponent } from './UserMgmt/Component/dashboard/dashboard.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
   declarations: [
@@ -91,6 +91,7 @@ defineLocale('en-gb', enGbLocale); //
     MatOptionModule,
     MatPaginatorModule,
     BsDatepickerModule.forRoot(),
+    NgxPaginationModule
   ],
   providers: [],
   bootstrap: [AppComponent]
