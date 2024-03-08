@@ -3,22 +3,6 @@
   <form class="row g-3" [formGroup]="userViewForm">
    
    <h1 class="mt-4" style="text-align: center;">User Details</h1> <hr>
-   <nav class="navbar navbar-expand-lg">
-    <div class="container">
-       
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="nav nav-tabs nav-pills custum-tab">
-            <li class="nav-item"><a class="nav-item nav-link" href="addUser">Add</a></li>
-            <li><a class="nav-item nav-link active" href="viewUser">View</a></li>
-      
-          </ul>
-            
-        </div>
-    </div>
-</nav>
 
   <table class="table table-striped mt-3">
       <thead style="background-color:rgb(156, 221, 241);">
@@ -29,6 +13,7 @@
          <th>Role</th>
          <th>Email</th>
          <th>Phone No</th>
+         <th>Status</th>
          <th>Action</th>
   
        </tr>
@@ -46,12 +31,11 @@
               <td>{{user.roleName}}</td>
               <td>{{user.email}}</td>
               <td>{{user.phoneNo}}</td>
+              <td *ngIf="user.deletedFlag" id="toggleButton"><button class="btn btn-danger" (click)="deleteUser(user.userId,!user.deletedFlag);">InActive</button></td>
+              
+              <td *ngIf="!user.deletedFlag" id="toggleButton"><button class="btn btn-success" (click)="deleteUser(user.userId,!user.deletedFlag);">Active</button></td>
   
-              <td>
-                  <button class="btn btn-primary" (click)="editUser(user.userId);">Edit</button>&nbsp;
-                  <button class="btn btn-danger" (click)="deleteUser(user.userId);">Delete</button>
-                 
-              </td>
+              <td><button class="btn btn-primary" (click)="editUser(user.userId);">Edit</button>&nbsp;</td>
            </tr> 
            <tr *ngIf="!userDetails || userDetails.length === 0" >
             <td colspan="7" class="text-center">

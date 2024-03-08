@@ -31,8 +31,8 @@ export class UserService {
     return this.http.get(this.editUserUrl+userId);
   }
 
-  deleteUser(userId:any){
-    return this.http.delete(this.deleteUserUrl+userId);
+  deleteUser(userId:any,deletedFlag:any){
+    return this.http.delete(this.deleteUserUrl+`${userId}/${deletedFlag}`);
   }
 
   duplicateCheck(userName:any){

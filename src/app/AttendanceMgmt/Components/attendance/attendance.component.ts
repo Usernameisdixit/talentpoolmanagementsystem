@@ -71,7 +71,7 @@ export class AttendanceComponent {
           //is present for null case no data
           this.isPresents = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
           this.attendanceDetails = data;
-          console.log('Backend API Response:', data);
+          console.log('Backend API Response:', this.isPresents);
           this.uncheckCheckbox1 = true;
           this.uncheckCheckbox2 = true;
         },
@@ -177,11 +177,5 @@ export class AttendanceComponent {
     this.selectedDate = newDate || undefined;
     this.applyFilter(this.selectedFilter); // Call applyFilter when the date changes
   }
-
-  
-
-  
-
-
 
 }

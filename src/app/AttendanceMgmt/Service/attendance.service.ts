@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs'; // Import Observable from rxjs
 
 @Injectable({
@@ -30,7 +30,14 @@ export class AttendanceService {
   }
 
   getAttendanceReportData(year: string, month: string, platform: string, selectedDate: string): Observable<any> {
-    const url = `${this.reportData}/pdfData/${year}/${month}/${platform}/${selectedDate}`;
-    return this.httpClient.get<any>(url);
+    const url = `${this.reportData}/pdfData`;
+    const params = {
+        year: year,
+        month: month,
+        platform: platform,
+        selectedDate: selectedDate
+    };
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post<any>(url, params, { headers });
   }
 }
