@@ -38,7 +38,7 @@ export class UserComponent {
   ngOnInit(){
    // *****************CODE FOR ACCESSING SESSION DATA**********************
     //console.log(sessionStorage.getItem('user'+"user object inside user registration"));
-    const storedUserString = sessionStorage.getItem('user');
+    const storedUserString = localStorage.getItem('user');
     if (storedUserString) {
       const storedUser = JSON.parse(storedUserString);
       this.userId=storedUser.userId;
