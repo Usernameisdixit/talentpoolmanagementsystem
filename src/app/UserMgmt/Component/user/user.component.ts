@@ -150,9 +150,9 @@ export class UserComponent {
 
 
   // for duplicate check
-  duplicateCheck(){
+  duplicateCheck(event:any){
    
-    const userName=this.userForm.value.userName;
+    const userName=event.target.value;
     this.userService.duplicateCheck(userName).subscribe((data:any)=>{
       console.log(data);
      
