@@ -14,8 +14,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	@Transactional
 	@Modifying
-	@Query(value = "update user set deletedFlag=true where userId=:userId",nativeQuery = true)
-	void deleteUser(Integer userId);
+	@Query(value = "update user set deletedFlag=:deletedFlag where userId=:userId",nativeQuery = true)
+	void deleteUser(Integer userId,Boolean deletedFlag);
 
 	@Query(value = "select count(1) from user where userName=:userName and deletedFlag=0;",nativeQuery = true)
 	Integer getDuplicateCount(String userName);

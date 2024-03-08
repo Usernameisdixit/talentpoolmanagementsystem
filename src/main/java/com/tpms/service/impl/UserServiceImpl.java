@@ -60,9 +60,9 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public void deleteUserById(Integer intUserId) {
+	public void deleteUserById(Integer intUserId,Boolean deletedFlag) {
 
-		 userRepository.deleteUser(intUserId);
+		userRepository.deleteUser(intUserId,deletedFlag);
 	}
 
 	@Override
