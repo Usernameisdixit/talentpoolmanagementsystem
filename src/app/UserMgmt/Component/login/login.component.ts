@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
     password:''
   }
   errorMessage: string= '';
+  hidePassword = true;
   constructor(private loginService: LoginService,private router: Router,private authService: AuthService) { 
     this.users=[]
   }
@@ -38,6 +39,17 @@ export class LoginComponent implements OnInit {
               const responseObject = JSON.parse(response);
               const status = responseObject?.status;
               const email=responseObject?.email;
+              const user = responseObject?.user;
+    sessionStorage.setItem("user", JSON.stringify(user));
+    const storedUserString = sessionStorage.getItem('user');
+    if (storedUserString) {
+      const storedUser = JSON.parse(storedUserString);
+      // Now you can use the 'storedUser' object
+      console.log(storedUser.userId+" user session id");
+    } else {
+      console.error('User not found in sessionStorage.');
+    }
+
               if(status==='firstlogin'){
                 this.router.navigate(['restpassword',email]);
               }
@@ -81,18 +93,12 @@ export class LoginComponent implements OnInit {
 
 
 
-  // onSubmit(){
-  //   //console.log("Form submitted.");
-  //   if((this.credentials.username!='' && this.credentials.password!='') 
-  //             && (this.credentials.username!=null && this.credentials.password!=null))
-  // {
-
-  // }
-  // else{
-  //   console.log("Fields are Empty");
     
-  // }
-  // }
+// Add this method to your component class
+togglePasswordVisibility() {
+this.hidePassword = !this.hidePassword;
+}
+
 
 
 }
