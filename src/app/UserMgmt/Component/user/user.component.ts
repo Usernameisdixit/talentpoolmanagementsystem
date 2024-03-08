@@ -17,6 +17,8 @@ export class UserComponent {
   userId:any;
   roleDetails:any;
   isHidden: boolean = true;
+  username: any;
+  email: any;
   constructor(private formBuilder:FormBuilder,private userService:UserService,private actRoute:ActivatedRoute,
             private route:Router){
 
@@ -34,6 +36,18 @@ export class UserComponent {
 
 
   ngOnInit(){
+   // *****************CODE FOR ACCESSING SESSION DATA**********************
+    //console.log(sessionStorage.getItem('user'+"user object inside user registration"));
+    const storedUserString = sessionStorage.getItem('user');
+    if (storedUserString) {
+      const storedUser = JSON.parse(storedUserString);
+      this.userId=storedUser.userId;
+      this.username = storedUser.userName;
+      this.email = storedUser.email;
+    } else {
+      console.error('User not found in sessionStorage.');
+    }
+
     this.getRoleDetails();
     this.actRoute.params.subscribe((params)=>{
        this.userId=params['userId'];
