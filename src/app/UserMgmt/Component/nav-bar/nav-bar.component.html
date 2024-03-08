@@ -25,12 +25,19 @@
     </button>
     <div class="spacer"></div>
     <div *ngIf="authService.isAuthenticated()">
-      <button mat-button >{{this.credentials.username}}</button>
+      <!-- <button mat-button >{{this.credentials.username}}</button>
       <span class='material-icons-outlined'>
       <button mat-button routerLink="login"  (click)="logout()">Logout</button>
-      </span>
+      </span> -->
     <!-- <button mat-button >{{successMessage}}</button> -->
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item>{{credentials.username}}</button>
+      <button mat-menu-item routerLink="login" (click)="logout()">Logout</button>
+    </mat-menu>
     
+    <button mat-icon-button [matMenuTriggerFor]="userMenu">
+      <mat-icon style="font-size: 24px; color:blue;">account_circle</mat-icon>
+    </button>
    
   </div>
 </mat-toolbar>
