@@ -19,7 +19,7 @@ export class AttendanceGenerateServiceService {
   }
   generateAttendanceReport(attendanceDetails: any[]): void {
     const pdf = new jsPDF();
-  
+    
     // Static header content
     pdf.text('Attendance Report', 10, 10);
   

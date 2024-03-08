@@ -23,7 +23,7 @@
             <label for="platform">Platform:</label>
             <select id="platform" [(ngModel)]="platform" class="form-control">
                 <option value='0' selected>--Select--</option>
-                <option *ngFor="let platform of platforms" [value]="platform.platformId">{{ platform.platform }}
+                <option *ngFor="let platform of platforms" [value]="platform.platform">{{ platform.platform }}
                 </option>
             </select>
         </div>
@@ -43,6 +43,8 @@
     <div class="row justify-content-center mt-4">
         <div class="col-md-6 text-center">
             <button type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button>
+            <div class="button-space"></div>
+            <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
         </div>
     </div>
 
