@@ -39,34 +39,52 @@ export class UserViewComponent {
     this.route.navigate(["editUser/"+userId]);
   }
 
-  //delete user
-  deleteUser(userId:any){
-    Swal.fire({
-      title: 'Do you wnat to delete!',
-      text: 'You will not be able to recover this data!',
+  //active or inactive user
+  deleteUser(userId:any,deletedFlag:boolean){
+   
+    if(deletedFlag){
+      Swal.fire({
+      title: 'Do you want to InActive ?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
       reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-       
-        // User confirmed, proceed with deletion
-        this.userService.deleteUser(userId).subscribe((data: any) => {
-          Swal.fire('Deleted', 'This data is successfully deleted.', 'success');
-          this.getUserDetails();
-        }, (error: any) => {
-          console.log(error);
-        });
+      }).then((result) => {
+         if (result.isConfirmed) {
       
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // User clicked cancel, do nothing
-        Swal.fire('Cancelled', 'Your data is safe :)', 'error');
+           // User confirmed, proceed with deletion
+            this.userService.deleteUser(userId,deletedFlag).subscribe((data: any) => {
+          
+            Swal.fire('InActivated', 'User InActivated', 'success');
+            this.getUserDetails();
+         }, (error: any) => {
+         console.log(error);
+         });
+        } 
+       });
+    }
+    else{
+        Swal.fire({
+          title: 'Do you want to Active ?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'No',
+          reverseButtons: true
+        }).then((result) => {
+           if (result.isConfirmed) {
+               // User confirmed, proceed with deletion
+               this.userService.deleteUser(userId,deletedFlag).subscribe((data: any) => {
+                Swal.fire('Activated', 'User Activated', 'success');
+                this.getUserDetails();
+             }, (error: any) => {
+                console.log(error);
+             });
+           } 
+         });
       }
-    });
-
-  }
+}
 
   // for pagination
 indexNumber : number = 0;
