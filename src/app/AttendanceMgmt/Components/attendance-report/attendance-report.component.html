@@ -1,0 +1,50 @@
+<div class="row justify-content-start maxscrn">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="year">Year:</label>
+            <select id="year" [(ngModel)]="year" class="form-control">
+                <option [value]="getCurrentYear()" selected>{{ getCurrentYear() }}</option>
+                <option [value]="getCurrentYear() + 1">{{ getCurrentYear() + 1 }}</option>
+                <option [value]="getCurrentYear() + 2">{{ getCurrentYear() + 2 }}</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="month">Month:</label>
+            <select id="month" [(ngModel)]="month" class="form-control">
+                <option value='0' selected>--Select--</option>
+                <option *ngFor="let option of months" [value]="option.value">{{ option.name }}</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="platform">Platform:</label>
+            <select id="platform" [(ngModel)]="platform" class="form-control">
+                <option value='0' selected>--Select--</option>
+                <option *ngFor="let platform of platforms" [value]="platform.platformId">{{ platform.platform }}
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="date">Date:</label>
+            <div class="input-group">
+                <input id="date" class="form-control" type="text" [(ngModel)]="selectedDate" bsDatepicker
+                    [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }" placeholder="Select date" />
+                <span class="input-group-text"><i class="material-icons">date_range</i></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6 text-center">
+            <button type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button>
+        </div>
+    </div>
+
+
+</div>

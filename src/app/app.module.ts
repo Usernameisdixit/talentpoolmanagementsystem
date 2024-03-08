@@ -45,6 +45,8 @@ import { enGbLocale } from 'ngx-bootstrap/locale';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { DashboardComponent } from './UserMgmt/Component/dashboard/dashboard.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { AttendanceReportComponent } from './AttendanceMgmt/Components/attendance-report/attendance-report.component';
+
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
   declarations: [
@@ -63,8 +65,8 @@ defineLocale('en-gb', enGbLocale); //
     AppLayoutComponent,
     TalentlistComponent,
     AttendanceComponent,
-    DashboardComponent
-
+    DashboardComponent,
+    AttendanceReportComponent
     
 
   ],
