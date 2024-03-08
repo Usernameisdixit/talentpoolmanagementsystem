@@ -10,6 +10,7 @@ export class AttendanceService {
   private apiUrl = 'http://localhost:9999/tpms/attendance';
   private platformUrl = 'http://localhost:9999/tpms/getplatform';
   private attendanceSaveUrl = 'http://localhost:9999/tpms/submitAttendance';
+  private reportData='http://localhost:9999/tpms';
   attendanceSave: any;
 
   constructor(private httpClient: HttpClient) { }
@@ -26,5 +27,10 @@ export class AttendanceService {
       selectedDate: selectedDate
     };
     return this.httpClient.post(this.attendanceSaveUrl, attendanceDetails, { params: params });
+  }
+
+  getAttendanceReportData(year: string, month: string, platform: string, selectedDate: string): Observable<any> {
+    const url = `${this.reportData}/pdfData/${year}/${month}/${platform}/${selectedDate}`;
+    return this.httpClient.get<any>(url);
   }
 }

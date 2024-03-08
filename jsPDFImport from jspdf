@@ -1,0 +1,84 @@
+[1mdiff --git a/angular.json b/angular.json[m
+[1mindex 3e72945..cd2f475 100644[m
+[1m--- a/angular.json[m
+[1m+++ b/angular.json[m
+[36m@@ -25,6 +25,9 @@[m
+               "src/assets"[m
+             ],[m
+             "styles": [[m
+[32m+[m[32m              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",[m
+[32m+[m[32m              "./node_modules/bootstrap/dist/css/bootstrap.min.css",[m
+[32m+[m[32m              "node_modules/bootstrap/dist/css/bootstrap.min.css",[m
+               "@angular/material/prebuilt-themes/indigo-pink.css",[m
+               "src/styles.css"[m
+             ],[m
+[1mdiff --git a/package-lock.json b/package-lock.json[m
+[1mindex 974a218..ac37430 100644[m
+[1m--- a/package-lock.json[m
+[1m+++ b/package-lock.json[m
+[36m@@ -18,6 +18,9 @@[m
+         "@angular/platform-browser": "^16.2.0",[m
+         "@angular/platform-browser-dynamic": "^16.2.0",[m
+         "@angular/router": "^16.2.0",[m
+[32m+[m[32m        "bootstrap": "^5.3.3",[m
+[32m+[m[32m        "ngx": "^2.4.0",[m
+[32m+[m[32m        "ngx-bootstrap": "^11.0.2",[m
+         "rxjs": "~7.8.0",[m
+         "sweetalert2": "^11.10.6",[m
+         "tslib": "^2.3.0",[m
+[36m@@ -3748,6 +3751,23 @@[m
+         "tslib": "^2.1.0"[m
+       }[m
+     },[m
+[32m+[m[32m    "node_modules/@mrmlnc/readdir-enhanced": {[m
+[32m+[m[32m      "version": "2.2.1",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz",[m
+[32m+[m[32m      "integrity": "sha512-bPHp6Ji8b41szTOcaP63VlnbbO5Ny6dwAATtY6JTjh5N2OLrb5Qk/Th5cRkRQhkWCt+EJsYrNB0MiL+Gpn6e3g==",[m
+[32m+[m[32m      "dependencies": {[m
+[32m+[m[32m        "call-me-maybe": "^1.0.1",[m
+[32m+[m[32m        "glob-to-regexp": "^0.3.0"[m
+[32m+[m[32m      },[m
+[32m+[m[32m      "engines": {[m
+[32m+[m[32m        "node": ">=4"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+[32m+[m[32m    "node_modules/@mrmlnc/readdir-enhanced/node_modules/glob-to-regexp": {[m
+[32m+[m[32m      "version": "0.3.0",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/glob-to-regexp/-/glob-to-regexp-0.3.0.tgz",[m
+[32m+[m[32m      "integrity": "sha512-Iozmtbqv0noj0uDDqoL0zNq0VBEfK2YFoMAZoxJe4cwphvLR+JskfF30QhXHOR4m3KrE6NLRYw+U9MRXvifyig=="[m
+[32m+[m[32m    },[m
+     "node_modules/@ngtools/webpack": {[m
+       "version": "16.2.12",[m
+       "resolved": "https://registry.npmjs.org/@ngtools/webpack/-/webpack-16.2.12.tgz",[m
+[36m@@ -3973,6 +3993,16 @@[m
+         "node": ">=14"[m
+       }[m
+     },[m
+[32m+[m[32m    "node_modules/@popperjs/core": {[m
+[32m+[m[32m      "version": "2.11.8",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/@popperjs/core/-/core-2.11.8.tgz",[m
+[32m+[m[32m      "integrity": "sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==",[m
+[32m+[m[32m      "peer": true,[m
+[32m+[m[32m      "funding": {[m
+[32m+[m[32m        "type": "opencollective",[m
+[32m+[m[32m        "url": "https://opencollective.com/popperjs"[m
+[32m+[m[32m      }[m
+[32m+[m[32m    },[m
+     "node_modules/@schematics/angular": {[m
+       "version": "16.2.12",[m
+       "resolved": "https://registry.npmjs.org/@schematics/angular/-/angular-16.2.12.tgz",[m
+[36m@@ -4951,23 +4981,100 @@[m
+       "version": "1.0.10",[m
+       "resolved": "https://registry.npmjs.org/argparse/-/argparse-1.0.10.tgz",[m
+       "integrity": "sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==",[m
+[31m-      "dev": true,[m
+       "dependencies": {[m
+         "sprintf-js": "~1.0.2"[m
+       }[m
+     },[m
+[32m+[m[32m    "node_modules/arr-diff": {[m
+[32m+[m[32m      "version": "4.0.0",[m
+[32m+[m[32m      "resolved": "https://registry.npmjs.org/arr-diff/-/arr-diff-4.0.0.tgz",[m
+[32m+[m[32m      "integrity": "sha512-YVIQ82gZPGBebQV/a8dar4AitzCQs0jjXwMPZllpXMaGjXPYVUawSxQrRsjhjupyVxEvbHgUmIhKVlND+j02kA==",[m
+[32m+[m[32m      "engines": {[m
+[32m+[m[32m 

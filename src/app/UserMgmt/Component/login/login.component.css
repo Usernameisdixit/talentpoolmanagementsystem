@@ -7,3 +7,75 @@
   }
 
   
+  
+ 
+  
+  
+  .input-with-hover::placeholder {
+    color: #aaa;
+  }
+  
+  .input-with-hover:hover::placeholder {
+    color: #666;
+  }
+  
+  .horizontal-card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+  
+  .textured-card {
+   /* Add texture image path */
+    background-size: cover;
+    background-position: center;
+  }
+  
+ 
+  
+
+  
+
+  
+  /* Style for custom color button */
+  mat-raised-button[color="custom"] {
+    background-color: #136797; /* Change to desired color */
+    color: white;
+  }
+  
+  /* Hover effect for custom color button */
+  mat-raised-button[color="custom"]:hover {
+    background-color: #155b7ecc; /* Darker shade for hover effect */
+  }
+  
+  
+
+  .horizontal-card {
+    border: 2px solid #a4a5a7; /* Add border with 2px width and blue color */
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.7); /* Set a semi-transparent white background */
+  }
+  
+  .static-content {
+    padding: 40px;
+    background-image: url('../../../../assets/abc.png'); /* Update the path */
+    color: white;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+  }
+  
+  .static-content h2 {
+    font-size: 24px;
+  }
+  
+  .static-content p {
+    font-size: 16px;
+  }
+  
+  .white-background {
+    background-color: rgba(248, 243, 243, 0.7); /* Set a semi-transparent white background */
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+  }
+  
