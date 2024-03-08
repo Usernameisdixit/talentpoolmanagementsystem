@@ -12,6 +12,8 @@ public interface AttendanceService {
 
 	public List<Platform> getAllPlatform();
 
-	public void saveAttendance(JSONArray allData, String selectedDate);
+	public String saveAttendance(JSONArray allData, String selectedDate);
+
+	public JSONArray getAttendanceReportData(String platform, String selectedDate, String year, String month);
 
 }
