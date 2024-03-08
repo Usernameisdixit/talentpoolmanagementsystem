@@ -1,5 +1,6 @@
 package com.tpms.service.impl;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +30,16 @@ public class UserServiceImpl implements UserService{
 	public User saveUser(User user) {
 	
 		if(user.getUserId() != 0) {
+			User existUser=getUserById(user.getUserId());
+				 user.setPassword(existUser.getPassword());
+                 user.setIsFirstLogin(existUser.getIsFirstLogin());
 			
-			user.setUserId(user.getUserId());
-			user.setIsFirstLogin(true);
+                 user.setUserId(user.getUserId());
 		}
 		
 		else {
 			user.setIsFirstLogin(true);
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
 		}
 		user.setDeletedFlag(false);
 	        List<Role> roleDetails=roleService.getRoleList();
@@ -45,13 +49,13 @@ public class UserServiceImpl implements UserService{
 			  }
 		    }
 		
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		
 		return userRepository.save(user);
 	}
 
 	@Override
 	public List<User> getUserDetails() {
-		return userRepository.findByDeletedFlagFalse();
+		return userRepository.findAll();
 	}
 
 	@Override
