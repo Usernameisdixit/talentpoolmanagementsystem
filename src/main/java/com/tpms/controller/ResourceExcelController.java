@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
-
+import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -24,15 +24,18 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
-
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tpms.entity.Platform;
+import com.tpms.entity.ResourcePool;
 import com.tpms.repository.PlatformRepository;
 import com.tpms.service.impl.ExcelUploadEmployeeServiceImpl;
 import com.tpms.service.impl.ResourcePoolServiceImpl;
@@ -138,4 +141,39 @@ public class ResourceExcelController {
 	        
 	        platformRepository.save(platform);
 	    } 
+	    
+	    
+		@GetMapping("/emp/uploadedData")
+		public List<ResourcePool> gettbl_resource_pool(){
+			return this.tbl_resource_pool_Service.getAllEmploye();
+			
+		}
+		 
+	   
+		//Get Particular Resource From Talent Resource Pool
+		@GetMapping("/emp/talent/{id}")
+		public ResourcePool getTalentById(@PathVariable Integer id){ 
+			System.out.println(id);
+			return tbl_resource_pool_Service.getTalentById(id);
+			//return new ResponseEntity<>(msg, HttpStatus.OK);
+		}
+		
+		
+		//For Updating Talent Pool Resource
+		@PutMapping("/emp/talent")
+		public ResponseEntity<String> updateEmployee (@RequestBody ResourcePool emp){ 
+			
+			String msg =tbl_resource_pool_Service.addorUpdateEmployee(emp);
+			return new ResponseEntity<>(msg, HttpStatus.OK);
+		}
+	    
+		//For Deleting Talent Pool Resource
+		@DeleteMapping("/emp/talent/{id}")
+		public ResponseEntity<String> deleteEmployee (@PathVariable Integer id){ 
+		
+			String msg=tbl_resource_pool_Service.delete(id);
+			return new ResponseEntity<>(msg, HttpStatus.OK);
+		}
+	    
+	    
 }
