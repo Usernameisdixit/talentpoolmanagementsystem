@@ -24,7 +24,7 @@
   <div class="col-md-6">
     <label for="validationDefault01" class="form-label text-primary">User Full name</label><span class="text-danger font-weight-bold">*</span>
 
-    <input type="text" class="form-control" id="userFullName" formControlName="userFullName" (blur)="duplicateCheck()"/>
+    <input type="text" class="form-control" id="userFullName" formControlName="userFullName" />
     <div *ngIf="userForm.get('userFullName')?.invalid && userForm.get('userFullName')?.touched">
       <p class="text-danger">Please Enter The User Full Name.</p>
     </div>
@@ -34,7 +34,7 @@
   <div class="col-md-6">
     <label for="validationDefault01" class="form-label text-primary">User name</label><span class="text-danger font-weight-bold">*</span>
 
-    <input type="text" class="form-control" id="userName" formControlName="userName" (blur)="duplicateCheck()"/>
+    <input type="text" class="form-control" id="userName" formControlName="userName" (blur)="duplicateCheck($event)"/>
     <div *ngIf="userForm.get('userName')?.invalid && userForm.get('userName')?.touched">
       <p class="text-danger">Please Enter The User Name.</p>
     </div>
