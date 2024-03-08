@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,9 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tpms.entity.FormData;
 import com.tpms.entity.User;
 import com.tpms.repository.UserRepository;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 /**
  *@author Jiban Jena
@@ -49,21 +45,17 @@ public class LoginController {
 	         //System.out.println("session timeout"+sessionTime);
 	        if (user != null && BCrypt.checkpw(formData.getPassword(), user.getPassword())) {
 	        	if(user.getIsFirstLogin()) {
-	        		return ResponseEntity.ok(Map.of("status", "firstlogin", "message", "First time user logged in.","email",user.getEmail()));
+	        		return ResponseEntity.ok(Map.of("status", "firstlogin", "message", 
+	        				"First time user logged in.","user",user));
 	        	}
 	        	else {
 	               return ResponseEntity.ok(Map.of("status", "success", "message", "Login successful","user",user));
 	        	}
 	        } else {
-	            return ResponseEntity.ok(Map.of("status", "error", "message", "Invalid credentials"));
+	            return ResponseEntity.ok(Map.of("status", "error", "message", "Invalid credentials","user",user));
 	        }
 	    }
 	
-		/*
-		 * public static boolean verifyPassword(String enteredPassword, String
-		 * passwordFromDatabase) { return BCrypt.checkpw(enteredPassword,
-		 * passwordFromDatabase); }
-		 */
 	
 	@PostMapping("/getEmail")
     public ResponseEntity<?> getEmail(@RequestBody FormData formEmail) {

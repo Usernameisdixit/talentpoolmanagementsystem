@@ -62,11 +62,15 @@ public class AttendanceController {
 	}
    
 	
-	@GetMapping("pdfData/{year}/{month}/{platform}/{selectedDate}")
-	public String getAttendanceReportData(@PathVariable(name="year") String year,@PathVariable(name="month") String month,@PathVariable(name="platform") String platform,@PathVariable(name="selectedDate")String selectedDate){
-		JSONArray attendanceReportData = attendanceService.getAttendanceReportData(platform, selectedDate,year,month);
-		System.err.println("Report Data "+attendanceReportData);
-		return attendanceReportData.toString();
-		
+	@PostMapping("pdfData")
+	public String getAttendanceReportData(@RequestBody Map<String, String> params) {
+	    String year = params.get("year");
+	    String month = params.get("month");
+	    String platform = params.get("platform");
+	    String selectedDate = params.get("selectedDate");
+	    JSONArray attendanceReportData = attendanceService.getAttendanceReportData(platform, selectedDate,year,month);
+//	    System.err.println("Report Data " + attendanceReportData);
+	    return attendanceReportData.toString();
 	}
+
 }
