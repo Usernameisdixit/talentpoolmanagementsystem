@@ -12,7 +12,7 @@ public interface UserService {
 
 	User getUserById(Integer userId);
 
-	void deleteUserById(Integer intUserId);
+	void deleteUserById(Integer intUserId, Boolean deletedFlag);
 
 	String getStatusOfDuplicacyCheck(String userName);
 

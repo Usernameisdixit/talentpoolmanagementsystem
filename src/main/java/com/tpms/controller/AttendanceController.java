@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,15 +46,31 @@ public class AttendanceController {
 		Map<String, Object> response = new HashMap<>();
 		try {
 			JSONArray allData = new JSONArray(data);
-			attendanceService.saveAttendance(allData, selectedDate);
-			System.err.println(allData.get(0));
+			String result=attendanceService.saveAttendance(allData, selectedDate);
+//			System.err.println("suraj "+result);
+			if(result=="success") {
 			response.put("status", 200);
 			response.put("success", "Attendance Save Succesfully");
+			}else {
+				response.put("Error", "Error");
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 			response.put("Error", "Error");
 		}
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+   
+	
+	@PostMapping("pdfData")
+	public String getAttendanceReportData(@RequestBody Map<String, String> params) {
+	    String year = params.get("year");
+	    String month = params.get("month");
+	    String platform = params.get("platform");
+	    String selectedDate = params.get("selectedDate");
+	    JSONArray attendanceReportData = attendanceService.getAttendanceReportData(platform, selectedDate,year,month);
+//	    System.err.println("Report Data " + attendanceReportData);
+	    return attendanceReportData.toString();
 	}
 
 }

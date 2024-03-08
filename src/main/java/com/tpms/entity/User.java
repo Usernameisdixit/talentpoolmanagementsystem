@@ -1,39 +1,49 @@
 package com.tpms.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
+@Table(name = "user")
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer userId;
+    
+    private String userFullName;
 
-	private String userFullName;
+    private String userName;
 
-	private String userName;
+    private String password;
 
-	private String password;
+    @ManyToOne
+    @JoinColumn(name = "roleid")
+    private Role roleId;
 
-	private Integer roleId;
-	
-	private String roleName;
+    private String roleName;
 
-	private String phoneNo;
+    private String phoneNo;
 
-	private String email;
+    @Column(name = "email")
+    private String email;
+    
+    private Boolean isFirstLogin;
 
-	private Boolean isFirstLogin;
+    @Column(name = "createdby")
+    private Integer createdBy;
 
-	private Integer createdBy;
+    private Integer updatedBy;
 
-	private Integer updatedBy;
+    private Boolean deletedFlag;
 
-	private Boolean deletedFlag;
 
 }
