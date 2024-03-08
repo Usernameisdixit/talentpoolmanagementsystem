@@ -32,7 +32,7 @@ public class UserController {
 	private RoleService roleService;
 	
 	
-	@Value("${userpassword}")
+	@Value("${user.default.password}")
 	private String password;
 	
 	@PostMapping("/addUser")
