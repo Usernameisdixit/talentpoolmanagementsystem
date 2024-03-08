@@ -34,8 +34,9 @@
               <td *ngIf="user.deletedFlag" id="toggleButton"><button class="btn btn-danger" (click)="deleteUser(user.userId,!user.deletedFlag);">InActive</button></td>
               
               <td *ngIf="!user.deletedFlag" id="toggleButton"><button class="btn btn-success" (click)="deleteUser(user.userId,!user.deletedFlag);">Active</button></td>
-  
-              <td><button class="btn btn-primary" (click)="editUser(user.userId);">Edit</button>&nbsp;</td>
+              
+              <td *ngIf="!user.deletedFlag"><button class="btn btn-primary" (click)="editUser(user.userId);">Edit</button>&nbsp;</td>
+              <td *ngIf="user.deletedFlag"><button class="btn btn-primary" (click)="editUser(user.userId);" disabled>Edit</button>&nbsp;</td>
            </tr> 
            <tr *ngIf="!userDetails || userDetails.length === 0" >
             <td colspan="7" class="text-center">
