@@ -89,11 +89,10 @@ export class UserComponent {
         this.userService.saveUser(userData).subscribe((data) => {
           Swal.fire({
             title: 'Do you want to submit?',
-            text: 'This action cannot be undone!',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, submit it!',
-            cancelButtonText: 'No, cancel!',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
             reverseButtons: true
           }).then((result) => {
             if (result.isConfirmed) {
@@ -127,7 +126,7 @@ export class UserComponent {
           userFullName:data.userFullName,
           userName:data.userName,          
           password:data.password,
-          roleId:data.roleId,
+          roleId:data.role.roleId,
           phoneNo:data.phoneNo,
           email:data.email,
           chrDeletedFlag:data.chrDeletedFlag
