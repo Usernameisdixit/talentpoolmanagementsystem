@@ -455,3 +455,36 @@ a[aria-expanded="true"] {
 }
 
 
+#sidebar ul ul a:hover {
+    color: #000; /* Change text color on hover */
+    background: #ccc; /* Change background color to grey on hover */
+}
+
+/* Navbar hover effect */
+.navbar:hover {
+    background: #ccc; /* Change navbar background color to grey on hover */
+}
+
+/* Sidebar link hover effect */
+#sidebar ul li a:hover {
+    color: #666; /* Change text color to grey on hover */
+    background: #ccc; /* Change background color to grey on hover */
+}
+
+/* Active link background color */
+#sidebar ul li.active > a,
+a[aria-expanded="true"] {
+    background: #666; /* Change active link background color to grey */
+}
+
+/* Submodule hover effect */
+#sidebar ul ul a:hover {
+    color: #666; /* Change text color to grey on hover */
+    background: #ccc; /* Change background color to grey on hover */
+}
+
+/* Dropdown toggle hover effect */
+.dropdown-toggle:hover::after {
+    color: #666; /* Change color to grey on hover */
+}
+
