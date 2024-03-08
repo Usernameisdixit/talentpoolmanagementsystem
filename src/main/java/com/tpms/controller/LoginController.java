@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,6 +18,9 @@ import com.tpms.entity.FormData;
 import com.tpms.entity.User;
 import com.tpms.repository.UserRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 /**
  *@author Jiban Jena
 **/ 
@@ -28,7 +32,8 @@ public class LoginController {
 	@Autowired
 	private UserRepository userRepository;
 
-	
+//	@Value("${server.servlet.session.timeout}")
+//	private Integer sessionTime;
 	
 	@GetMapping("/getAllUsers")
 	public ResponseEntity<List<User>> getAllUSers()
@@ -41,12 +46,13 @@ public class LoginController {
 	 @PostMapping("/login")
 	    public ResponseEntity<?> loginUser(@RequestBody FormData formData) {		 
 	        User user = userRepository.findByUserName(formData.getUsername());
+	         //System.out.println("session timeout"+sessionTime);
 	        if (user != null && BCrypt.checkpw(formData.getPassword(), user.getPassword())) {
 	        	if(user.getIsFirstLogin()) {
 	        		return ResponseEntity.ok(Map.of("status", "firstlogin", "message", "First time user logged in.","email",user.getEmail()));
 	        	}
 	        	else {
-	               return ResponseEntity.ok(Map.of("status", "success", "message", "Login successful"));
+	               return ResponseEntity.ok(Map.of("status", "success", "message", "Login successful","user",user));
 	        	}
 	        } else {
 	            return ResponseEntity.ok(Map.of("status", "error", "message", "Invalid credentials"));
@@ -79,7 +85,6 @@ public class LoginController {
 	
 	@PostMapping("/resetPassword")
 	public ResponseEntity<?> resetPassword(@RequestBody FormData formData) {
-      
 		User user = userRepository.findByEmail(formData.getEmail());
 		if(!formData.getNewpassword().equalsIgnoreCase(formData.getConfirmpassword())) {
 			return ResponseEntity
@@ -106,5 +111,12 @@ public class LoginController {
 		}
 
 	}
+	
+	
+//	@GetMapping("/sessionTimeout")
+//    public ResponseEntity<Integer> getSessionTimeout() {
+//        int sessionTimeout =sessionTime; // Get session timeout from configuration or other source
+//        return ResponseEntity.ok(sessionTimeout);
+//    }
 
 }
