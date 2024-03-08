@@ -1,0 +1,81 @@
+<div class="wrapper">
+    <nav id="sidebar">
+        <div class="sidebar-header text-center">
+          
+        </div>
+
+        <ul class="list-unstyled components" id="menu">
+            <li class="">
+                <a href="dashboard" class="nav-link">Dashboard</a>
+            </li>
+
+            <!-- Sub-modules for Dashboard -->
+            <li>
+                <a href="#submenu1" data-bs-toggle="collapse" class="nav-link dropdown align-middle dropdown-toggle sidebar-navlink">
+                    <i class="custom-icon"></i> Submodules
+                </a>
+                <ul class="collapse" id="submenu1" data-bs-parent="#menu">
+                    <li class="w-100">
+                        
+                        <a routerLink="/submodule"  class="nav-link">Submodule </a>
+                    </li>
+                    <!-- Add more sub-modules as needed -->
+                </ul>
+            </li>
+
+            <li>
+                <a href="#" class="nav-link">User Registration</a>
+            </li>
+
+            <li>
+                <a href="#submenu1" data-bs-toggle="collapse" class="nav-link dropdown align-middle dropdown-toggle sidebar-navlink">
+                    <i class="custom-icon"></i> Submodules
+                </a>
+                <ul class="collapse" id="submenu1" data-bs-parent="#menu">
+                    <li class="w-100">
+                        
+                        <a routerLink="/addUser"  class="nav-link">Add User </a>
+                    </li>
+
+                    <li class="w-100">
+                        
+                        <a routerLink="/viewUser"  class="nav-link">View User </a>
+                    </li>
+                    <!-- Add more sub-modules as needed -->
+                </ul>
+            </li>
+
+            <li>
+                <a routerLink="/uploadExcel" class="nav-link">Resource Management</a>
+            </li>
+
+            <li>
+                <a routerLink="/talents" class="nav-link">View Resource</a>
+            </li>
+
+            <li>
+                <a routerLink="/settings" class="nav-link">Activity Management</a>
+            </li>
+
+            <li>
+                <a routerLink="/attendance" class="nav-link">Attendance Management</a>
+            </li>
+
+            <li>
+                <a routerLink="/settings" class="nav-link">Assessment Management</a>
+            </li>
+
+            <li>
+                <a routerLink="/settings" class="nav-link">Email Activity</a>
+            </li>
+
+            <li>
+                <a routerLink="/settings" class="nav-link">Reports</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div id="content">
+        <router-outlet></router-outlet>
+    </div>
+</div>

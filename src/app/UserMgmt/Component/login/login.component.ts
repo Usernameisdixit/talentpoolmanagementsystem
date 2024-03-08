@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../Service/login.service';  // Update the path
 import { User } from 'src/app/Model/user';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ export class LoginComponent implements OnInit {
     password:''
   }
   errorMessage: string= '';
-  constructor(private loginService: LoginService,private router: Router) { 
+  constructor(private loginService: LoginService,private router: Router,private authService: AuthService) { 
     this.users=[]
   }
     
@@ -42,7 +43,8 @@ export class LoginComponent implements OnInit {
               }
             else{
               if (status === 'success') {
-                this.router.navigate(['sidenav']);
+                this.authService.setAuthenticated(true);
+                this.router.navigate(['/dashboard']);
                 this.loginService.getMessage("user logged in");
               } else {
                 this.errorMessage = 'Invalid credentials. Please try again.';

@@ -25,7 +25,7 @@ import { ForgotpasswordComponent } from './UserMgmt/Component/forgotpassword/for
 import {MatCardModule} from '@angular/material/card';
 import { RestpasswordComponent } from './UserMgmt/Component/restpassword/restpassword.component';
 import { MatMenuModule } from '@angular/material/menu';
-import { SidenavComponent } from './UserMgmt/Component/sidenav/sidenav.component';
+import { SideNavComponent } from './UserMgmt/Component/side-nav/side-nav.component';
 import { MatListModule } from '@angular/material/list';
 import { UserComponent } from './UserMgmt/Component/user/user.component';
 import { UserViewComponent } from './UserMgmt/Component/user-view/user-view.component';
@@ -43,6 +43,8 @@ import { AttendanceComponent } from './AttendanceMgmt/Components/attendance/atte
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { enGbLocale } from 'ngx-bootstrap/locale';
 import { defineLocale } from 'ngx-bootstrap/chronos';
+
+import { DashboardComponent } from './UserMgmt/Component/dashboard/dashboard.component';
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
   declarations: [
@@ -54,13 +56,14 @@ defineLocale('en-gb', enGbLocale); //
     UserComponent,
     ForgotpasswordComponent,
     RestpasswordComponent,
-    SidenavComponent,
+    SideNavComponent,
     LoginComponent,
     NavBarComponent,
     FileUploadComponent,
     AppLayoutComponent,
     TalentlistComponent,
-    AttendanceComponent
+    AttendanceComponent,
+    DashboardComponent
 
     
 

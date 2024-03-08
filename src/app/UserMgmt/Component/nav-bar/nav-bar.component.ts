@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../Service/login.service';  // Update the path
 import { User } from 'src/app/Model/user';
+import { AuthService } from 'src/app/auth.service';
 @Component({
   selector: 'app-nav-bar',
   templateUrl: './nav-bar.component.html',
@@ -12,7 +13,7 @@ export class NavBarComponent implements OnInit{
     username:'',
     password:''
   }
-  constructor(private loginService: LoginService) { 
+  constructor(private loginService: LoginService,public authService: AuthService) { 
     this.users=[]
   }
   errormessage: any;
@@ -35,8 +36,9 @@ export class NavBarComponent implements OnInit{
   }
   logout() {
     
-    this.loginService.resetMessage();
-  }
+    this.authService.clearAuthentication();
+   
+}
 
 
 

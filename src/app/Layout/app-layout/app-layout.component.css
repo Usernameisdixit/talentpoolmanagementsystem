@@ -1,0 +1,34 @@
+/* app-layout.component.css */
+.main-content {
+    margin-left: 200px; /* Adjust according to your side navigation width */
+  }
+  
+  /* side-nav.component.css */
+  nav {
+    width: 200px; /* Adjust according to your side navigation width */
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background-color: #333;
+    color: #fff;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    padding: 10px;
+  }
+  
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    background-color: #555;
+  }
+  
