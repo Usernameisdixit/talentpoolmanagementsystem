@@ -21,6 +21,6 @@ export class IdleService {
 
   private resetTimer(): void {
     clearTimeout(this.timeoutId);
-    this.timeoutId = setTimeout(() => this.userInactive.emit(), 30000); // Set timeout to 5 minutes (300,000 milliseconds)
+    this.timeoutId = setTimeout(() => this.userInactive.emit(), 3000000); // Set timeout to 5 minutes (300,000 milliseconds)
   }
 }

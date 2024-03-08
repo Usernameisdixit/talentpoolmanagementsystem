@@ -14,6 +14,8 @@ import { DashboardComponent } from './UserMgmt/Component/dashboard/dashboard.com
 
 
 import { authGuard } from './Guard/auth.guard';
+import { AttendanceReportComponent } from './AttendanceMgmt/Components/attendance-report/attendance-report.component';
+
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -36,6 +38,8 @@ const routes: Routes = [
       { path: 'uploadExcel', component: FileUploadComponent,canActivate: [authGuard]  },
       {path: "attendance", component:AttendanceComponent,canActivate: [authGuard]},
       {path:'talents',component:TalentlistComponent,canActivate: [authGuard]},
+      {path: "attendanceReport", component:AttendanceReportComponent,canActivate: [authGuard]},
+
     ]
   }
 ];
