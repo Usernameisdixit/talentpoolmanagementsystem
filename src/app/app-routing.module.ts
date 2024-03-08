@@ -9,6 +9,7 @@ import { UserViewComponent } from './UserMgmt/Component/user-view/user-view.comp
 import { NavBarComponent } from './UserMgmt/Component/nav-bar/nav-bar.component';
 import { FileUploadComponent } from './ResourceMgmt/Components/file-upload/file-upload.component';
 import { TalentlistComponent } from './ResourceMgmt/Components/talentlist/talentlist.component';
+import { TalenteditComponent } from './ResourceMgmt/Components/talentedit/talentedit.component';
 import { AttendanceComponent } from './AttendanceMgmt/Components/attendance/attendance.component';
 import { DashboardComponent } from './UserMgmt/Component/dashboard/dashboard.component';
 
@@ -38,6 +39,7 @@ const routes: Routes = [
       { path: 'uploadExcel', component: FileUploadComponent,canActivate: [authGuard]  },
       {path: "attendance", component:AttendanceComponent,canActivate: [authGuard]},
       {path:'talents',component:TalentlistComponent,canActivate: [authGuard]},
+      {path:'edit/:id',   component:TalenteditComponent,canActivate: [authGuard]},
       {path: "attendanceReport", component:AttendanceReportComponent,canActivate: [authGuard]},
 
     ]

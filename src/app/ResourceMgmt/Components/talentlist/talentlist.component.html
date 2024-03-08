@@ -1,39 +1,39 @@
 <div  class="container">
-<br>
-<h1 class="text-center text-underline bold">Talent Pool Resource List</h1>
-<br>
-<table class="table table-striped" >
-    <thead>
-      <tr class="text-align:center">
-<th>ResourceId</th>
-<th>ResourceName</th>
-<th>ResourceCode</th>
-<th>Platform</th>
-<th>Lchocation</th>
-<th>Experience</th>
-<th>PhoneNo</th>
-<th>Email</th>
-      </tr>
-
-    </thead>
-<tbody>
-<tr *ngFor="let c of talent" class="text-align:center">
-<td>{{c.intResourceId}}</td>
-<td>{{c.vchResourceName}}</td>
-<td>{{c.vchResourceCode}}</td>
-<td>{{c.vchPlatform}}</td>
-<td>{{c.vchLocation}}</td>
-<td>{{c.vchExperience}}</td>
-<td>{{c.vchPhoneNo}}</td>
-<td>{{c.vchEmail}}</td>
-<td>
-  &nbsp;
-  <button type="button" class="btn btn-info" (click)="editalent(c.intResourceId)" >Edit</button>
-  &nbsp;
-  <button type="button" class="btn btn-danger" (click)="deletetalent($event, c.intResourceId)">Delete</button>
-  </td>
-</tr>
-   <tbody>
-</table>
-
-</div>
+  <br>
+  <h1 class="text-center text-underline bold">Talent Pool Resource List</h1>
+  <br>
+  <table class="table table-striped" >
+      <thead>
+        <tr class="text-align:center">
+  <th>ResourceId</th>
+  <th>ResourceName</th>
+  <th>ResourceCode</th>
+  <th>Platform</th>
+  <th>Lchocation</th>
+  <th>Experience</th>
+  <th>PhoneNo</th>
+  <th>Email</th>
+        </tr>
+  
+      </thead>
+  <tbody>
+  <tr *ngFor="let c of talent" class="text-align:center">
+  <td>{{c.resourceId}}</td>
+  <td>{{c.resourceName}}</td>
+  <td>{{c.resourceCode}}</td>
+  <td>{{c.platform}}</td>
+  <td>{{c.location}}</td>
+  <td>{{c.experience}}</td>
+  <td>{{c.phoneNo}}</td>
+  <td>{{c.email}}</td>
+  <td>
+    &nbsp;
+    <button type="button" class="btn btn-info" (click)="editalent(c.resourceId)" >Edit</button>
+    &nbsp;
+    <button type="button" class="btn btn-danger" (click)="deletetalent($event, c.resourceId)">Delete</button>
+    </td>
+  </tr>
+     <tbody>
+  </table>
+  
+  </div>

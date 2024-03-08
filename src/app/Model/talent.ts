@@ -1,22 +1,22 @@
 export class Talent {
        
-       intResourceId:number=0;
-       vchResourceName:string="";
-       vchResourceCode:string="";
-	   vchPlatform:string="";
-	   vchLocation:string="";
-	   vchEngagementPlan:string="";
-	   vchExperience:string="";  
-	   dtmAllocationDate:any="";
-	   vchPhoneNo:string="";  
-	   vchEmail:string="";
-	    intCreatedBy:string="";  
-	    dtmCreatedOn:string="";
-	    intUpdatedBy:string="";
-	    dtmUpdatedOn:any="";
-	    vchStatus:string="";
-	   bitDeletedFlag:string="";
+	resourceId:number=0;
+	resourceName:string="";
+   resourceCode:string="";
+   platform:string="";
+   location:string="";
+   engagementPlan:string="";
+   experience:string="";  
+   allocationDate:any="";
+   phoneNo:string="";  
+   email:string="";
+   createdBy:string="";  
+   // dtmCreatedOn:string="";
+	updatedBy:string="";
+	dtmUpdatedOn:any="";
+	status:string="";
+	deletedFlag:string="";
 
 
-       constructor(){}
+   constructor(){}
 }
