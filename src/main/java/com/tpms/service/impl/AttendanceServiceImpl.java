@@ -252,12 +252,10 @@ public class AttendanceServiceImpl implements AttendanceService {
 	     SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
 	     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	     String formattedDate=null;
-		 Date finalDate=null;
 		try {
-			if(selectedDate!=null && selectedDate.equals("undefined")) {
+			if(selectedDate!=null && !selectedDate.equals("undefined")) {
 			Date date = inputFormat.parse(selectedDate);
             formattedDate = outputFormat.format(date);
-            finalDate = dateFormat.parse(formattedDate);
 			}
 		} catch (ParseException e1) {
 
