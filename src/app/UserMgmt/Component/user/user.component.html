@@ -2,23 +2,6 @@
   
   <h2 style="text-align: center; background: #5c8de7;">User Registration</h2><hr>
 
-  <nav class="navbar navbar-expand-lg mt-4">
-    <div class="container">
-       
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="nav nav-tabs nav-pills custum-tab">
-            <li class="nav-item"><a class="nav-item nav-link active" href="addUser">Add</a></li>
-            <li><a class="nav-item nav-link" href="viewUser">View</a></li>
-      
-          </ul>
-            
-        </div>
-    </div>
-</nav>
-
 <form class=" g-3 mt-3" [formGroup]="userForm" (ngSubmit)="onSubmit()">
  
   <div class="col-md-6">
