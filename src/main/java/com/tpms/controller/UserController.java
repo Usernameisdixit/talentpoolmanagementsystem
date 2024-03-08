@@ -64,9 +64,9 @@ public class UserController {
 		return ResponseEntity.ok().body(user);
 	}
 	
-	@DeleteMapping("/deleteUser/{id}/{deletedFlag}")
-	public ResponseEntity<Map<String,Object>> deleteStudent(@PathVariable(name="id") Integer userId,
-			@PathVariable(name="deletedFlag") Boolean deletedFlag){
+	@DeleteMapping("/deleteUser/{userId}/{deletedFlag}")
+	public ResponseEntity<Map<String,Object>> deleteStudent(@PathVariable Integer userId,@PathVariable Boolean deletedFlag){
+
 		userService.deleteUserById(userId,deletedFlag);
 		Map<String, Object> response = new HashMap<>();
 		response.put("Status" , 200);
