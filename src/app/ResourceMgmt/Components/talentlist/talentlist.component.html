@@ -35,5 +35,7 @@
   </tr>
      <tbody>
   </table>
-  
+  <div class="d-flex justify-content-end" id="pagination" *ngIf="talent.length!=0">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)= "getTableDataChange($event)"></pagination-controls>
+  </div>
   </div>

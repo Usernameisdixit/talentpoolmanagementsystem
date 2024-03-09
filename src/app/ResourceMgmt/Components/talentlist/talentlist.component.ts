@@ -31,7 +31,7 @@ export class TalentlistComponent implements OnInit {
     }
 
     editalent(id:number){
-    this.router.navigate(["/edit",id]);
+    this.router.navigate(["/editalent",id]);
    }
     
   deletetalent(event:any,id:number){
@@ -45,6 +45,21 @@ export class TalentlistComponent implements OnInit {
       alert(this.delmsg);
   });
 } 
+  }
+
+  // for pagination
+  indexNumber : number = 0;
+  page : number = 1;
+  tableSize : number = 10;
+  count : number = 0;
+  pageSizes = [10,20,30,40,50];
+  
+  //pagination functionality
+  getTableDataChange(event : any){
+    
+    this.page = event;
+    this.indexNumber = (this.page - 1) * this.tableSize;
+    this.getTalent();
   }
 
 

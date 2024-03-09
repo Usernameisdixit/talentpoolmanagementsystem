@@ -44,7 +44,7 @@ const routes: Routes = [
       { path: 'uploadExcel', component: FileUploadComponent,canActivate: [authGuard]  },
       {path: "attendance", component:AttendanceComponent,canActivate: [authGuard]},
       {path:'talents',component:TalentlistComponent,canActivate: [authGuard]},
-      {path:'edit/:id',   component:TalenteditComponent,canActivate: [authGuard]},
+      {path:'editalent/:id',   component:TalenteditComponent,canActivate: [authGuard]},
       {path: "attendanceReport", component:AttendanceReportComponent,canActivate: [authGuard]},
 
     ]
