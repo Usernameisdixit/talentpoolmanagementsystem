@@ -1,0 +1,22 @@
+<div class="container">
+  <img src="../../../../../assets/img/user-img.png" alt="User Picture" class="user-picture">
+    <h1>Create New Role</h1>
+    <!-- <form  (ngSubmit)="submit()" [formGroup]="EmployeeForm"></form> -->
+    <form  (ngSubmit)="saveRole()" [formGroup]="RoleForm">
+ 
+      <!-- <div class="form-group">
+        <label for="roleId">Role Id:</label>
+        <input type="text" id="roleId" name="roleId" formControlName="roleId" required>
+      </div> -->
+
+      <div class="form-group">
+        <label for="roleName">Role Name:</label>
+        <input type="text" id="roleName" name="roleName" formControlName="roleName" required>
+      </div>
+  
+      <button *ngIf="RoleForm.get('roleId').value > 0" class="btn-create" type="button" (click)="updateRole()">Update Role</button>
+      <button *ngIf="RoleForm.get('roleId').value == 0" class="btn-create" type="submit">Create Role</button>
+    
+      <!-- <button class="btn-create" type="submit">Create Role</button> -->
+    </form>
+  </div>

@@ -47,6 +47,8 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { DashboardComponent } from './UserMgmt/Component/dashboard/dashboard.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AttendanceReportComponent } from './AttendanceMgmt/Components/attendance-report/attendance-report.component';
+import { ViewRoleComponent } from './UserMgmt/Component/role/view-role/view-role.component';
+import { CreateRoleComponent } from './UserMgmt/Component/role/create-role/create-role.component';
 
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
@@ -68,7 +70,9 @@ defineLocale('en-gb', enGbLocale); //
     TalenteditComponent,
     AttendanceComponent,
     DashboardComponent,
-    AttendanceReportComponent
+    AttendanceReportComponent,
+    CreateRoleComponent,
+    ViewRoleComponent
     
 
   ],
