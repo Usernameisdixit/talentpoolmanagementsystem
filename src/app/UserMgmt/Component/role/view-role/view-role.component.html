@@ -1,0 +1,30 @@
+<div class="container">
+  <h2>View Roles</h2>
+  <table class="custom-table">
+    <thead>
+      <tr>
+        <th>Sl#</th>
+        <th>Role Name</th>
+        <th>Status</th>
+        <th>Actions</th> 
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let role of roleList; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ role.roleName }}</td>
+        <td>
+          <span class="status-badge status-{{ role.deletedFlag ? 'inactive' : 'active' }}">
+            {{ role.deletedFlag ? 'Inactive' : 'Active' }}
+          </span>
+        </td>
+        <td>
+          <button class="btn btn-primary btn-sm btn-space" (click)="editRole(role.roleId)">Edit</button>
+          <button class="btn btn-danger btn-sm btn-space" (click)="deleteRole(role.roleId)">
+            {{ role.deletedFlag ? 'Restore' : 'Inactive' }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

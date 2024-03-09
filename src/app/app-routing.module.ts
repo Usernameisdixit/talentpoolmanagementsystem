@@ -15,6 +15,8 @@ import { DashboardComponent } from './UserMgmt/Component/dashboard/dashboard.com
 
 import { authGuard } from './Guard/auth.guard';
 import { AttendanceReportComponent } from './AttendanceMgmt/Components/attendance-report/attendance-report.component';
+import { CreateRoleComponent } from './UserMgmt/Component/role/create-role/create-role.component';
+import { ViewRoleComponent } from './UserMgmt/Component/role/view-role/view-role.component';
 
 
 const routes: Routes = [
@@ -23,6 +25,9 @@ const routes: Routes = [
   { path: 'forgotPassword', component: ForgotpasswordComponent },
   { path: 'restpassword/:email', component: RestpasswordComponent },
   { path: 'navbar', component: NavBarComponent },
+  { path : "role", component:CreateRoleComponent},
+  { path : "viewRole", component:ViewRoleComponent},
+  { path : "edit/:roleId", component:CreateRoleComponent},
   { 
     path: '', 
     component: AppLayoutComponent,
