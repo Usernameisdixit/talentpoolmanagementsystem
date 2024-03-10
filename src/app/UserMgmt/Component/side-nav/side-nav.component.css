@@ -70,4 +70,10 @@
 
     padding: 10px 15px;
   }
-  
+  /* Add this CSS to your stylesheet */
+#header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure the header stays on top of other content */
+}

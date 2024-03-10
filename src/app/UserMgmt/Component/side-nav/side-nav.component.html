@@ -1,76 +1,83 @@
 <div class="wrapper">
     <nav id="sidebar">
         <div class="sidebar-header text-center">
-          
+            <!-- Add logo or branding -->
         </div>
 
         <ul class="list-unstyled components" id="menu">
-            <li class="">
+            <!-- Dashboard -->
+            <li>
                 <a href="dashboard" class="nav-link">Dashboard</a>
             </li>
 
-            <!-- Sub-modules for Dashboard -->
+            <!-- User Management -->
             <li>
                 <a href="#submenu1" data-bs-toggle="collapse" class="nav-link dropdown align-middle dropdown-toggle sidebar-navlink">
-                    <i class="custom-icon"></i> Submodules
+                    <i class="fa fa-user"></i> User Management
                 </a>
                 <ul class="collapse" id="submenu1" data-bs-parent="#menu">
-                    <li class="w-100">
-                        
-                        <a routerLink="/submodule"  class="nav-link">Submodule </a>
+                    <li>
+                        <a routerLink="/addUser" class="nav-link">Add User</a>
                     </li>
-                    <!-- Add more sub-modules as needed -->
+                    <li>
+                        <a routerLink="/viewUser" class="nav-link">View User</a>
+                    </li>
                 </ul>
             </li>
 
+            <!-- Resource Management -->
             <li>
-                <a href="#" class="nav-link">User Registration</a>
-            </li>
-
-            <li>
-                <a href="#submenu1" data-bs-toggle="collapse" class="nav-link dropdown align-middle dropdown-toggle sidebar-navlink">
-                    <i class="custom-icon"></i> Submodules
+                <a href="#submenu2" data-bs-toggle="collapse" class="nav-link dropdown align-middle dropdown-toggle sidebar-navlink">
+                    <i class="fa fa-database"></i> Resource Management
                 </a>
-                <ul class="collapse" id="submenu1" data-bs-parent="#menu">
-                    <li class="w-100">
-                        
-                        <a routerLink="/addUser"  class="nav-link">Add User </a>
+                <ul class="collapse" id="submenu2" data-bs-parent="#menu">
+                    <li>
+                        <a routerLink="/uploadExcel" class="nav-link">Upload Resource File</a>
                     </li>
-
-                    <li class="w-100">
-                        
-                        <a routerLink="/viewUser"  class="nav-link">View User </a>
+                    <li>
+                        <a routerLink="/talents" class="nav-link">View Resource List</a>
                     </li>
-                    <!-- Add more sub-modules as needed -->
                 </ul>
             </li>
 
+            <!-- Activity Management -->
             <li>
-                <a routerLink="/uploadExcel" class="nav-link">Resource Management</a>
+                <a routerLink="/settings" class="nav-link"><i class="fa fa-cogs"></i> Activity Management</a>
             </li>
 
+            <!-- Attendance Management -->
             <li>
-                <a routerLink="/talents" class="nav-link">View Resource</a>
+                <a routerLink="/attendance" class="nav-link"><i class="fa fa-calendar"></i> Attendance Management</a>
             </li>
 
+            <!-- Assessment Management -->
             <li>
-                <a routerLink="/settings" class="nav-link">Activity Management</a>
+                <a href="#submenu3" data-bs-toggle="collapse" class="nav-link dropdown align-middle dropdown-toggle sidebar-navlink">
+                    <i class="fa fa-clipboard"></i> Assessment Management
+                </a>
+                <ul class="collapse" id="submenu3" data-bs-parent="#menu">
+                    <li>
+                        <a routerLink="/addassessment" class="nav-link">Create Assessment</a>
+                    </li>
+                    <li>
+                        <a routerLink="/viewasessment" class="nav-link">View Assessment</a>
+                    </li>
+                </ul>
             </li>
 
+            <!-- Email Activity -->
             <li>
-                <a routerLink="/attendance" class="nav-link">Attendance Management</a>
+                <a routerLink="/settings" class="nav-link"><i class="fa fa-envelope"></i> Email Activity</a>
             </li>
 
+            <!-- Reports -->
             <li>
-                <a routerLink="/settings" class="nav-link">Assessment Management</a>
+                <a routerLink="/settings" class="nav-link"><i class="fa fa-bar-chart"></i> Reports</a>
             </li>
 
+            <!-- Disclaimer -->
             <li>
-                <a routerLink="/settings" class="nav-link">Email Activity</a>
-            </li>
-
-            <li>
-                <a routerLink="/settings" class="nav-link">Reports</a>
+                <a routerLink="/disclaimer" class="nav-link"><i class="fa fa-exclamation-circle"></i> Disclaimer</a>
             </li>
         </ul>
     </nav>
