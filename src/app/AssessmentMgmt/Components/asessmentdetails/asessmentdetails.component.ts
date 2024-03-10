@@ -94,6 +94,21 @@ export class AsessmentdetailsComponent implements OnInit {
   }
 
   submitAssessments(): void {
+    // Check if all required fields are filled
+    if (!this.selectedPlatformId || !this.selectedYear || !this.fromDate || !this.toDate || !this.assessments || this.assessments.length === 0) {
+      Swal.fire('Error', 'Please fill all required fields.', 'error');
+      return;
+    }
+
+    // Check if any assessment has empty fields
+    for (const assessment of this.assessments) {
+      if (!assessment.activityName || !assessment.marks || !assessment.totalMarks || !assessment.remarks) {
+        Swal.fire('Error', 'Please fill all fields for each assessment.', 'error');
+        return;
+      }
+    }
+
+    // If all validations pass, proceed with submitting assessments
     const assessmentDtos: AssessmentDto[] = this.mapAssessmentDtos(this.assessments);
     this.apiService.submitAssessments(assessmentDtos).subscribe(
       (response: any) => {

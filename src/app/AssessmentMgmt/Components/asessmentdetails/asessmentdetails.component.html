@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-md-3">
             <div class="form-group">
-                <label for="platformSelect">Platform:</label>
+                <label for="platformSelect">Platform:<span>*</span></label>
                 <select id="platformSelect" class="form-control custom-select" [(ngModel)]="selectedPlatform" (change)="onPlatformChange()">
                     <option *ngFor="let platform of platforms" [value]="platform.platformId">{{ platform.platform }}</option>
                 </select>
@@ -14,19 +14,19 @@
         </div>
         <div class="col-md-3">
             <div class="form-group">
-                <label for="yearSelect">Year:</label>
+                <label for="yearSelect">Year:<span>*</span></label>
                 <input type="text" id="yearSelect" class="form-control" [(ngModel)]="selectedYear">
             </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
-              <label for="fromDate">From Date:</label>
+              <label for="fromDate">From Date:<span>*</span></label>
  <input type="text" id="fromDate" class="form-control" [(ngModel)]="fromDate" bsDatepicker [bsConfig]="bsConfig">
           </div>
       </div>
       <div class="col-md-3">
           <div class="form-group">
-              <label for="toDate">To Date:</label>
+              <label for="toDate">To Date:<span>*</span></label>
               <input type="text" id="toDate" class="form-control" [(ngModel)]="toDate" bsDatepicker [bsConfig]="bsConfig">
           </div>
       </div>
