@@ -9,6 +9,7 @@ import { UserViewComponent } from './UserMgmt/Component/user-view/user-view.comp
 import { NavBarComponent } from './UserMgmt/Component/nav-bar/nav-bar.component';
 import { FileUploadComponent } from './ResourceMgmt/Components/file-upload/file-upload.component';
 import { TalentlistComponent } from './ResourceMgmt/Components/talentlist/talentlist.component';
+import { TalenteditComponent } from './ResourceMgmt/Components/talentedit/talentedit.component';
 import { AttendanceComponent } from './AttendanceMgmt/Components/attendance/attendance.component';
 import { DashboardComponent } from './UserMgmt/Component/dashboard/dashboard.component';
 
@@ -18,6 +19,8 @@ import { AttendanceReportComponent } from './AttendanceMgmt/Components/attendanc
 import { AsessmentdetailsComponent } from './AssessmentMgmt/Components/asessmentdetails/asessmentdetails.component';
 import { DisclaimerComponent } from './Disclaimer/disclaimer/disclaimer.component';
 import { ViewassessmentComponent } from './AssessmentMgmt/Components/viewassessment/viewassessment.component';
+import { CreateRoleComponent } from './UserMgmt/Component/role/create-role/create-role.component';
+import { ViewRoleComponent } from './UserMgmt/Component/role/view-role/view-role.component';
 
 
 const routes: Routes = [
@@ -26,6 +29,9 @@ const routes: Routes = [
   { path: 'forgotPassword', component: ForgotpasswordComponent },
   { path: 'restpassword/:email', component: RestpasswordComponent },
   
+  { path : "role", component:CreateRoleComponent},
+  { path : "viewRole", component:ViewRoleComponent},
+  { path : "edit/:roleId", component:CreateRoleComponent},
   { 
     path: '', 
     component: AppLayoutComponent,
@@ -41,6 +47,7 @@ const routes: Routes = [
       { path: 'uploadExcel', component: FileUploadComponent,canActivate: [authGuard]  },
       {path: "attendance", component:AttendanceComponent,canActivate: [authGuard]},
       {path:'talents',component:TalentlistComponent,canActivate: [authGuard]},
+      {path:'editalent/:id',   component:TalenteditComponent,canActivate: [authGuard]},
       {path: "attendanceReport", component:AttendanceReportComponent,canActivate: [authGuard]},
       { path: 'addassessment', component: AsessmentdetailsComponent, canActivate: [authGuard]  },
       { path: 'disclaimer', component: DisclaimerComponent, canActivate: [authGuard]  },

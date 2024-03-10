@@ -1,0 +1,136 @@
+body {
+
+    font-family: Arial, sans-serif;
+
+    margin: 0;
+
+    padding: 0;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    height: 100vh;
+
+    background-color: #f5f5f5;
+
+  }
+
+  
+
+  .container {
+
+    max-width: 400px;
+
+    width: 100%;
+
+    padding: 40px;
+
+    background-color: #fff;
+
+    border-radius: 10px;
+
+    box-shadow: 0 0 20px rgba(0, 0, 0,
+0.1);
+
+  }
+
+  
+
+  h1 {
+
+    text-align: center;
+
+    margin-bottom: 30px;
+
+    color: #333;
+
+  }
+
+  
+
+  .form-group {
+
+    margin-bottom: 20px;
+
+  }
+
+  
+
+  label {
+
+    display: block;
+
+    font-weight: bold;
+
+    margin-bottom: 5px;
+
+    color: #555;
+
+  }
+
+  
+
+  input[type="text"] {
+
+    width: 100%;
+
+    padding: 10px;
+
+    font-size: 16px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 5px;
+
+  }
+
+  
+
+  button.btn-create {
+
+    background-color: #4CAF50;
+
+    color: white;
+
+    padding: 12px 20px;
+
+    border: none;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    width: 100%;
+
+    font-size: 16px;
+
+    transition: background-color 0.3s;
+
+  }
+
+  
+
+  button.btn-create:hover {
+
+    background-color: #45a049;
+
+  }
+
+
+
+
+  .logo {
+
+    max-width: 100px; 
+
+    margin-bottom: 20px; 
+
+  }
+
+  .user-picture {
+    display: block; /* Ensure the image appears as a block element */
+    margin: 0 auto 20px; /* Adjust margin as needed */
+  }

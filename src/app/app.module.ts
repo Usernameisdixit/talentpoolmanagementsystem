@@ -39,6 +39,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { FileUploadComponent } from './ResourceMgmt/Components/file-upload/file-upload.component';
 import { AppLayoutComponent } from './Layout/app-layout/app-layout.component';
 import { TalentlistComponent } from './ResourceMgmt/Components/talentlist/talentlist.component';
+import {  TalenteditComponent } from './ResourceMgmt/Components/talentedit/talentedit.component';
 import { AttendanceComponent } from './AttendanceMgmt/Components/attendance/attendance.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { enGbLocale } from 'ngx-bootstrap/locale';
@@ -46,11 +47,16 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { DashboardComponent } from './UserMgmt/Component/dashboard/dashboard.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AttendanceReportComponent } from './AttendanceMgmt/Components/attendance-report/attendance-report.component';
+<<<<<<< HEAD
 import { DatePipe } from '@angular/common';
 import { AsessmentdetailsComponent } from './AssessmentMgmt/Components/asessmentdetails/asessmentdetails.component';
 import { DisclaimerComponent } from './Disclaimer/disclaimer/disclaimer.component';
 import { ViewassessmentComponent } from './AssessmentMgmt/Components/viewassessment/viewassessment.component';
 
+=======
+import { ViewRoleComponent } from './UserMgmt/Component/role/view-role/view-role.component';
+import { CreateRoleComponent } from './UserMgmt/Component/role/create-role/create-role.component';
+>>>>>>> ab492903afc4dc512e82a851d6cd505b87cc74bc
 
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
@@ -69,12 +75,18 @@ defineLocale('en-gb', enGbLocale); //
     FileUploadComponent,
     AppLayoutComponent,
     TalentlistComponent,
+    TalenteditComponent,
     AttendanceComponent,
     DashboardComponent,
     AttendanceReportComponent,
+<<<<<<< HEAD
     AsessmentdetailsComponent,
     DisclaimerComponent,
     ViewassessmentComponent
+=======
+    CreateRoleComponent,
+    ViewRoleComponent
+>>>>>>> ab492903afc4dc512e82a851d6cd505b87cc74bc
     
 
   ],
