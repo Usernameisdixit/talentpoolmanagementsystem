@@ -47,17 +47,12 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { DashboardComponent } from './UserMgmt/Component/dashboard/dashboard.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AttendanceReportComponent } from './AttendanceMgmt/Components/attendance-report/attendance-report.component';
-<<<<<<< HEAD
+import { ViewRoleComponent } from './UserMgmt/Component/role/view-role/view-role.component';
+import { CreateRoleComponent } from './UserMgmt/Component/role/create-role/create-role.component';
 import { DatePipe } from '@angular/common';
 import { AsessmentdetailsComponent } from './AssessmentMgmt/Components/asessmentdetails/asessmentdetails.component';
 import { DisclaimerComponent } from './Disclaimer/disclaimer/disclaimer.component';
 import { ViewassessmentComponent } from './AssessmentMgmt/Components/viewassessment/viewassessment.component';
-
-=======
-import { ViewRoleComponent } from './UserMgmt/Component/role/view-role/view-role.component';
-import { CreateRoleComponent } from './UserMgmt/Component/role/create-role/create-role.component';
->>>>>>> ab492903afc4dc512e82a851d6cd505b87cc74bc
-
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
   declarations: [
@@ -79,14 +74,11 @@ defineLocale('en-gb', enGbLocale); //
     AttendanceComponent,
     DashboardComponent,
     AttendanceReportComponent,
-<<<<<<< HEAD
     AsessmentdetailsComponent,
     DisclaimerComponent,
-    ViewassessmentComponent
-=======
-    CreateRoleComponent,
-    ViewRoleComponent
->>>>>>> ab492903afc4dc512e82a851d6cd505b87cc74bc
+    ViewassessmentComponent,
+    ViewRoleComponent,
+    CreateRoleComponent
     
 
   ],
