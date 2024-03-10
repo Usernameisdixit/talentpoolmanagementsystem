@@ -26,10 +26,10 @@ public class Assessment {
 	private Integer activityId;
 	
 
-	private Double activityMark;
+	private Double doubleActivityMark;
 	
 	
-	private Double securedMark;
+	private Double doubleSecuredMark;
 
 	
 	private LocalDate asesmentDate;
@@ -47,6 +47,6 @@ public class Assessment {
 	private Integer updatedBy;
 
 	
-	private Boolean deletedFlag;
+	private Byte deletedFlag;
 
 }

@@ -1,6 +1,7 @@
 package com.tpms.entity;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,30 +13,30 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "tbl_activity_allocation")
+@Table(name = "activity_allocation")
 public class ActivityAllocation {
 	
     @Id
-    @Column(name="intActivityAllocateId")
+   
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long activityAllocateId;
 
-    @Column(name="intResourceId")
-    private Long resourceId;
+  
+    private Integer resourceId;
     
-    @Column(name="intActivityId")
-    private Long activityId;
+    private Integer platformId;
     
-    @Column(name="dtmAllocationDate")
-    private LocalDateTime allocationDate;
     
-    @Column(name="intCreatedBy")
+ 
+    private Date activityDate;
+    
+  
     private Integer createdBy;
 	
-	@Column(name="intUpdatedBy")
+	
 	private Integer updatedBy;
 	
-	@Column(name="bitDeletedFlag")
+
 	private Boolean deletedFlag;
   
 }
