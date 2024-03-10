@@ -1,0 +1,35 @@
+<!-- viewactivity.component.html -->
+
+<h2 class="page-title">View Assessment Details</h2>
+
+<button (click)="viewAssessmentTable()" class="btn btn-secondary">View Assessment Table</button>
+
+<div *ngIf="showAssessmentTable" class="assessment-table-container">
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Sl.No</th>
+          <th>Resource Name</th>
+          <th>Platform Name</th>
+          <th>Activity Name</th>
+          <th>Total Marks</th>
+          <th>Marks</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let assessment of assessments; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ assessment[0] }}</td> <!-- Assuming resource name is the first element in the array -->
+          <td>{{ assessment[1] }}</td> <!-- Assuming platform name is the second element in the array -->
+          <td>{{ assessment[2] }}</td> <!-- Assuming activity name is the third element in the array -->
+          <td>{{ assessment[3] }}</td> <!-- Assuming total marks is the fourth element in the array -->
+          <td>{{ assessment[4] }}</td> <!-- Assuming marks is the fifth element in the array -->
+          <td>{{ assessment[5] }}</td> <!-- Assuming remarks is the sixth element in the array -->
+        </tr>
+      </tbody>
+    </table>
+    
+  </div>
+</div>

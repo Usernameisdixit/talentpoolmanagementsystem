@@ -15,6 +15,9 @@ import { DashboardComponent } from './UserMgmt/Component/dashboard/dashboard.com
 
 import { authGuard } from './Guard/auth.guard';
 import { AttendanceReportComponent } from './AttendanceMgmt/Components/attendance-report/attendance-report.component';
+import { AsessmentdetailsComponent } from './AssessmentMgmt/Components/asessmentdetails/asessmentdetails.component';
+import { DisclaimerComponent } from './Disclaimer/disclaimer/disclaimer.component';
+import { ViewassessmentComponent } from './AssessmentMgmt/Components/viewassessment/viewassessment.component';
 
 
 const routes: Routes = [
@@ -22,14 +25,14 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'forgotPassword', component: ForgotpasswordComponent },
   { path: 'restpassword/:email', component: RestpasswordComponent },
-  { path: 'navbar', component: NavBarComponent },
+  
   { 
     path: '', 
     component: AppLayoutComponent,
     canActivateChild: [authGuard],
     children: [
-      { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]}
-        
+      { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
+      { path: 'navbar', component: NavBarComponent, canActivate: [authGuard]  }
       ,
       { path: 'addUser', component: UserComponent, canActivate: [authGuard] },
       { path: 'viewUser', component: UserViewComponent, canActivate: [authGuard] },
@@ -39,6 +42,9 @@ const routes: Routes = [
       {path: "attendance", component:AttendanceComponent,canActivate: [authGuard]},
       {path:'talents',component:TalentlistComponent,canActivate: [authGuard]},
       {path: "attendanceReport", component:AttendanceReportComponent,canActivate: [authGuard]},
+      { path: 'addassessment', component: AsessmentdetailsComponent, canActivate: [authGuard]  },
+      { path: 'disclaimer', component: DisclaimerComponent, canActivate: [authGuard]  },
+      { path: 'viewasessment', component: ViewassessmentComponent, canActivate: [authGuard]  },
 
     ]
   }

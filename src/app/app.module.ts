@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 
 
 import { AttendanceMgmtComponent } from './AttendanceMgmt/Components/attendance-mgmt/attendance-mgmt.component';
-import { AssessmentMgmtComponent } from './AssessmentMgmt/Components/assessment-mgmt/assessment-mgmt.component';
+
 import { UsermgmtComponent } from './UserMgmt/Component/usermgmt/usermgmt.component';
 
 
@@ -46,13 +46,18 @@ import { defineLocale } from 'ngx-bootstrap/chronos';
 import { DashboardComponent } from './UserMgmt/Component/dashboard/dashboard.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AttendanceReportComponent } from './AttendanceMgmt/Components/attendance-report/attendance-report.component';
+import { DatePipe } from '@angular/common';
+import { AsessmentdetailsComponent } from './AssessmentMgmt/Components/asessmentdetails/asessmentdetails.component';
+import { DisclaimerComponent } from './Disclaimer/disclaimer/disclaimer.component';
+import { ViewassessmentComponent } from './AssessmentMgmt/Components/viewassessment/viewassessment.component';
+
 
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
   declarations: [
     AppComponent,
     AttendanceMgmtComponent,
-    AssessmentMgmtComponent,
+  
     UsermgmtComponent,
     UserViewComponent,
     UserComponent,
@@ -66,7 +71,10 @@ defineLocale('en-gb', enGbLocale); //
     TalentlistComponent,
     AttendanceComponent,
     DashboardComponent,
-    AttendanceReportComponent
+    AttendanceReportComponent,
+    AsessmentdetailsComponent,
+    DisclaimerComponent,
+    ViewassessmentComponent
     
 
   ],
@@ -95,7 +103,7 @@ defineLocale('en-gb', enGbLocale); //
     BsDatepickerModule.forRoot(),
     NgxPaginationModule
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 

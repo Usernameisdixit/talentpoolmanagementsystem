@@ -1,81 +1,69 @@
-.full-width{
-    width: 100%;
+.bootstrap-wrapper {
+  background-color: #f5f5f5;
+  padding: 20px;
 }
-.container.text-center a {
-    display: inline-block;
-    margin-top: 10px; /* Adjust the top margin as needed */
-  }
 
-  
-  
- 
-  
-  
-  .input-with-hover::placeholder {
-    color: #aaa;
-  }
-  
-  .input-with-hover:hover::placeholder {
-    color: #666;
-  }
-  
-  .horizontal-card {
-    border: none;
-    border-radius: 15px;
-    overflow: hidden;
-  }
-  
-  .textured-card {
-   /* Add texture image path */
-    background-size: cover;
-    background-position: center;
-  }
-  
- 
-  
+.horizontal-card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-  
+.static-content {
+  padding: 20px;
+}
 
-  
-  /* Style for custom color button */
-  mat-raised-button[color="custom"] {
-    background-color: #136797; /* Change to desired color */
-    color: white;
-  }
-  
-  /* Hover effect for custom color button */
-  mat-raised-button[color="custom"]:hover {
-    background-color: #155b7ecc; /* Darker shade for hover effect */
-  }
-  
-  
+.static-content .content-wrapper {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-  .horizontal-card {
-    border: 2px solid #a4a5a7; /* Add border with 2px width and blue color */
-    border-radius: 15px;
-    overflow: hidden;
-    background-color: rgba(255, 255, 255, 0.7); /* Set a semi-transparent white background */
-  }
-  
-  .static-content {
-    padding: 40px;
-    background-image: url('../../../../assets/abc.png'); /* Update the path */
-    color: white;
-    border-top-left-radius: 15px;
-    border-bottom-left-radius: 15px;
-  }
-  
-  .static-content h2 {
-    font-size: 24px;
-  }
-  
-  .static-content p {
-    font-size: 16px;
-  }
-  
-  .white-background {
-    background-color: rgba(248, 243, 243, 0.7); /* Set a semi-transparent white background */
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
-  }
-  
+.static-content h2 {
+  color: #333;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.static-content p {
+  color: #666;
+  font-size: 16px;
+}
+
+.white-background {
+  background-color: #fff;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.img-fluid {
+  max-width: 100px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.error-container {
+  margin-bottom: 20px;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+}
+
+.container {
+  margin-top: 20px;
+}
+
+.full-width {
+  width: 100%;
+}

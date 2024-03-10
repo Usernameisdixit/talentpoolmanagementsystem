@@ -1,0 +1,15 @@
+/* viewactivity.component.css */
+
+.page-title {
+    color: #333;
+  }
+  
+  .btn-secondary {
+    background-color: #979595;
+    color: #fff;
+  }
+  
+  .assessment-table-container {
+    margin-top: 20px;
+  }
+  

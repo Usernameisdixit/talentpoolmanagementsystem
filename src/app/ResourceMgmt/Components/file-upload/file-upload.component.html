@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>File Upload</title>
+    <h2>File Upload</h2>
     <link rel="stylesheet" href="file-upload.component.css">
 </head>
 
@@ -12,16 +12,18 @@
     <div class="container">
         <h2>Upload File</h2>
         <div class="form-group">
-            <label for="fileInput">Choose File:</label>
+            <label for="fileInput">Resource File :  </label>
             <input type="file" id="fileInput" (change)="onFileSelected($event)" accept=".xlsx">
         </div>
-        <div *ngIf="selectedFile" class="file-name">
-            {{ selectedFile.name }}
-        </div>
-            <div class="form-group">
-                <label for="allocationDate">Allocation Date:</label>
-                <input type="date" id="allocationDate" [(ngModel)]="allocationDate" name="allocationDate" class="bold-black">
+     
+        <div class="form-group">
+            <div class="input-group ">
+            <label for="allocationDate">Allocation Date:</label>
+            <input type="text" id="allocationDate" [(ngModel)]="allocationDate" name="allocationDate" class="bold-black" bsDatepicker [bsConfig]="bsConfig">
+            <span class="input-group-text"><i class="material-icons">date_range</i></span>
             </div>
+        </div>
+        
 
 
         
@@ -29,9 +31,7 @@
             <span *ngIf="isUploading" class="spinner"></span>
             Upload
         </button>
-        <div *ngIf="fileError" class="error-message">
-            {{ fileError }}
-        </div>
+   
     </div>
 </body>
 

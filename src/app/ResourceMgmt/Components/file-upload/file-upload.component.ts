@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DatePipe } from '@angular/common';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import Swal from 'sweetalert2';
-
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-file-upload',
@@ -10,43 +10,74 @@ import Swal from 'sweetalert2';
   styleUrls: ['./file-upload.component.css']
 })
 export class FileUploadComponent {
-  selectedFile: File;
 
-  allocationDate : Date;
-  isUploading: boolean ; 
+  bsConfig: Partial<BsDatepickerConfig>;
+
+  selectedFile: File;
+  allocationDate: Date;
+  isUploading: boolean;
 
   formattedDate: string;
   fileError: string;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private localeService: BsLocaleService, private datePipe: DatePipe) {
+    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
+    this.localeService.use('en-gb');
+  }
 
   onFileSelected(event): void {
     this.selectedFile = event.target.files[0];
   }
 
   onUpload(): void {
-debugger;
+    debugger;
     this.fileError = null;
+    let errorMessage = '';
+    let allocationMsg = '';
+    let fileFormat = '';
 
-    
     if (!this.selectedFile) {
-      this.fileError = 'Please select a file.';
-      return;
+      errorMessage = 'Please select a file.\n';
     }
     if (!this.allocationDate) {
-      this.fileError = 'Please select an allocation date.';
-      return;
+      allocationMsg = 'Please select an allocation date.\n';
     }
-   
-    if (!this.selectedFile.name.endsWith('.xlsx')) {
-      this.fileError = 'Unsupported file type. Please select a .xlsx file.';
+    if (!this.selectedFile) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error!',
+        text: errorMessage
+      });
       return;
     }
 
+    if (!this.allocationDate) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error!',
+        text: allocationMsg
+      });
+      return;
+    }
+
+
+    if (!this.selectedFile.name.endsWith('.xlsx')) {
+      fileFormat = 'Unsupported file type. Please select a .xlsx file.\n';
+    }
+
+    if (fileFormat) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error!',
+        text: fileFormat
+      });
+      return;
+    }
+
+    const formattedDate = this.datePipe.transform(this.allocationDate, 'yyyy-MM-dd');
     const formData = new FormData();
     formData.append('file', this.selectedFile);
-    
-    formData.append('allocationDate',this.allocationDate.toString());
+    formData.append('allocationDate', formattedDate);
 
     this.http.post('http://localhost:9999/tpms/upload', formData)
       .subscribe(response => {
@@ -57,8 +88,10 @@ debugger;
           title: 'Success!',
           text: 'Platform data saved successfully'
         });
-        this.isUploading = false; 
-        
+        this.selectedFile = null;
+        this.allocationDate = null;
+        this.isUploading = false;
+
       }, error => {
         console.error('Error uploading file', error);
         // Display error message using SweetAlert
@@ -68,9 +101,9 @@ debugger;
           text: 'Failed to upload file. Please try again later.'
         });
 
-        this.isUploading = false; 
+        this.selectedFile = null;
+        this.allocationDate = null;
+        this.isUploading = false;
       });
   }
-
-  
 }
