@@ -97,4 +97,37 @@ export class AttendanceReportComponent {
     this.selectedDate = null;
   }
 
+  generateExcel(){
+
+    if (this.month === '0') {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please choose a month before generating the PDF!',
+      });
+    } else {
+      this.attendanceService.getAttendanceReportData(this.year, this.month, this.platform, this.selectedDate?.toLocaleString())
+        .subscribe(data => {
+          this.isPresent = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
+          if (this.isPresent) {
+            this.attendanceGeneratedService.generateAttendanceReportExcel(data);
+            Swal.fire({
+              icon: 'success',
+              title: 'PDF Generated',
+              text: 'Your PDF has been successfully generated!',
+            });
+          } else {
+            Swal.fire({
+              icon: 'info',
+              title: 'No Data Found',
+              text: 'No attendance data found for the selected year and month!',
+            });
+          }
+        });
+
+    }
+
+  }
+  
+
 }
