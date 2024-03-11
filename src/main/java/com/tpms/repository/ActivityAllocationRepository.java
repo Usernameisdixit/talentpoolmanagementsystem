@@ -25,7 +25,7 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
 	Map<String, Object> findAllDetails(@Param("activityAllocateDetId") Integer activityAllocateDetId);
 	 
 
-	List<ActivityAllocation> findByPlatformIdAndActivityDate(Long platformId, Date fromDate);
+	List<ActivityAllocation> findByPlatformIdAndActivityDateBetween(Long platformId, Date fromDate,Date toDate);
 
 
 
