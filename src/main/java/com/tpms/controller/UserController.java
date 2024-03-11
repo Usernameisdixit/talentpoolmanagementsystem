@@ -60,6 +60,7 @@ public class UserController {
 	public ResponseEntity<List<User>> getStudent(){
 		
 		List<User> userList = userService.getUserDetails();
+		System.err.println(userList);
 		return ResponseEntity.ok().body(userList);
 	}
 	
