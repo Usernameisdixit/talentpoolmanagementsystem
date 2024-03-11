@@ -6,8 +6,10 @@
                     <div class="row">
                         <!-- Left side: Static content -->
                         <div class="col-lg-6 static-content">
-                            <h2>Welcome To Talent Management System</h2>
-                            <p>Unlock your potential. Dive into our talent pool management system</p>
+                            <div class="content-wrapper">
+                                <h2>Welcome To Talent Management System</h2>
+                                <p>Unlock your potential. Dive into our talent pool management system</p>
+                            </div>
                         </div>
                         <!-- Right side: Login form -->
                         <div class="col-lg-6 white-background">
@@ -26,7 +28,8 @@
                                     </mat-form-field>
                                     <mat-form-field class="full-width">
                                         <mat-label>Password</mat-label>
-                                        <input [(ngModel)]="credentials.password" required [type]="hidePassword ? 'password' : 'text'" name="password" matInput class="input-with-hover">
+                                        <input [(ngModel)]="credentials.password" required [type]="hidePassword ? 'password' : 'text'" name="password" matInput class="input-with-hover"
+                                        (keydown.enter)="$event.preventDefault()">
                                         <button mat-icon-button matSuffix (click)="togglePasswordVisibility()">
                                             <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                                         </button>

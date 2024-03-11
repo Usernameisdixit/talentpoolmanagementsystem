@@ -1,0 +1,89 @@
+<!-- activity-allocation.component.html -->
+
+<h2 class="text-center">Assessment Evaluation</h2>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="platformSelect">Platform:<span>*</span></label>
+                <select id="platformSelect" class="form-control custom-select" [(ngModel)]="selectedPlatform" (change)="onPlatformChange()">
+                    <option *ngFor="let platform of platforms" [value]="platform.platformId">{{ platform.platform }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="yearSelect">Year:<span>*</span></label>
+                <input type="text" id="yearSelect" class="form-control" [(ngModel)]="selectedYear">
+            </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+              <label for="fromDate">From Date:<span>*</span></label>
+ <input type="text" id="fromDate" class="form-control" [(ngModel)]="fromDate" bsDatepicker [bsConfig]="bsConfig">
+          </div>
+      </div>
+      <div class="col-md-3">
+          <div class="form-group">
+              <label for="toDate">To Date:<span>*</span></label>
+              <input type="text" id="toDate" class="form-control" [(ngModel)]="toDate" bsDatepicker [bsConfig]="bsConfig">
+          </div>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <button class="btn btn-secondary" (click)="toggleAssessmentTable()">Get Details</button>
+        </div>
+    </div>
+
+    <div class="row mt-3" *ngIf="assessments && assessments.length">
+        <div class="col-md-12">
+            <table class="table table-bordered  table-hover">
+                <thead>
+                    <tr>
+                        <th>Resource Code</th>
+                        <th>Resource Name</th>
+                        <th>Platform</th>
+                        <th class="text-center">Assessment Details</th>
+                        <th>Total Marks</th>
+                        <th>Marks</th>
+                        <th>Assessment Hour</th>
+                        <th>Assessment Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngFor="let assessment of assessments; let i = index">
+                        <tr>
+                            <td>{{ assessment.resourceCode }}</td>
+                            <td>{{ assessment.resourceName }}</td>
+                            <td >{{ selectedPlatformName }}</td>
+                            <td>{{ assessment.activityDetails.activityDetails }}</td>
+                            <td><input type="text" [(ngModel)]="assessment.activityDetails.totalMarks" class="form-control"></td>
+                            <td><input type="text" [(ngModel)]="assessment.activityDetails.marks" class="form-control"></td>
+                            <td><input type="text" [(ngModel)]="assessment.activityDetails.hour" class="form-control"></td>
+                            <td><input type="text" [(ngModel)]="assessment.activityDetails.remarks" class="form-control"></td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-12 d-flex justify-content-center">
+            <button class="btn btn-success" (click)="submitAssessments()">Submit</button>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <ul>
+                <li *ngFor="let allocation of activityAllocations">
+                    {{ allocation.intActivityAllocateId }} - {{ allocation.dtmActivityDate }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

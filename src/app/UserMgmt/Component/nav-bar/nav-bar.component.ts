@@ -20,24 +20,18 @@ export class NavBarComponent implements OnInit{
   successMessage: any;
   ngOnInit(): void {
     //throw new Error('Method not implemented.');
-    this.loginService.currentMessage.subscribe((message) => {
-      //console.log("navbar message",message);
-      this.successMessage = message;
-    });
-
-    this.loginService.getUserList().subscribe((users:any)=>{
-      this.users = users;
-      console.log("navbar getUserList",users);
-
-      for (const user of this.users) {
-        this.credentials.username=user.vchUserName;
-      }
-    });
+    const storedUserString = localStorage.getItem('user');
+    if (storedUserString) {
+      const storedUser = JSON.parse(storedUserString);
+      this.credentials.username = storedUser.userName;
+      console.log("navbar session name="+this.credentials.username);
+    } else {
+      console.error('User not found in sessionStorage.');
+    }
   }
   logout() {
-    
     this.authService.clearAuthentication();
-   
+    localStorage.clear();
 }
 
 

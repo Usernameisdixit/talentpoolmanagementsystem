@@ -9,7 +9,7 @@ import { Talent } from 'src/app/Model/talent';
 })
 export class ContactService {
 
-  private baseUrl="http://localhost:9898/emp"
+  private baseUrl="http://localhost:9999/tpms/emp"
 
 
   constructor(private httpClient:HttpClient) { }
