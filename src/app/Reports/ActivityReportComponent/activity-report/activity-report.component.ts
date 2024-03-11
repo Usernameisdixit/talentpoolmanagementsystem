@@ -3,21 +3,18 @@ import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { enGbLocale } from 'ngx-bootstrap/locale';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { AttendanceService } from '../../Service/attendance.service';
-import { AttendanceGenerateServiceService } from '../../Service/attendance-generate-service.service';
 import Swal from 'sweetalert2';
-
-
+import { AttendanceGenerateServiceService } from 'src/app/AttendanceMgmt/Service/attendance-generate-service.service';
+import { ActivityReportServiceService } from '../../ActivityReportService/activity-report-service.service';
 @Component({
-  selector: 'app-attendance-report',
-  templateUrl: './attendance-report.component.html',
-  styleUrls: ['./attendance-report.component.css']
+  selector: 'app-activity-report',
+  templateUrl: './activity-report.component.html',
+  styleUrls: ['./activity-report.component.css']
 })
-export class AttendanceReportComponent {
-
+export class ActivityReportComponent {
 
   bsConfig: Partial<BsDatepickerConfig>;
-  constructor(private localeService: BsLocaleService, private attendanceService: AttendanceService, private attendanceGeneratedService: AttendanceGenerateServiceService) {
+  constructor(private localeService: BsLocaleService, private attendanceGeneratedService: AttendanceGenerateServiceService,private activityReportService:ActivityReportServiceService) {
     this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
     this.localeService.use('en-gb'); // Use the defined locale
   }
@@ -50,8 +47,15 @@ export class AttendanceReportComponent {
     return date.toLocaleString('en-us', { month: 'long' });
   }
 
+  loadPlatforms() {
+    this.attendanceGeneratedService.getPlatforms().subscribe(
+      (data: any[]) => {
+        this.platforms = data;
+      },
+    );
+  }
 
-  generatePDF() {
+  generateActPDF() {
 
     if (this.month === '0') {
       Swal.fire({
@@ -60,11 +64,11 @@ export class AttendanceReportComponent {
         text: 'Please choose a month before generating the PDF!',
       });
     } else {
-      this.attendanceService.getAttendanceReportData(this.year, this.month, this.platform, this.selectedDate?.toLocaleString())
+      this.activityReportService.getActivityReportData(this.year, this.month, this.platform, this.selectedDate?.toLocaleString())
         .subscribe(data => {
           this.isPresent = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
           if (this.isPresent) {
-            this.attendanceGeneratedService.generateAttendanceReport(data);
+            this.activityReportService.generateActivityReport(data);
             Swal.fire({
               icon: 'success',
               title: 'PDF Generated',
@@ -74,7 +78,7 @@ export class AttendanceReportComponent {
             Swal.fire({
               icon: 'info',
               title: 'No Data Found',
-              text: 'No attendance data found for the selected year and month!',
+              text: 'No activity details data found for the selected year and month!',
             });
           }
         });
@@ -82,22 +86,7 @@ export class AttendanceReportComponent {
     }
   }
 
-  loadPlatforms() {
-    this.attendanceGeneratedService.getPlatforms().subscribe(
-      (data: any[]) => {
-        this.platforms = data;
-      },
-
-    );
-  }
-
-  resetForm() {
-    this.month = '0';
-    this.platform = '0';
-    this.selectedDate = null;
-  }
-
-  generateExcel(){
+  generateActExcel(){
 
     if (this.month === '0') {
       Swal.fire({
@@ -106,11 +95,11 @@ export class AttendanceReportComponent {
         text: 'Please choose a month before generating the PDF!',
       });
     } else {
-      this.attendanceService.getAttendanceReportData(this.year, this.month, this.platform, this.selectedDate?.toLocaleString())
+      this.activityReportService.getActivityReportData(this.year, this.month, this.platform, this.selectedDate?.toLocaleString())
         .subscribe(data => {
           this.isPresent = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
           if (this.isPresent) {
-            this.attendanceGeneratedService.generateAttendanceReportExcel(data);
+            this.activityReportService.generateActivityReportExcel(data);
             Swal.fire({
               icon: 'success',
               title: 'Excel Generated',
@@ -128,6 +117,14 @@ export class AttendanceReportComponent {
     }
 
   }
-  
+
+  resetForm() {
+    this.month = '0';
+    this.platform = '0';
+    this.selectedDate = null;
+  }
+
+
+
 
 }
