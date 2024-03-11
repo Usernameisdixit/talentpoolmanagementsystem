@@ -73,8 +73,20 @@
             </li>
 
             <!-- Reports -->
+           
+
             <li>
-                <a routerLink="/settings" class="nav-link"><i class="fas fa-chart-bar"></i> Reports</a>
+                <a href="#submenu4" data-bs-toggle="collapse" class="nav-link dropdown align-middle dropdown-toggle sidebar-navlink">
+                    <i class="fas fa-chart-bar"></i> Reports 
+                </a>
+                <ul class="collapse" id="submenu4" data-bs-parent="#menu">
+                    <li>
+                        <a routerLink="/attendanceReport" class="nav-link"><i class="fas fa-plus-circle"></i>Attendance Report</a>
+                    </li>
+                    <li>
+                        <a routerLink="/activityReport" class="nav-link"><i class="fas fa-eye"></i> Activity Report</a>
+                    </li>
+                </ul>
             </li>
 
             <!-- Disclaimer -->

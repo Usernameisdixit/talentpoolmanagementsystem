@@ -53,6 +53,7 @@ import { DatePipe } from '@angular/common';
 import { AsessmentdetailsComponent } from './AssessmentMgmt/Components/asessmentdetails/asessmentdetails.component';
 import { DisclaimerComponent } from './Disclaimer/disclaimer/disclaimer.component';
 import { ViewassessmentComponent } from './AssessmentMgmt/Components/viewassessment/viewassessment.component';
+import { ActivityReportComponent } from './Reports/ActivityReportComponent/activity-report/activity-report.component';
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
   declarations: [
@@ -78,8 +79,8 @@ defineLocale('en-gb', enGbLocale); //
     DisclaimerComponent,
     ViewassessmentComponent,
     ViewRoleComponent,
-    CreateRoleComponent
-    
+    CreateRoleComponent,
+    ActivityReportComponent
 
   ],
   imports: [

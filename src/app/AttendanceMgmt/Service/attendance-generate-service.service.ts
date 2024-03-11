@@ -68,7 +68,7 @@ export class AttendanceGenerateServiceService {
         lineWidth: 0.5        // Border width for all cells
       },
       headStyles: {
-        fillColor: [200, 200, 200], // Header background color
+        fillColor: [203, 61, 40], // Header background color
         textColor: [0, 0, 0],      // Header text color
         lineColor: [0, 0, 0],     // Border color for header cells
         lineWidth: 0.5            // Border width for header cells
@@ -107,18 +107,22 @@ export class AttendanceGenerateServiceService {
 
   generateAttendanceReportExcel(attendanceDetails: any[]): void {
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([], { skipHeader: true });
-
     XLSX.utils.sheet_add_aoa(ws, [['Resource Name', 'Platform', 'First Half', 'Second Half']], { origin: 'A2' });
 
     // Merge cells and add static header content
-    ws['A1'] = { v: 'Attendance Report', t: 's', s: { font: { bold: true, size: 14 }, alignment: { horizontal: 'center', vertical: 'center' } } };
+    ws['A1'] = {
+      v: 'Attendance Report',
+      t: 's',
+      s: {
+        font: { bold: true }
+      }
+    };
+    
     ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }]; // Merge cells
 
-    // Add styles to the merged cell (Attendance Report)
-    ws['A1'].s = { font: { bold: true, size: 100, color: { rgb: 'FFFFFF' } }, fill: { fgColor: { rgb: '000080' } }, alignment: { horizontal: 'center', vertical: 'center' } };
     const data: any[] = [];
     const processedDates = new Set<string>();
-    
+
     attendanceDetails.sort((a, b) => {
       const dateA = new Date(a.activityDate).getTime();
       const dateB = new Date(b.activityDate).getTime();
@@ -131,14 +135,7 @@ export class AttendanceGenerateServiceService {
       // Check if the date has been processed
       if (!processedDates.has(activityDate)) {
         const dateRowColor = processedDates.has(activityDate) ? 'white' : 'lightblue';
-        data.push([{
-          t: 's', // cell type: s = string
-          v: activityDate,
-          s: {
-            fill: { fgColor: { rgb: dateRowColor } },
-            alignment: { horizontal: 'left' }
-          }
-        }]);
+        data.push([activityDate]);
         processedDates.add(activityDate);
       }
 
@@ -146,25 +143,21 @@ export class AttendanceGenerateServiceService {
       const secondHalfData = this.getSecondHalfData(detail);
       const dataRowColor = 'white';
       data.push([
-        { t: 's', v: detail.resourceName, s: { fill: { fgColor: { rgb: dataRowColor } } } },
-        { t: 's', v: detail.domain, s: { fill: { fgColor: { rgb: dataRowColor } } } },
-        { t: 's', v: firstHalfData, s: { fill: { fgColor: { rgb: dataRowColor } } } },
-        { t: 's', v: secondHalfData, s: { fill: { fgColor: { rgb: dataRowColor } } } }
+        { t: 's', v: detail.resourceName },
+        { t: 's', v: detail.domain },
+        { t: 's', v: firstHalfData },
+        { t: 's', v: secondHalfData }
       ]);
     });
 
-    // Add auto filter
-   // ws['!autofilter'] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }) };
-
     // Add data to worksheet
-    // XLSX.utils.sheet_add_json(ws, data, { header: ['Resource Name', 'Platform', 'First Half', 'Second Half'], skipHeader: true, origin: 'A3' });
     XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A3' });
+
     // Create a workbook
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Attendance Report');
 
     // Save the workbook as an Excel file
     XLSX.writeFile(wb, 'attendance_report.xlsx');
-
   }
 }

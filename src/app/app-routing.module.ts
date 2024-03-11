@@ -21,6 +21,7 @@ import { DisclaimerComponent } from './Disclaimer/disclaimer/disclaimer.componen
 import { ViewassessmentComponent } from './AssessmentMgmt/Components/viewassessment/viewassessment.component';
 import { CreateRoleComponent } from './UserMgmt/Component/role/create-role/create-role.component';
 import { ViewRoleComponent } from './UserMgmt/Component/role/view-role/view-role.component';
+import { ActivityReportComponent } from './Reports/ActivityReportComponent/activity-report/activity-report.component';
 
 
 const routes: Routes = [
@@ -52,7 +53,7 @@ const routes: Routes = [
       { path: 'addassessment', component: AsessmentdetailsComponent, canActivate: [authGuard]  },
       { path: 'disclaimer', component: DisclaimerComponent, canActivate: [authGuard]  },
       { path: 'viewasessment', component: ViewassessmentComponent, canActivate: [authGuard]  },
-
+       {path: "activityReport", component:ActivityReportComponent,canActivate: [authGuard]},
     ]
   }
 ];
