@@ -11,42 +11,42 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "tbl_assessment")
+@Table(name = "assessment")
 public class Assessment {
 
 	@Id
-	@Column(name="intAsesmentId")
+
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer asesmentId;
 
-	@Column(name="intResourceId")
+	
 	private Integer resourceId;
 	
-	@Column(name="intActivityId")
+	
 	private Integer activityId;
 	
-	@Column(name="doubleActivityMark")
-	private Double activityMark;
-	
-	@Column(name="doubleSecuredMark")
-	private Double securedMark;
 
-	@Column(name="dtmAsesmentDate")
+	private Double doubleActivityMark;
+	
+	
+	private Double doubleSecuredMark;
+
+	
 	private LocalDate asesmentDate;
 	
-	@Column(name="vchAsesmentHours")
+	
 	private String asesmentHours;
 
-	@Column(name="vchRemark")
-	private String vchRemark;
 	
-	@Column(name="intCreatedBy")
+	private String remark;
+	
+	
 	private Integer createdBy;
 
-	@Column(name="intUpdatedBy")
+	
 	private Integer updatedBy;
 
-	@Column(name="bitDeletedFlag")
-	private Boolean deletedFlag;
+	
+	private Byte deletedFlag;
 
 }
