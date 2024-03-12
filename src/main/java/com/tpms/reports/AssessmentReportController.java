@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
+
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -57,7 +57,7 @@ public class AssessmentReportController {
             
           
             Row headerRow = sheet.createRow(0);
-            String[] headers = {"Sl.No", "Resource Name", "Platform Name", "Activity Name", "Total Marks", "Marks", "Remarks"};
+            String[] headers = {"Resource Name", "Platform Name", "Activity Name", "Total Marks", "Marks", "Remarks"};
             for (int i = 0; i < headers.length; i++) {
                 Cell cell = headerRow.createCell(i);
                 cell.setCellValue(headers[i]);
@@ -104,6 +104,7 @@ public class AssessmentReportController {
             PdfPTable table = new PdfPTable(7); // 7 columns for the headers
             addTableHeader(table);
             
+            // Add rows for all assessments
             for (Object[] assessmentData : assessments) {
                 addRow(table, assessmentData);
             }
@@ -115,6 +116,7 @@ public class AssessmentReportController {
         }
         return outputStream.toByteArray();
     }
+
 
     private void addTableHeader(PdfPTable table) {
         String[] headers = {"Sl.No", "Resource Name", "Platform Name", "Activity Name", "Total Marks", "Marks", "Remarks"};
@@ -132,6 +134,7 @@ public class AssessmentReportController {
             table.addCell(cell);
         }
     }
+
 
 
     private ResponseEntity<byte[]> getResponseEntityForPDF(byte[] pdfBytes) {

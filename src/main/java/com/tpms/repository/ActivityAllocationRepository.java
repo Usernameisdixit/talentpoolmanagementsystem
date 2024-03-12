@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,6 +27,9 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
 	 
 
 	List<ActivityAllocation> findByPlatformIdAndActivityDateBetween(Long platformId, Date fromDate,Date toDate);
+	
+	@Query("SELECT alloc FROM ActivityAllocation alloc JOIN FETCH alloc.details det WHERE alloc.resourceId=:id AND alloc.deletedFlag=false and det.deletedFlag=false")
+	ActivityAllocation findByResourceId(Integer id, Limit limit);
 
 
 

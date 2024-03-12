@@ -16,16 +16,25 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tpms.entity.Activity;
+import com.tpms.entity.ActivityAllocation;
+import com.tpms.entity.Platform;
+import com.tpms.entity.ResourcePool;
+import com.tpms.service.ActivityService;
 import com.tpms.service.impl.ActivityServiceImpl;
 
 //@CrossOrigin(origins="http://localhost:4200")
 @CrossOrigin("*")
 @RestController
-public class ActivityRestController {
+public class ActivityController {
 	
+	
+	
+	
+	ActivityService activityService;
 	
 	@Autowired
 	ActivityServiceImpl activityServiceImpl;
+	
 	
 	@GetMapping("/get/activity")
 	public List<Activity> getAllActivities()
@@ -84,7 +93,31 @@ public class ActivityRestController {
     return attendanceReportData.toString();
 }
 
-
+	@GetMapping("platforms")
+	List<Platform> getPlatforms() {
+		return activityService.fetchPlatforms();
+	}
+	
+	@GetMapping("resources")
+	List<ResourcePool> getResources() {
+		return activityService.getResources();
+	}
+	
+	@GetMapping("activities")
+	List<Activity> getActivities(String platform) {
+		return activityService.findAll();
+	}
+	
+	@PostMapping("saveAllocation")
+	ActivityAllocation saveAllocation(@RequestBody ActivityAllocation data) {
+		return activityService.saveAllocation(data);
+	}
+	
+	@GetMapping("allocationDetails")
+	ActivityAllocation getAllocationDetailsByResource(@RequestParam("id") Integer resourceId) {
+		return activityService.getAllocationDetailsByResource(resourceId);
+	}
+	
 	
 
 }

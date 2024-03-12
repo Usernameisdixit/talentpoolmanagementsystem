@@ -16,11 +16,18 @@ import javax.sql.DataSource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Limit;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.tpms.entity.Activity;
+import com.tpms.entity.ActivityAllocation;
+import com.tpms.entity.Platform;
+import com.tpms.entity.ResourcePool;
+import com.tpms.repository.ActivityAllocationRepository;
 import com.tpms.repository.ActivityRepository;
+import com.tpms.repository.PlatformRepository;
+import com.tpms.repository.ResourcePoolRepository;
 import com.tpms.service.ActivityService;
 
 @Service
@@ -28,6 +35,18 @@ public class ActivityServiceImpl {
 	
 	@Autowired
     private ActivityRepository activityRepository;
+	
+	@Autowired
+	PlatformRepository platformRepo;
+	
+	@Autowired
+	ResourcePoolRepository resourceRepo;
+	
+	@Autowired
+	ActivityRepository activityRepo;
+	
+	@Autowired
+	ActivityAllocationRepository activityAllocRepo;
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -175,6 +194,29 @@ public class ActivityServiceImpl {
 	}
     
     
+	public List<Platform> fetchPlatforms() {
+		return platformRepo.findAll();
+	}
+
 	
+	public List<ResourcePool> getResources() {
+		return resourceRepo.findAllWithAlloc();
+	}
+
+
+	public List<Activity> findAll() {
+		return activityRepo.findAll();
+	}
+
+	
+	public ActivityAllocation saveAllocation(ActivityAllocation data) {
+		return activityAllocRepo.save(data);
+	}
+
+
+	public ActivityAllocation getAllocationDetailsByResource(Integer resourceId) {
+		return activityAllocRepo.findByResourceId(resourceId, Limit.of(1));
+	}
+
 
 }
