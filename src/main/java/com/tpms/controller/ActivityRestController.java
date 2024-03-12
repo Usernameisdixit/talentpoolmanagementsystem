@@ -1,7 +1,9 @@
 package com.tpms.controller;
 
 import java.util.List;
+import java.util.Map;
 
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,7 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.tpms.entity.Activity;
 import com.tpms.service.impl.ActivityServiceImpl;
 
-@CrossOrigin(origins="http://localhost:4201")
+//@CrossOrigin(origins="http://localhost:4200")
+@CrossOrigin("*")
 @RestController
 public class ActivityRestController {
 	
@@ -69,6 +72,17 @@ public class ActivityRestController {
 	public void updateDeletedFlag(@PathVariable Integer activityId, @RequestParam Boolean deletedFlag) {
 	    activityServiceImpl.updateDeletedFlag(activityId, deletedFlag);
 	}
+	
+	@PostMapping("activityReportData")
+	public String getActivityReportData(@RequestBody Map<String, String> params) {
+    String year = params.get("year");
+    String month = params.get("month");
+    String platform = params.get("platform");
+    String selectedDate = params.get("selectedDate");
+    JSONArray attendanceReportData = activityServiceImpl.getActivityReportData(platform, selectedDate,year,month);
+//    System.err.println("Report Data " + attendanceReportData);
+    return attendanceReportData.toString();
+}
 
 
 	
