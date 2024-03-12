@@ -53,6 +53,12 @@ import { DatePipe } from '@angular/common';
 import { AsessmentdetailsComponent } from './AssessmentMgmt/Components/asessmentdetails/asessmentdetails.component';
 import { DisclaimerComponent } from './Disclaimer/disclaimer/disclaimer.component';
 import { ViewassessmentComponent } from './AssessmentMgmt/Components/viewassessment/viewassessment.component';
+import { ActivityReportComponent } from './Reports/ActivityReportComponent/activity-report/activity-report.component';
+import { AssessmentreportComponent } from './Reports/AssessmentReport/assessmentreport/assessmentreport.component';
+import { ReportTypeDialogComponent } from './Reports/report-type-dialog/report-type-dialog.component';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
+
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
   declarations: [
@@ -78,8 +84,10 @@ defineLocale('en-gb', enGbLocale); //
     DisclaimerComponent,
     ViewassessmentComponent,
     ViewRoleComponent,
-    CreateRoleComponent
-    
+    CreateRoleComponent,
+    ActivityReportComponent,
+    AssessmentreportComponent,
+    ReportTypeDialogComponent
 
   ],
   imports: [
@@ -105,9 +113,11 @@ defineLocale('en-gb', enGbLocale); //
     MatOptionModule,
     MatPaginatorModule,
     BsDatepickerModule.forRoot(),
-    NgxPaginationModule
+    NgxPaginationModule,
+    MatDialogModule,
+    MatSnackBarModule
   ],
-  providers: [DatePipe],
+  providers: [DatePipe,MatSnackBar],
   bootstrap: [AppComponent]
 })
 

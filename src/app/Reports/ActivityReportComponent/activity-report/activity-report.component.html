@@ -1,4 +1,4 @@
-<h2 class="text-center mb-4">Attendance Report</h2>
+<h2 class="text-center mb-4">Activity Report</h2>
 <div class="row justify-content-start maxscrn">
     <div class="col-md-3">
         <div class="form-group">
@@ -43,11 +43,9 @@
 
     <div class="row justify-content-center mt-4">
         <div class="col-md-6 text-center">
-            <button type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button>
-            <div class="button-space"></div>
-            <button type="button" class="btn btn-success" (click)="generateExcel()">Generate Excel</button>
-            <div class="button-space"></div>
-            <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
+            <button type="button" class="btn btn-success button-space" (click)="generateActPDF()">Generate PDF</button>
+            <button type="button" class="btn btn-success button-space" (click)="generateActExcel()">Generate Excel</button> 
+             <button type="button" class="btn btn-danger button-space" (click)="resetForm()">Reset</button> 
         </div>
     </div>
 

@@ -55,9 +55,9 @@ export class AttendanceComponent {
       }
     );
   }
-  applyFilter(selectedOption: any): void {
+  applyFilter(): void {
     console.log('this Selected Filter:', this.selectedFilter);
-    console.log('this Selected date:', this.selectedDate);
+    // console.log('this Selected date:',selectedOption);
     console.log('this Selected date:', this.selectedDate?.toLocaleString());
     //console.log(this.selectedFilter !== '0' && this.selectedDate != null);
     if (this.selectedFilter !== '0' && this.selectedDate != null) {
@@ -175,7 +175,21 @@ export class AttendanceComponent {
 
   onDateChange(newDate: Date | null) {
     this.selectedDate = newDate || undefined;
-    this.applyFilter(this.selectedFilter); // Call applyFilter when the date changes
+    this.applyFilter(); // Call applyFilter when the date changes
   }
+
+    // for pagination
+indexNumber : number = 0;
+page : number = 1;
+tableSize : number = 10;
+count : number = 0;
+pageSizes = [10,20,30,40,50];
+
+//pagination functionality
+getTableDataChange(event : any){
+  this.page = event;
+  this.indexNumber = (this.page - 1) * this.tableSize;
+  this.applyFilter();
+}
 
 }
