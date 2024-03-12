@@ -1,0 +1,14 @@
+<mat-card class="custom-card">
+    <h1 mat-dialog-title>Choose Report Type</h1>
+    <div mat-dialog-content>
+      <button mat-raised-button color="primary" [ngClass]="{'pdf-button': true, 'selected': selectedType === 'pdf'}" (click)="choose('pdf')">
+        <mat-icon>picture_as_pdf</mat-icon> <!-- File icon for PDF -->
+        PDF
+      </button>
+      <button mat-raised-button color="primary" [ngClass]="{'excel-button': true, 'selected': selectedType === 'excel'}" (click)="choose('excel')">
+        <mat-icon>description</mat-icon> <!-- File icon for Excel -->
+        Excel
+      </button>
+    </div>
+  </mat-card>
+  
