@@ -117,6 +117,7 @@ export class AttendanceGenerateServiceService {
         font: { bold: true }
       }
     };
+    //ws['A1'].s = { font: { bold: true } };
     
     ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }]; // Merge cells
 
