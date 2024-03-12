@@ -2,11 +2,12 @@ package com.tpms.service;
 
 import java.util.List;
 
+import com.tpms.dto.RoleDto;
 import com.tpms.entity.Role;
 
 public interface RoleService {
 	
-	List<Role> getRoleList();
+	List<RoleDto> getRoleList();
 	
 	Role getRoleById(Integer id);
 	

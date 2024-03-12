@@ -2,15 +2,16 @@ package com.tpms.service;
 
 import java.util.List;
 
+import com.tpms.dto.UserDto;
 import com.tpms.entity.User;
 
 public interface UserService {
 
-	User saveUser(User user);
+	User saveUser(UserDto user);
 
 	List<User> getUserDetails();
 
-	User getUserById(Integer userId);
+	UserDto getUserById(Integer userId);
 
 	void deleteUserById(Integer intUserId, Boolean deletedFlag);
 
