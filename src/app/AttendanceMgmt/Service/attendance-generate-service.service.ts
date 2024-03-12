@@ -11,18 +11,35 @@ import { HttpClient } from '@angular/common/http';
 export class AttendanceGenerateServiceService {
 
   private platformUrl = 'http://localhost:9999/tpms/getplatform';
+  
 
   constructor(private httpClient: HttpClient) { }
+  
 
   ngOnInit() {
     this.getPlatforms();
 
   }
-  generateAttendanceReport(attendanceDetails: any[]): void {
+  generateAttendanceReport(attendanceDetails: any[],year: string, monthName: string, platformName: string, selectedDate: string): void {
     const pdf = new jsPDF();
+
+    //selected date i got as Date: 3/1/2024, 12:00:00 AM
+      
 
     // Static header content
     pdf.text('Attendance Report', 10, 10);
+    const fontSize = 10; 
+     pdf.setFontSize(fontSize);
+     const fy = `Year: ${year}`;  ;
+     const month = `Month: ${monthName}`;
+     const platform = `Platform: ${platformName==='0'?'':platformName}`;
+     const reportDate = `Date: ${selectedDate===undefined?'':selectedDate}`;
+     
+     // Add additional information
+     pdf.text(fy, 10, 20);
+     pdf.text(month, 100, 20); 
+     pdf.text(platform , 10, 26);
+     pdf.text(reportDate, 100, 26);
 
     // Table content
     const data = [];
@@ -62,14 +79,14 @@ export class AttendanceGenerateServiceService {
     autoTable(pdf, {
       head: [['Resource Name', 'Platform', 'First Half', 'Second Half']],
       body: data,
-      startY: 20,              // Adjust starting y-position
+      startY: 30,              
       styles: {
         lineColor: [0, 0, 0], // Border color for all cells
         lineWidth: 0.5        // Border width for all cells
       },
       headStyles: {
-        fillColor: [203, 61, 40], // Header background color
-        textColor: [0, 0, 0],      // Header text color
+        fillColor: [203, 61, 40],
+        textColor: [0, 0, 0],     
         lineColor: [0, 0, 0],     // Border color for header cells
         lineWidth: 0.5            // Border width for header cells
       },
@@ -105,7 +122,7 @@ export class AttendanceGenerateServiceService {
     return this.httpClient.get<any[]>(this.platformUrl);
   }
 
-  generateAttendanceReportExcel(attendanceDetails: any[]): void {
+  generateAttendanceReportExcel(attendanceDetails: any[],year: string, month: string, platform: string, selectedDate: string): void {
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([], { skipHeader: true });
     XLSX.utils.sheet_add_aoa(ws, [['Resource Name', 'Platform', 'First Half', 'Second Half']], { origin: 'A2' });
 
@@ -113,8 +130,8 @@ export class AttendanceGenerateServiceService {
     ws['A1'] = {
       v: 'Attendance Report',
       t: 's',
-      s: {
-        font: { bold: true }
+      font: {
+         bold: true 
       }
     };
     //ws['A1'].s = { font: { bold: true } };

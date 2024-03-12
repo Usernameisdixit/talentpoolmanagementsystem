@@ -6,6 +6,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import Swal from 'sweetalert2';
 import { AttendanceGenerateServiceService } from 'src/app/AttendanceMgmt/Service/attendance-generate-service.service';
 import { ActivityReportServiceService } from '../../ActivityReportService/activity-report-service.service';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-activity-report',
   templateUrl: './activity-report.component.html',
@@ -14,7 +15,7 @@ import { ActivityReportServiceService } from '../../ActivityReportService/activi
 export class ActivityReportComponent {
 
   bsConfig: Partial<BsDatepickerConfig>;
-  constructor(private localeService: BsLocaleService, private attendanceGeneratedService: AttendanceGenerateServiceService,private activityReportService:ActivityReportServiceService) {
+  constructor(private localeService: BsLocaleService, private attendanceGeneratedService: AttendanceGenerateServiceService, private activityReportService: ActivityReportServiceService, private datePipe: DatePipe) {
     this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
     this.localeService.use('en-gb'); // Use the defined locale
   }
@@ -22,6 +23,7 @@ export class ActivityReportComponent {
   selectedDate: Date = null;
 
   year: string = '';
+  monthName: string = '';
   month: string = '0';
   platform: string = '0';
   attendanceDetails: any[] = [];
@@ -33,7 +35,7 @@ export class ActivityReportComponent {
     this.loadPlatforms();
     this.platform = '0';
     this.year = this.getCurrentYear().toString();
-    this.month = '0'; // Set the default value or fetch from somewhere
+    this.month = '0'; 
     // Populate months array
     this.months = Array.from({ length: 12 }, (_, i) => ({ value: (i + 1).toString(), name: this.getMonthName(i) }));
   }
@@ -43,8 +45,9 @@ export class ActivityReportComponent {
   }
 
   getMonthName(index: number): string {
-    const date = new Date(2000, index, 1); // Using 2000 as the year, but any year works
-    return date.toLocaleString('en-us', { month: 'long' });
+    const date = new Date(2000, index, 1); 
+    this.monthName = date.toLocaleString('en-us', { month: 'long' });
+    return this.monthName;
   }
 
   loadPlatforms() {
@@ -56,7 +59,7 @@ export class ActivityReportComponent {
   }
 
   generateActPDF() {
-
+    this.getMonthName(parseInt(this.month)-1);
     if (this.month === '0') {
       Swal.fire({
         icon: 'error',
@@ -64,11 +67,12 @@ export class ActivityReportComponent {
         text: 'Please choose a month before generating the PDF!',
       });
     } else {
+      const formattedDate = this.selectedDate ? this.datePipe.transform(this.selectedDate, 'dd-MMMM-yyyy') : null;
       this.activityReportService.getActivityReportData(this.year, this.month, this.platform, this.selectedDate?.toLocaleString())
         .subscribe(data => {
           this.isPresent = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
           if (this.isPresent) {
-            this.activityReportService.generateActivityReport(data);
+            this.activityReportService.generateActivityReport(data, this.year, this.monthName, this.platform, formattedDate?.toLocaleString());
             Swal.fire({
               icon: 'success',
               title: 'PDF Generated',
@@ -86,7 +90,7 @@ export class ActivityReportComponent {
     }
   }
 
-  generateActExcel(){
+  generateActExcel() {
 
     if (this.month === '0') {
       Swal.fire({
