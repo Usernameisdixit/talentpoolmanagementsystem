@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs'; // Import Observable from rxjs
+import { Observable } from 'rxjs'; 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
@@ -26,11 +26,24 @@ export class ActivityReportServiceService {
     return this.httpClient.post<any>(url, params, { headers });
   }
 
-  generateActivityReport(activityData: any[]): void {
+  generateActivityReport(activityData: any[],year: string, monthName: string, platformName: string, selectedDate: string): void {
     const pdf = new jsPDF();
 
     // Static header content
     pdf.text('Activity Details Report', 10, 10);
+
+    const fontSize = 10; 
+     pdf.setFontSize(fontSize);
+     const fy = `Year: ${year}`;  ;
+     const month = `Month: ${monthName}`;
+     const platform = `Platform: ${platformName==='0'?'':platformName}`;
+     const reportDate = `Date: ${selectedDate===undefined?'':selectedDate}`;
+     
+     // Add additional information
+     pdf.text(fy, 10, 20);
+     pdf.text(month, 100, 20); 
+     pdf.text(platform , 10, 26);
+     pdf.text(reportDate, 100, 26);
 
     // Table content
     const data = [];
@@ -70,16 +83,16 @@ export class ActivityReportServiceService {
     autoTable(pdf, {
       head: [['Resource Name', 'Platform', 'First Half', 'Second Half']],
       body: data,
-      startY: 20,              // Adjust starting y-position
+      startY: 30,              
       styles: {
-        lineColor: [0, 0, 0], // Border color for all cells
-        lineWidth: 0.5        // Border width for all cells
+        lineColor: [0, 0, 0],
+        lineWidth: 0.5        
       },
       headStyles: {
-        fillColor: [200, 200, 200], // Header background color
-        textColor: [0, 0, 0],      // Header text color
-        lineColor: [0, 0, 0],     // Border color for header cells
-        lineWidth: 0.5            // Border width for header cells
+        fillColor: [200, 200, 200], 
+        textColor: [0, 0, 0],     
+        lineColor: [0, 0, 0],     
+        lineWidth: 0.5            
       },
     });
 
@@ -135,7 +148,7 @@ export class ActivityReportServiceService {
       if (!processedDates.has(activityDate)) {
         const dateRowColor = processedDates.has(activityDate) ? 'white' : 'lightblue';
         data.push([{
-          t: 's', // cell type: s = string
+          t: 's', 
           v: activityDate,
           s: {
             fill: { fgColor: { rgb: dateRowColor } },
@@ -156,11 +169,7 @@ export class ActivityReportServiceService {
       ]);
     });
 
-    // Add auto filter
-    // ws['!autofilter'] = { ref: XLSX.utils.encode_range({ s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }) };
-
-    // Add data to worksheet
-    // XLSX.utils.sheet_add_json(ws, data, { header: ['Resource Name', 'Platform', 'First Half', 'Second Half'], skipHeader: true, origin: 'A3' });
+    
     XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A3' });
     // Create a workbook
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
