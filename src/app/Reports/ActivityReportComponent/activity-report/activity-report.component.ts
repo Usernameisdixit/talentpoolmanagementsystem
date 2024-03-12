@@ -92,7 +92,7 @@ export class ActivityReportComponent {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Please choose a month before generating the PDF!',
+        text: 'Please choose a month before generating the Excel!',
       });
     } else {
       this.activityReportService.getActivityReportData(this.year, this.month, this.platform, this.selectedDate?.toLocaleString())
@@ -109,7 +109,7 @@ export class ActivityReportComponent {
             Swal.fire({
               icon: 'info',
               title: 'No Data Found',
-              text: 'No attendance data found for the selected year and month!',
+              text: 'No aactivity details data found for the selected year and month!',
             });
           }
         });

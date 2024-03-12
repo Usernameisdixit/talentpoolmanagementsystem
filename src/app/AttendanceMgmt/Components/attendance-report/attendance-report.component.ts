@@ -103,7 +103,7 @@ export class AttendanceReportComponent {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Please choose a month before generating the PDF!',
+        text: 'Please choose a month before generating the Excel!',
       });
     } else {
       this.attendanceService.getAttendanceReportData(this.year, this.month, this.platform, this.selectedDate?.toLocaleString())
