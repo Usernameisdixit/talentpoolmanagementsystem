@@ -25,7 +25,9 @@ export class AssessmentreportComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.downloadReport(result);
+    
+      this.downloadReport(result);
+   
       }
     });
   }
