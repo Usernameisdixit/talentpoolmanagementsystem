@@ -1,10 +1,12 @@
 package com.tpms.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tpms.dto.RoleDto;
 import com.tpms.entity.Role;
 import com.tpms.repository.RoleRepository;
 import com.tpms.service.RoleService;
@@ -16,8 +18,17 @@ public class RoleServiceImpl implements RoleService {
 	private RoleRepository roleRepository;
 
 	@Override
-	public List<Role> getRoleList() {
-		return roleRepository.findAll();
+	public List<RoleDto> getRoleList() {
+		List<RoleDto> roleDto=new ArrayList<>();
+		List<Role> roleDetails= roleRepository.findAll();
+		
+	    for(Role r :roleDetails) {
+	    	RoleDto r1=new RoleDto();
+	    	r1.setRoleId(r.getRoleId());
+	    	r1.setRoleName(r.getRoleName());
+	    	roleDto.add(r1);
+	    }
+		return roleDto;
 	}
 
 	@Override

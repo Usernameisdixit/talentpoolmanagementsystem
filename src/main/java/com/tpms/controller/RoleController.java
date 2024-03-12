@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tpms.dto.RoleDto;
 import com.tpms.entity.Role;
 import com.tpms.service.RoleService;
 
@@ -26,7 +27,7 @@ public class RoleController {
 	private RoleService roleService;
 
 	@GetMapping("/getRoles")
-	public List<Role> getAllRoles() {
+	public List<RoleDto> getAllRoles() {
 		return roleService.getRoleList();
 	}
 

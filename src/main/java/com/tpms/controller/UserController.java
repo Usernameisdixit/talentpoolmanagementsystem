@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tpms.entity.Role;
+import com.tpms.dto.RoleDto;
+import com.tpms.dto.UserDto;
 import com.tpms.entity.User;
 import com.tpms.service.RoleService;
 import com.tpms.service.UserService;
@@ -42,7 +43,7 @@ public class UserController {
 	private String password;
 	
 	@PostMapping("/addUser")
-	public ResponseEntity<User> saveUser(@RequestBody User user){
+	public ResponseEntity<User> saveUser(@RequestBody UserDto user){
 		user.setPassword(password);
 		User userDetail=userService.saveUser(user);
 		
@@ -50,8 +51,8 @@ public class UserController {
 	}
 	
 	@GetMapping("/getRoleDetails")
-	public ResponseEntity<List<Role>> getRoleId(){
-		 List<Role> roleDetails=roleService.getRoleList();
+	public ResponseEntity<List<RoleDto>> getRoleId(){
+		 List<RoleDto> roleDetails=roleService.getRoleList();
 		
 		return ResponseEntity.ok().body(roleDetails);
 	}
@@ -60,14 +61,12 @@ public class UserController {
 	public ResponseEntity<List<User>> getStudent(){
 		
 		List<User> userList = userService.getUserDetails();
-		System.err.println(userList);
 		return ResponseEntity.ok().body(userList);
 	}
 	
 	@GetMapping("/getUserById/{id}")
-	public ResponseEntity<User> getStudentById(@PathVariable(name = "id") Integer userId){
-		User user=userService.getUserById(userId);
-		
+	public ResponseEntity<UserDto> getStudentById(@PathVariable(name = "id") Integer userId){
+		UserDto user=userService.getUserById(userId);
 		return ResponseEntity.ok().body(user);
 	}
 	
