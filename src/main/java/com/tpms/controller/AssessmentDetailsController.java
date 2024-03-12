@@ -72,10 +72,10 @@ public class AssessmentDetailsController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String toDate) {
         try {
             Date from = new SimpleDateFormat("yyyy-MM-dd").parse(fromDate);
-            Date to = new SimpleDateFormat("yyyy-MM-dd").parse(toDate);
+            Date toDt = new SimpleDateFormat("yyyy-MM-dd").parse(toDate);
 
             List<ActivityAllocationDetails> activityAllocationDetails = activityallocationRepository
-                    .findByPlatformIdAndActivityDate(platformId, from)
+                    .findByPlatformIdAndActivityDateBetween(platformId, from,toDt)
                     .stream()
                     .map(activityAllocation -> activityAllocationDetailsRepository.findByActivityAllocation(activityAllocation))
                     .flatMap(List::stream)
@@ -115,7 +115,7 @@ public class AssessmentDetailsController {
          return optionalResource.map(ResourcePool::getResourceCode).orElse(null);
 	}
 
-	// Method to fetch resourceName based on resourceId
+	
     private String fetchResourceName(Integer resourceId) {
         Optional<ResourcePool> optionalResource = resourcePoolRepository.findById(resourceId);
         return optionalResource.map(ResourcePool::getResourceName).orElse(null);
