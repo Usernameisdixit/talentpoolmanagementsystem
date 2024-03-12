@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ContactService } from '../../Services/contact.service';
 import { Talent } from 'src/app/Model/talent';
 import { Router } from '@angular/router';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { RouterModule, RouterEvent } from '@angular/router';
 
 @Component({
@@ -13,6 +17,7 @@ export class TalentlistComponent implements OnInit {
 
   talent:Talent[]=[];
   delmsg:string="";
+  c:Talent[];
  constructor(private service:ContactService, private router:Router){}
 
 
@@ -62,5 +67,62 @@ export class TalentlistComponent implements OnInit {
     this.getTalent();
   }
 
+ 
+
+  exportToPDF() {
+    const doc = new jsPDF();
+  
+    const data = this.getTableData();
+  
+    // Add title centered
+    const pageTitle = 'Talent Pool Resource Details';
+    const textWidth = doc.getTextDimensions(pageTitle).w;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const x = (pageWidth - textWidth) / 2;
+    doc.text(pageTitle, x, 10);
+  
+    // Add the table
+    (doc as any).autoTable({
+      head: [['ResourceId', 'Resource Name', 'Resource Code', 'Platform', 'Location', 'Experience', 'Mobile','Email']],
+      body: data,
+      startY: 20, 
+      margin: { top: 15 } 
+    });
+  
+    doc.save('Talent_Pool_Resource_List.pdf');
+  }
+
+  private getTableData(): any[][] {
+    return this.talent.map((c, index) => [
+      
+      c.resourceId,
+      c.resourceName,
+      c.resourceCode,
+      c.platform,
+      c.location,
+      c.experience,
+      c.phoneNo,
+      c.email
+      
+    ]);
+  }
+  
+  // For Implimenting Excel Format Data Reporting 
+  exportToExcel()  {
+    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(this.getTableData());
+  
+    // Add header row
+    const header = ['ResourceId', 'Resource Name', 'Resource Code', 'Platform', 'Location', 'Experience', 'Mobile','Email'];
+    XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' });
+  
+    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    this.saveAsExcelFile(excelBuffer, 'Talent_Pool_Resource_List.pdf');
+  }
+  
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
+  }
 
 }
