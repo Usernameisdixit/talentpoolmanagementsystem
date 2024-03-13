@@ -63,5 +63,20 @@ export class ViewRoleComponent {
       text: message
     });
   }
+// for pagination
+indexNumber : number = 0;
+page : number = 1;
+tableSize : number = 10;
+count : number = 0;
+pageSizes = [5,10,15,20,25,30,35,40,45,50];
+
+//pagination functionality
+getTableDataChange(event : any){
+  
+  this.page = event;
+  this.indexNumber = (this.page - 1) * this.tableSize;
+  this.getAllRole();
+}
+  
 
 }
