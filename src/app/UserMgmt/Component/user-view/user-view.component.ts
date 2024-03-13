@@ -101,11 +101,11 @@ export class UserViewComponent {
 }
 
   // for pagination
-indexNumber : number = 0;
-page : number = 1;
-tableSize : number = 10;
-count : number = 0;
-pageSizes = [10,20,30,40,50];
+  indexNumber : number = 0;
+  page : number = 1;
+  tableSize : number = 10;
+  count : number = 0;
+  pageSizes = [10,20,30,40,50];
 
 //pagination functionality
 getTableDataChange(event : any){
@@ -122,31 +122,31 @@ exportToPDF() {
   const pageTitle = 'User Details';
 
   // Get user details from the service and transform the data
-  this.userService.getUserDetails().pipe(
-      map((data: any[]) => {
-          return data.map(user => [
-             user.userId, user.userFullName, user.userName, user.role.roleName, user.email, user.phoneNo
-          ]);
-      })
-  ).subscribe((tableData) => {
-      console.log(tableData);
+  this.userService.getUserDetails().
+    pipe(
+       map((data: any[]) => {
+             return data.map(user => [
+               user.userId, user.userFullName, user.userName, user.role.roleName, user.email, user.phoneNo
+            ]);
+        })
+     ).subscribe((tableData) => {
 
-      const textWidth = doc.getTextDimensions(pageTitle).w;
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const x = (pageWidth - textWidth) / 2;
-      doc.text(pageTitle, x, 10);
+          const textWidth = doc.getTextDimensions(pageTitle).w;
+          const pageWidth = doc.internal.pageSize.getWidth();
+          const x = (pageWidth - textWidth) / 2;
+          doc.text(pageTitle, x, 10);
 
-      // Adding table to the PDF
-      (doc as any).autoTable({
-          head: [['Sl.No', 'User Full Name', 'User Name', 'Role', 'Email', 'Phone No.']],
-          body: tableData,
-          startY: 20,
-          margin: { top: 15 }
-      });
+          // Adding table to the PDF
+          (doc as any).autoTable({
+              head: [['Sl.No', 'User Full Name', 'User Name', 'Role', 'Email', 'Phone No.']],
+              body: tableData,
+              startY: 20,
+              margin: { top: 15 }
+            });
 
-      // Save the PDF
-      doc.save('users-details.pdf');
-  });
+          // Save the PDF
+          doc.save('users-details.pdf');
+       });
 }
 
 
@@ -156,33 +156,35 @@ exportToPDF() {
   
 exportToExcel() {
   debugger;
-  this.userService.getUserDetails().pipe(
+  this.userService.getUserDetails().
+    pipe(
         map((data: any[]) => {
              return data.map(user => [
-              user.userId, user.userFullName, user.userName, user.role.roleName, user.email, user.phoneNo
+                user.userId, user.userFullName, user.userName, user.role.roleName, user.email, user.phoneNo
            ]);
         })
       ).subscribe((tableData) => {
-       
-        const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
+             
+          // Add header row
+            const header = ['Sl.No', 'User Full Name', 'User Name', 'Role', 'Email', 'Phone No'];
+            tableData.unshift(header);
 
-        // Add header row
-       const header = ['Sl.No', 'User Full Name', 'User Name', 'Role', 'Email', 'Phone No'];
-       XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' });
+            const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
 
-       const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-       const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-       this.saveAsExcelFile(excelBuffer, 'user-details');
-       });
-    }
+            const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+            const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            this.saveAsExcelFile(excelBuffer, 'user-details');
+
+        });
+  }
 
 
     
     
-    // to save excel file
-  private saveAsExcelFile(buffer: any, fileName: string): void {
+// to save excel file
+private saveAsExcelFile(buffer: any, fileName: string): void {
     const data: Blob = new Blob([buffer], 
-    { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
   }
 
