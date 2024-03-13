@@ -31,7 +31,7 @@ import com.tpms.repository.ResourcePoolRepository;
 import com.tpms.service.ActivityService;
 
 @Service
-public class ActivityServiceImpl {
+public class ActivityServiceImpl implements ActivityService {
 	
 	@Autowired
     private ActivityRepository activityRepository;
@@ -200,7 +200,7 @@ public class ActivityServiceImpl {
 
 	
 	public List<ResourcePool> getResources() {
-		return resourceRepo.findAllWithAlloc();
+		return resourceRepo.findAll();
 	}
 
 

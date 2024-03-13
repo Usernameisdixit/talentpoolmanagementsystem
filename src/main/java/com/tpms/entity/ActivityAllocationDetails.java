@@ -3,6 +3,8 @@ package com.tpms.entity;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +28,7 @@ public class ActivityAllocationDetails {
 	
 	 @ManyToOne
 	 @JoinColumn(name = "activityAllocateId")
+	 @JsonIgnoreProperties("details")
 	 private ActivityAllocation activityAllocation;
 	    
 	@ManyToOne

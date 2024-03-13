@@ -29,7 +29,7 @@ public class ActivityController {
 	
 	
 	
-	
+	@Autowired
 	ActivityService activityService;
 	
 	@Autowired
