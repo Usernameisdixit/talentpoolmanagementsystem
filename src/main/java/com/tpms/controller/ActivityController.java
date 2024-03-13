@@ -22,14 +22,13 @@ import com.tpms.entity.ResourcePool;
 import com.tpms.service.ActivityService;
 import com.tpms.service.impl.ActivityServiceImpl;
 
-//@CrossOrigin(origins="http://localhost:4200")
 @CrossOrigin("*")
 @RestController
 public class ActivityController {
 	
 	
 	
-	
+	@Autowired
 	ActivityService activityService;
 	
 	@Autowired

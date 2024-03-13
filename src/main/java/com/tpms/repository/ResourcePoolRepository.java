@@ -16,8 +16,7 @@ public interface ResourcePoolRepository extends JpaRepository<ResourcePool, Inte
 
 	List<ResourcePool> findByPlatform(String platform);
 	
-	@Query(value = "select r.*, exists(select resourceId from activity_allocation where resourceId=r.resourceId) as isAllocatedActivity from resource_pool r where r.deletedFlag=0", nativeQuery = true)
-	List<ResourcePool> findAllWithAlloc();
+	
 
 	
 }

@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
-
+import com.itextpdf.text.Element;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -101,12 +104,21 @@ public class AssessmentReportController {
             PdfWriter.getInstance(document, outputStream);
             document.open();
             
-            PdfPTable table = new PdfPTable(7); // 7 columns for the headers
+            com.itextpdf.text.Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 15, BaseColor.BLACK);
+            Paragraph titleParagraph = new Paragraph("Assessment Report", titleFont);
+            titleParagraph.setAlignment(Element.ALIGN_CENTER);
+            titleParagraph.setSpacingAfter(20f);
+            document.add(titleParagraph);
+            
+            PdfPTable table = new PdfPTable(7); 
+            table.setWidthPercentage(100);
             addTableHeader(table);
             
-            // Add rows for all assessments
+            int index = 1;
+            
+            
             for (Object[] assessmentData : assessments) {
-                addRow(table, assessmentData);
+                addRow(table, index++, assessmentData);
             }
             
             document.add(table);
@@ -121,19 +133,33 @@ public class AssessmentReportController {
     private void addTableHeader(PdfPTable table) {
         String[] headers = {"Sl.No", "Resource Name", "Platform Name", "Activity Name", "Total Marks", "Marks", "Remarks"};
         for (String header : headers) {
-            PdfPCell cell = new PdfPCell();
+            PdfPCell cell = new PdfPCell();        
+            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            cell.setPadding(8);
             cell.setPhrase(new Phrase(header));
             table.addCell(cell);
         }
     }
 
-    private void addRow(PdfPTable table, Object[] rowData) {
-        for (Object field : rowData) {
-            PdfPCell cell = new PdfPCell();
-            cell.setPhrase(new Phrase(field.toString()));
-            table.addCell(cell);
+    
+    
+
+    
+    private void addRow(PdfPTable table, int serialNumber, Object[] assessmentData) {
+       
+        PdfPCell serialNumberCell = new PdfPCell(new Phrase(String.valueOf(serialNumber)));
+        serialNumberCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(serialNumberCell);
+        
+       
+        for (Object data : assessmentData) {
+            table.addCell(String.valueOf(data));
+            table.setWidthPercentage(100);
         }
     }
+
 
 
 

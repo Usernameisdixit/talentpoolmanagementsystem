@@ -26,9 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tpms.dto.ActivityWithResourceDTO;
 import com.tpms.dto.AssessmentDto;
-import com.tpms.entity.ActivityAllocation;
+
 import com.tpms.entity.ActivityAllocationDetails;
-import com.tpms.entity.Assessment;
+
 import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
 import com.tpms.repository.ActivityAllocationDetailsRepository;
@@ -96,12 +96,11 @@ public class AssessmentDetailsController {
                     .collect(Collectors.toSet());
 
           
+        
             List<ActivityWithResourceDTO> response = new ArrayList<>();
             for (ActivityAllocationDetails detail : activityAllocationDetails) {
-                if (uniqueActivityNames.remove(detail.getActivity().getActivityName())) {
-                    Pair<String, String> resourceInfo = activityDetailsWithResourceInfo.get(detail);
-                    response.add(new ActivityWithResourceDTO(detail, resourceInfo.getFirst(),resourceInfo.getSecond()));
-                }
+                Pair<String, String> resourceInfo = activityDetailsWithResourceInfo.get(detail);
+                response.add(new ActivityWithResourceDTO(detail, resourceInfo.getFirst(), resourceInfo.getSecond()));
             }
 
             return ResponseEntity.ok(response);
