@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Page Title</title>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <label>Platform</label>
+        <select id="platform">
+          <option *ngFor="let platform of platforms" [value]="platform.platformId">{{ platform.platform }}</option>
+        </select>
+      </div>
+    
+      <div class="col-md-3">
+        <label>Activity Date</label>
+        <input type="date" id="activityDate" (ngModel)="activityDate" (change)="setDate()">
+      </div>
+    </div>
+    
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2">Resources</th>
+          <th rowspan="2">Platform</th>
+          <th colspan="2">Activity Details</th>
+          <th rowspan="2">Action</th>
+        </tr>
+        <tr>
+          <th>1st half</th>
+          <th>2nd half</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let resource of resources">
+          <td>{{resource.resourceName}}</td>
+          <td>{{resource.platform}}</td>
+          <td>
+            <div *ngIf="resource.isAllocatedActivity">
+              <ul *ngFor="let detail of resource.activityAlloc.details">
+                <li *ngIf="detail.activityFor==1">
+                  {{detail.activity.activityName}} ({{detail.fromHours}}~{{detail.toHours}})
+                </li>
+              </ul>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="resource.isAllocatedActivity">
+              <ul *ngFor="let detail of resource.activityAlloc.details">
+                <li *ngIf="detail.activityFor==2">
+                 {{detail.activity.activityName}} ({{detail.fromHours}}~{{detail.toHours}})
+                </li>
+              </ul>
+            </div>
+          </td>
+          <td><button class="btn btn-info">
+            <span  *ngIf="resource.isAllocatedActivity==false">Add</span>
+            <span *ngIf="resource.isAllocatedActivity==true" (click)="editDetails(resource.resourceId)">Edit</span>
+          </button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

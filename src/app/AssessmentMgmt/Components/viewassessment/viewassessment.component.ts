@@ -61,17 +61,53 @@ export class ViewassessmentComponent {
   }
   
   
+
+
+
   exportToExcel() {
-    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(this.getTableData());
+   
+    const tableData = this.getTableData();
+
+   
+    const headerStyle = { bold: true }; 
+    const header = [
+        { v: 'Sl.No', s: headerStyle },
+        { v: 'Resource Name', s: headerStyle },
+        { v: 'Platform Name', s: headerStyle },
+        { v: 'Activity Name', s: headerStyle },
+        { v: 'Total Marks', s: headerStyle },
+        { v: 'Marks', s: headerStyle },
+        { v: 'Remarks', s: headerStyle }
+    ];
+    
   
-    // Add header row
-    const header = ['Sl.No', 'Resource Name', 'Platform Name', 'Activity Name', 'Total Marks', 'Marks', 'Remarks'];
-    XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' });
+    tableData.unshift(header);
+
+   
+    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
+    
+   
+    const range = XLSX.utils.decode_range(worksheet['!ref']);
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+            const cellAddress = { c: C, r: R };
+            const cellRef = XLSX.utils.encode_cell(cellAddress);
+            if (!worksheet[cellRef]) continue;
+            worksheet[cellRef].s = { wrapText: true };
+        }
+    }
+
   
     const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    
+  
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    
+  
     this.saveAsExcelFile(excelBuffer, 'assessment-details');
-  }
+}
+
+
   
 
   private saveAsExcelFile(buffer: any, fileName: string): void {

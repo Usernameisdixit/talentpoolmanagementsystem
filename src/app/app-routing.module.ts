@@ -23,8 +23,8 @@ import { CreateRoleComponent } from './UserMgmt/Component/role/create-role/creat
 import { ViewRoleComponent } from './UserMgmt/Component/role/view-role/view-role.component';
 import { ActivityReportComponent } from './Reports/ActivityReportComponent/activity-report/activity-report.component';
 import { AssessmentreportComponent } from './Reports/AssessmentReport/assessmentreport/assessmentreport.component';
-
-
+import { AllocationComponent } from './ActivityAllocation/Components/allocation/allocation.component';
+import { AllocationDetailsComponent } from './ActivityAllocation/Components/allocation-details/allocation-details.component';
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
@@ -56,6 +56,9 @@ const routes: Routes = [
       { path: 'viewasessment', component: ViewassessmentComponent, canActivate: [authGuard]  },
        {path: "activityReport", component:ActivityReportComponent,canActivate: [authGuard]},
        { path: 'assessmentreport', component: AssessmentreportComponent, canActivate: [authGuard]  },
+       {path: "activity", component:AllocationComponent,canActivate: [authGuard]},
+       { path: 'editallocdetails/:id', component: AllocationDetailsComponent, canActivate: [authGuard]  },
+   
     ]
   }
 ];
