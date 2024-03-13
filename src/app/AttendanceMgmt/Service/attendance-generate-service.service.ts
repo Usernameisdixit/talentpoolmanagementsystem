@@ -122,7 +122,7 @@ export class AttendanceGenerateServiceService {
     return this.httpClient.get<any[]>(this.platformUrl);
   }
 
-  generateAttendanceReportExcel(attendanceDetails: any[],year: string, month: string, platform: string, selectedDate: string): void {
+  generateAttendanceReportExcel(attendanceDetails: any[],year: string, monthName: string, platformName: string, selectedDate: string): void {
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([], { skipHeader: true });
     XLSX.utils.sheet_add_aoa(ws, [['Resource Name', 'Platform', 'First Half', 'Second Half']], { origin: 'A2' });
 

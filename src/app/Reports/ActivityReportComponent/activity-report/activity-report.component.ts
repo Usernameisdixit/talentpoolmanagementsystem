@@ -91,7 +91,7 @@ export class ActivityReportComponent {
   }
 
   generateActExcel() {
-
+    this.getMonthName(parseInt(this.month)-1);
     if (this.month === '0') {
       Swal.fire({
         icon: 'error',
@@ -99,11 +99,12 @@ export class ActivityReportComponent {
         text: 'Please choose a month before generating the Excel!',
       });
     } else {
+      const formattedDate = this.selectedDate ? this.datePipe.transform(this.selectedDate, 'dd-MMMM-yyyy') : null;
       this.activityReportService.getActivityReportData(this.year, this.month, this.platform, this.selectedDate?.toLocaleString())
         .subscribe(data => {
           this.isPresent = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
           if (this.isPresent) {
-            this.activityReportService.generateActivityReportExcel(data);
+            this.activityReportService.generateActivityReportExcel(data, this.year, this.monthName, this.platform, formattedDate?.toLocaleString());
             Swal.fire({
               icon: 'success',
               title: 'Excel Generated',

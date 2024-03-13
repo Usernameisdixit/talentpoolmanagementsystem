@@ -1,21 +1,21 @@
 <div class="container mt-3">
   
-  <h2 style="text-align: center; background: #5c8de7;">User Registration</h2><hr>
+  <h2 style="text-align: center;">Add User</h2><hr>
 
 <form class=" g-3 mt-3" [formGroup]="userForm" (ngSubmit)="onSubmit()">
  
   <div class="col-md-6">
-    <label for="validationDefault01" class="form-label text-primary">User Full name</label><span class="text-danger font-weight-bold">*</span>
+     <label for="validationDefault01" class="form-label">User Full Name :</label><span class="text-danger font-weight-bold">*</span>
 
-    <input type="text" class="form-control" id="userFullName" formControlName="userFullName" />
-    <div *ngIf="userForm.get('userFullName')?.invalid && userForm.get('userFullName')?.touched">
-      <p class="text-danger">Please Enter The User Full Name.</p>
-    </div>
+     <input type="text" class="form-control" id="userFullName" formControlName="userFullName" />
+     <div *ngIf="userForm.get('userFullName')?.invalid && userForm.get('userFullName')?.touched">
+       <p class="text-danger">Please Enter The User Full Name.</p>
+     </div>
    
   </div>
 
-  <div class="col-md-6">
-    <label for="validationDefault01" class="form-label text-primary">User name</label><span class="text-danger font-weight-bold">*</span>
+  <div class="col-md-6 mt-2">
+    <label for="validationDefault01" class="form-label">User Name :</label><span class="text-danger font-weight-bold">*</span>
 
     <input type="text" class="form-control" id="userName" formControlName="userName" (blur)="duplicateCheck($event)"/>
     <div *ngIf="userForm.get('userName')?.invalid && userForm.get('userName')?.touched">
@@ -24,11 +24,11 @@
    
   </div>
 
-  <div class="col-md-6">
-    <label for="validationDefault02" class="form-label text-primary">Role Name</label><span class="text-danger font-weight-bold">*</span>
+  <div class="col-md-6 mt-2">
+    <label for="validationDefault02" class="form-label">Role :</label><span class="text-danger font-weight-bold">*</span>
 
     <select class="form-select" id="roleId"  formControlName="roleId">
-      <option value="0">Select Role Name</option>
+      <option value="0"> Select Role </option>
       <option *ngFor="let role of roleDetails" value="{{role.roleId}}">{{role.roleName}}</option>
       <div *ngIf="userForm.get('roleId')?.invalid && userForm.get('roleId')?.touched">
         <p class="text-danger font-weight-bold">Please Select Role Name</p>
@@ -36,8 +36,8 @@
     </select>
   </div>
 
-  <div class="col-md-6">
-    <label for="validationDefault03" class="form-label text-primary">Mobile No.</label><span class="text-danger font-weight-bold">*</span>
+  <div class="col-md-6 mt-2">
+    <label for="validationDefault03" class="form-label">Mobile No. :</label><span class="text-danger font-weight-bold">*</span>
 
     <input type="text" class="form-control" id="phoneNo" formControlName="phoneNo"/>
     <div *ngIf="userForm.get('phoneNo')?.invalid && userForm.get('phoneNo')?.touched">
@@ -49,20 +49,13 @@
     
   </div>
 
-  <div class="col-md-6">
-    <label for="validationDefault04" class="form-label text-primary">Email</label><span class="text-danger font-weight-bold">*</span>
+  <div class="col-md-6 mt-2">
+    <label for="validationDefault04" class="form-label">Email :</label><span class="text-danger font-weight-bold">*</span>
 
     <input type="email" class="form-control" id="email" formControlName="email"/>
     <!-- <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
       <p class="text-danger font-weight-bold">Please Enter A Valid Email Address.</p>
    </div> -->
-    
-  </div>
-
-  <div class="col-md-4" [hidden]="isHidden">
-    <label for="validationDefault05" class="form-label">Password</label>
-
-    <input type="password" class="form-control" id="password" formControlName="password"/>
     
   </div>
 

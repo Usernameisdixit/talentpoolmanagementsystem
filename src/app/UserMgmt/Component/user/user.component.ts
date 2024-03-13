@@ -27,7 +27,7 @@ export class UserComponent {
       userFullName:['',Validators.required],
       userName:['',Validators.required],
       password:['',Validators.required],
-      roleId:[0,Validators.required],
+      roleId:['0',Validators.required],
       phoneNo:['',Validators.required],
       email:['',Validators.required],
       chrDeletedFlag:['0']
@@ -126,7 +126,7 @@ export class UserComponent {
           userFullName:data.userFullName,
           userName:data.userName,          
           password:data.password,
-          roleId:data.role.roleId,
+          roleId:data.roleId,
           phoneNo:data.phoneNo,
           email:data.email,
           chrDeletedFlag:data.chrDeletedFlag
