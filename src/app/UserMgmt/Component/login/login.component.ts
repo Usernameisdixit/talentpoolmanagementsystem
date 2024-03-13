@@ -38,8 +38,8 @@ export class LoginComponent implements OnInit {
 
               const responseObject = JSON.parse(response);
               const status = responseObject?.status;
-              const email=responseObject?.email;
               const user = responseObject?.user;
+              const email=user?.email;
     localStorage.setItem("user", JSON.stringify(user));
     const storedUserString = localStorage.getItem('user');
     if (storedUserString) {
