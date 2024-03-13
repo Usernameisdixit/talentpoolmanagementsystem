@@ -5,6 +5,7 @@ import { AssessmentserviceService } from '../../Service/assessmentservice.servic
 import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-asessmentdetails',
@@ -28,7 +29,7 @@ export class AsessmentdetailsComponent implements OnInit {
   assessments: any[];
   assessmentDtos: AssessmentDto[] = [];
 
-  constructor(private http: HttpClient, private datePipe: DatePipe, private apiService: AssessmentserviceService) {
+  constructor(private http: HttpClient, private datePipe: DatePipe, private apiService: AssessmentserviceService,private route:Router) {
     this.bsConfig = {
       containerClass: 'theme-dark-blue',
       dateInputFormat: 'DD-MMM-YYYY',
@@ -94,20 +95,10 @@ export class AsessmentdetailsComponent implements OnInit {
   }
 
   submitAssessments(): void {
-    // Check if all required fields are filled
-    if (!this.selectedPlatformId || !this.selectedYear || !this.fromDate || !this.toDate || !this.assessments || this.assessments.length === 0) {
-      Swal.fire('Error', 'Please fill all required fields.', 'error');
-      return;
-    }
+   
 
-    // Check if any assessment has empty fields
-    for (const assessment of this.assessments) {
-      if (!assessment.activityName || !assessment.marks || !assessment.totalMarks || !assessment.remarks) {
-        Swal.fire('Error', 'Please fill all fields for each assessment.', 'error');
-        return;
-      }
-    }
-
+ 
+ 
     // If all validations pass, proceed with submitting assessments
     const assessmentDtos: AssessmentDto[] = this.mapAssessmentDtos(this.assessments);
     this.apiService.submitAssessments(assessmentDtos).subscribe(
@@ -115,6 +106,8 @@ export class AsessmentdetailsComponent implements OnInit {
         if (response && response.message) {
           console.log('Assessments submitted successfully:', response.message);
           Swal.fire('Success', response.message, 'success');
+          this.route.navigateByUrl('[viewasessment]');
+
         } else {
           console.error('Unexpected response:', response);
           Swal.fire('Error', 'Failed to submit assessments', 'error');

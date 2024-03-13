@@ -18,6 +18,10 @@ export class ViewassessmentComponent {
   assessments: any[];
   showAssessmentTable: boolean = false;
 
+ 
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+
   constructor(private apiService: AssessmentserviceService) { }
 
   viewAssessmentTable() {
@@ -125,5 +129,41 @@ export class ViewassessmentComponent {
       assessment[4], 
       assessment[5]  
     ]);
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.assessments.length / this.itemsPerPage);
+  }
+
+  // Get assessments for the current page
+  getCurrentPageAssessments(): any[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.assessments.slice(startIndex, endIndex);
+  }
+
+  // Go to previous page
+  goToPreviousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  // Go to next page
+  goToNextPage(): void {
+    if (this.currentPage < this.getTotalPages()) {
+      this.currentPage++;
+    }
+  }
+
+  // Go to specific page
+  goToPage(pageNumber: number): void {
+    if (pageNumber >= 1 && pageNumber <= this.getTotalPages()) {
+      this.currentPage = pageNumber;
+    }
+  }
+
+  getPageNumbers(): number[] {
+    return Array.from({ length: this.getTotalPages() }, (_, index) => index + 1);
   }
 }
