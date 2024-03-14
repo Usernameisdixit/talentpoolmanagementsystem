@@ -67,7 +67,7 @@ export class ActivityReportComponent {
         text: 'Please choose a month before generating the PDF!',
       });
     } else {
-      const formattedDate = this.selectedDate ? this.datePipe.transform(this.selectedDate, 'dd-MMMM-yyyy') : null;
+      const formattedDate = this.selectedDate ? this.datePipe.transform(this.selectedDate, 'dd-MMM-yyyy') : null;
       this.activityReportService.getActivityReportData(this.year, this.month, this.platform, this.selectedDate?.toLocaleString())
         .subscribe(data => {
           this.isPresent = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
