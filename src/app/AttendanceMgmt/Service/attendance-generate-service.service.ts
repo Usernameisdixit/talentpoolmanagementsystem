@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import * as XLSX from 'xlsx';
-import { Observable } from 'rxjs'; // Import Observable from rxjs
+// import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx-js-style';
+import { Observable } from 'rxjs'; // 
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -11,35 +12,32 @@ import { HttpClient } from '@angular/common/http';
 export class AttendanceGenerateServiceService {
 
   private platformUrl = 'http://localhost:9999/tpms/getplatform';
-  
+
 
   constructor(private httpClient: HttpClient) { }
-  
+
 
   ngOnInit() {
     this.getPlatforms();
 
   }
-  generateAttendanceReport(attendanceDetails: any[],year: string, monthName: string, platformName: string, selectedDate: string): void {
+  generateAttendanceReport(attendanceDetails: any[], year: string, monthName: string, platformName: string, selectedDate: string): void {
     const pdf = new jsPDF();
-
-    //selected date i got as Date: 3/1/2024, 12:00:00 AM
-      
-
+    
     // Static header content
     pdf.text('Attendance Report', 10, 10);
-    const fontSize = 10; 
-     pdf.setFontSize(fontSize);
-     const fy = `Year: ${year}`;  ;
-     const month = `Month: ${monthName}`;
-     const platform = `Platform: ${platformName==='0'?'':platformName}`;
-     const reportDate = `Date: ${selectedDate===undefined?'':selectedDate}`;
-     
-     // Add additional information
-     pdf.text(fy, 10, 20);
-     pdf.text(month, 100, 20); 
-     pdf.text(platform , 10, 26);
-     pdf.text(reportDate, 100, 26);
+    const fontSize = 10;
+    pdf.setFontSize(fontSize);
+    const fy = `Year: ${year}`;;
+    const month = `Month: ${monthName}`;
+    const platform = `Platform: ${platformName === '0' ? '' : platformName}`;
+    const reportDate = `Date: ${selectedDate === undefined ? '' : selectedDate}`;
+
+    // Add additional information
+    pdf.text(fy, 10, 20);
+    pdf.text(month, 100, 20);
+    pdf.text(platform, 10, 26);
+    pdf.text(reportDate, 100, 26);
 
     // Table content
     const data = [];
@@ -57,7 +55,7 @@ export class AttendanceGenerateServiceService {
 
       // Check if the date has been processed
       if (!processedDates.has(activityDate)) {
-        const dateRowColor = processedDates.has(activityDate) ? [255, 255, 255] : [200, 200, 255];
+        const dateRowColor = processedDates.has(activityDate) ? [255, 255, 255] : ['CEEEF5'];
         data.push([{ content: activityDate, colSpan: 5, styles: { fillColor: dateRowColor, halign: 'left' } }]);
         processedDates.add(activityDate);
       }
@@ -76,20 +74,23 @@ export class AttendanceGenerateServiceService {
     });
 
     // Create auto table
+    
     autoTable(pdf, {
       head: [['Resource Name', 'Platform', 'First Half', 'Second Half']],
       body: data,
       startY: 30,              
       styles: {
-        lineColor: [0, 0, 0], // Border color for all cells
-        lineWidth: 0.5        // Border width for all cells
+        lineColor: [0, 0, 0],
+        lineWidth: 0.5,
       },
       headStyles: {
-        fillColor: [203, 61, 40],
-        textColor: [0, 0, 0],     
-        lineColor: [0, 0, 0],     // Border color for header cells
-        lineWidth: 0.5            // Border width for header cells
+        fillColor: [104, 211, 245], 
+        textColor: [9, 9, 9],
+        lineColor: [0, 0, 0],
+        lineWidth: 0.5, 
+        fontStyle: 'bold', 
       },
+      margin: { left: 10 }, 
     });
 
     pdf.save('attendance_report.pdf');
@@ -99,7 +100,7 @@ export class AttendanceGenerateServiceService {
   private getFirstHalfData(detail: any): string {
     let firstHalfData = '';
     detail.firstHalf.forEach((firstHalfObj, index, array) => {
-      firstHalfData += `${firstHalfObj.attendanceStatus} : ${firstHalfObj.activityName} ${firstHalfObj.fromHours} to ${firstHalfObj.toHours}`;
+      firstHalfData += `${firstHalfObj.attendanceStatus} : ${firstHalfObj.activityName} (${firstHalfObj.fromHours} to ${firstHalfObj.toHours})`;
       if (index < array.length - 1) {
         firstHalfData += '\n';
       }
@@ -110,7 +111,7 @@ export class AttendanceGenerateServiceService {
   private getSecondHalfData(detail: any): string {
     let secondHalfData = '';
     detail.secondHalf.forEach((secondHalfObj, index, array) => {
-      secondHalfData += `${secondHalfObj.attendanceStatus} : ${secondHalfObj.activityName} ${secondHalfObj.fromHours} to ${secondHalfObj.toHours}`;
+      secondHalfData += `${secondHalfObj.attendanceStatus} : ${secondHalfObj.activityName} (${secondHalfObj.fromHours} to ${secondHalfObj.toHours})`;
       if (index < array.length - 1) {
         secondHalfData += '\n';
       }
@@ -122,21 +123,70 @@ export class AttendanceGenerateServiceService {
     return this.httpClient.get<any[]>(this.platformUrl);
   }
 
-  generateAttendanceReportExcel(attendanceDetails: any[],year: string, monthName: string, platformName: string, selectedDate: string): void {
+  generateAttendanceReportExcel(attendanceDetails: any[], year: string, monthName: string, platformName: string, selectedDate: string): void {
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([], { skipHeader: true });
-    XLSX.utils.sheet_add_aoa(ws, [['Resource Name', 'Platform', 'First Half', 'Second Half']], { origin: 'A2' });
 
-    // Merge cells and add static header content
+    // Set column widths
+    ws['!cols'] = [
+      { wch: 20 }, // Resource Name
+      { wch: 15 }, // Platform
+      { wch: 40 }, // First Half
+      { wch: 40 }, // Second Half
+    ];
+
+    // Add headings with wrapText
+    const headerRow = ['Resource Name', 'Platform', 'First Half', 'Second Half'];
+    XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A6' });
+    for (let col = 0; col < headerRow.length; col++) {
+      const cellAddress = XLSX.utils.encode_cell({ r: 5, c: col }); 
+      ws[cellAddress].s = {
+        font: { bold: true },
+        fill: {
+          patternType: 'solid',
+          fgColor: { rgb: '52D8F9' }, 
+        },
+        alignment: {
+          wrapText: true,
+        },
+      };
+    }
+   
     ws['A1'] = {
       v: 'Attendance Report',
       t: 's',
-      font: {
-         bold: true 
-      }
+      s: {
+        font: {
+          bold: true,
+          size: 14,
+          color: { rgb: '1D05EE' },
+        },
+        alignment: {
+          horizontal: 'center',
+          vertical: 'center',
+          wrapText: true,
+        },
+      },
     };
-    //ws['A1'].s = { font: { bold: true } };
-    
-    ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }]; // Merge cells
+
+    ws['A3'] = {
+      v: `Financial Year: ${year}`,
+      t: 's',
+    };
+    ws['C3'] = {
+      v: ` Month: ${monthName}`,
+      t: 's',
+    };
+
+    ws['A4'] = {
+      v: platformName === '0' ? 'Platform: ' : `Platform: ${platformName}`,
+      t: 's',
+    };
+    ws['C4'] = {
+      v: selectedDate === undefined ? 'Date: ' : `Date: ${selectedDate}`,
+      t: 's',
+    };
+
+    ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }]; // Merge cells
 
     const data: any[] = [];
     const processedDates = new Set<string>();
@@ -149,27 +199,48 @@ export class AttendanceGenerateServiceService {
 
     attendanceDetails.forEach(detail => {
       const activityDate = detail.activityDate;
-
       // Check if the date has been processed
+      debugger;
       if (!processedDates.has(activityDate)) {
-        const dateRowColor = processedDates.has(activityDate) ? 'white' : 'lightblue';
+        const dateRowColor = processedDates.has(activityDate) ? 'white' : 'red';
+        console.log(data.length);
         data.push([activityDate]);
+        const currentRowIndex = data.length + 5;
+        ws['!merges'].push({ s: { r: currentRowIndex, c: 0 }, e: { r: currentRowIndex, c: 3 } });
+        // Apply the fill color to each cell in the merged range
+        for (let col = 0; col < 4; col++) {
+          const cellAddress = XLSX.utils.encode_cell({ r: currentRowIndex, c: col });
+          ws[cellAddress] = {
+            v: null,  
+            s: {
+              font: {
+                bold: true,
+              },
+              fill: {
+                patternType: 'solid',
+                fgColor: { rgb: 'CEEEF5' },
+              },
+              alignment: {
+                wrapText: true,
+              },
+            },
+          };
+        }
         processedDates.add(activityDate);
       }
 
       const firstHalfData = this.getFirstHalfData(detail);
       const secondHalfData = this.getSecondHalfData(detail);
-      const dataRowColor = 'white';
       data.push([
-        { t: 's', v: detail.resourceName },
-        { t: 's', v: detail.domain },
-        { t: 's', v: firstHalfData },
-        { t: 's', v: secondHalfData }
+        { v: detail.resourceName, s: { alignment: { wrapText: true } } },
+        { v: detail.domain, s: { alignment: { wrapText: true } } },
+        { v: firstHalfData, s: { alignment: { wrapText: true } } },
+        { v: secondHalfData, s: { alignment: { wrapText: true } } },
       ]);
     });
 
     // Add data to worksheet
-    XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A3' });
+    XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A7' });
 
     // Create a workbook
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
@@ -178,4 +249,5 @@ export class AttendanceGenerateServiceService {
     // Save the workbook as an Excel file
     XLSX.writeFile(wb, 'attendance_report.xlsx');
   }
+
 }

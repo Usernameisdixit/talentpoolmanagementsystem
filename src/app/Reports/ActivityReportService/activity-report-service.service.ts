@@ -3,7 +3,8 @@ import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs'; 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx-js-style';
+// import * as XLSX from 'xlsx';
 
 @Injectable({
   providedIn: 'root'
@@ -61,7 +62,7 @@ export class ActivityReportServiceService {
 
       // Check if the date has been processed
       if (!processedDates.has(activityDate)) {
-        const dateRowColor = processedDates.has(activityDate) ? [255, 255, 255] : [200, 200, 255];
+        const dateRowColor = processedDates.has(activityDate) ? [255, 255, 255] :['CEEEF5'];
         data.push([{ content: activityDate, colSpan: 5, styles: { fillColor: dateRowColor, halign: 'left' } }]);
         processedDates.add(activityDate);
       }
@@ -86,14 +87,16 @@ export class ActivityReportServiceService {
       startY: 30,              
       styles: {
         lineColor: [0, 0, 0],
-        lineWidth: 0.5        
+        lineWidth: 0.5,
       },
       headStyles: {
-        fillColor: [200, 200, 200], 
-        textColor: [0, 0, 0],     
-        lineColor: [0, 0, 0],     
-        lineWidth: 0.5            
+        fillColor: [104, 211, 245], 
+        textColor: [9, 9, 9], 
+        lineColor: [0, 0, 0], 
+        lineWidth: 0.5, 
+        fontStyle: 'bold', 
       },
+      margin: { left: 10 }, 
     });
 
     pdf.save('activity_report.pdf');
@@ -102,7 +105,7 @@ export class ActivityReportServiceService {
   private getFirstHalfData(detail: any): string {
     let firstHalfData = '';
     detail.firstHalf.forEach((firstHalfObj, index, array) => {
-      firstHalfData += `${firstHalfObj.activityName} ${firstHalfObj.fromHours} to ${firstHalfObj.toHours}`;
+      firstHalfData += `${firstHalfObj.activityName} (${firstHalfObj.fromHours} to ${firstHalfObj.toHours})`;
       if (index < array.length - 1) {
         firstHalfData += '\n';
       }
@@ -113,7 +116,7 @@ export class ActivityReportServiceService {
   private getSecondHalfData(detail: any): string {
     let secondHalfData = '';
     detail.secondHalf.forEach((secondHalfObj, index, array) => {
-      secondHalfData += `${secondHalfObj.activityName} ${secondHalfObj.fromHours} to ${secondHalfObj.toHours}`;
+      secondHalfData += `${secondHalfObj.activityName} (${secondHalfObj.fromHours} to ${secondHalfObj.toHours})`;
       if (index < array.length - 1) {
         secondHalfData += '\n';
       }
@@ -121,62 +124,130 @@ export class ActivityReportServiceService {
     return secondHalfData;
   }
 
-  generateActivityReportExcel(attendanceDetails: any[],year: string, monthName: string, platformName: string, selectedDate: string): void {
+  generateActivityReportExcel(activityData: any[],year: string, monthName: string, platformName: string, selectedDate: string): void {
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([], { skipHeader: true });
 
-    XLSX.utils.sheet_add_aoa(ws, [['Resource Name', 'Platform', 'First Half', 'Second Half']], { origin: 'A2' });
+    // Set column widths
+    ws['!cols'] = [
+      { wch: 20 }, // Resource Name
+      { wch: 15 }, // Platform
+      { wch: 40 }, // First Half
+      { wch: 40 }, // Second Half
+    ];
 
-    // Merge cells and add static header content
-    ws['A1'] = { v: 'Activity Report', t: 's', s: { font: { bold: true, size: 14 }, alignment: { horizontal: 'center', vertical: 'center' } } };
-    ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }]; // Merge cells
+    // Add headings with wrapText
+    const headerRow = ['Resource Name', 'Platform', 'First Half', 'Second Half'];
+    XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A6' });
+    for (let col = 0; col < headerRow.length; col++) {
+      const cellAddress = XLSX.utils.encode_cell({ r: 5, c: col }); 
+      ws[cellAddress].s = {
+        font: { bold: true },
+        fill: {
+          patternType: 'solid',
+          fgColor: { rgb: '52D8F9' }, 
+        },
+        alignment: {
+          wrapText: true,
+        },
+      };
+    }
+   
+    ws['A1'] = {
+      v: 'Activity Report',
+      t: 's',
+      s: {
+        font: {
+          bold: true,
+          size: 14,
+          color: { rgb: '1D05EE' },
+        },
+        alignment: {
+          horizontal: 'center',
+          vertical: 'center',
+          wrapText: true,
+        },
+      },
+    };
 
-    // Add styles to the merged cell (Attendance Report)
-    ws['A1'].s = { font: { bold: true, size: 100, color: { rgb: 'FFFFFF' } }, fill: { fgColor: { rgb: '000080' } }, alignment: { horizontal: 'center', vertical: 'center' } };
+    ws['A3'] = {
+      v: `Financial Year: ${year}`,
+      t: 's',
+    };
+    ws['C3'] = {
+      v: ` Month: ${monthName}`,
+      t: 's',
+    };
+
+    ws['A4'] = {
+      v: platformName === '0' ? 'Platform: ' : `Platform: ${platformName}`,
+      t: 's',
+    };
+    ws['C4'] = {
+      v: selectedDate === undefined ? 'Date: ' : `Date: ${selectedDate}`,
+      t: 's',
+    };
+
+    ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }]; // Merge cells
+
     const data: any[] = [];
     const processedDates = new Set<string>();
 
-    attendanceDetails.sort((a, b) => {
+    activityData.sort((a, b) => {
       const dateA = new Date(a.activityDate).getTime();
       const dateB = new Date(b.activityDate).getTime();
       return dateA - dateB;
     });
 
-    attendanceDetails.forEach(detail => {
+    activityData.forEach(detail => {
       const activityDate = detail.activityDate;
-
       // Check if the date has been processed
+      debugger;
       if (!processedDates.has(activityDate)) {
-        const dateRowColor = processedDates.has(activityDate) ? 'white' : 'lightblue';
-        data.push([{
-          t: 's', 
-          v: activityDate,
-          s: {
-            fill: { fgColor: { rgb: dateRowColor } },
-            alignment: { horizontal: 'left' }
-          }
-        }]);
+        const dateRowColor = processedDates.has(activityDate) ? 'white' : 'red';
+        console.log(data.length);
+        data.push([activityDate]);
+        const currentRowIndex = data.length + 5;
+        ws['!merges'].push({ s: { r: currentRowIndex, c: 0 }, e: { r: currentRowIndex, c: 3 } });
+        // Apply the fill color to each cell in the merged range
+        for (let col = 0; col < 4; col++) {
+          const cellAddress = XLSX.utils.encode_cell({ r: currentRowIndex, c: col });
+          ws[cellAddress] = {
+            v: null,  
+            s: {
+              font: {
+                bold: true,
+              },
+              fill: {
+                patternType: 'solid',
+                fgColor: { rgb: 'CEEEF5' },
+              },
+              alignment: {
+                wrapText: true,
+              },
+            },
+          };
+        }
         processedDates.add(activityDate);
       }
 
       const firstHalfData = this.getFirstHalfData(detail);
       const secondHalfData = this.getSecondHalfData(detail);
-      const dataRowColor = 'white';
       data.push([
-        { t: 's', v: detail.resourceName, s: { fill: { fgColor: { rgb: dataRowColor } } } },
-        { t: 's', v: detail.domain, s: { fill: { fgColor: { rgb: dataRowColor } } } },
-        { t: 's', v: firstHalfData, s: { fill: { fgColor: { rgb: dataRowColor } } } },
-        { t: 's', v: secondHalfData, s: { fill: { fgColor: { rgb: dataRowColor } } } }
+        { v: detail.resourceName, s: { alignment: { wrapText: true } } },
+        { v: detail.domain, s: { alignment: { wrapText: true } } },
+        { v: firstHalfData, s: { alignment: { wrapText: true } } },
+        { v: secondHalfData, s: { alignment: { wrapText: true } } },
       ]);
     });
 
-    
-    XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A3' });
+    // Add data to worksheet
+    XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A7' });
+
     // Create a workbook
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Attendance Report');
+    XLSX.utils.book_append_sheet(wb, ws, 'Activity Report');
 
     // Save the workbook as an Excel file
     XLSX.writeFile(wb, 'activity_report.xlsx');
-
   }
 }

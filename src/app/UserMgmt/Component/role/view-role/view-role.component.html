@@ -1,37 +1,48 @@
-<div class="container">
-  <h2>View Roles</h2>
-  <table class="custom-table">
-    <thead>
-      <tr>
-        <th>Sl#</th>
-        <th>Role Name</th>
-        <th>Status</th>
-        <th>Actions</th> 
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let role of roleList | paginate :{
-        itemsPerPage : tableSize,
-        currentPage : page ,
-        totalItems: count
-        }; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ role.roleName }}</td>
-        <td>
-          <span class="status-badge status-{{ role.deletedFlag ? 'inactive' : 'active' }}">
-            {{ role.deletedFlag ? 'Inactive' : 'Active' }}
-          </span>
-        </td>
-        <td>
-          <button class="btn btn-primary btn-sm btn-space" (click)="editRole(role.roleId)">Edit</button>
-          <button class="btn btn-danger btn-sm btn-space" (click)="deleteRole(role.roleId)">
-            {{ role.deletedFlag ? 'Restore' : 'Inactive' }}
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="d-flex justify-content-end" id="pagination" *ngIf="roleList.length!=0">
-    <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)= "getTableDataChange($event)"></pagination-controls>
+<div class="container mt-3">
+  <h1 class="mt-4" style="text-align: center;">View Roles</h1>
+  <hr>
+  <div class="row">
+    <div class="col-md-12 text-right">
+      <div class="export-buttons">
+        <button class="btn btn-icon export-btn" title="Download PDF" (click)="exportToPDF()">
+          <i class="fas fa-file-pdf fa-lg pdf-icon"></i>
+        </button>
+        <button class="btn btn-icon export-btn" title="Download Excel" (click)="exportToExcel()">
+          <i class="fas fa-file-excel fa-lg excel-icon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="table-responsive mt-2" id="roleTable">
+    <table class="table table-striped table-bordered custom-table">
+      <thead class="thead-dark">
+        <tr>
+          <th>Sl#</th>
+          <th>Role Name</th>
+          <th>Status</th>
+          <th>Actions</th> 
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let role of roleList | paginate :{ itemsPerPage: tableSize, currentPage: page, totalItems: count }; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ role.roleName }}</td>
+          <td>
+            <span class="status-badge status-{{ role.deletedFlag ? 'inactive' : 'active' }}">
+              {{ role.deletedFlag ? 'Inactive' : 'Active' }}
+            </span>
+          </td>
+          <td>
+            <button class="btn btn-primary btn-sm btn-space" (click)="editRole(role.roleId)">Edit</button>
+            <button class="btn btn-danger btn-sm btn-space" (click)="deleteRole(role.roleId)">
+              {{ role.deletedFlag ? 'Restore' : 'Inactive' }}
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="d-flex justify-content-end" id="pagination" *ngIf="roleList.length != 0">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="getTableDataChange($event)"></pagination-controls>
   </div>
 </div>

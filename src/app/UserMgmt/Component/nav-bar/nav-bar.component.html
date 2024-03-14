@@ -8,7 +8,7 @@
   <div class="spacer"></div>
   <div *ngIf="authService.isAuthenticated()">
     <mat-menu #userMenu="matMenu">
-      <button mat-menu-item>{{credentials.username}}</button>
+      <button mat-menu-item>{{userName}}</button>
       <button mat-menu-item routerLink="login" (click)="logout()">Logout</button>
     </mat-menu>
     <button mat-icon-button [matMenuTriggerFor]="userMenu">

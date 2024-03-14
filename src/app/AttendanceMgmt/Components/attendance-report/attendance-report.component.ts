@@ -70,11 +70,11 @@ export class AttendanceReportComponent {
           if (this.isPresent) {
             
             this.attendanceGeneratedService.generateAttendanceReport(data,this.year, this.monthName, this.platform, formattedDate?.toLocaleString());
-            Swal.fire({
-              icon: 'success',
-              title: 'PDF Generated',
-              text: 'Your PDF has been successfully generated!',
-            });
+            // Swal.fire({
+            //   icon: 'success',
+            //   title: 'PDF Generated',
+            //   text: 'Your PDF has been successfully generated!',
+            // });
           } else {
             Swal.fire({
               icon: 'info',
@@ -111,17 +111,17 @@ export class AttendanceReportComponent {
         text: 'Please choose a month before generating the Excel!',
       });
     } else {
-      const formattedDate = this.selectedDate ? this.datePipe.transform(this.selectedDate, 'dd-MMMM-yyyy') : null;
+      const formattedDate = this.selectedDate ? this.datePipe.transform(this.selectedDate, 'dd-MMM-yyyy') : null;
       this.attendanceService.getAttendanceReportData(this.year, this.month, this.platform, this.selectedDate?.toLocaleString())
         .subscribe(data => {
           this.isPresent = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
           if (this.isPresent) {
             this.attendanceGeneratedService.generateAttendanceReportExcel(data,this.year, this.monthName, this.platform, formattedDate?.toLocaleString());
-            Swal.fire({
-              icon: 'success',
-              title: 'Excel Generated',
-              text: 'Your Excel has been successfully generated!',
-            });
+            // Swal.fire({
+            //   icon: 'success',
+            //   title: 'Excel Generated',
+            //   text: 'Your Excel has been successfully generated!',
+            // });
           } else {
             Swal.fire({
               icon: 'info',

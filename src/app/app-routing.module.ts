@@ -31,9 +31,7 @@ const routes: Routes = [
   { path: 'forgotPassword', component: ForgotpasswordComponent },
   { path: 'restpassword/:email', component: RestpasswordComponent },
   
-  { path : "role", component:CreateRoleComponent},
-  { path : "viewRole", component:ViewRoleComponent},
-  { path : "edit/:roleId", component:CreateRoleComponent},
+  
   { 
     path: '', 
     component: AppLayoutComponent,
@@ -57,7 +55,10 @@ const routes: Routes = [
        {path: "activityReport", component:ActivityReportComponent,canActivate: [authGuard]},
        { path: 'assessmentreport', component: AssessmentreportComponent, canActivate: [authGuard]  },
        {path: "activity", component:AllocationComponent,canActivate: [authGuard]},
-       { path: 'editallocdetails/:id', component: AllocationDetailsComponent, canActivate: [authGuard]  },
+       { path: 'editallocdetails/:id', component: AllocationDetailsComponent,   },
+       { path : "role", component:CreateRoleComponent, canActivate: [authGuard]},
+       { path : "viewRole", component:ViewRoleComponent, canActivate: [authGuard]},
+       { path : "edit/:roleId", component:CreateRoleComponent, canActivate: [authGuard]}
    
     ]
   }
