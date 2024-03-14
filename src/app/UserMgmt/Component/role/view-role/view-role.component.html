@@ -1,5 +1,17 @@
 <div class="container">
   <h2>View Roles</h2>
+  <div class="top-heading position-relative">
+     <div class="export-buttons">
+       <button  (click)="exportToPDF()" class="btn btn-icon export-btn" title="Download PDF">
+         <i class="fas fa-file-pdf fa-lg pdf-icon"></i>
+       </button>
+
+       <button  (click)="exportToExcel()" class="btn btn-icon export-btn" title="Download Excel">
+        <i class="fas fa-file-excel fa-lg excel-icon"></i>
+      </button>
+       
+     </div>
+ </div>
   <table class="custom-table">
     <thead>
       <tr>
