@@ -53,12 +53,12 @@
     </span>
   </td>
   <td>
-    &nbsp;
-    <button type="button" class="btn btn-info" (click)="editalent(c.resourceId)" >Edit</button>
-    &nbsp;
-    <button type="button" class="btn btn-danger" (click)="deletetalent($event, c.resourceId)">Delete</button>
-    </td>
-  </tr>
+    <div class="btn-group">
+      <button type="button" class="btn btn-info" (click)="editalent(c.resourceId)">Edit</button>&nbsp;&nbsp;
+      <button type="button" class="btn btn-danger" (click)="deletetalent($event, c.resourceId)">Delete</button>
+    </div>
+  </td>
+  
      <tbody>
   </table>
   <div class="d-flex justify-content-end" id="pagination" *ngIf="talent.length!=0">

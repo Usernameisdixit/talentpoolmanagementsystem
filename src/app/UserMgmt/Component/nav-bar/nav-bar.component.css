@@ -2,11 +2,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(22, 130, 138, 0.8); /* Transparent background */
+  background: rgba(22, 130, 138) ;/* Transparent background */
   color: white; /* Change text color */
   padding: 10px 20px; /* Add padding to the toolbar */
   box-shadow: 0 2px 4px rgba(165, 39, 39, 0.1); /* Add shadow for depth */
-
+  
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* ensure the navbar is above other content */
+  
+  
  
 }
 
@@ -19,6 +26,7 @@
   width: 100px; /* Set logo width */
   height: auto; /* Maintain aspect ratio */
   margin-right: 10px;
+  
 }
 
 .company-name {

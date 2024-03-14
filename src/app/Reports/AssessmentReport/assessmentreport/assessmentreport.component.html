@@ -1,9 +1,76 @@
-<div class="container">
-    <h1 class="text-center mb-4">Report Generation</h1>
-    <div class="card">
-      <div class="card-body d-flex justify-content-center"> <!-- Center align button -->
-        <button mat-raised-button color="primary" (click)="generateReport()">Generate Report</button>
-      </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assessment Report</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/ngx-bootstrap/datepicker/bs-datepicker.css" rel="stylesheet">
+
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-center mb-4">Assessment Report</h2>
+    <div class="row justify-content-start">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="year">Year:</label>
+                <select id="year" [(ngModel)]="year" class="form-control">
+                    <option [value]="getCurrentYear()" selected>{{ getCurrentYear() }}</option>
+                    <option [value]="getCurrentYear() + 1">{{ getCurrentYear() + 1 }}</option>
+                    <option [value]="getCurrentYear() + 2">{{ getCurrentYear() + 2 }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="month">Month:</label>
+                <select id="month" [(ngModel)]="month" class="form-control">
+                    <option value='0' selected>--Select--</option>
+                    <option *ngFor="let option of months" [value]="option.value">{{ option.name }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="platform">Platform:</label>
+                <select id="platform" [(ngModel)]="platform" class="form-control">
+                    <option value='0' selected>--Select--</option>
+                    <option *ngFor="let platform of platforms" [value]="platform.platform">{{ platform.platform }}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <div class="input-group">
+                    <input id="date" class="form-control" type="text" [(ngModel)]="selectedDate" bsDatepicker
+                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" placeholder="Select date" />
+                    <span class="input-group-text"><i class="material-icons">date_range</i></span>
+                </div>
+            </div>
+        </div>
+
+    
+       
+
+        <div class="row justify-content-center button-container"> <!-- Added button-container class here -->
+            <div class="col-md-12 text-center">
+                <button type="button" class="btn btn-success button-space" (click)="downloadReport('pdf')">Generate PDF</button>&nbsp;
+                <button type="button" class="btn btn-success button-space" (click)="downloadReport('excel')">Generate Excel</button> &nbsp;
+                <button type="button" class="btn btn-danger button-space" (click)="resetForm()">Reset</button> 
+            </div>
+        </div>
     </div>
   </div>
-  
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ngx-bootstrap/datepicker/bs-datepicker.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

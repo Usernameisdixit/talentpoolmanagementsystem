@@ -1,60 +1,77 @@
-/* Resetting default margin and padding */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  /* Styling container */
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  /* Styling form elements */
-  label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  input[type="date"],
-  select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
-  
-  /* Styling table */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  thead {
-    background-color: #f2f2f2;
-  }
-  
-  th {
-    font-weight: bold;
-  }
-  
-  /* Styling links */
-  a {
-    text-decoration: none;
-    color: #007bff;
-  }
-  
-  a:hover {
-    text-decoration: underline;
-  }
-  
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 10px;
+}
+
+.row {
+
+  margin-bottom: 20px;
+}
+
+.col-md-3 {
+  flex-basis: calc(25% - 10px);
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+select,
+input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.activity-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.activity-table th,
+.activity-table td {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
+
+.activity-table th {
+  background-color: #f0f0f0;
+}
+
+.edit-btn {
+  cursor: pointer;
+  color: blue;
+}
+
+.edit-btn:hover {
+  text-decoration: underline;
+}
+/* Align fields properly */
+.container {
+  margin-top: 10px;
+}
+
+.col-md-3 {
+  margin-bottom: 10px;
+}
+
+/* Style for edit button */
+.edit-btn {
+  cursor: pointer;
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.edit-btn:hover {
+  text-decoration: none;
+}

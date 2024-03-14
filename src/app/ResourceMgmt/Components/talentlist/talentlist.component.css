@@ -5,21 +5,32 @@
     right: 0;
 }
 
-/* Badge styling */
-.status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
-  }
+
   
-  .status-active {
-    background-color: #28a745;
-    color: #fff;
-  }
+
   
-  .status-inactive {
-    background-color: #dc3545;
-    color: #fff;
-  }
+ 
+
+  .export-buttons {
+  margin-top: 20px;
+}
+
+.export-btn {
+  margin-right: 10px;
+}
+
+.btn-medium {
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+.btn-light {
+  background-color: #f8f9fa;
+  color: #000;
+  border-color: #dee2e6;
+}
+
+.btn-light:hover {
+  background-color: #e2e6ea;
+  color: #000;
+}
