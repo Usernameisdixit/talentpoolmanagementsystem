@@ -4,24 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Your Page Title</title>
+  <link rel="stylesheet" href="allocation.component.css">
 </head>
 <body>
   <div class="container">
     <div class="row">
+      <h1 class="text-center">Activity Allocation</h1>
       <div class="col-md-3">
-        <label>Platform</label>
+        <label for="platform">Platform</label>
         <select id="platform">
           <option *ngFor="let platform of platforms" [value]="platform.platformId">{{ platform.platform }}</option>
         </select>
       </div>
     
       <div class="col-md-3">
-        <label>Activity Date</label>
+        <label for="activityDate">Activity Date</label>
         <input type="date" id="activityDate" (ngModel)="activityDate" (change)="setDate()">
       </div>
     </div>
     
-    <table>
+    <table class="activity-table">
       <thead>
         <tr>
           <th rowspan="2">Resources</th>
@@ -56,10 +58,12 @@
               </ul>
             </div>
           </td>
-          <td><button class="btn btn-info">
-            <span  *ngIf="resource.isAllocatedActivity==false" (click)="editDetails(resource.resourceId)">Add</span>
-            <span *ngIf="resource.isAllocatedActivity==true" (click)="editDetails(resource.resourceId)">Edit</span>
-          </button></td>
+          <td>
+            <button class=" btn-secondary" *ngIf="resource.isAllocatedActivity==false">
+              Add
+            </button>
+            <button class=" btn-info" *ngIf="resource.isAllocatedActivity==true" (click)="editDetails(resource.resourceId)">Edit</button>
+          </td>
         </tr>
       </tbody>
     </table>

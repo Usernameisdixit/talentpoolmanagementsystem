@@ -28,6 +28,7 @@ export class AsessmentdetailsComponent implements OnInit {
   showAssessmentTable: boolean = false;
   assessments: any[];
   assessmentDtos: AssessmentDto[] = [];
+ 
 
   constructor(private http: HttpClient, private datePipe: DatePipe, private apiService: AssessmentserviceService,private route:Router) {
     this.bsConfig = {
@@ -95,10 +96,6 @@ export class AsessmentdetailsComponent implements OnInit {
   }
 
   submitAssessments(): void {
-   
-
- 
- 
     // If all validations pass, proceed with submitting assessments
     const assessmentDtos: AssessmentDto[] = this.mapAssessmentDtos(this.assessments);
     this.apiService.submitAssessments(assessmentDtos).subscribe(
@@ -106,7 +103,7 @@ export class AsessmentdetailsComponent implements OnInit {
         if (response && response.message) {
           console.log('Assessments submitted successfully:', response.message);
           Swal.fire('Success', response.message, 'success');
-          this.route.navigateByUrl('[viewasessment]');
+          this.route.navigateByUrl('/viewasessment');
 
         } else {
           console.error('Unexpected response:', response);
@@ -118,6 +115,10 @@ export class AsessmentdetailsComponent implements OnInit {
         Swal.fire('Error', 'Failed to submit assessments', 'error');
       }
     );
+  }
+
+  getRowCount(resourceCode: string): number {
+    return this.assessments.filter(assessment => assessment.resourceCode === resourceCode).length;
   }
 
 }

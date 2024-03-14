@@ -23,6 +23,10 @@ export class ViewassessmentComponent {
   itemsPerPage: number = 10;
 
   constructor(private apiService: AssessmentserviceService) { }
+  ngOnInit(): void {
+    // Your initialization code here
+   this.viewAssessmentTable();
+  }
 
   viewAssessmentTable() {
     this.showAssessmentTable = !this.showAssessmentTable;

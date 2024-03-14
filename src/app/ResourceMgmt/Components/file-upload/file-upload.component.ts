@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import Swal from 'sweetalert2';
 import { DatePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-file-upload',
@@ -20,7 +21,7 @@ export class FileUploadComponent {
   formattedDate: string;
   fileError: string;
 
-  constructor(private http: HttpClient, private localeService: BsLocaleService, private datePipe: DatePipe) {
+  constructor(private http: HttpClient, private localeService: BsLocaleService, private datePipe: DatePipe,private route : Router) {
     this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
     this.localeService.use('en-gb');
   }
@@ -30,7 +31,7 @@ export class FileUploadComponent {
   }
 
   onUpload(): void {
-    debugger;
+
     this.fileError = null;
     let errorMessage = '';
     let allocationMsg = '';
@@ -88,6 +89,7 @@ export class FileUploadComponent {
           title: 'Success!',
           text: 'Platform data saved successfully'
         });
+        this.route.navigateByUrl('/talents');
         this.selectedFile = null;
         this.allocationDate = null;
         this.isUploading = false;
