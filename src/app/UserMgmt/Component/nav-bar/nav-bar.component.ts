@@ -13,6 +13,7 @@ export class NavBarComponent implements OnInit{
     username:'',
     password:''
   }
+userName: any;
   constructor(private loginService: LoginService,public authService: AuthService) { 
     this.users=[]
   }
@@ -23,7 +24,7 @@ export class NavBarComponent implements OnInit{
     const storedUserString = localStorage.getItem('user');
     if (storedUserString) {
       const storedUser = JSON.parse(storedUserString);
-      this.credentials.username = storedUser.userName;
+       this.userName= storedUser.userName;
       console.log("navbar session name="+this.credentials.username);
     } else {
       console.error('User not found in sessionStorage.');
