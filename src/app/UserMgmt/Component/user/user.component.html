@@ -28,7 +28,7 @@
     <label for="validationDefault02" class="form-label">Role :</label><span class="text-danger font-weight-bold">*</span>
 
     <select class="form-select" id="roleId"  formControlName="roleId">
-      <option value="0"> Select Role </option>
+      <option value=""> Select Role </option>
       <option *ngFor="let role of roleDetails" value="{{role.roleId}}">{{role.roleName}}</option>
       <div *ngIf="userForm.get('roleId')?.invalid && userForm.get('roleId')?.touched">
         <p class="text-danger font-weight-bold">Please Select Role Name</p>

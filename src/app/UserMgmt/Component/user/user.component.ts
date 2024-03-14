@@ -27,10 +27,9 @@ export class UserComponent {
       userFullName:['',Validators.required],
       userName:['',Validators.required],
       password:['',Validators.required],
-      roleId:['0',Validators.required],
+      roleId:['',Validators.required],
       phoneNo:['',Validators.required],
-      email:['',Validators.required],
-      chrDeletedFlag:['0']
+      email:['',Validators.required]
     });
   }
 
@@ -63,22 +62,20 @@ export class UserComponent {
   }
 
 
-  //get role details
+  //--------------------------------  get role details ----------------------------------
   getRoleDetails(){
 
     this.userService.getRoleDetails().subscribe((data)=>{
       console.log(data);
-     
-       this.roleDetails=data;
+      this.roleDetails=data;
     },
     (error)=>{
       console.log(error);
-     
     });
   }
 
 
-  //to save User
+  //------------------------------------ to save User --------------------------------------
   onSubmit(){
      let errorFlag=0;
      const userFullName=this.userForm.get('userFullName');
@@ -152,7 +149,7 @@ export class UserComponent {
 
 
 
-  //data binding in add page
+  //---------------------------- data binding in add page -------------------------------------
   editData(){
     this.userService.editUser(this.userId).subscribe((data:any)=>{
      
@@ -184,7 +181,7 @@ export class UserComponent {
   }
 
 
-  // for duplicate check
+  // ------------------------------- for duplicate check -------------------
   duplicateCheck(event:any){
    
     const userName=event.target.value;
