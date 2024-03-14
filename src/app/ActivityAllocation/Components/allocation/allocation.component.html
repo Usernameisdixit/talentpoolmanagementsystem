@@ -57,7 +57,7 @@
             </div>
           </td>
           <td><button class="btn btn-info">
-            <span  *ngIf="resource.isAllocatedActivity==false">Add</span>
+            <span  *ngIf="resource.isAllocatedActivity==false" (click)="editDetails(resource.resourceId)">Add</span>
             <span *ngIf="resource.isAllocatedActivity==true" (click)="editDetails(resource.resourceId)">Edit</span>
           </button></td>
         </tr>
