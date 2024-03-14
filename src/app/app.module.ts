@@ -58,6 +58,8 @@ import { AssessmentreportComponent } from './Reports/AssessmentReport/assessment
 import { ReportTypeDialogComponent } from './Reports/report-type-dialog/report-type-dialog.component';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
+import { AllocationComponent } from './ActivityAllocation/Components/allocation/allocation.component';
+import { AllocationDetailsComponent } from './ActivityAllocation/Components/allocation-details/allocation-details.component';
 
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
@@ -87,7 +89,9 @@ defineLocale('en-gb', enGbLocale); //
     CreateRoleComponent,
     ActivityReportComponent,
     AssessmentreportComponent,
-    ReportTypeDialogComponent
+    ReportTypeDialogComponent,
+    AllocationComponent,
+    AllocationDetailsComponent
 
   ],
   imports: [

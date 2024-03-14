@@ -18,6 +18,10 @@ export class ViewassessmentComponent {
   assessments: any[];
   showAssessmentTable: boolean = false;
 
+ 
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+
   constructor(private apiService: AssessmentserviceService) { }
 
   viewAssessmentTable() {
@@ -61,17 +65,53 @@ export class ViewassessmentComponent {
   }
   
   
+
+
+
   exportToExcel() {
-    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(this.getTableData());
+   
+    const tableData = this.getTableData();
+
+   
+    const headerStyle = { bold: true }; 
+    const header = [
+        { v: 'Sl.No', s: headerStyle },
+        { v: 'Resource Name', s: headerStyle },
+        { v: 'Platform Name', s: headerStyle },
+        { v: 'Activity Name', s: headerStyle },
+        { v: 'Total Marks', s: headerStyle },
+        { v: 'Marks', s: headerStyle },
+        { v: 'Remarks', s: headerStyle }
+    ];
+    
   
-    // Add header row
-    const header = ['Sl.No', 'Resource Name', 'Platform Name', 'Activity Name', 'Total Marks', 'Marks', 'Remarks'];
-    XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' });
+    tableData.unshift(header);
+
+   
+    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
+    
+   
+    const range = XLSX.utils.decode_range(worksheet['!ref']);
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+            const cellAddress = { c: C, r: R };
+            const cellRef = XLSX.utils.encode_cell(cellAddress);
+            if (!worksheet[cellRef]) continue;
+            worksheet[cellRef].s = { wrapText: true };
+        }
+    }
+
   
     const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    
+  
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    
+  
     this.saveAsExcelFile(excelBuffer, 'assessment-details');
-  }
+}
+
+
   
 
   private saveAsExcelFile(buffer: any, fileName: string): void {
@@ -89,5 +129,41 @@ export class ViewassessmentComponent {
       assessment[4], 
       assessment[5]  
     ]);
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.assessments.length / this.itemsPerPage);
+  }
+
+  // Get assessments for the current page
+  getCurrentPageAssessments(): any[] {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return this.assessments.slice(startIndex, endIndex);
+  }
+
+  // Go to previous page
+  goToPreviousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    }
+  }
+
+  // Go to next page
+  goToNextPage(): void {
+    if (this.currentPage < this.getTotalPages()) {
+      this.currentPage++;
+    }
+  }
+
+  // Go to specific page
+  goToPage(pageNumber: number): void {
+    if (pageNumber >= 1 && pageNumber <= this.getTotalPages()) {
+      this.currentPage = pageNumber;
+    }
+  }
+
+  getPageNumbers(): number[] {
+    return Array.from({ length: this.getTotalPages() }, (_, index) => index + 1);
   }
 }

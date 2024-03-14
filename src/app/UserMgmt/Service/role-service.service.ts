@@ -13,7 +13,6 @@ export class RoleServiceService {
   constructor(private http :HttpClient) { }
 
   createRole(role: any): Observable<any> {
-    debugger;
     return this.http.post(`${this.saveUrl}`, role);
   }
 
@@ -26,12 +25,10 @@ export class RoleServiceService {
   }
 
   editRole(id:any){
-    debugger
     return this.http.get(this.editUrl+id);
 }
 
 updateRole(id:any,data:any){
-  debugger
   return this.http.put(this.updateUrl+id,data);
 }
 
