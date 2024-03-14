@@ -60,6 +60,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AllocationComponent } from './ActivityAllocation/Components/allocation/allocation.component';
 import { AllocationDetailsComponent } from './ActivityAllocation/Components/allocation-details/allocation-details.component';
+import { FooterComponent } from './Footer/footer/footer.component';
 
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
@@ -91,7 +92,8 @@ defineLocale('en-gb', enGbLocale); //
     AssessmentreportComponent,
     ReportTypeDialogComponent,
     AllocationComponent,
-    AllocationDetailsComponent
+    AllocationDetailsComponent,
+    FooterComponent
 
   ],
   imports: [
