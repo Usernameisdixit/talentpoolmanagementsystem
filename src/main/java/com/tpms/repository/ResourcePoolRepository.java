@@ -15,6 +15,9 @@ public interface ResourcePoolRepository extends JpaRepository<ResourcePool, Inte
 	Optional<ResourcePool> findById(Integer resourceId);
 
 	List<ResourcePool> findByPlatform(String platform);
+
+	@Query("FROM ResourcePool r JOIN FETCH r.activityAlloc a JOIN FETCH a.details d WHERE r.deletedFlag=0 AND a.deletedFlag=false AND d.deletedFlag=false")
+	List<ResourcePool> findAllActiveRecords();
 	
 	
 
