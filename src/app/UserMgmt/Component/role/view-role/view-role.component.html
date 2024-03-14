@@ -1,5 +1,17 @@
 <div class="container">
   <h2>View Roles</h2>
+  <div class="top-heading position-relative">
+     <div class="export-buttons">
+       <button  (click)="exportToPDF()" class="btn btn-icon export-btn" title="Download PDF">
+         <i class="fas fa-file-pdf fa-lg pdf-icon"></i>
+       </button>
+
+       <button  (click)="exportToExcel()" class="btn btn-icon export-btn" title="Download Excel">
+        <i class="fas fa-file-excel fa-lg excel-icon"></i>
+      </button>
+       
+     </div>
+ </div>
   <table class="custom-table">
     <thead>
       <tr>
@@ -10,7 +22,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let role of roleList; let i = index">
+      <tr *ngFor="let role of roleList | paginate :{
+        itemsPerPage : tableSize,
+        currentPage : page ,
+        totalItems: count
+        }; let i = index">
         <td>{{ i + 1 }}</td>
         <td>{{ role.roleName }}</td>
         <td>
@@ -27,4 +43,7 @@
       </tr>
     </tbody>
   </table>
+  <div class="d-flex justify-content-end" id="pagination" *ngIf="roleList.length!=0">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)= "getTableDataChange($event)"></pagination-controls>
+  </div>
 </div>

@@ -27,7 +27,7 @@ export class UserComponent {
       userFullName:['',Validators.required],
       userName:['',Validators.required],
       password:['',Validators.required],
-      roleId:[0,Validators.required],
+      roleId:['0',Validators.required],
       phoneNo:['',Validators.required],
       email:['',Validators.required],
       chrDeletedFlag:['0']
@@ -66,7 +66,6 @@ export class UserComponent {
   //get role details
   getRoleDetails(){
 
-
     this.userService.getRoleDetails().subscribe((data)=>{
       console.log(data);
      
@@ -79,14 +78,49 @@ export class UserComponent {
   }
 
 
-  //to add User
+  //to save User
   onSubmit(){
-     
-       // for save user
+     let errorFlag=0;
+     const userFullName=this.userForm.get('userFullName');
+     const userName=this.userForm.get('userName');
+     const email=this.userForm.get('email');
+     const phoneNo=this.userForm.get('phoneNo');
+     const roleId=this.userForm.get('roleId');
+      debugger;
+    if (userFullName?.invalid && errorFlag === 0) {
+      errorFlag = 1;
+      userFullName.markAsTouched();
+      Swal.fire("Please Enter The Full Name!");
+    }
+    if (userName?.invalid && errorFlag === 0) {
+      errorFlag = 1;
+      userName.markAsTouched();
+      Swal.fire("Please Enter The User Name!");
+    }
+
+    if (roleId?.invalid && errorFlag === 0) {
+      errorFlag = 1;
+      roleId.markAsTouched();
+      Swal.fire("Please Select Role!");
+    }
+
+    if (phoneNo?.invalid && errorFlag === 0) {
+      errorFlag = 1;
+      phoneNo.markAsTouched();
+      Swal.fire("Please Enter A Valid Phone Number!");
+    }
+
+    if (email?.invalid && errorFlag === 0) {
+      errorFlag = 1;
+      email.markAsTouched();
+      Swal.fire("Please Enter A Valid Email!");
+    }
+
+    if(errorFlag===0){
         const userData=this.userForm.value;
         userData.userId=this.userId;
         console.log(userData);
-        this.userService.saveUser(userData).subscribe((data) => {
+        debugger;
           Swal.fire({
             title: 'Do you want to submit?',
             icon: 'warning',
@@ -96,22 +130,24 @@ export class UserComponent {
             reverseButtons: true
           }).then((result) => {
             if (result.isConfirmed) {
+              this.userService.saveUser(userData).subscribe((data) => {
               if (this.userId != 0) {
                 Swal.fire('User Updated', 'User Updated Successfully', 'success');
               } else {
                 Swal.fire('User Created', 'User Created Successfully', 'success');
               }
               this.route.navigate(['viewUser']);
+            },
+            (error) => {
+              console.log(error);
+            });
+              
             } else if (result.dismiss === Swal.DismissReason.cancel) {
               // User clicked cancel, do nothing
               Swal.fire('Cancelled', 'Your data is not submitted :)', 'error');
             }
-          });
-        },
-        (error) => {
-          console.log(error);
-        });
-   
+          }); 
+     }
   }
 
 
@@ -126,7 +162,7 @@ export class UserComponent {
           userFullName:data.userFullName,
           userName:data.userName,          
           password:data.password,
-          roleId:data.role.roleId,
+          roleId:data.roleId,
           phoneNo:data.phoneNo,
           email:data.email,
           chrDeletedFlag:data.chrDeletedFlag
