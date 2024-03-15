@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Talent } from 'src/app/Model/talent';
 import { ContactService } from '../../Services/contact.service';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-talentedit',
@@ -12,6 +13,7 @@ export class TalenteditComponent {
 
   talent:Talent= new Talent();
   id:number=0;
+  talentedit:FormGroup;
   constructor(private service:ContactService, private router:Router, private activeRouter:ActivatedRoute){}
   
   ngOnInit():void{
@@ -30,5 +32,19 @@ getContact(){
     }
   )
 }
+
+updateContact(){
+  console.log();
+}
+
+
+cancelData(){
+
+
+  this.router.navigate(['talents']);
+}
+
+
+
 
 }

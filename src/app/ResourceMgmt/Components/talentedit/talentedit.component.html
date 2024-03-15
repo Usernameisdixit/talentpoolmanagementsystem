@@ -4,12 +4,72 @@
 <br>
 </div>
 
+<div class="container-fluid">
 
-<div class="form-group">
+<form>
+  <div class="row">
+  <div class="col-md-6">
+<!--
+<div class="form-group" class="col-md-6">
 <label>Id</label>
 <input type="text" class="form-control" name="resourceId" id="resourceId" [(ngModel)]="talent.resourceId" readonly>
 </div>
-<div class="form-group">
-  <label>Id</label>
-  <input type="text" class="form-control" name="resourceId" id="resourceId" [(ngModel)]="talent.resourceId" readonly>
+-->
+<div class="form-group" class="col-md-11">
+  <label class="col-form-label">Resource Name:*</label>
+  <input type="text"  class="form-control"  name="resourceName" id="resourceName" [(ngModel)]="talent.resourceName" readonly>
+</div>
+
+<div class="form-group" class="col-md-11">
+<label class="col-form-label">Resource Code:*</label>
+<input type="text" class="form-control"  name="resourceCode" id="resourceName" [(ngModel)]="talent.resourceCode" readonly>
+</div>
+
+<div class="form-group" class="col-md-11">
+<label class="col-form-label">PlatForm:</label>
+<input type="text" class="form-control" name="platform" id="platform" [(ngModel)]="talent.platform">
+</div>
+
+<div class="form-group" class="col-md-11">
+  <label class="col-form-label">Experience:</label>
+  <input type="text" class="form-control" name="experience" id="experience" [(ngModel)]="talent.experience">
   </div>
+
+</div>
+<div class="col-md-6">
+
+<div class="form-group" class="col-md-11">
+<label  class="col-form-label">Location:</label>
+<input type="text" class="form-control" name="location" id="location" [(ngModel)]="talent.location">
+</div>
+
+<div class="form-group" class="col-md-11">
+<label class="col-form-label">Mobile:</label>
+<input type="text" class="form-control" name="phoneNo" id="phoneNo" [(ngModel)]="talent.phoneNo">
+</div>
+
+<div class="form-group" class="col-md-11">
+<label class="col-form-label">Email:</label>
+<input type="text" class="form-control" name="email" id="email" [(ngModel)]="talent.email">
+</div>
+
+<div class="form-group" class="col-md-11">
+  <label class="col-form-label">Engagement Plan:</label>
+  <input type="text" class="form-control" name="engagementPlan" id="engagementPlan" [(ngModel)]="talent.engagementPlan">
+</div>
+
+</div>
+
+<div class="col-md-12">
+  
+</div>
+
+<div class="col-md-12">
+<button class="btn btn-success"  type="submit">Update</button> &nbsp;&nbsp;
+
+<button class="btn btn-warning"  type="button" (click)="cancelData()">Cancel</button> &nbsp;&nbsp;
+</div>
+</div>
+</form> 
+
+</div>
