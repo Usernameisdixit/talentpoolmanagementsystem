@@ -1,3 +1,5 @@
+
+<div class="card-body">
 <div class="container mt-3">
   
   <h2 style="text-align: center;">Add User</h2><hr>
@@ -5,8 +7,9 @@
 <form class=" g-3 mt-3" [formGroup]="userForm" (ngSubmit)="onSubmit()">
  
   <div class="col-md-6">
+    <div class="">
      <label for="validationDefault01" class="form-label">User Full Name :</label><span class="text-danger font-weight-bold">*</span>
-
+    </div>
      <input type="text" class="form-control" id="userFullName" formControlName="userFullName" />
      <div *ngIf="userForm.get('userFullName')?.invalid && userForm.get('userFullName')?.touched">
        <p class="text-danger">Please Enter The User Full Name.</p>
@@ -17,7 +20,7 @@
   <div class="col-md-6 mt-2">
     <label for="validationDefault01" class="form-label">User Name :</label><span class="text-danger font-weight-bold">*</span>
 
-    <input type="text" class="form-control" id="userName1" formControlName="userName" (blur)="duplicateCheck($event)"/>
+    <input type="text" class="form-control" id="userName" formControlName="userName" (blur)="duplicateCheck($event)"/>
     <div *ngIf="userForm.get('userName')?.invalid && userForm.get('userName')?.touched">
       <p class="text-danger">Please Enter The User Name.</p>
     </div>
@@ -39,13 +42,10 @@
   <div class="col-md-6 mt-2">
     <label for="validationDefault03" class="form-label">Mobile No. :</label><span class="text-danger font-weight-bold">*</span>
 
-    <input type="text" class="form-control" id="phoneNo" formControlName="phoneNo"/>
-    <div *ngIf="userForm.get('phoneNo')?.invalid && userForm.get('phoneNo')?.touched">
-       <p class="text-danger font-weight-bold">Please Enter Mobile No.</p>
-    </div>
-    <!-- <div *ngIf="userForm.get('phoneNo')?.hasError('minlength') && userForm.get('phoneNo')?.hasError('maxlength')">
+    <input type="text" class="form-control" id="phoneNo" formControlName="phoneNo" (blur)="checkDuplicatePhoneNo($event)"/>
+     <div *ngIf="userForm.get('phoneNo')?.hasError('pattern')">
       <p class="text-danger font-weight-bold">Please Enter Valid Mobile No.</p>
-    </div> -->
+    </div>
     
   </div>
 
@@ -61,16 +61,17 @@
 
 <div>
   <div class="gap-2 col-3 mx-auto mt-3" *ngIf="userId === 0">
-    <button class="btn btn-primary" type="submit">Create</button> &nbsp;&nbsp;
+    <button class="btn btn-success" type="submit">Create</button> &nbsp;&nbsp;
 
     <button class="btn btn-danger" type="reset"> Reset </button>
   </div>
 
    <div class="gap-2 col-3 mx-auto mt-3" *ngIf="userId > 0">
-    <button class="btn btn-primary" type="submit">Update</button> &nbsp;&nbsp;
+    <button class="btn btn-success" type="submit">Update</button> &nbsp;&nbsp;
 
     <button class="btn btn-warning" type="button" (click)="cancelData()"> Cancel </button>
   </div>
 </div>
 </form>
+</div>
 </div>

@@ -28,11 +28,13 @@ export class UserComponent {
       userName:['',Validators.required],
       password:['',Validators.required],
       roleId:['',Validators.required],
-      phoneNo:['',Validators.required],
-      email:['',Validators.required]
+      phoneNo:['', [Validators.required, Validators.pattern("^((\\+91-?)|0)?[0-9]{10}$")]],
+      email:['',[Validators.required, Validators.email]]
     });
   }
-
+  get f(){  
+    return this.userForm.controls;  
+  }
 
   ngOnInit(){
    // *****************CODE FOR ACCESSING SESSION DATA**********************
@@ -83,7 +85,6 @@ export class UserComponent {
      const email=this.userForm.get('email');
      const phoneNo=this.userForm.get('phoneNo');
      const roleId=this.userForm.get('roleId');
-      debugger;
     if (userFullName?.invalid && errorFlag === 0) {
       errorFlag = 1;
       userFullName.markAsTouched();
@@ -104,7 +105,7 @@ export class UserComponent {
     if (phoneNo?.invalid && errorFlag === 0) {
       errorFlag = 1;
       phoneNo.markAsTouched();
-      Swal.fire("Please Enter A Valid Phone Number!");
+      Swal.fire("Please Enter A Valid Mobile Number!");
     }
 
     if (email?.invalid && errorFlag === 0) {
@@ -116,10 +117,8 @@ export class UserComponent {
     if(errorFlag===0){
         const userData=this.userForm.value;
         userData.userId=this.userId;
-        console.log(userData);
-        debugger;
           Swal.fire({
-            title: 'Do you want to submit?',
+            title: this.userId===0?'Do you want to submit?':'Do you want to update?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes',
@@ -142,6 +141,7 @@ export class UserComponent {
             } else if (result.dismiss === Swal.DismissReason.cancel) {
               // User clicked cancel, do nothing
               Swal.fire('Cancelled', 'Your data is not submitted :)', 'error');
+              this.userForm.reset();
             }
           }); 
      }
@@ -153,7 +153,6 @@ export class UserComponent {
   editData(){
     this.userService.editUser(this.userId).subscribe((data:any)=>{
      
-      console.log(data);
       this.userForm.patchValue(
         {
           userFullName:data.userFullName,
@@ -161,10 +160,8 @@ export class UserComponent {
           password:data.password,
           roleId:data.roleId,
           phoneNo:data.phoneNo,
-          email:data.email,
-          chrDeletedFlag:data.chrDeletedFlag
-
-
+          email:data.email
+         
         })
     },
       (error)=>{
@@ -191,9 +188,16 @@ export class UserComponent {
       if(data.status=='Exist'){
        
        Swal.fire('Error', 'Username already exists', 'error');
-       this.userForm.reset();
+       this.userForm.value.userName="";
       }
   })
+}
+
+
+//------------------------- to check duplicate phone no ------------------
+checkDuplicatePhoneNo(event:any){
+  const phoneNo=event.target.value;
+
 }
 
 
