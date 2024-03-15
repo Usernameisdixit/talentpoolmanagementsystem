@@ -59,17 +59,29 @@ export class ViewassessmentComponent {
   
     // Add the table
     (doc as any).autoTable({
-      head: [['Sl.No', 'Resource Name', 'Platform Name', 'Activity Name', 'Total Marks', 'Marks', 'Remarks']],
+      head: [['Sl.No', 'Resource Name', 'Platform Name', 'Activity Name', 'Total Marks', 'Marks', 'Percentage','Remarks']],
       body: data,
       startY: 20, 
       margin: { top: 15 } 
     });
-  
+
+    const currentDate = this.getCurrentFormattedDate();
+    const dateWidth = doc.getTextDimensions(currentDate).w;
+    const dateX = pageWidth - dateWidth - 10; // Adjust 10 according to your preference
+    doc.text(currentDate, dateX, 5);
+
     doc.save('assessment-details.pdf');
   }
   
   
-
+  getCurrentFormattedDate(): string {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = months[currentDate.getMonth()];
+    const year = currentDate.getFullYear();
+    return `${day} ${month} ${year}`;
+}
 
 
   exportToExcel() {
@@ -85,6 +97,7 @@ export class ViewassessmentComponent {
         { v: 'Activity Name', s: headerStyle },
         { v: 'Total Marks', s: headerStyle },
         { v: 'Marks', s: headerStyle },
+        { v: 'Percentage', s: headerStyle },
         { v: 'Remarks', s: headerStyle }
     ];
     
@@ -123,7 +136,7 @@ export class ViewassessmentComponent {
     saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
   }
 
-  private getTableData(): any[][] {
+ private getTableData(): any[][] {
     return this.assessments.map((assessment, index) => [
       index + 1,
       assessment[0],
@@ -131,9 +144,21 @@ export class ViewassessmentComponent {
       assessment[2], 
       assessment[3], 
       assessment[4], 
-      assessment[5]  
+      this.calculatePercentage(assessment[4], assessment[3]) ,// Add percentage calculation
+      assessment[5],
+    
     ]);
-  }
+}
+
+// Function to calculate percentage
+private calculatePercentage(totalMarks: number, marksObtained: number): string {
+    if (totalMarks === 0) {
+        return '0%';
+    }
+    const percentage = (marksObtained / totalMarks) * 100;
+    return percentage.toFixed(2) + '%';
+}
+
 
   getTotalPages(): number {
     return Math.ceil(this.assessments.length / this.itemsPerPage);

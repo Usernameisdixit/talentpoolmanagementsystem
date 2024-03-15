@@ -121,4 +121,20 @@ export class AsessmentdetailsComponent implements OnInit {
     return this.assessments.filter(assessment => assessment.resourceCode === resourceCode).length;
   }
 
+
+
+
+  calculateRowspan(assessment: any): number {
+    let count = 1;
+    for (let i = this.assessments.indexOf(assessment) + 1; i < this.assessments.length; i++) {
+        if (assessment.resourceCode === this.assessments[i].resourceCode && assessment.resourceName === this.assessments[i].resourceName && assessment.selectedPlatformName === this.assessments[i].selectedPlatformName) {
+            count++;
+        } else {
+            break;
+        }
+    }
+    return count;
+}
+
+  
 }

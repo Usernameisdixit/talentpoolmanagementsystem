@@ -1,0 +1,29 @@
+.edit-form {
+  max-width: 400px;
+  margin: auto;
+}
+
+
+/* Align the container to the left */
+.container {
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Adjust the alignment of the form within the container */
+.form-group {
+  margin-bottom: 20px;
+}
+
+/* Adjust the button style */
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
