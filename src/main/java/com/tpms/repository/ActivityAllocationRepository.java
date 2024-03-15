@@ -29,7 +29,7 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
 	List<ActivityAllocation> findByPlatformIdAndActivityDateBetween(Long platformId, Date fromDate,Date toDate);
 	
 	@Query("SELECT alloc FROM ActivityAllocation alloc JOIN FETCH alloc.details det WHERE alloc.resourceId=:id AND alloc.deletedFlag=false and det.deletedFlag=false")
-	ActivityAllocation findByResourceId(Integer id, Limit limit);
+	ActivityAllocation findByResourceId(Integer id);
 
 
 
