@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Modifying;
+import jakarta.transaction.Transactional;
+import org.springframework.data.repository.query.Param;
 
 import com.tpms.entity.ResourcePool;
 
@@ -20,6 +23,18 @@ public interface ResourcePoolRepository extends JpaRepository<ResourcePool, Inte
 	List<ResourcePool> findAllActiveRecords();
 	
 	
+	@Query("SELECT r.deletedFlag FROM ResourcePool r WHERE r.resourceId = :id")
+	Byte getDeletedFlagByRoleId(@Param("id") Integer id);
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE ResourcePool r SET r.deletedFlag = 1 WHERE r.resourceId = :id")
+	void updateBitDeletedFlagById(@Param("id") Integer id);
+
+	@Modifying
+	@Transactional
+	@Query("UPDATE ResourcePool r SET r.deletedFlag = 0 WHERE r.resourceId = :id")
+	void updateBitDeletedFlagByFalse(Integer id);
 
 	
 }
