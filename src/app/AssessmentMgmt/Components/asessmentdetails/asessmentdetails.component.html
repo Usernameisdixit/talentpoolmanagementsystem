@@ -55,18 +55,30 @@
                 </thead>
                 <tbody>
                     <ng-container *ngFor="let assessment of assessments; let i = index">
-                        <tr>
-                            <td>{{ assessment.resourceCode }}</td>
-                            <td>{{ assessment.resourceName }}</td>
-                            <td >{{ selectedPlatformName }}</td>
-                            <td>{{ assessment.activityDetails.activityDetails }}</td>
-                            <td><input type="text" [(ngModel)]="assessment.activityDetails.totalMarks" class="form-control"></td>
-                            <td><input type="text" [(ngModel)]="assessment.activityDetails.marks" class="form-control"></td>
-                            <td><input type="text" [(ngModel)]="assessment.activityDetails.hour" class="form-control"></td>
-                            <td><input type="text" [(ngModel)]="assessment.activityDetails.remarks" class="form-control"></td>
-                        </tr>
+                        <ng-container *ngIf="i === 0 || (assessment.resourceCode !== assessments[i - 1].resourceCode || assessment.resourceName !== assessments[i - 1].resourceName || assessment.selectedPlatformName !== assessments[i - 1].selectedPlatformName)">
+                            <tr>
+                                <td [attr.rowspan]="calculateRowspan(assessment)">{{ assessment.resourceCode }}</td>
+                                <td [attr.rowspan]="calculateRowspan(assessment)">{{ assessment.resourceName }}</td>
+                                <td [attr.rowspan]="calculateRowspan(assessment)">{{ selectedPlatformName }}</td>
+                                <td>{{ assessment.activityDetails.activityDetails }}</td>
+                                <td><input type="text" [(ngModel)]="assessment.activityDetails.totalMarks" class="form-control"></td>
+                                <td><input type="text" [(ngModel)]="assessment.activityDetails.marks" class="form-control"></td>
+                                <td><input type="text" [(ngModel)]="assessment.activityDetails.hour" class="form-control"></td>
+                                <td><input type="text" [(ngModel)]="assessment.activityDetails.remarks" class="form-control"></td>
+                            </tr>
+                        </ng-container>
+                        <ng-container *ngIf="i !== 0 && (assessment.resourceCode === assessments[i - 1].resourceCode && assessment.resourceName === assessments[i - 1].resourceName && assessment.selectedPlatformName === assessments[i - 1].selectedPlatformName)">
+                            <tr>
+                                <td>{{ assessment.activityDetails.activityDetails }}</td>
+                                <td><input type="text" [(ngModel)]="assessment.activityDetails.totalMarks" class="form-control"></td>
+                                <td><input type="text" [(ngModel)]="assessment.activityDetails.marks" class="form-control"></td>
+                                <td><input type="text" [(ngModel)]="assessment.activityDetails.hour" class="form-control"></td>
+                                <td><input type="text" [(ngModel)]="assessment.activityDetails.remarks" class="form-control"></td>
+                            </tr>
+                        </ng-container>
                     </ng-container>
                 </tbody>
+                
             </table>
         </div>
     </div>

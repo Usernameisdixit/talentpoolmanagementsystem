@@ -1,0 +1,85 @@
+<div>
+  <nav class="navbar navbar-expand navbar-dark bg-dark">
+    <div class="container">
+      <a href="#" class="navbar-brand">Manage Activity</a>
+      <div class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a routerLink="/activities" class="nav-link">Activities</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/add" class="nav-link">Add</a>
+        </li>
+      </div>
+    </div>
+  </nav>
+
+  <div class="submit-form" *ngIf="!submitted">
+    <div class="form-group">
+      <label for="title">ActivityRef Number:</label>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        required
+        [(ngModel)]="activity.activityRefNo"
+        name="title"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="description">Activity Name:</label>
+      <input
+        class="form-control"
+        id="description"
+        required
+        [(ngModel)]="activity.activityName"
+        name="description"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="description1">Activity Description:</label>
+      <input
+        class="form-control"
+        id="description1"
+        required
+        [(ngModel)]="activity.description"
+        name="description1"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="description2">Activity ResponsePerson1:</label>
+      <input
+        class="form-control"
+        id="description2"
+        required
+        [(ngModel)]="activity.responsPerson1"
+        name="description2"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="description3">Activity ResponsePerson2:</label>
+      <input
+        class="form-control"
+        id="description3"
+        required
+        [(ngModel)]="activity.responsPerson2"
+        name="description3"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="indicator">Enable Assessment:</label>
+      <input type="checkbox" id="indicator" [(ngModel)]="activity.isAsesmentEnable" name="indicator">
+    </div>
+
+    <button (click)="saveTutorial()" class="btn btn-success">Submit</button>
+  </div>
+
+  <div *ngIf="submitted">
+    <h4>Activity was submitted successfully!</h4>
+    <button class="btn btn-success" (click)="newTutorial()">Add</button>
+  </div>
+</div>

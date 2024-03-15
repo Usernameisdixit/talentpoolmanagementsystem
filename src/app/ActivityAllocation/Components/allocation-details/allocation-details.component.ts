@@ -45,13 +45,13 @@ export class AllocationDetailsComponent implements OnInit {
     this.getActivityList();
     this.selectedDate = this.dateService.getDate();
     this.allocationService.getAllocationsByResource(this.resourceId).subscribe(data => {
-      this.allocateId = data.intActivityAllocateId;
+      this.allocateId = data.activityAllocateId;
+      debugger;
       this.dynamicArray = data.details.map((item: DynamicGrid) => item as DynamicGrid);
     });
   }
   
   addMore(): void {
-    debugger;
     this.newDynamic = {activityFor: this.selectedSession, activity: this.activity,
                     fromHours: this.selectedActivityFrom, toHours: this.selectedActivityTo,
                     activityDetails: this.selectedDetails};
@@ -77,9 +77,9 @@ export class AllocationDetailsComponent implements OnInit {
                     activityName: event.target[selectedIndex].innerText};
   }
 
-  submitForm(): void {
-    const data = {intResourceId: this.resourceId, date: this.selectedDate,
-                  intActivityAllocateId: this.allocateId, details: this.dynamicArray};
+  submitForm(): void {debugger;
+    const data = {resourceId: this.resourceId, activityDate: this.selectedDate,
+                  activityAllocateId: this.allocateId, details: this.dynamicArray};
     this.allocationService.saveActivities(data).subscribe();
     this.router.navigateByUrl('/activity').then(() => {
       this.router.navigate([this.router.url]);

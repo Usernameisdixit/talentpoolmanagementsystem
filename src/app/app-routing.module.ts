@@ -25,15 +25,18 @@ import { ActivityReportComponent } from './Reports/ActivityReportComponent/activ
 import { AssessmentreportComponent } from './Reports/AssessmentReport/assessmentreport/assessmentreport.component';
 import { AllocationComponent } from './ActivityAllocation/Components/allocation/allocation.component';
 import { AllocationDetailsComponent } from './ActivityAllocation/Components/allocation-details/allocation-details.component';
+
+import { ActivityListComponent } from './ActivityMgmt/Components/activity-list/activity-list.component';
+import { ActivityDetailsComponent } from './ActivityMgmt/Components/activity-details/activity-details.component';
+import { AddActivityComponent } from './ActivityMgmt/Components/add-activity/add-activity.component';
+
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'forgotPassword', component: ForgotpasswordComponent },
   { path: 'restpassword/:email', component: RestpasswordComponent },
   
-  { path : "role", component:CreateRoleComponent},
-  { path : "viewRole", component:ViewRoleComponent},
-  { path : "edit/:roleId", component:CreateRoleComponent},
+  
   { 
     path: '', 
     component: AppLayoutComponent,
@@ -57,7 +60,15 @@ const routes: Routes = [
        {path: "activityReport", component:ActivityReportComponent,canActivate: [authGuard]},
        { path: 'assessmentreport', component: AssessmentreportComponent, canActivate: [authGuard]  },
        {path: "activity", component:AllocationComponent,canActivate: [authGuard]},
-       { path: 'editallocdetails/:id', component: AllocationDetailsComponent, canActivate: [authGuard]  },
+       { path: 'editallocdetails/:id', component: AllocationDetailsComponent,   },
+       { path : "role", component:CreateRoleComponent, canActivate: [authGuard]},
+       { path : "viewRole", component:ViewRoleComponent, canActivate: [authGuard]},
+       { path : "edit/:roleId", component:CreateRoleComponent, canActivate: [authGuard]},
+       //{ path: 'activities', redirectTo: 'activities', pathMatch: 'full',},
+       { path: 'activities', component: ActivityListComponent ,canActivate: [authGuard]},
+       { path: 'activity/:id', component: ActivityDetailsComponent ,canActivate: [authGuard]},
+       { path: 'add', component: AddActivityComponent , canActivate: [authGuard]}
+
    
     ]
   }

@@ -77,3 +77,51 @@
   width: 100%;
   z-index: 1000; /* Ensure the header stays on top of other content */
 }
+
+.wrapper {
+  position: relative; /* Ensure relative positioning for absolute/fixed positioning */
+  display: flex;
+  flex-direction: row; /* Horizontal layout */
+  height: 100%; /* Ensure full height */
+}
+
+#sidebar {
+  position: fixed; /* Fixed positioning */
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 250px; /* Set the width as needed */
+  background-color: #37474f;
+  color: #fff;
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+
+
+.wrapper {
+    position: relative;
+    display: flex;
+}
+
+#sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    background-color: #37474f;
+    color: #fff;
+    overflow-y: auto;
+}
+
+#content {
+    flex-grow: 1;
+    padding-left: 250px;
+    padding-top: 80px;
+    
+}
+
+.page-content {
+    margin: 50px auto; /* Adjust margin as needed */
+    max-width: 800px; /* Adjust maximum width as needed */
+}
