@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,10 +23,13 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+
 import com.tpms.repository.AssessmentRepository;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -36,11 +40,17 @@ public class AssessmentReportController {
     private AssessmentRepository assessmentRepository;
 
     @GetMapping("/download")
-    public ResponseEntity<byte[]> downloadReport(@RequestParam String type) {
-        // Fetch assessment data from the database
-        List<Object[]> assessmentDetails = assessmentRepository.findAllWithDetails();
+    public ResponseEntity<byte[]> downloadReport(@RequestParam("year") int year,
+                                                 @RequestParam("month") int month,
+                                                 @RequestParam("platform") String platform,
+                                                 @RequestParam("selectedDate") String selectedDate,
+                                                 @RequestParam("reportType") String type) {
+    	
+    	  LocalDate date = LocalDate.parse(selectedDate); 
+    	
+        List<Object[]> assessmentDetails = assessmentRepository.findReportDetails(year,month,date,platform);
 
-        // Process data and generate report based on type
+       
         byte[] reportBytes;
         if ("pdf".equalsIgnoreCase(type)) {
             reportBytes = generatePDFReport(assessmentDetails);
