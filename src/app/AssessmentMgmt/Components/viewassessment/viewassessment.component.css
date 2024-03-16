@@ -36,3 +36,13 @@
     justify-content: center;
   }
 }
+/* In your component's CSS file */
+.edit-button {
+  background-color: #044985; /* Edit button color */
+  border-color: #6c757d; /* Border color */
+}
+
+.button-spacing {
+  margin-left: 10px; /* Adjust the margin as needed */
+}
+

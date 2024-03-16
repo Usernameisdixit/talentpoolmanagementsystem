@@ -136,19 +136,109 @@ export class ViewassessmentComponent {
     saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
   }
 
- private getTableData(): any[][] {
-    return this.assessments.map((assessment, index) => [
-      index + 1,
-      assessment[0],
-      assessment[1], 
-      assessment[2], 
-      assessment[3], 
-      assessment[4], 
-      this.calculatePercentage(assessment[4], assessment[3]) ,// Add percentage calculation
-      assessment[5],
+  private getTableData(): any[][] {
+    let mergedData: any[] = [];
+    let serialNumber = 1;
+
     
-    ]);
+    const groupedAssessments = this.groupAssessmentsByResourcePlatform();
+
+    
+    for (const key in groupedAssessments) {
+        if (groupedAssessments.hasOwnProperty(key)) {
+            const group = groupedAssessments[key];
+            const resourceName = group[0][0]; 
+            const platformName = group[0][1]; 
+
+            let isFirstRow = true;
+            let totalMarks = 0;
+            let marksObtained = 0;
+
+                
+                 const activityTotals: { [key: string]: { totalMarks: number, marksObtained: number } } = {};
+
+
+                 group.forEach(assessment => {
+                     const activityName = assessment[2]; 
+                     const totalMarks = assessment[4]; 
+                     const marksObtained = assessment[3]; 
+     
+                     if (!activityTotals[activityName]) {
+                         activityTotals[activityName] = { totalMarks: 0, marksObtained: 0 };
+                     }
+     
+                     activityTotals[activityName].totalMarks += totalMarks;
+                     activityTotals[activityName].marksObtained += marksObtained;
+                 });
+
+                 
+  
+            const processedActivities: { [key: string]: boolean } = {};
+
+        
+            group.forEach(assessment => {
+                const activityName = assessment[2]; 
+                const totalMarks = activityTotals[activityName].totalMarks;
+                const marksObtained = activityTotals[activityName].marksObtained;
+                const remarks = assessment[5]; 
+                const percentage = this.calculatePercentage(totalMarks, marksObtained);
+
+        
+                if (!processedActivities[activityName]) {
+              
+                    const row: any[] = [
+                        isFirstRow ? serialNumber++ : '', 
+                        isFirstRow ? resourceName : '', 
+                        isFirstRow ? platformName : '', 
+                        activityName, 
+                        totalMarks, 
+                        marksObtained,
+                        percentage, 
+                        remarks
+                    ];
+
+                    mergedData.push(row); // Add row to mergedData
+                    processedActivities[activityName] = true; // Mark activity as processed
+                } else {
+                    // For repeated activities, only update remarks in the existing row
+                    const existingRow = mergedData.find(row => row[3] === activityName); // Find the existing row
+                    if (existingRow) {
+                        existingRow[7] += ', ' + remarks; // Append remarks to existing remarks
+                    }
+                }
+
+                isFirstRow = false; // Update flag to false for subsequent rows
+            });
+        }
+    }
+
+    return mergedData;
 }
+
+
+
+// Function to group assessments by resource-platform combination
+private groupAssessmentsByResourcePlatform(): { [key: string]: any[][] } {
+    const groupedAssessments: { [key: string]: any[][] } = {};
+
+ 
+    this.assessments.forEach(assessment => {
+        const resourceName = assessment[0];
+        const platformName = assessment[1]; 
+        const key = `${resourceName}_${platformName}`;
+
+        if (!groupedAssessments[key]) {
+            groupedAssessments[key] = [];
+        }
+
+        groupedAssessments[key].push(assessment);
+    });
+
+    return groupedAssessments;
+}
+
+
+
 
 // Function to calculate percentage
 private calculatePercentage(totalMarks: number, marksObtained: number): string {
@@ -194,5 +284,10 @@ private calculatePercentage(totalMarks: number, marksObtained: number): string {
 
   getPageNumbers(): number[] {
     return Array.from({ length: this.getTotalPages() }, (_, index) => index + 1);
+  }
+
+  deleteAssessment(assessmentId: number)
+  {
+
   }
 }

@@ -30,6 +30,7 @@
             <th>Total Marks</th>
             <th>Marks</th>
             <th>Remarks</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -38,9 +39,17 @@
             <td>{{ assessment[0] }}</td>
             <td>{{ assessment[1] }}</td>
             <td>{{ assessment[2] }}</td>
-            <td>{{ assessment[3] }}</td>
             <td>{{ assessment[4] }}</td>
+            <td>{{ assessment[3] }}</td>
             <td>{{ assessment[5] }}</td>
+            <td class="text-center">
+              <button class="btn btn-primary btn-secondary edit-button" [routerLink]="['/edit-assessment', assessment[6]]">Edit</button>
+              <span class="button-spacing"></span>
+              <button class="btn btn-danger delete-button" (click)="deleteAssessment(assessment[6])">Delete</button>
+            </td>
+
+
+
           </tr>
         </tbody>
       </table>
