@@ -8,17 +8,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +31,7 @@ import com.tpms.dto.ActivityWithResourceDTO;
 import com.tpms.dto.AssessmentDto;
 
 import com.tpms.entity.ActivityAllocationDetails;
-
+import com.tpms.entity.Assessment;
 import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
 import com.tpms.repository.ActivityAllocationDetailsRepository;
@@ -75,7 +78,7 @@ public class AssessmentDetailsController {
             Date toDt = new SimpleDateFormat("yyyy-MM-dd").parse(toDate);
 
             List<ActivityAllocationDetails> activityAllocationDetails = activityallocationRepository
-                    .findByPlatformIdAndActivityDateBetween(platformId, from,toDt)
+                    .findByPlatformIdAndActivityDateBetweenAndDeletedFlagIsFalse(platformId, from,toDt)
                     .stream()
                     .map(activityAllocation -> activityAllocationDetailsRepository.findByActivityAllocation(activityAllocation))
                     .flatMap(List::stream)
@@ -83,6 +86,7 @@ public class AssessmentDetailsController {
 
             // Create a map to associate resource names with ActivityAllocationDetails
             Map<ActivityAllocationDetails, Pair<String,String>> activityDetailsWithResourceInfo = new HashMap<>();
+            
             for (ActivityAllocationDetails detail : activityAllocationDetails) {
                 Integer resourceId = detail.getActivityAllocation().getResourceId();
                 String resourceName = fetchResourceName(resourceId);
@@ -90,17 +94,17 @@ public class AssessmentDetailsController {
                 activityDetailsWithResourceInfo.put(detail, Pair.of(resourceName, resourceCode));
             }
 
-           
-            Set<String> uniqueActivityNames = activityAllocationDetails.stream()
-                    .map(detail -> detail.getActivity().getActivityName())
-                    .collect(Collectors.toSet());
+        
+//            Set<String> uniqueActivityNames = activityAllocationDetails.stream()
+//                    .map(detail -> detail.getActivity().getActivityName())
+//                    .collect(Collectors.toSet());
 
           
         
             List<ActivityWithResourceDTO> response = new ArrayList<>();
             for (ActivityAllocationDetails detail : activityAllocationDetails) {
                 Pair<String, String> resourceInfo = activityDetailsWithResourceInfo.get(detail);
-                response.add(new ActivityWithResourceDTO(detail, resourceInfo.getFirst(), resourceInfo.getSecond()));
+                response.add(new ActivityWithResourceDTO(detail,detail.getActivityAllocation(), resourceInfo.getFirst(), resourceInfo.getSecond()));
             }
 
             return ResponseEntity.ok(response);
@@ -130,6 +134,20 @@ public class AssessmentDetailsController {
         List<Object[]> assessmentDetails = assessmentRepository.findAllWithDetails();
         return ResponseEntity.ok().body(assessmentDetails);
         
+    }
+    
+    @GetMapping("/editAssessment/{id}")
+    public List<Object[]> getAssessmentById(@PathVariable Integer id) {
+        return assessmentRepository.findDetailsByAssessmentId(id);
+    }
+
+    @PutMapping("/updateAssessment/{id}")
+    public ResponseEntity<?> updateAssessment(@PathVariable Integer id, @RequestBody AssessmentDto assessmentDto) {
+     
+            assessmentService.updateAssessment(id, assessmentDto);
+            return ResponseEntity.ok().build();
+     
+      
     }
     
 }

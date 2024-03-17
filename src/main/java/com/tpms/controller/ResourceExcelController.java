@@ -10,7 +10,9 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -175,5 +177,33 @@ public class ResourceExcelController {
 			return new ResponseEntity<>(msg, HttpStatus.OK);
 		}
 	    
+		//For De-Actiavte The Given Resource From Resource Pool
+		@PostMapping("/emp/delete/talent/{id}")
+		public ResponseEntity<Map<String, Object>> deleteResource(@PathVariable(name = "id") Integer id) {
+
+			Byte result = tbl_resource_pool_Service.getDeletedFlagByRoleId(id);
+			if (result == 1) {
+				tbl_resource_pool_Service.updateBitDeletedFlagByFalse(id);
+			} else {
+				tbl_resource_pool_Service.updateBitDeletedFlagById(id);
+			}
+
+			Map<String, Object> response = new HashMap<>();
+			response.put("status", 200);
+			response.put("deleted", "Data Deleted Succesfully");
+			if (result == 1) {
+				response.put("deletedFlag", false);
+			} else {
+				response.put("deletedFlag", true);
+			}
+
+			return ResponseEntity.ok().body(response);
+		}
+	
+		
+		
+		
+		
+		
 	    
 }

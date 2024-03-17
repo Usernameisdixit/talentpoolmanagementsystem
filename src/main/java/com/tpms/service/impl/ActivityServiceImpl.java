@@ -200,7 +200,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 	
 	public List<ResourcePool> getResources() {
-		return resourceRepo.findAll();
+		return resourceRepo.findAllActiveRecords();
 	}
 
 
@@ -215,7 +215,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 
 	public ActivityAllocation getAllocationDetailsByResource(Integer resourceId) {
-		return activityAllocRepo.findByResourceId(resourceId, Limit.of(1));
+		return activityAllocRepo.findByResourceId(resourceId);
 	}
 
 
