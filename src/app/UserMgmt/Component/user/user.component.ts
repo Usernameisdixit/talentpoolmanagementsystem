@@ -68,7 +68,6 @@ export class UserComponent {
   getRoleDetails(){
 
     this.userService.getRoleDetails().subscribe((data)=>{
-      console.log(data);
       this.roleDetails=data;
     },
     (error)=>{
@@ -141,7 +140,7 @@ export class UserComponent {
             } else if (result.dismiss === Swal.DismissReason.cancel) {
               // User clicked cancel, do nothing
               Swal.fire('Cancelled', 'Your data is not submitted :)', 'error');
-              this.userForm.reset();
+              location.reload();
             }
           }); 
      }
@@ -179,27 +178,28 @@ export class UserComponent {
 
 
   // ------------------------------- for duplicate check -------------------
-  duplicateCheck(event:any){
-   
-    const userName=event.target.value;
-    this.userService.duplicateCheck(userName).subscribe((data:any)=>{
-      console.log(data);
-     
+  checkDuplicateValue(event:any){
+    const value=event.target.value;
+    const colName=event.target.name;
+    this.userService.duplicateCheck(value,colName).subscribe((data:any)=>{
+    
       if(data.status=='Exist'){
-       
-       Swal.fire('Error', 'Username already exists', 'error');
-       this.userForm.value.userName="";
+        Swal.fire({
+          title: 'Error',
+          text: 'Data already exists',
+          icon: 'error',
+          showConfirmButton: true
+        }).then((result) => {
+          if (result.isConfirmed) {
+            location.reload(); 
+          }
+        });
       }
-  })
-}
-
-
-//------------------------- to check duplicate phone no ------------------
-checkDuplicatePhoneNo(event:any){
-  const phoneNo=event.target.value;
-
-}
-
-
+   },
+    (error)=>{
+       console.log(error);
+       
+    });
+  }
 
 }

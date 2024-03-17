@@ -20,7 +20,7 @@
   <div class="col-md-6 mt-2">
     <label for="validationDefault01" class="form-label">User Name :</label><span class="text-danger font-weight-bold">*</span>
 
-    <input type="text" class="form-control" id="userName" formControlName="userName" (blur)="duplicateCheck($event)"/>
+    <input type="text" class="form-control" name="userName" id="userName" formControlName="userName" (keyup)="checkDuplicateValue($event)"/>
     <div *ngIf="userForm.get('userName')?.invalid && userForm.get('userName')?.touched">
       <p class="text-danger">Please Enter The User Name.</p>
     </div>
@@ -42,7 +42,7 @@
   <div class="col-md-6 mt-2">
     <label for="validationDefault03" class="form-label">Mobile No. :</label><span class="text-danger font-weight-bold">*</span>
 
-    <input type="text" class="form-control" id="phoneNo" formControlName="phoneNo" (blur)="checkDuplicatePhoneNo($event)"/>
+    <input type="text" class="form-control" name="phoneNo" id="phoneNo" formControlName="phoneNo" (keyup)="checkDuplicateValue($event)"/>
      <div *ngIf="userForm.get('phoneNo')?.hasError('pattern')">
       <p class="text-danger font-weight-bold">Please Enter Valid Mobile No.</p>
     </div>
@@ -52,7 +52,7 @@
   <div class="col-md-6 mt-2">
     <label for="validationDefault04" class="form-label">Email :</label><span class="text-danger font-weight-bold">*</span>
 
-    <input type="email" class="form-control" id="email" formControlName="email"/>
+    <input type="email" class="form-control" name="email" id="email" formControlName="email" (keyup)="checkDuplicateValue($event)"/>
      <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
       <p class="text-danger font-weight-bold">Please Enter A Valid Email.</p>
    </div> 
