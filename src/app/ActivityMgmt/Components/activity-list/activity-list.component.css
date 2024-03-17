@@ -11,3 +11,13 @@
 .inactive {
   color: red;
 }
+
+
+.even-row {
+  background-color: lightblue !important;
+}
+
+.odd-row {
+  background-color: lightgray !important;
+}
+

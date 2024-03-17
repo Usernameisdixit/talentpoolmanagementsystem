@@ -66,4 +66,12 @@ h2 {
     transition: background-color 0.3s ease;
 }
 
+.space {
 
+    margin-right: 10px;
+}
+
+.required {
+    color: red;
+    margin-left: 5px; /* Adjust margin as needed */
+}

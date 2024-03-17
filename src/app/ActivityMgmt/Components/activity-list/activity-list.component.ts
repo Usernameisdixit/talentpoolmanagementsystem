@@ -4,6 +4,10 @@ import { ActivityService } from 'src/app/ActivityMgmt/Service/activity.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatPaginator,PageEvent} from '@angular/material/paginator';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 
 
@@ -21,8 +25,10 @@ export class ActivityListComponent implements OnInit {
   title = '';
   message: any;
   pagedActivities: Activity[] = [];
-  pageSize = 5; // Number of items per page
-  
+  pageSize = 3; // Number of items per page
+  currentPage = 1;
+  page=1
+
 
   constructor(private activityService: ActivityService,private router: Router) {}
 
@@ -35,7 +41,7 @@ export class ActivityListComponent implements OnInit {
       next: (data) => {
         this.activities = data;
         console.log('Retrieved activities:', this.activities); 
-        this.setPage(0);
+        this.setPage(this.currentPage);
 
         console.log(data);
       },
@@ -45,35 +51,19 @@ export class ActivityListComponent implements OnInit {
 
 
   setPage(pageIndex: number): void {
-    const startIndex = pageIndex * this.pageSize;
-    let endIndex = startIndex + this.pageSize;
-    if (endIndex > this.activities.length) {
-      endIndex = this.activities.length;
-    }
+    const startIndex = (pageIndex - 1) * this.pageSize;
+    const endIndex = Math.min(startIndex + this.pageSize, this.activities.length);
     this.pagedActivities = this.activities.slice(startIndex, endIndex);
   }
 
 
   onPageChange(event: PageEvent): void {
-    console.log('Page changed:', event);
-    this.setPage(event.pageIndex);
+    
+    this.currentPage = event.pageIndex + 1;
+    this.setPage(this.currentPage); 
   }
   
 
-
-  onPageSizeChange(event: any): void {
-    const pageSize = event.pageSize; // Extract the pageSize property from the event
-
-    console.log('New Page Size:', pageSize);
-    this.pageSize = pageSize;
-    this.setPage(0); // Always navigate to the first page when changing the page size
-  }
-  
-  
-  
-  
-  
-  
   getActivity(id: string): void {
     this.activityService.get(id).subscribe({
       next: (data: Activity) => {
@@ -140,8 +130,81 @@ export class ActivityListComponent implements OnInit {
 }
 
 
+exportToPDF() {
+  const doc = new jsPDF();
+
+  const data = this.getTableDataa();
+
+  // Add title centered
+  const pageTitle = 'Activity Details';
+  const textWidth = doc.getTextDimensions(pageTitle).w;
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const x = (pageWidth - textWidth) / 2;
+  doc.text(pageTitle, x, 15);
+
+  // Add the table
+  (doc as any).autoTable({
+    head: [['SL#', 'ActivityRefNo', 'ActivityName', 'ActivityDescription	', 'ActivityResponsPerson1', 'ActivityResponsPerson2', 'Status']],
+    body: data,
+    startY: 20, 
+    margin: { top: 15 } 
+  });
+
+  doc.save('Activity_Details.pdf');
+}
+private getTableDataa(): any[][] {
+  let serialNumber = 1;
+  return this.activities.map((c, index) => [
+    
+    serialNumber++,
+    c.activityRefNo,
+    c.activityName,
+    c.description,
+    c.responsPerson1,
+    c.responsPerson2,
+    c.deletedFlag ? 'Inactive' : 'Active',
+    
+    
+  ]);
+}
   
-  
+
+// For Implimenting Excel Format Data Reporting
+exportToExcel()  {
+   
+  const tableData = this.getTableDataa();
+
+ 
+  const headerStyle = { bold: true };
+  const header = [
+      { v: 'SL#', s: headerStyle },
+      { v: 'ActivityRefNo', s: headerStyle },
+      { v: 'ActivityName', s: headerStyle },
+      { v: 'ActivityDescription', s: headerStyle },
+      { v: 'ActivityResponsPerson1', s: headerStyle },
+      { v: 'ActivityResponsPerson2', s: headerStyle },
+      { v: 'Status', s: headerStyle },
+      
+  ];
+ 
+  tableData.unshift(header);
+
+  const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
+
+  // Add header row
+  //const header = ['ResourceId', 'Resource Name', 'Resource Code', 'Platform', 'Location', 'Experience', 'Mobile','Email'];
+  XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' });
+
+  const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+  const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  this.saveAsExcelFile(excelBuffer, 'Activity_Details');
+}
+
+private saveAsExcelFile(buffer: any, fileName: string): void {
+  const data: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
+}
+
   
 
   // removeAllTutorials(): void {

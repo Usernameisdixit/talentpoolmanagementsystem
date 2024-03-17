@@ -14,6 +14,7 @@ export class AssessmentserviceService {
   private baseUrl = 'http://localhost:9999/tpms';
   private viewUrl = 'http://localhost:9999/tpms/viewAssesmentDetails';
   private editUrl = 'http://localhost:9999/tpms/editAssessment';
+  private updateUrl = 'http://localhost:9999/tpms/updateAssessment';
   constructor(private http: HttpClient) { }
 
   getPlatforms(): Observable<any[]> {
@@ -55,7 +56,7 @@ export class AssessmentserviceService {
 
 
    updateAssessment(assessment: any): Observable<any> {
-    const url = `${this.apiUrl}/${assessment.assessmentId}`;
+    const url = `${this.updateUrl}/${assessment.id}`;
     return this.http.put(url, assessment);
   }
 

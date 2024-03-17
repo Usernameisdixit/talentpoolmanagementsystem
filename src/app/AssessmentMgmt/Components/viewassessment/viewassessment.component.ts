@@ -160,8 +160,8 @@ export class ViewassessmentComponent {
 
                  group.forEach(assessment => {
                      const activityName = assessment[2]; 
-                     const totalMarks = assessment[4]; 
-                     const marksObtained = assessment[3]; 
+                     const totalMarks = assessment[3]; 
+                     const marksObtained = assessment[4]; 
      
                      if (!activityTotals[activityName]) {
                          activityTotals[activityName] = { totalMarks: 0, marksObtained: 0 };
