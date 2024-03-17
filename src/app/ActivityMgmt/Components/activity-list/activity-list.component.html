@@ -1,12 +1,3 @@
-<style>
-  .table tbody tr:nth-child(even) {
-    background-color: lightblue;
-  }
-  .table tbody tr:nth-child(odd) {
-    background-color: white;
-  }
-</style>
-
 <div>
   <nav class="navbar navbar-expand navbar-dark bg-dark">
     <div class="container">
@@ -22,66 +13,76 @@
     </div>
   </nav>
 
-  <div class="container d-flex justify-content-center">
-    <div class="list row">
-      <div class="col-md-8">
-        <!-- Your HTML content -->
-      </div>
-      <div class="col-md-8">
-        <h4>Activity List</h4>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>ActivityID</th>
-              <th>ActivityRefNo</th>
-              <th>ActivityName</th>
-              <th>ActivityDescription</th>
-              <th>ActivityResponsPerson1</th>
-              <th>ActivityResponsPerson2</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let activity of pagedActivities; let i = index" (click)="setActiveActivity(activity, i)">
-              <td>{{ activity.activityId }}</td>
-              <td>{{ activity.activityRefNo }}</td>
-              <td>{{ activity.activityName }}</td>
-              <td>{{ activity.description }}</td>
-              <td>{{ activity.responsPerson1 }}</td>
-              <td>{{ activity.responsPerson2 }}</td>
-              <td>
-                <span *ngIf="!activity.deletedFlag" class="m-1 active"><b>Active</b></span>
-                <span *ngIf="activity.deletedFlag" class="m-1 inactive"><b>Inactive</b></span>
-              </td>
-              <td>
-                <div class="d-flex justify-content-between">
-                  <button class="m-1 btn btn-sm btn-primary" (click)="editActivity(activity.activityId)">Edit</button>
-                  <button class="m-1 btn btn-sm" [ngStyle]="{ 'background-color': activity.deletedFlag ? 'green' : 'red' }" (click)="toggleDeletedFlag(activity)">
-                    {{ activity.deletedFlag ? 'Activate' : 'Deactivate' }}
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <mat-paginator [length]="activities?.length"
-               [pageSize]="pageSize"
-               [pageSizeOptions]="[5, 10, 25, 100]"
-               (page)="onPageChange($event)"
-               (pageSizeChange)="onPageSizeChange($event)">
-</mat-paginator>
-
-
-
-      </div>
-    </div>
+  <div class="container d-flex justify-content-end mt-3">
+  <div class="export-buttons">
+    <button  (click)="exportToPDF()" class="btn btn-icon export-btn" title="Download PDF">
+      <i class="fas fa-file-pdf fa-lg pdf-icon"></i>
+    </button>
+    
+    <button (click)="exportToExcel()" class="btn btn-icon export-btn" title="Download Excel">
+      <i class="fas fa-file-excel fa-lg excel-icon"></i>
+    </button>
+  </div>
   </div>
 
-  <footer class="footer bg-dark mt-5">
-    <div class="container text-white text-center">
-      <span>&copy; 2024_ CSM Technologies. All rights reserved.</span>
-    </div>
-  </footer>
+  <div class="container d-flex justify-content-center">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>ActivityID</th>
+          <th>ActivityRefNo</th>
+          <th>ActivityName</th>
+          <th>ActivityDescription</th>
+          <th>ActivityResponsPerson1</th>
+          <th>ActivityResponsPerson2</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let activity of pagedActivities; let i = index" (click)="setActiveActivity(activity, i)" [ngClass]="{'even-row': i % 2 === 0, 'odd-row': i % 2 !== 0}">
+          <td>{{ activity.activityId }}</td>
+          <td>{{ activity.activityRefNo }}</td>
+          <td>{{ activity.activityName }}</td>
+          <td>{{ activity.description }}</td>
+          <td>{{ activity.responsPerson1 }}</td>
+          <td>{{ activity.responsPerson2 }}</td>
+          <td>
+            <span *ngIf="!activity.deletedFlag" class="m-1 active"><b>Active</b></span>
+            <span *ngIf="activity.deletedFlag" class="m-1 inactive"><b>Inactive</b></span>
+          </td>
+          <td>
+            <div class="d-flex justify-content-between">
+              <button class="m-1 btn btn-sm btn-primary" (click)="editActivity(activity.activityId)">Edit</button>
+              <button class="m-1 btn btn-sm" [ngStyle]="{ 'background-color': activity.deletedFlag ? 'green' : 'red' }" (click)="toggleDeletedFlag(activity)">
+                {{ activity.deletedFlag ? 'Activate' : 'Deactivate' }}
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+
+    
+
+
+  </div>
+
+
+  <div class="container d-flex justify-content-end mt-3">
+    <mat-paginator [pageSize]="pageSize" [length]="activities?.length" (page)="onPageChange($event)">
+    </mat-paginator>
+      </div>
+
+<footer class="footer bg-dark mt-5">
+  <div class="container text-white text-center">
+    <span>&copy; 2024_ CSM Technologies. All rights reserved.</span>
+  </div>
+</footer>
+
+
+
 </div>
+
+

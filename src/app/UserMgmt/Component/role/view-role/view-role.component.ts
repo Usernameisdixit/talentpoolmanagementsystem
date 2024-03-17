@@ -118,15 +118,25 @@ private getTableData(): any[][] {
 }
 
 exportToExcel()  {
-  const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(this.getTableData());
+    
+  const tableData = this.getTableData();
+
+  const headerStyle = { bold: true }; 
+  const header = [
+      { v: 'RoleId', s: headerStyle },
+      { v: 'Role Name', s: headerStyle }
+  ];
+  
+  tableData.unshift(header);
+
+  const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
 
   // Add header row
-  const header = ['Role ID', 'Role Name'];
   XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' });
 
   const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
   const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  this.saveAsExcelFile(excelBuffer, 'Role_Master_Details.pdf');
+  this.saveAsExcelFile(excelBuffer, 'Role_Master_Details');
 }
 
 private saveAsExcelFile(buffer: any, fileName: string): void {

@@ -7,11 +7,14 @@ import { AssessmentDto } from 'src/app/Model/AssessmentDto';
   providedIn: 'root'
 })
 export class AssessmentserviceService {
+  
 
   private platformUrl = 'http://localhost:9999/tpms/getPlatforms';
   apiUrl = 'http://localhost:9999/tpms/api/assessment-details';
   private baseUrl = 'http://localhost:9999/tpms';
   private viewUrl = 'http://localhost:9999/tpms/viewAssesmentDetails';
+  private editUrl = 'http://localhost:9999/tpms/editAssessment';
+  private updateUrl = 'http://localhost:9999/tpms/updateAssessment';
   constructor(private http: HttpClient) { }
 
   getPlatforms(): Observable<any[]> {
@@ -49,5 +52,17 @@ export class AssessmentserviceService {
    viewAssessmentDetails(): Observable<AssessmentDto[]> {
      return this.http.get<AssessmentDto[]>(this.viewUrl);
    }
+
+
+
+   updateAssessment(assessment: any): Observable<any> {
+    const url = `${this.updateUrl}/${assessment.id}`;
+    return this.http.put(url, assessment);
+  }
+
+  getAssessmentById(assessmentId: string): Observable<any> {
+    const url = `${this.editUrl}/${assessmentId}`;
+    return this.http.get(url);
+  }
   
 }

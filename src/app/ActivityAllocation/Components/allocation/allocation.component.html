@@ -3,26 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Page Title</title>
+  <title>Activity Allocation</title>
   <link rel="stylesheet" href="allocation.component.css">
 </head>
 <body>
   <div class="container">
     <div class="row">
-      <h1 class="text-center">Activity Allocation</h1>
+      <div class="col text-center">
+        <h1>Activity Allocation</h1>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-md-3">
-        <label for="platform">Platform</label>
-        <select id="platform">
+        <label for="platform">Platform <span class="required">*</span></label>
+        <select id="platform" class="form-control">
           <option *ngFor="let platform of platforms" [value]="platform.platformId">{{ platform.platform }}</option>
         </select>
       </div>
-    
       <div class="col-md-3">
-        <label for="activityDate">Activity Date</label>
-        <input type="date" id="activityDate" (ngModel)="activityDate" (change)="setDate()">
+        <label for="activityDate">Activity Date <span class="required">*</span></label>
+        <input type="date" id="activityDate" class="form-control" (ngModel)="activityDate" (change)="setDate()">
       </div>
     </div>
-    
     <table class="activity-table">
       <thead>
         <tr>
@@ -53,16 +55,16 @@
             <div *ngIf="resource.isAllocatedActivity">
               <ul *ngFor="let detail of resource.activityAlloc.details">
                 <li *ngIf="detail.activityFor==2">
-                 {{detail.activity.activityName}} ({{detail.fromHours}}~{{detail.toHours}})
+                  {{detail.activity.activityName}} ({{detail.fromHours}}~{{detail.toHours}})
                 </li>
               </ul>
             </div>
           </td>
           <td>
-            <button class=" btn-secondary" *ngIf="resource.isAllocatedActivity==false">
+            <button class="btn btn-secondary" *ngIf="resource.isAllocatedActivity==false">
               Add
             </button>
-            <button class=" btn-info" *ngIf="resource.isAllocatedActivity==true" (click)="editDetails(resource.resourceId)">Edit</button>
+            <button class="btn btn-primary" *ngIf="resource.isAllocatedActivity==true" (click)="editDetails(resource.resourceId)">Edit</button>
           </td>
         </tr>
       </tbody>

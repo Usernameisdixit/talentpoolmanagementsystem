@@ -54,8 +54,13 @@
   </td>
   <td>
     <div class="btn-group">
-      <button type="button" class="btn btn-info" (click)="editalent(c.resourceId)">Edit</button>&nbsp;&nbsp;
-      <button type="button" class="btn btn-danger" (click)="deletetalent($event, c.resourceId)">Delete</button>
+      <button type="button" class="btn btn-primary" (click)="editalent(c.resourceId)">Edit</button>
+     <!-- <button type="button" class="btn btn-danger" (click)="deletetalent($event, c.resourceId)">Delete</button> -->
+      <td *ngIf="c.deletedFlag" id="toggleButton"><button class="btn btn-danger" (click)="deletetalent($event, c.resourceId);">InActive</button></td>
+              
+      <td *ngIf="!c.deletedFlag" id="toggleButton"><button class="btn btn-success" (click)="deletetalent($event, c.resourceId);">Active</button></td>
+      
+    
     </div>
   </td>
   

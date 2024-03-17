@@ -29,6 +29,7 @@ import { AllocationDetailsComponent } from './ActivityAllocation/Components/allo
 import { ActivityListComponent } from './ActivityMgmt/Components/activity-list/activity-list.component';
 import { ActivityDetailsComponent } from './ActivityMgmt/Components/activity-details/activity-details.component';
 import { AddActivityComponent } from './ActivityMgmt/Components/add-activity/add-activity.component';
+import { EditAssessmentComponent } from './AssessmentMgmt/Components/edit-assessment/edit-assessment.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -67,7 +68,8 @@ const routes: Routes = [
        //{ path: 'activities', redirectTo: 'activities', pathMatch: 'full',},
        { path: 'activities', component: ActivityListComponent ,canActivate: [authGuard]},
        { path: 'activity/:id', component: ActivityDetailsComponent ,canActivate: [authGuard]},
-       { path: 'add', component: AddActivityComponent , canActivate: [authGuard]}
+       { path: 'add', component: AddActivityComponent , canActivate: [authGuard]},
+       { path: 'editassesment/:id', component: EditAssessmentComponent , canActivate: [authGuard]}
 
    
     ]

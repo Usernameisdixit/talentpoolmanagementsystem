@@ -28,9 +28,12 @@ findContactByResourceNumber(id:number):Observable<Talent>{
   return this.httpClient.get<Talent>(`${this.baseUrl}/talent/${id}`);
 }
 
-deleteByResourceNumber(id:number):Observable<string>{
-  return this.httpClient.delete(`${this.baseUrl}/talent/${id}`, {responseType:"text"});
-}
+//deleteByResourceNumber(id:number):Observable<string>{
+ // return this.httpClient.delete(`${this.baseUrl}/talent/${id}`, {responseType:"text"});
+//}
 
+deleteByResourceNumber(id:number):Observable<string>{
+  return this.httpClient.post(`${this.baseUrl}/delete/talent/${id}`,id, {responseType:"text"});
+}
 
 }

@@ -3,3 +3,7 @@
 @import "~@fortawesome/fontawesome-free/css/all.css";
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.space {
+    margin-right: 10px;
+}

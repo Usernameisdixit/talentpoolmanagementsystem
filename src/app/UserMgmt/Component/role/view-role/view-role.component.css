@@ -20,6 +20,19 @@
   margin-right: 5px;
 }
 
+.header-title {
+  text-align: center;
+  background-color: gray;
+  color: white; 
+  padding: 10px;
+}
+
+.gray-bg {
+  background-color: white; 
+  color: black; 
+  padding: 10px;
+}
+
 .btn-primary {
   background-color: #007bff;
   color: #fff;

@@ -66,6 +66,7 @@ import { AddActivityComponent } from './ActivityMgmt/Components/add-activity/add
 import { ActivityListComponent } from './ActivityMgmt/Components/activity-list/activity-list.component';
 import { ActivityDetailsComponent } from './ActivityMgmt/Components/activity-details/activity-details.component';
 import { ActivityNavbarComponent } from './ActivityMgmt/Components/activity-navbar/activity-navbar.component';
+import { EditAssessmentComponent } from './AssessmentMgmt/Components/edit-assessment/edit-assessment.component';
 
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
@@ -102,7 +103,8 @@ defineLocale('en-gb', enGbLocale); //
     AddActivityComponent,
     ActivityListComponent,
     ActivityDetailsComponent,
-    ActivityNavbarComponent
+    ActivityNavbarComponent,
+    EditAssessmentComponent
 
   ],
   imports: [
