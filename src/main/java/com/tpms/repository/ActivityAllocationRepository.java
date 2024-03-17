@@ -1,19 +1,17 @@
 package com.tpms.repository;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.domain.Limit;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.tpms.entity.ActivityAllocation;
-import com.tpms.entity.ActivityAllocationDetails;
-import com.tpms.entity.Platform;
+
 
 
 
@@ -26,7 +24,8 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
 	Map<String, Object> findAllDetails(@Param("activityAllocateDetId") Integer activityAllocateDetId);
 	 
 
-	List<ActivityAllocation> findByPlatformIdAndActivityDateBetween(Long platformId, Date fromDate,Date toDate);
+	List<ActivityAllocation> findByPlatformIdAndActivityDateBetweenAndDeletedFlagIsFalse(Long platformId, Date fromDate, Date toDate);
+
 	
 	@Query("SELECT alloc FROM ActivityAllocation alloc JOIN FETCH alloc.details det WHERE alloc.resourceId=:id AND alloc.deletedFlag=false and det.deletedFlag=false")
 	ActivityAllocation findByResourceId(Integer id);
