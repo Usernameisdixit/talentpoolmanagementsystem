@@ -15,8 +15,8 @@ export class AllocationService {
     return this.http.get<any[]>(`${this.apiUrl}/platforms`);
   }
 
-  getResources(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/resources`);
+  getResources(activityDate: string, platformId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/resources?activityDate=${activityDate}&platformId=${platformId}`);
   }
 
   getActivities(): Observable<any[]> {

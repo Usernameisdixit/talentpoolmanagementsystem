@@ -15,13 +15,13 @@ export class AllocationComponent implements OnInit {
   platforms:Platform[] = [];
   resources:Resource[] = [];
   activityDate: any;
+  platformId: any;
  
   constructor(private allocationService: AllocationService,
               private router:Router, private dateService: DateService) { }
 
   ngOnInit(): void {
     this.getPlatforms();
-    this.getResources();
   }
 
   getPlatforms(): void {
@@ -31,18 +31,19 @@ export class AllocationComponent implements OnInit {
   }
 
   getResources(): void {
-    this.allocationService.getResources().subscribe((data: any[]) => {
+    this.allocationService.getResources(this.activityDate,this.platformId).subscribe((data: any[]) => {
       this.resources = data;
       this.resources.forEach(resource => {
-        resource.isAllocatedActivity = resource.activityAlloc ? true : false;
+        resource.isAllocatedActivity = resource.activityAlloc.length>0 ? true : false;
       });
       console.log(this.resources);
     });
   }
   
 
-  setDate(): void {
+  setDate(): void {debugger;
     this.dateService.setDate(this.activityDate);
+    this.getResources();
   }
 
   editDetails(id:number){
