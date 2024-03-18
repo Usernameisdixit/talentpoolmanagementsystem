@@ -174,19 +174,14 @@ public class ResourcePoolServiceImpl {
 	//For Updating Any Resource
 	public String addorUpdateEmployee(ResourcePool emp) {
 		
-		Integer empid=emp.getResourceId();
-		System.out.println(emp);
+	try {
+			tbl_resource_pool_Repository.save(emp);
 		
-		
-		tbl_resource_pool_Repository.save(emp);
-		System.out.println(emp);
-		if (empid==null)
-		{
-		
-		return "Record Inserted";}
-		else{
-		return "Record Updated";	
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
+		return "Record Updated";
 	}
 	
 	
