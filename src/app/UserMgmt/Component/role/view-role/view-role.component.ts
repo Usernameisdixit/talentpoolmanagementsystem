@@ -24,7 +24,6 @@ export class ViewRoleComponent {
 
   getAllRole(){
     this.service.viewRole().subscribe((responseData: any)=>{
-      debugger;
       this.roleList = responseData;
       console.log("hi"+JSON.stringify(this.roleList));
     })
@@ -37,9 +36,7 @@ export class ViewRoleComponent {
 
 
   deleteRole(id: any) {
-    debugger;
     this.service.delete(id).subscribe((data: any) => {
-      debugger;
       console.log(data);
       this.getAllRole();
       if (data.status === 200 && data.deleted === 'Data Deleted Succesfully') {
