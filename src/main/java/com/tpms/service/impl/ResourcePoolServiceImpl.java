@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tpms.entity.ResourcePool;
 import com.tpms.entity.ResourcePoolHistory;
-
+import com.tpms.entity.Role;
 import com.tpms.repository.ResourcePoolRepository;
 import com.tpms.utils.ExcelUtils;
 
@@ -206,6 +206,20 @@ public class ResourcePoolServiceImpl {
 	}
 	
 	
+	
+	public void updateBitDeletedFlagById(Integer id) {
+		tbl_resource_pool_Repository.updateBitDeletedFlagById(id);
+	}
+
+	
+	public Byte getDeletedFlagByRoleId(Integer id) {
+		return tbl_resource_pool_Repository.getDeletedFlagByRoleId(id);
+	}
+
+	
+	public void updateBitDeletedFlagByFalse(Integer id) {
+		tbl_resource_pool_Repository.updateBitDeletedFlagByFalse(id);
+	}
 	
 	
 
