@@ -155,7 +155,6 @@ exportToPDF() {
 // excel export work
   
 exportToExcel() {
-  debugger;
   this.userService.getUserDetails().
     pipe(
         map((data: any[]) => {
@@ -170,6 +169,7 @@ exportToExcel() {
             tableData.unshift(header);
 
             const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
+            
 
             const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
             const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
