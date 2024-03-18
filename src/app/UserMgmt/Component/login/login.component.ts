@@ -40,6 +40,12 @@ export class LoginComponent implements OnInit {
               const status = responseObject?.status;
               const user = responseObject?.user;
               const email=user?.email;
+              const username=user?.userName;
+              const userFullName=user?.userFullName;
+              localStorage.setItem("email",email);
+              localStorage.setItem('userName',username);
+    localStorage.setItem("userId",user?.userId);
+    localStorage.setItem("userFullName",userFullName);          
     localStorage.setItem("user", JSON.stringify(user));
     const storedUserString = localStorage.getItem('user');
     if (storedUserString) {
