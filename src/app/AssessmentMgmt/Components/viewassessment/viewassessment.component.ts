@@ -59,7 +59,7 @@ export class ViewassessmentComponent {
   
     // Add the table
     (doc as any).autoTable({
-      head: [['Sl.No', 'Resource Name', 'Platform Name', 'Activity Name', 'Total Marks', 'Marks', 'Percentage','Remarks']],
+      head: [['Sl.No', 'Resource Name', 'Platform Name', 'Activity Name', 'Total Marks', 'Secured Marks', 'Percentage','Remarks']],
       body: data,
       startY: 20, 
       margin: { top: 15 } 
@@ -84,50 +84,57 @@ export class ViewassessmentComponent {
 }
 
 
-  exportToExcel() {
-   
-    const tableData = this.getTableData();
-
-   
-    const headerStyle = { bold: true }; 
-    const header = [
-        { v: 'Sl.No', s: headerStyle },
-        { v: 'Resource Name', s: headerStyle },
-        { v: 'Platform Name', s: headerStyle },
-        { v: 'Activity Name', s: headerStyle },
-        { v: 'Total Marks', s: headerStyle },
-        { v: 'Marks', s: headerStyle },
-        { v: 'Percentage', s: headerStyle },
-        { v: 'Remarks', s: headerStyle }
-    ];
-    
+exportToExcel() {
+  const tableData = this.getTableData();
   
-    tableData.unshift(header);
-
-   
-    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
-    
-   
-    const range = XLSX.utils.decode_range(worksheet['!ref']);
-    for (let R = range.s.r; R <= range.e.r; ++R) {
-        for (let C = range.s.c; C <= range.e.c; ++C) {
-            const cellAddress = { c: C, r: R };
-            const cellRef = XLSX.utils.encode_cell(cellAddress);
-            if (!worksheet[cellRef]) continue;
-            worksheet[cellRef].s = { wrapText: true };
-        }
-    }
-
+  const headerStyle = { bold: true }; 
+  const header = [
+      { v: 'Sl.No', s: headerStyle },
+      { v: 'Resource Name', s: headerStyle },
+      { v: 'Platform Name', s: headerStyle },
+      { v: 'Activity Name', s: headerStyle },
+      { v: 'Total Marks', s: headerStyle },
+      { v: 'Secured Marks', s: headerStyle },
+      { v: 'Percentage', s: headerStyle },
+      { v: 'Remarks', s: headerStyle }
+  ];
   
-    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-    
+  tableData.unshift(header);
   
-    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    
+  const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
   
-    this.saveAsExcelFile(excelBuffer, 'assessment-details');
+  // Dynamically wrap cells based on content length
+  const range = XLSX.utils.decode_range(worksheet['!ref']);
+  for (let R = range.s.r; R <= range.e.r; ++R) {
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+          const cellAddress = { c: C, r: R };
+          const cellRef = XLSX.utils.encode_cell(cellAddress);
+          if (!worksheet[cellRef]) continue;
+          worksheet[cellRef].s = { wrapText: true };
+      }
+  }
+  
+  // Set column widths based on content length
+  const colWidths = [];
+  for (let C = range.s.c; C <= range.e.c; ++C) {
+      let maxWidth = 0;
+      for (let R = range.s.r; R <= range.e.r; ++R) {
+          const cellAddress = { c: C, r: R };
+          const cellRef = XLSX.utils.encode_cell(cellAddress);
+          if (!worksheet[cellRef]) continue;
+          const cellValue = worksheet[cellRef].v.toString();
+          maxWidth = Math.max(maxWidth, cellValue.length);
+      }
+      colWidths[C] = { wch: maxWidth + 2 }; // Add some padding
+  }
+  worksheet['!cols'] = colWidths;
+  
+  const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+  
+  const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  
+  this.saveAsExcelFile(excelBuffer, 'assessment-details');
 }
-
 
   
 
