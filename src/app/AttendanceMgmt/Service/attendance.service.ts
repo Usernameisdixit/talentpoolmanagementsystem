@@ -29,13 +29,16 @@ export class AttendanceService {
     return this.httpClient.post(this.attendanceSaveUrl, attendanceDetails, { params: params });
   }
 
-  getAttendanceReportData(year: string, month: string, platform: string, selectedDate: string): Observable<any> {
+  getAttendanceReportData(year: string, month: string, platform: string, selectedDate: string,resourceValue : any): Observable<any> {
+ 
+ 
     const url = `${this.reportData}/pdfData`;
     const params = {
         year: year,
         month: month,
         platform: platform,
-        selectedDate: selectedDate
+        selectedDate: selectedDate,
+        resourceValue : resourceValue
     };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post<any>(url, params, { headers });
