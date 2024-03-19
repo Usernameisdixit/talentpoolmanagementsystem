@@ -200,7 +200,6 @@ export class UserComponent {
                 showConfirmButton: true
               }).then((result) => {
                 if (result.isConfirmed) {
-                  //this.userForm.value.userName.reset();
                   this.userForm.get(colName).setValue('');
                 }
               });
