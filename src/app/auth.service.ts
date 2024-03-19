@@ -25,4 +25,9 @@ export class AuthService {
   clearAuthentication(): void {
     sessionStorage.removeItem('authenticated');
   }
+
+  getUsername(): string | null {
+    return localStorage.getItem('userName');
+  }
+
 }

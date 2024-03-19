@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Talent } from 'src/app/Model/talent';
 import { ContactService } from '../../Services/contact.service';
 import { FormGroup } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-talentedit',
@@ -34,7 +35,25 @@ getContact(){
 }
 
 updateContact(){
-  console.log();
+ // alert("hello"+this.talent.email);
+  console.log(this.talent);
+  this.service.createTalent(this.talent).subscribe(
+    data=>{
+      console.log("Updating a Contact.....");
+      console.log(this.talent);
+      Swal.fire({
+        icon: 'success',
+        title: 'Resource Data Update successful',
+        text:  'Resource Data has been updated successfully!',
+      });
+      this.router.navigate(['talents']);
+      console.log(data);
+    },
+    error=>{
+
+    });
+    this.getContact();
+    
 }
 
 
