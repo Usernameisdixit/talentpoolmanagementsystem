@@ -162,7 +162,7 @@ public class ResourceExcelController {
 		
 		
 		//For Updating Talent Pool Resource
-		@PutMapping("/emp/talent")
+		@PostMapping("/emp/updatetalent")
 		public ResponseEntity<String> updateEmployee (@RequestBody ResourcePool emp){ 
 			
 			String msg =tbl_resource_pool_Service.addorUpdateEmployee(emp);
