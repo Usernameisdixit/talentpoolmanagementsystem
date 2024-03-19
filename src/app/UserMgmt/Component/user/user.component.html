@@ -1,3 +1,5 @@
+
+<div class="card-body">
 <div class="container mt-3">
   
   <h2 style="text-align: center;">Add User</h2><hr>
@@ -5,11 +7,12 @@
 <form class=" g-3 mt-3" [formGroup]="userForm" (ngSubmit)="onSubmit()">
  
   <div class="col-md-6">
+    <div class="">
      <label for="validationDefault01" class="form-label">User Full Name :</label><span class="text-danger font-weight-bold">*</span>
-
+    </div>
      <input type="text" class="form-control" id="userFullName" formControlName="userFullName" />
      <div *ngIf="userForm.get('userFullName')?.invalid && userForm.get('userFullName')?.touched">
-       <p class="text-danger">Please Enter The User Full Name.</p>
+       <p class="text-danger">Please enter the user full name.</p>
      </div>
    
   </div>
@@ -17,9 +20,9 @@
   <div class="col-md-6 mt-2">
     <label for="validationDefault01" class="form-label">User Name :</label><span class="text-danger font-weight-bold">*</span>
 
-    <input type="text" class="form-control" id="userName1" formControlName="userName" (blur)="duplicateCheck($event)"/>
+    <input type="text" class="form-control" name="userName" id="userName" formControlName="userName" (keyup)="checkDuplicateValue($event);" (keydown)="preventSpaces($event);"/>
     <div *ngIf="userForm.get('userName')?.invalid && userForm.get('userName')?.touched">
-      <p class="text-danger">Please Enter The User Name.</p>
+      <p class="text-danger">Please enter the user name.</p>
     </div>
    
   </div>
@@ -31,7 +34,7 @@
       <option value=""> Select Role </option>
       <option *ngFor="let role of roleDetails" value="{{role.roleId}}">{{role.roleName}}</option>
       <div *ngIf="userForm.get('roleId')?.invalid && userForm.get('roleId')?.touched">
-        <p class="text-danger font-weight-bold">Please Select Role Name</p>
+        <p class="text-danger font-weight-bold">Please select role name.</p>
      </div>
     </select>
   </div>
@@ -39,38 +42,36 @@
   <div class="col-md-6 mt-2">
     <label for="validationDefault03" class="form-label">Mobile No. :</label><span class="text-danger font-weight-bold">*</span>
 
-    <input type="text" class="form-control" id="phoneNo" formControlName="phoneNo"/>
-    <div *ngIf="userForm.get('phoneNo')?.invalid && userForm.get('phoneNo')?.touched">
-       <p class="text-danger font-weight-bold">Please Enter Mobile No.</p>
+    <input type="number" class="form-control" name="phoneNo" id="phoneNo" formControlName="phoneNo" (keyup)="checkDuplicateValue($event);" (keydown)="preventSpaces($event);"  (keydown)="preventMaxNo($event);"/>
+     <div *ngIf="userForm.get('phoneNo')?.hasError('pattern')">
+      <p class="text-danger font-weight-bold">Please enter valid mobile No.(eg: maxlength & minlength should be 10)</p>
     </div>
-    <!-- <div *ngIf="userForm.get('phoneNo')?.hasError('minlength') && userForm.get('phoneNo')?.hasError('maxlength')">
-      <p class="text-danger font-weight-bold">Please Enter Valid Mobile No.</p>
-    </div> -->
     
   </div>
 
   <div class="col-md-6 mt-2">
     <label for="validationDefault04" class="form-label">Email :</label><span class="text-danger font-weight-bold">*</span>
 
-    <input type="email" class="form-control" id="email" formControlName="email"/>
+    <input type="email" class="form-control" name="email" id="email" formControlName="email" (keyup)="checkDuplicateValue($event)"/>
      <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
-      <p class="text-danger font-weight-bold">Please Enter A Valid Email.</p>
+      <p class="text-danger font-weight-bold">Please enter a valid email.(eg:abc123@gmail.com)</p>
    </div> 
     
   </div>
 
 <div>
   <div class="gap-2 col-3 mx-auto mt-3" *ngIf="userId === 0">
-    <button class="btn btn-primary" type="submit">Create</button> &nbsp;&nbsp;
+    <button class="btn btn-success" type="submit">Create</button> &nbsp;&nbsp;
 
     <button class="btn btn-danger" type="reset"> Reset </button>
   </div>
 
    <div class="gap-2 col-3 mx-auto mt-3" *ngIf="userId > 0">
-    <button class="btn btn-primary" type="submit">Update</button> &nbsp;&nbsp;
+    <button class="btn btn-success" type="submit">Update</button> &nbsp;&nbsp;
 
     <button class="btn btn-warning" type="button" (click)="cancelData()"> Cancel </button>
   </div>
 </div>
 </form>
+</div>
 </div>

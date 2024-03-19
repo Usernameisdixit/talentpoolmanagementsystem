@@ -1,0 +1,42 @@
+<!-- edit-assessment.component.html -->
+
+<div class="container">
+    <h2> Assessment Details</h2>
+  
+    <!-- Display related info: Resource Name, Platform Name, Activity Name -->
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <p><strong>Resource Name:</strong> {{ resourceName }}</p>
+      </div>
+      <div class="col-md-4">
+        <p><strong>Platform Name:</strong> {{ platformName }}</p>
+      </div>
+      <div class="col-md-4">
+        <p><strong>Activity Name:</strong> {{ activityName }}</p>
+      </div>
+    </div>
+  
+    <!-- Editable fields for assessment details -->
+    <form (ngSubmit)="updateAssessment()" #assessmentForm="ngForm">
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label for="totalMarks">Total Marks:</label>
+          <input type="number" id="totalMarks" class="form-control" name="totalMarks" [(ngModel)]="totalMarks" required>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="marks">Marks:</label>
+          <input type="number" id="marks" class="form-control" name="marks" [(ngModel)]="marks" required>
+        </div>
+        <div class="form-group col-md-4">
+          <label for="remarks">Assessment Remarks:</label>
+          <textarea id="remarks" class="form-control" name="remarks" [(ngModel)]="remarks"></textarea>
+        </div>
+      </div>
+      
+      <!-- Update and Cancel buttons -->
+      <div class="form-group text-center">
+        <button type="submit" class="btn btn-success space">Update</button>
+        <button type="button" class="btn btn-warning" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </form>
+  </div>

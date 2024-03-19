@@ -6,6 +6,9 @@
     </div>
   </button>
   <div class="spacer"></div>
+      <div style="font-size: 12px;">
+       <div> {{currentDate}}</div>
+      </div>
   <div *ngIf="authService.isAuthenticated()">
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item>{{userName}}</button>

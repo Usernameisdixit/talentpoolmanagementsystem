@@ -3,28 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Page Title</title>
+  <title>Activity Allocation</title>
+  <link rel="stylesheet" href="allocation.component.css">
 </head>
 <body>
   <div class="container">
     <div class="row">
+      <div class="col text-center">
+        <h1>Activity Allocation</h1>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-md-3">
-        <label>Platform</label>
-        <select id="platform">
+        <label for="platform">Platform <span class="required">*</span></label>
+        <select id="platform" class="form-control" [(ngModel)]="platformId">
+          <option value="0">All</option>
           <option *ngFor="let platform of platforms" [value]="platform.platformId">{{ platform.platform }}</option>
         </select>
       </div>
-    
       <div class="col-md-3">
-        <label>Activity Date</label>
-        <input type="date" id="activityDate" (ngModel)="activityDate" (change)="setDate()">
+        <label for="activityDate">Activity Date <span class="required">*</span></label>
+        <input type="date" id="activityDate" [(ngModel)]="activityDate" (change)="setDate()">
       </div>
     </div>
-    
-    <table>
+    <table class="activity-table">
       <thead>
         <tr>
-          <th rowspan="2">Resources</th>
+          <th rowspan="2">Resource Code</th>
+          <th rowspan="2">Resource Name</th>
           <th rowspan="2">Platform</th>
           <th colspan="2">Activity Details</th>
           <th rowspan="2">Action</th>
@@ -36,11 +42,12 @@
       </thead>
       <tbody>
         <tr *ngFor="let resource of resources">
+          <td>{{resource.resourceCode}}</td>
           <td>{{resource.resourceName}}</td>
           <td>{{resource.platform}}</td>
           <td>
             <div *ngIf="resource.isAllocatedActivity">
-              <ul *ngFor="let detail of resource.activityAlloc.details">
+              <ul *ngFor="let detail of resource.activityAlloc.at(0).details">
                 <li *ngIf="detail.activityFor==1">
                   {{detail.activity.activityName}} ({{detail.fromHours}}~{{detail.toHours}})
                 </li>
@@ -49,17 +56,19 @@
           </td>
           <td>
             <div *ngIf="resource.isAllocatedActivity">
-              <ul *ngFor="let detail of resource.activityAlloc.details">
+              <ul *ngFor="let detail of resource.activityAlloc.at(0).details">
                 <li *ngIf="detail.activityFor==2">
-                 {{detail.activity.activityName}} ({{detail.fromHours}}~{{detail.toHours}})
+                  {{detail.activity.activityName}} ({{detail.fromHours}}~{{detail.toHours}})
                 </li>
               </ul>
             </div>
           </td>
-          <td><button class="btn btn-info">
-            <span  *ngIf="resource.isAllocatedActivity==false">Add</span>
-            <span *ngIf="resource.isAllocatedActivity==true" (click)="editDetails(resource.resourceId)">Edit</span>
-          </button></td>
+          <td>
+            <button class="btn-secondary" *ngIf="resource.isAllocatedActivity==false" (click)="editDetails(resource.resourceId)">
+              Add
+            </button>
+            <button class="btn-info" *ngIf="resource.isAllocatedActivity==true" (click)="editDetails(resource.resourceId)">Edit</button>
+          </td>
         </tr>
       </tbody>
     </table>

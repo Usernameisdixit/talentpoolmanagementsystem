@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <h2>File Upload</h2>
+    <title>File Upload</title>
     <link rel="stylesheet" href="file-upload.component.css">
 </head>
 
@@ -12,26 +12,24 @@
     <div class="container">
         <h2>Upload File</h2>
         <div class="form-group">
-            <label for="fileInput">Resource File :  </label>
+            <label for="fileInput">Resource File:<span class="required">*</span></label>
             <input type="file" id="fileInput" (change)="onFileSelected($event)" accept=".xlsx">
         </div>
      
         <div class="form-group">
-            <div class="input-group ">
-            <label for="allocationDate">Allocation Date:</label>
-            <input type="text" id="allocationDate" [(ngModel)]="allocationDate" name="allocationDate" class="bold-black" bsDatepicker [bsConfig]="bsConfig">
-            <span class="input-group-text"><i class="material-icons">date_range</i></span>
+            <label for="allocationDate">Allocation Date:<span class="required">*</span></label>
+            <div class="input-group">
+                <input type="text" id="allocationDate" [(ngModel)]="allocationDate" name="allocationDate" class="bold-black" bsDatepicker [bsConfig]="bsConfig">
+                <span class="input-group-text"><i class="material-icons">date_range</i></span>
             </div>
         </div>
-        
-
-
-        
-        <button (click)="onUpload()" [disabled]="isUploading" class="upload-btn">
+        <div class="text-center ">
+        <button (click)="onUpload()" [disabled]="isUploading" class="btn btn-success space">
             <span *ngIf="isUploading" class="spinner"></span>
-            Upload
+            Upload 
         </button>
-   
+        <button class="btn btn-danger space" type="reset"> Reset </button>
+    </div>
     </div>
 </body>
 

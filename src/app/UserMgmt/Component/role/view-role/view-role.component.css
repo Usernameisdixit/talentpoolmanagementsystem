@@ -20,6 +20,19 @@
   margin-right: 5px;
 }
 
+.header-title {
+  text-align: center;
+  background-color: gray;
+  color: white; 
+  padding: 10px;
+}
+
+.gray-bg {
+  background-color: white; 
+  color: black; 
+  padding: 10px;
+}
+
 .btn-primary {
   background-color: #007bff;
   color: #fff;
@@ -65,4 +78,21 @@
 .status-inactive {
   background-color: #dc3545;
   color: #fff;
+}
+
+.export-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.export-btn {
+  margin-left: 10px;
+}
+
+.pdf-icon {
+  color: #ff5733; 
+}
+
+.excel-icon {
+  color: #2e8b57;
 }

@@ -1,87 +1,77 @@
-/* file-upload.component.css */
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-image: url('abc.png'); /* Set your background image */
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    background-color: white; /* Set a light background color */
 }
 
 .container {
-    max-width: 600px; /* Increase the width of the container */
-    margin-top: 50px; /* Adjust margin from the top */
-    padding: 40px; /* Increase padding for a larger card */
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color:white;
 }
 
 h2 {
     text-align: center;
-    margin-bottom: 20px; /* Add spacing below the heading */
+    margin-bottom: 20px;
+    color: #333;
 }
 
 .form-group {
-    display: flex;
-    align-items: center; /* Align items vertically */
     margin-bottom: 20px;
 }
 
 .form-group label {
-    flex: 0 0 auto; /* Do not allow label to grow or shrink */
+    display: block;
     font-weight: bold;
-    margin-right: 10px; /* Add spacing between label and input field */
     color: #333;
 }
 
 .form-group input[type="file"],
 .form-group input[type="text"] {
-    flex: 1; /* Allow input field to grow */
-    width: calc(100% - 10px);
+    width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    transition: border-color 0.3s ease;
 }
 
-.form-group input[type="file"]:focus,
-.form-group input[type="text"]:focus {
-    border-color: #66afe9;
-}
-
-.form-group .input-group {
-    display: flex;
-    align-items: center; /* Align items vertically */
+.input-group {
     position: relative;
 }
 
-.form-group .input-group .input-group-text {
-    background-color: #ccc; /* Example color for calendar icon background */
-    padding: 8px; /* Adjust padding as needed */
-    border-radius: 0 5px 5px 0; /* Adjust border radius to match input field */
+.input-group input[type="text"] {
+    padding-right: 40px; /* Adjust the padding to accommodate the icon */
+}
+
+.input-group .input-group-text {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
     cursor: pointer;
 }
 
-.form-group .input-group .input-group-text i {
-    color: #333; /* Example color for calendar icon */
-}
-
 .upload-btn {
-    display: block; /* Make the button a block element */
-    margin: 20px auto 0; /* Center align horizontally with 20px top margin */
-    padding: 15px 30px; /* Increase padding for a larger button */
-    background-color: #103477; /* Change button background color */
-    color: white;
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    background-color: #279239;
+    color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.upload-btn:hover {
-    background-color: #0a2149; /* Darker background color on hover */
+.space {
+
+    margin-right: 10px;
+}
+
+.required {
+    color: red;
+    margin-left: 5px; /* Adjust margin as needed */
 }

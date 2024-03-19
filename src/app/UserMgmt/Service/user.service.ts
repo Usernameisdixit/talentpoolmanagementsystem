@@ -12,6 +12,7 @@ export class UserService {
   getRoleUrl:string="http://localhost:9999/tpms/getRoleDetails";
   deleteUserUrl:string="http://localhost:9999/tpms/deleteUser/";
   duplicateCheckUrl:string="http://localhost:9999/tpms/duplicateCheck/";
+  
 
   constructor(private http:HttpClient) { }
 
@@ -35,7 +36,8 @@ export class UserService {
     return this.http.delete(this.deleteUserUrl+`${userId}/${deletedFlag}`);
   }
 
-  duplicateCheck(userName:any){
-    return this.http.get(this.duplicateCheckUrl+userName);
+  duplicateCheck(value:any,colName:any){
+    return this.http.get(this.duplicateCheckUrl+`${value}/${colName}`);
   }
+
 }
