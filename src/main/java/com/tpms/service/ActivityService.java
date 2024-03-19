@@ -24,7 +24,7 @@ public interface ActivityService {
 
     public List<Platform> fetchPlatforms();
 
-	public List<ResourcePool> getResources();
+	public List<ResourcePool> getFilteredResources(String activityDate, Integer platformId);
 	
 	public List<Activity> findAll();
 

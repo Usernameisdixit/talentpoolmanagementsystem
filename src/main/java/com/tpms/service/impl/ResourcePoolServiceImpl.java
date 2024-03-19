@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tpms.entity.ResourcePool;
 import com.tpms.entity.ResourcePoolHistory;
-
+import com.tpms.entity.Role;
 import com.tpms.repository.ResourcePoolRepository;
 import com.tpms.utils.ExcelUtils;
 
@@ -174,19 +174,14 @@ public class ResourcePoolServiceImpl {
 	//For Updating Any Resource
 	public String addorUpdateEmployee(ResourcePool emp) {
 		
-		Integer empid=emp.getResourceId();
-		System.out.println(emp);
+	try {
+			tbl_resource_pool_Repository.save(emp);
 		
-		
-		tbl_resource_pool_Repository.save(emp);
-		System.out.println(emp);
-		if (empid==null)
-		{
-		
-		return "Record Inserted";}
-		else{
-		return "Record Updated";	
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
+		return "Record Updated";
 	}
 	
 	
@@ -206,6 +201,20 @@ public class ResourcePoolServiceImpl {
 	}
 	
 	
+	
+	public void updateBitDeletedFlagById(Integer id) {
+		tbl_resource_pool_Repository.updateBitDeletedFlagById(id);
+	}
+
+	
+	public Byte getDeletedFlagByRoleId(Integer id) {
+		return tbl_resource_pool_Repository.getDeletedFlagByRoleId(id);
+	}
+
+	
+	public void updateBitDeletedFlagByFalse(Integer id) {
+		tbl_resource_pool_Repository.updateBitDeletedFlagByFalse(id);
+	}
 	
 	
 

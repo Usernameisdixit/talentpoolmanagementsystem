@@ -15,6 +15,7 @@ public interface UserService {
 
 	void deleteUserById(Integer intUserId, Boolean deletedFlag);
 
-	String getStatusOfDuplicacyCheck(String userName);
+	String getStatusOfDuplicacyCheck(String value, String colName);
+
 
 }

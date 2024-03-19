@@ -1,9 +1,6 @@
 package com.tpms.entity;
 
-
-
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,50 +17,30 @@ import lombok.Data;
 public class ActivityAllocationDetails {
 
 	@Id
-
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer activityAllocateDetId;
 
-	
-	
-	 @ManyToOne
-	 @JoinColumn(name = "activityAllocateId")
-	 @JsonIgnoreProperties("details")
-	 private ActivityAllocation activityAllocation;
-	    
 	@ManyToOne
-    @JoinColumn(name = "activityId")
-	private Activity activity;	
-	    
-	//private Integer activityId;
+	@JoinColumn(name = "activityAllocateId")
+	@JsonBackReference
+	private ActivityAllocation activityAllocation;
 
-	
+	@ManyToOne
+	@JoinColumn(name = "activityId")
+	private Activity activity;
+
 	private Byte activityFor;
 
-	
 	private String fromHours;
 
-	
 	private String toHours;
 
-	
 	private String activityDetails;
-
 
 	private Integer createdBy;
 
-	
 	private Integer updatedBy;
 
-
-	private Boolean deletedFlag;
-
-
-
-
-
-
-	
+	private Boolean deletedFlag = false;
 
 }
-

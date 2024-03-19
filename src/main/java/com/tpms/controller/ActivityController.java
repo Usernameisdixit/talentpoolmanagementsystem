@@ -98,8 +98,8 @@ public class ActivityController {
 	}
 	
 	@GetMapping("resources")
-	List<ResourcePool> getResources() {
-		return activityService.getResources();
+	List<ResourcePool> getResources(String activityDate, Integer platformId) {
+		return activityService.getFilteredResources(activityDate,platformId);
 	}
 	
 	@GetMapping("activities")

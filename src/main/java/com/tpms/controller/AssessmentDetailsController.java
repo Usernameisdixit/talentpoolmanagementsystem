@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,11 +15,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +32,7 @@ import com.tpms.dto.ActivityWithResourceDTO;
 import com.tpms.dto.AssessmentDto;
 
 import com.tpms.entity.ActivityAllocationDetails;
-
+import com.tpms.entity.Assessment;
 import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
 import com.tpms.repository.ActivityAllocationDetailsRepository;
@@ -75,32 +79,35 @@ public class AssessmentDetailsController {
             Date toDt = new SimpleDateFormat("yyyy-MM-dd").parse(toDate);
 
             List<ActivityAllocationDetails> activityAllocationDetails = activityallocationRepository
-                    .findByPlatformIdAndActivityDateBetween(platformId, from,toDt)
+                    .findByPlatformIdAndActivityDateBetweenAndDeletedFlagIsFalse(platformId, from, toDt)
                     .stream()
                     .map(activityAllocation -> activityAllocationDetailsRepository.findByActivityAllocation(activityAllocation))
                     .flatMap(List::stream)
                     .collect(Collectors.toList());
 
-            // Create a map to associate resource names with ActivityAllocationDetails
-            Map<ActivityAllocationDetails, Pair<String,String>> activityDetailsWithResourceInfo = new HashMap<>();
+            // Create a map to associate resource IDs with their corresponding activity details
+            Map<Integer, List<ActivityAllocationDetails>> activityDetailsByResource = new HashMap<>();
+            
             for (ActivityAllocationDetails detail : activityAllocationDetails) {
                 Integer resourceId = detail.getActivityAllocation().getResourceId();
-                String resourceName = fetchResourceName(resourceId);
-                String resourceCode = fetchResourceCode(resourceId);
-                activityDetailsWithResourceInfo.put(detail, Pair.of(resourceName, resourceCode));
+                if (!activityDetailsByResource.containsKey(resourceId)) {
+                    activityDetailsByResource.put(resourceId, new ArrayList<>());
+                }
+                activityDetailsByResource.get(resourceId).add(detail);
             }
 
-           
-            Set<String> uniqueActivityNames = activityAllocationDetails.stream()
-                    .map(detail -> detail.getActivity().getActivityName())
-                    .collect(Collectors.toSet());
-
-          
-        
             List<ActivityWithResourceDTO> response = new ArrayList<>();
-            for (ActivityAllocationDetails detail : activityAllocationDetails) {
-                Pair<String, String> resourceInfo = activityDetailsWithResourceInfo.get(detail);
-                response.add(new ActivityWithResourceDTO(detail, resourceInfo.getFirst(), resourceInfo.getSecond()));
+            for (Integer resourceId : activityDetailsByResource.keySet()) {
+                Set<String> uniqueActivityNames = new HashSet<>();
+                List<ActivityAllocationDetails> resourceActivityDetails = activityDetailsByResource.get(resourceId);
+                for (ActivityAllocationDetails detail : resourceActivityDetails) {
+                    String activityName = detail.getActivity().getActivityName();
+                    if (!uniqueActivityNames.contains(activityName)) {
+                        Pair<String, String> resourceInfo = Pair.of(fetchResourceName(resourceId), fetchResourceCode(resourceId));
+                        response.add(new ActivityWithResourceDTO(detail, detail.getActivityAllocation(), resourceInfo.getFirst(), resourceInfo.getSecond()));
+                        uniqueActivityNames.add(activityName);
+                    }
+                }
             }
 
             return ResponseEntity.ok(response);
@@ -130,6 +137,20 @@ public class AssessmentDetailsController {
         List<Object[]> assessmentDetails = assessmentRepository.findAllWithDetails();
         return ResponseEntity.ok().body(assessmentDetails);
         
+    }
+    
+    @GetMapping("/editAssessment/{id}")
+    public List<Object[]> getAssessmentById(@PathVariable Integer id) {
+        return assessmentRepository.findDetailsByAssessmentId(id);
+    }
+
+    @PutMapping("/updateAssessment/{id}")
+    public ResponseEntity<?> updateAssessment(@PathVariable Integer id, @RequestBody AssessmentDto assessmentDto) {
+     
+            assessmentService.updateAssessment(id, assessmentDto);
+            return ResponseEntity.ok().build();
+     
+      
     }
     
 }

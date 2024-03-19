@@ -80,12 +80,15 @@ public class UserController {
 		return ResponseEntity.ok().body(response);
 	}
 	
-	@GetMapping("/duplicateCheck/{userName}")
-	public ResponseEntity<String> checkDuplicateUser(@PathVariable(name="userName") String userName){
+	@GetMapping("/duplicateCheck/{value}/{colName}")
+	public ResponseEntity<String> checkDuplicateUser(@PathVariable(name="value") String value,
+			@PathVariable(name="colName") String colName){
 		
-		String result=userService.getStatusOfDuplicacyCheck(userName);
+		String result=userService.getStatusOfDuplicacyCheck(value,colName);
 		
 		return ResponseEntity.ok().body("{\"status\": \"" + result + "\"}");
 	}
+	
+	
 	
 }

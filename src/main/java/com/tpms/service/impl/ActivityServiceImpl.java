@@ -16,7 +16,6 @@ import javax.sql.DataSource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Limit;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -199,8 +198,46 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 	
-	public List<ResourcePool> getResources() {
-		return resourceRepo.findAll();
+	public List<ResourcePool> getFilteredResources(String activityDate, Integer platformId) {
+		List<ResourcePool> resources = null;
+		List<ResourcePool> filteredResources = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date parsedDate = sdf.parse(activityDate);
+			resources = resourceRepo.findAllActiveRecords(parsedDate,platformId);
+//			resources.forEach(resource->resource.getActivityAlloc().forEach(alloc->{
+//				if(alloc.getActivityDate()==null || !parsedDate.equals(alloc.getActivityDate()))
+//					resource.getActivityAlloc().remove(alloc);
+//			}));
+//			Stream<ResourcePool> resourceStream = resources.stream();
+//			filteredResources = resourceStream.map(resource->
+//				new ResourcePool(
+//						resource.getActivityAlloc().stream()
+//						.filter(alloc->parsedDate.equals(alloc.getActivityDate())).toList()
+//						//.collect(Collectors.toList())
+//				)
+//			);
+//			for (ResourcePool resource : resources) {
+//				for (ActivityAllocation allocation : resource.getActivityAlloc()) {
+//					if(parsedDate.equals(allocation.getActivityDate()))
+//						resource.getActivityAlloc().
+//				}
+//			}
+			for(int i=0; i<resources.size(); i++) {
+				List<ActivityAllocation> activityAlloc = resources.get(i).getActivityAlloc();
+				int j = 0;
+				while(j<activityAlloc.size()) {
+					if(!parsedDate.equals(activityAlloc.get(j).getActivityDate()) || activityAlloc.get(j).getDeletedFlag())
+						activityAlloc.remove(j);
+					else
+						j++;
+				}
+				resources.get(i).setActivityAlloc(activityAlloc);
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return resources;
 	}
 
 
@@ -215,7 +252,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 
 	public ActivityAllocation getAllocationDetailsByResource(Integer resourceId) {
-		return activityAllocRepo.findByResourceId(resourceId, Limit.of(1));
+		return activityAllocRepo.findByResourceId(resourceId);
 	}
 
 

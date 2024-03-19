@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService{
 		if(role != null) {
 			u1.setRole(role);
 		}else {
-			throw new RuntimeException("Role with ID " + user.getRoleId() + " not found");
+			throw new ResourceNotFoundException("Role with ID " + user.getRoleId() + " not found");
 		}
 		u1.setDeletedFlag(false);
 		
@@ -91,15 +91,32 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public String getStatusOfDuplicacyCheck(String userName) {
+	public String getStatusOfDuplicacyCheck(String value,String colName) {
+		Integer count=0;
+		String result="not Exist";
 		
-		String result="";
-		Integer count=userRepository.getDuplicateCount(userName);
-		if(count>0) {
+		
+        switch(colName) {
+		   case "userName": {
+			   count=userRepository.getDuplicateNameCount(value);
+			 
+			   break;
+		   }
+		   case "phoneNo":{
+			   count=userRepository.getDuplicatePhnNoCount(value);
+			 
+			   break;
+		   }
+		   case "email":{
+			   count=userRepository.getDuplicateEmailCount(value);
+			 
+			   break;
+		   }
+        }
+        	
+		if(count>=1)
 			result="Exist";
-		}
-		else
-			result="NotExist";
+		
 		return result;
 	}
 
