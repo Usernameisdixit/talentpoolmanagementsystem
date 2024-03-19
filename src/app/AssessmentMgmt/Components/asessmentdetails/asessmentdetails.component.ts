@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Router } from '@angular/router';
+import { DATE } from 'ngx-bootstrap/chronos/units/constants';
 
 @Component({
   selector: 'app-asessmentdetails',
@@ -30,6 +31,9 @@ export class AsessmentdetailsComponent implements OnInit {
   assessmentDtos: AssessmentDto[] = [];
   currentPage: number = 1;
   itemsPerPage: number = 10;
+  assessmentDate: Date;
+  detailsRetrieved: boolean = false;
+
  
 
   constructor(private http: HttpClient, private datePipe: DatePipe, private apiService: AssessmentserviceService,private route:Router) {
@@ -68,6 +72,7 @@ export class AsessmentdetailsComponent implements OnInit {
         .subscribe((data: any[]) => {
           console.log(data);
           this.assessments = data;
+          this.detailsRetrieved = true;
           console.log(this.assessments);
           this.assessmentDtos = this.mapAssessmentDtos(data);
           // Display message if no records found
@@ -80,6 +85,7 @@ export class AsessmentdetailsComponent implements OnInit {
   }
 
   mapAssessmentDtos(data: any[]): AssessmentDto[] {
+    debugger;
     return data.map(item => ({
       intActivityAllocateDetId: item.activityAllocateDetId,
       intActivityId: item.activityDetails.activity.activityId,
@@ -91,11 +97,13 @@ export class AsessmentdetailsComponent implements OnInit {
       activityAllocateId: item.activityAllocation.activityAllocateId,
       resourceId: item.activityAllocation.resourceId,
       platformId: item.activityAllocation.platformId,
-      activityDate: new Date(item.activityAllocation.activityDate),
+      assessmentDate: this.assessmentDate,
       marks: item.activityDetails.marks,
       totalMarks: item.activityDetails.totalMarks,
       hour: item.activityDetails.hour,
-      remarks: item.activityDetails.remarks
+      remarks: item.activityDetails.remarks,
+      activityFromDate:new Date(this.fromDate),
+      activityToDate:new Date(this.toDate),
     }));
   }
 

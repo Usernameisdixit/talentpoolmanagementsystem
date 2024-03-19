@@ -1,17 +1,5 @@
 <div>
-  <nav class="navbar navbar-expand navbar-dark bg-dark">
-    <div class="container">
-      <a href="#" class="navbar-brand">Manage Activity</a>
-      <div class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a routerLink="/activities" class="nav-link">Activities</a>
-        </li>
-        <li class="nav-item">
-          <a routerLink="/add" class="nav-link">Add</a>
-        </li>
-      </div>
-    </div>
-  </nav>
+
 
   <div class="container">
     <div class="row">
@@ -38,7 +26,7 @@
           <input type="text" class="form-control" id="ActivityResponsPerson2" [(ngModel)]="currentActivity.responsPerson2" name="ActivityResponsPerson2">
         </div>
         <!-- Add more input fields for other activity properties -->
-        <button class="btn btn-primary" (click)="updateActivity()">Save Changes</button>
+        <button class="btn btn-success" (click)="updateActivity()">Save Changes</button>
         <div *ngIf="message" class="mt-3">{{ message }}</div>
       </div>
     </div>

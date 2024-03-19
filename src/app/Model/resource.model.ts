@@ -16,5 +16,5 @@ export class Resource {
     status!: string;
     deletedFlag!: boolean;
     isAllocatedActivity!: boolean;
-    activityAlloc: any;
+    activityAlloc: any[];
 }
