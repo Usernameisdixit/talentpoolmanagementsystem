@@ -2,3 +2,7 @@
     margin-left: 10px; /* Adjust the value as needed for the desired space */
     display: inline-block;
 }
+
+.required {
+    color: red;
+}

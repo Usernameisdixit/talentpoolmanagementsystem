@@ -67,7 +67,7 @@ import { ActivityListComponent } from './ActivityMgmt/Components/activity-list/a
 import { ActivityDetailsComponent } from './ActivityMgmt/Components/activity-details/activity-details.component';
 import { ActivityNavbarComponent } from './ActivityMgmt/Components/activity-navbar/activity-navbar.component';
 import { EditAssessmentComponent } from './AssessmentMgmt/Components/edit-assessment/edit-assessment.component';
-
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
   declarations: [
@@ -132,7 +132,8 @@ defineLocale('en-gb', enGbLocale); //
     BsDatepickerModule.forRoot(),
     NgxPaginationModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatAutocompleteModule
   ],
   providers: [DatePipe,MatSnackBar],
   bootstrap: [AppComponent]
