@@ -87,7 +87,11 @@ public class ActivityController {
     String month = params.get("month");
     String platform = params.get("platform");
     String selectedDate = params.get("selectedDate");
-    JSONArray attendanceReportData = activityServiceImpl.getActivityReportData(platform, selectedDate,year,month);
+    String resourceValue = params.get("resourceValue");
+    if(resourceValue.equals("")) {
+        resourceValue="0";
+    }
+    JSONArray attendanceReportData = activityServiceImpl.getActivityReportData(platform, selectedDate,year,month,resourceValue);
 //    System.err.println("Report Data " + attendanceReportData);
     return attendanceReportData.toString();
 }

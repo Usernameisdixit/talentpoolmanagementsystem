@@ -89,7 +89,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
 
-	public JSONArray getActivityReportData(String platform, String selectedDate, String year, String month) {
+	public JSONArray getActivityReportData(String platform, String selectedDate, String year, String month, String resourceValue) {
 		JSONArray data = new JSONArray();
 		 SimpleDateFormat inputFormat = new SimpleDateFormat("M/d/yyyy, h:mm:ss a");
 	     SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -115,6 +115,7 @@ public class ActivityServiceImpl implements ActivityService {
 				attendanceQuerey.setString(3, formattedDate);
 				attendanceQuerey.setString(4, year);
 				attendanceQuerey.setString(5, month);
+				attendanceQuerey.setString(6,resourceValue);
 
 				try (ResultSet rs = attendanceQuerey.executeQuery();) {
 					if (rs != null) {
