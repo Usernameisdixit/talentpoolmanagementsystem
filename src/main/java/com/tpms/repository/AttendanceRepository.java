@@ -25,6 +25,11 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Integer>
 	           "INNER JOIN resource_pool resourcep ON resourcep.resourceId = att.resourceId " +
 	           "WHERE att.atendanceDate = :finaldate AND resourcep.platform = :platformName",nativeQuery = true)
 	List<Attendance> findByAttendanceDateAndPlatform(Date finaldate, String platformName);
+	 
+	 @Query(value = "SELECT att.* FROM attendance att " +
+	           "INNER JOIN resource_pool resourcep ON resourcep.resourceId = att.resourceId " +
+	           "WHERE att.atendanceDate = :finaldate",nativeQuery = true)
+	List<Attendance> findByAttendanceDateAndPlatformNew(Date finaldate);
 
 
 }
