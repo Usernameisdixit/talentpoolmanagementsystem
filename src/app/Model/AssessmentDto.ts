@@ -9,8 +9,10 @@ export interface AssessmentDto {
     activityAllocateId: number;
     resourceId: number;
      platformId: number;
-    activityDate: Date;
+     assessmentDate: Date;
     marks:number;
     totalMarks:number;
+    activityFromDate :Date;
+    activityToDate:Date;
   }
   
