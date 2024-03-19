@@ -1,7 +1,9 @@
 package com.tpms.entity;
 
-import java.time.LocalDate;
-import jakarta.persistence.Column;
+
+import java.util.Date;
+
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +25,10 @@ public class Assessment {
 	private Integer resourceId;
 	
 	
+	private Date activityFromDate;
+	
+	private Date activityToDate;
+	
 	private Integer activityId;
 	
 
@@ -32,7 +38,7 @@ public class Assessment {
 	private Double doubleSecuredMark;
 
 	
-	private LocalDate asesmentDate;
+	private Date asesmentDate;
 	
 	
 	private String asesmentHours;
