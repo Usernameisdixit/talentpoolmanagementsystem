@@ -3,6 +3,7 @@ import{FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { UserService } from '../../Service/user.service';
 import Swal from 'sweetalert2';
 import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs';
 
 
 @Component({
@@ -84,6 +85,10 @@ export class UserComponent {
      const email=this.userForm.get('email');
      const phoneNo=this.userForm.get('phoneNo');
      const roleId=this.userForm.get('roleId');
+     console.log(this.userForm);
+     
+     console.log(errorFlag);
+     
     if (userFullName?.invalid && errorFlag === 0) {
       errorFlag = 1;
       userFullName.markAsTouched();
@@ -140,7 +145,7 @@ export class UserComponent {
             } else if (result.dismiss === Swal.DismissReason.cancel) {
               // User clicked cancel, do nothing
               Swal.fire('Cancelled', 'Your data is not submitted :)', 'error');
-              location.reload();
+              
             }
           }); 
      }
@@ -150,23 +155,24 @@ export class UserComponent {
 
   //---------------------------- data binding in add page -------------------------------------
   editData(){
-    this.userService.editUser(this.userId).subscribe((data:any)=>{
-     
-      this.userForm.patchValue(
-        {
+    this.userService.editUser(this.userId)
+    .subscribe({
+      next:(data:any)=>{
+         this.userForm.patchValue(
+         {
           userFullName:data.userFullName,
           userName:data.userName,          
           password:data.password,
           roleId:data.roleId,
           phoneNo:data.phoneNo,
           email:data.email
-         
-        })
+         })
     },
-      (error)=>{
+      error:(error)=>{
          console.log(error);
          
-      });
+      }
+    });
   }
 
 
@@ -181,25 +187,92 @@ export class UserComponent {
   checkDuplicateValue(event:any){
     const value=event.target.value;
     const colName=event.target.name;
-    this.userService.duplicateCheck(value,colName).subscribe((data:any)=>{
-    
-      if(data.status=='Exist'){
-        Swal.fire({
-          title: 'Error',
-          text: 'Data already exists',
-          icon: 'error',
-          showConfirmButton: true
-        }).then((result) => {
-          if (result.isConfirmed) {
-            location.reload(); 
+    let userId=this.userId===0?0:this.userId;
+    if (userId === 0) {
+      this.userService.duplicateCheck(value, colName)
+        .subscribe({
+          next: (data: any) => {
+            if (data.status == 'Exist') {
+              Swal.fire({
+                title: 'Error',
+                text: 'Data already exists',
+                icon: 'error',
+                showConfirmButton: true
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  //this.userForm.value.userName.reset();
+                  this.userForm.get(colName).setValue('');
+                }
+              });
+            }
           }
         });
       }
-   },
-    (error)=>{
-       console.log(error);
-       
+    else{
+    this.userService.editUser(this.userId).pipe(
+      map((data: any) => {
+        console.log(data); 
+        let str = '';
+        switch (colName) {
+          case 'userName':
+            str = data.userName;
+            break;
+          case 'phoneNo':
+            str = data.phoneNo;
+            break;
+          case 'email':
+            str = data.email;
+            break;
+          default:
+            break;
+        }
+        return str;
+      })
+    ).subscribe((str: string) => {
+      if(userId!==0 && !(str===value)){ 
+       this.userService.duplicateCheck(value,colName)
+       .subscribe({
+        next:(data:any)=>{
+          if(data.status=='Exist'){
+            Swal.fire({
+            title: 'Error',
+            text: 'Data already exists',
+            icon: 'error',
+            showConfirmButton: true
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.userForm.get(colName).setValue('');
+              }
+           });
+         }
+      },
+         error:(error)=>{
+           console.log(error);
+        }
+      });
+     }
     });
   }
+  }
+
+  // to restrict blanck character in text fields
+
+  preventSpaces(event: KeyboardEvent) {
+    if (event.key === ' ') {
+      event.preventDefault();
+    }
+  }
+
+  // to restrict mobile number should 10 digit
+  preventMaxNo(event: KeyboardEvent) {
+      const inputElement = event.target as HTMLInputElement;
+      const phoneNumber = inputElement.value.replace(/\D/g, '');
+      if (event.key === 'Backspace') {
+        return;
+      }
+      if (phoneNumber.length >= 10) {
+        event.preventDefault();
+      }
+    }
 
 }
