@@ -26,7 +26,7 @@ public interface ResourcePoolRepository extends JpaRepository<ResourcePool, Inte
 			+ " LEFT JOIN a.details d ON (d is null or d.deletedFlag=false)"
 			+ " LEFT JOIN Platform p ON r.platform=p.platform"
 			+ " WHERE r.deletedFlag=0"
-			+ " AND p.platformId=:platformId")
+			+ " AND (p.platformId=:platformId OR :platformId=0)")
 	List<ResourcePool> findAllActiveRecords(Date activityDate, Integer platformId);
 	
 	@Query("SELECT r.deletedFlag FROM ResourcePool r WHERE r.resourceId = :id")
@@ -42,5 +42,4 @@ public interface ResourcePoolRepository extends JpaRepository<ResourcePool, Inte
 	@Query("UPDATE ResourcePool r SET r.deletedFlag = 0 WHERE r.resourceId = :id")
 	void updateBitDeletedFlagByFalse(Integer id);
 
-	
 }

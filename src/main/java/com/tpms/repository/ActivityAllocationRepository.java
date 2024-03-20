@@ -24,11 +24,19 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
 	Map<String, Object> findAllDetails(@Param("activityAllocateDetId") Integer activityAllocateDetId);
 	 
 
-	List<ActivityAllocation> findByPlatformIdAndActivityDateBetweenAndDeletedFlagIsFalse(Long platformId, Date fromDate, Date toDate);
+	 @Query(value = "SELECT DISTINCT r.resourceId, r.resourceCode, r.resourceName, r.designation, r.experience, act.activityName, p.platform " +
+             "FROM activity_allocation a " +
+             "INNER JOIN activity_allocation_details aa ON a.activityAllocateId = aa.activityAllocateId " +
+             "INNER JOIN resource_pool r ON r.resourceId = a.resourceId " +
+             "INNER JOIN activity act ON act.activityId = aa.activityId " +
+             "INNER JOIN platforms p ON p.platformId = a.platformId " +
+             "WHERE aa.activityId = :activityId " +
+             "AND a.activityDate BETWEEN :fromDate AND :toDate", nativeQuery = true)
+	   List<Object[]> findByPlatformIdAndActivityDateBetweenAndDeletedFlagIsFalse(Integer activityId, Date fromDate, Date toDate);
 
 	
-	@Query("SELECT alloc FROM ActivityAllocation alloc JOIN FETCH alloc.details det WHERE alloc.resourceId=:id AND alloc.deletedFlag=false and det.deletedFlag=false")
-	ActivityAllocation findByResourceId(Integer id);
+	@Query("SELECT alloc FROM ActivityAllocation alloc JOIN FETCH alloc.details det WHERE alloc.resourceId=:id AND alloc.activityDate=:activityDate AND alloc.deletedFlag=false and det.deletedFlag=false")
+	ActivityAllocation findByResourceId(Integer id, Date activityDate);
 
 
 

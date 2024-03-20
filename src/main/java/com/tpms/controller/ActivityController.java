@@ -1,5 +1,6 @@
 package com.tpms.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -117,10 +118,13 @@ public class ActivityController {
 	}
 	
 	@GetMapping("allocationDetails")
-	ActivityAllocation getAllocationDetailsByResource(@RequestParam("id") Integer resourceId) {
-		return activityService.getAllocationDetailsByResource(resourceId);
+	ActivityAllocation getAllocationDetailsByResource(@RequestParam("id") Integer resourceId, @RequestParam("date") Date activityDate) {
+		return activityService.getAllocationDetailsByResource(resourceId,activityDate);
 	}
 	
-	
+	@GetMapping("resource")
+	ResourcePool getResource(@RequestParam("id") Integer resourceId) {
+		return activityService.getResource(resourceId);
+	}
 
 }

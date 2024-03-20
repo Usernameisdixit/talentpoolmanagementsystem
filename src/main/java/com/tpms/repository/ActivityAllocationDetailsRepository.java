@@ -1,5 +1,6 @@
 package com.tpms.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.tpms.entity.ActivityAllocation;
 import com.tpms.entity.ActivityAllocationDetails;
-import com.tpms.entity.Platform;
+
 
 public interface ActivityAllocationDetailsRepository extends JpaRepository<ActivityAllocationDetails, Integer> {
 
@@ -19,5 +20,15 @@ public interface ActivityAllocationDetailsRepository extends JpaRepository<Activ
     Map<String, Object> findAllDetails(@Param("activityAllocateDetId") Integer activityAllocateDetId);
 
 	List<ActivityAllocationDetails> findByActivityAllocation(ActivityAllocation activityAllocation);
+
+	
+	@Query(value = "SELECT ad.activityId, ad.activityDetails "
+	        + "FROM activity_allocation_details ad "
+	        + "JOIN activity_allocation aa ON ad.activityAllocateId = aa.activityAllocateId "
+	        + "WHERE aa.activityDate BETWEEN :fromDate AND :toDate", nativeQuery = true)
+	List<Object[]> getActivitiesBetweenDates(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
+
+ 
+	
 
 }

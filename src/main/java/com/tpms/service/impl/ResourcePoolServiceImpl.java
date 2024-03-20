@@ -3,6 +3,7 @@ package com.tpms.service.impl;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 
 import java.util.Date;
@@ -13,10 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tpms.dto.ResourcePoolHistoryDto;
 import com.tpms.entity.ResourcePool;
 import com.tpms.entity.ResourcePoolHistory;
 import com.tpms.entity.Role;
+import com.tpms.repository.ResourcePoolHistoryRepository;
 import com.tpms.repository.ResourcePoolRepository;
+import com.tpms.utils.DateUtils;
 import com.tpms.utils.ExcelUtils;
 
 
@@ -24,7 +28,8 @@ import com.tpms.utils.ExcelUtils;
 @Service
 public class ResourcePoolServiceImpl {
 
-
+	@Autowired
+	private ResourcePoolHistoryRepository tbl_resource_pool_Repository_history;
 	
 	@Autowired
 	private ResourcePoolRepository tbl_resource_pool_Repository;
@@ -95,7 +100,7 @@ public class ResourcePoolServiceImpl {
 					SimpleDateFormat formatter =new SimpleDateFormat();
 					Date date =new Date();
 					
-					tbl_resource_poolMatch.get(j).setStatus("D");
+				//	tbl_resource_poolMatch.get(j).setStatus("D");
 					tbl_resource_poolMatch.get(j).setDeletedFlag((byte) 1);
 					
 					
@@ -111,6 +116,7 @@ public class ResourcePoolServiceImpl {
 					ResourcePool Emp=new ResourcePool();	
 					
 					Emp.setResourceName(tbl_resource_poolNotMatch.get(j).getResourceName()); 
+					Emp.setDesignation(tbl_resource_poolNotMatch.get(j).getDesignation()) ; //Newly added Coloumn
 					Emp.setResourceCode(tbl_resource_poolNotMatch.get(j).getResourceCode());
 					Emp.setPlatform(tbl_resource_poolNotMatch.get(j).getPlatform());
 					Emp.setEmail(tbl_resource_poolNotMatch.get(j).getEmail());
@@ -120,7 +126,7 @@ public class ResourcePoolServiceImpl {
 					Emp.setExperience(tbl_resource_poolNotMatch.get(j).getExperience());
 					Emp.setAllocationDate(allocationDate);
 					Emp.setDeletedFlag((byte) 0);
-					Emp.setStatus("A");
+					//Emp.setStatus("A");
 					tbl_resource_poolNotMatch1.add(Emp);
 				
 				
@@ -136,6 +142,7 @@ public class ResourcePoolServiceImpl {
 					ResourcePool Emp=new ResourcePool();	
 					
 					Emp.setResourceName(ExcelEmp.get(j).getResourceName()); 
+					Emp.setDesignation(ExcelEmp.get(j).getDesignation());  //Newly added Coloumn
 					Emp.setResourceCode(ExcelEmp.get(j).getResourceCode());
 					Emp.setPlatform(ExcelEmp.get(j).getPlatform());
 					Emp.setEmail(ExcelEmp.get(j).getEmail());
@@ -145,7 +152,7 @@ public class ResourcePoolServiceImpl {
 					Emp.setExperience(ExcelEmp.get(j).getExperience());
 					Emp.setAllocationDate(allocationDate);
 					Emp.setDeletedFlag((byte) 0);
-					Emp.setStatus("A");
+					//Emp.setStatus("A");
 					tbl_resource_poolNotMatch1.add(Emp);
 				}
 				
@@ -167,7 +174,29 @@ public class ResourcePoolServiceImpl {
 	}
 	
 	public List<ResourcePool> getAllEmploye(){
-		return this.tbl_resource_pool_Repository.findAll();
+		
+		List<ResourcePool> tbl_resource_pool=new ArrayList<>();
+		tbl_resource_pool=tbl_resource_pool_Repository.findAll();
+		List<ResourcePoolHistoryDto> tbl_resource_pooldto=new ArrayList<>();
+		List<Object[]> tbl_resource_poolfindMinMax=tbl_resource_pool_Repository_history.MinMaxAllocationDate();
+		
+		for (Object[] ob : tbl_resource_poolfindMinMax) {
+			ResourcePoolHistoryDto rgdt = new ResourcePoolHistoryDto();
+			rgdt.setResourceCode(ob[0].toString());
+			rgdt.setResourceName(ob[1].toString());
+			String Dur = DateUtils.monthDayDifference(ob[2].toString(), ob[3].toString());
+			rgdt.setDuration(Dur);
+			tbl_resource_pooldto.add(rgdt);
+		}
+		
+		for (ResourcePool resource : tbl_resource_pool) {
+			for (ResourcePoolHistoryDto resourcedto : tbl_resource_pooldto) {
+				if (resource.getResourceCode().equalsIgnoreCase(resourcedto.getResourceCode())) {
+					resource.setDuration(resourcedto.getDuration());
+				}
+			}
+		}
+		return tbl_resource_pool;
 		
 	}
 	
