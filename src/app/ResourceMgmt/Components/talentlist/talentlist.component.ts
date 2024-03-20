@@ -83,7 +83,7 @@ export class TalentlistComponent implements OnInit {
   
     // Add the table
     (doc as any).autoTable({
-      head: [['ResourceId', 'Resource Name', 'Resource Code', 'Platform', 'Location', 'Experience', 'Mobile','Email']],
+      head: [['Sl. No.', 'Res. Name', 'Desig.','Res. Code', 'Platform', 'Location', 'Exp.', 'Mobile','Email','Duration']],
       body: data,
       startY: 20, 
       margin: { top: 15 } 
@@ -95,14 +95,17 @@ export class TalentlistComponent implements OnInit {
   private getTableData(): any[][] {
     
     return this.talent.map((c, index) => [
-      c.resourceId,
+      //c.resourceId
+      index+1,
       c.resourceName,
+      c.designation,
       c.resourceCode,
       c.platform,
       c.location,
       c.experience,
       c.phoneNo,
-      c.email
+      c.email,
+      c.duration
       
     ]);
     
@@ -117,14 +120,16 @@ export class TalentlistComponent implements OnInit {
    
     const headerStyle = { bold: true }; 
     const header = [
-        { v: 'ResourceId', s: headerStyle },
+        { v: 'Sl. No', s: headerStyle },
         { v: 'Resource Name', s: headerStyle },
+        { v: 'Designation', s: headerStyle },
         { v: 'Resource Code', s: headerStyle },
         { v: 'Platform', s: headerStyle },
         { v: 'Location', s: headerStyle },
         { v: 'Experience', s: headerStyle },
         { v: 'Mobile', s: headerStyle },
-        { v: 'Email', s: headerStyle }
+        { v: 'Email', s: headerStyle },
+        { v: 'Duration', s: headerStyle }
     ];
     
     tableData.unshift(header);
@@ -132,7 +137,7 @@ export class TalentlistComponent implements OnInit {
     const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
   
     // Add header row
-    //const header = ['ResourceId', 'Resource Name', 'Resource Code', 'Platform', 'Location', 'Experience', 'Mobile','Email'];
+    //const header = ['ResourceId', 'Resource Name', 'Resource Code', 'Platform', 'Location', 'Experience', 'Mobile','Email','Duration'];
     XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' });
   
     const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
