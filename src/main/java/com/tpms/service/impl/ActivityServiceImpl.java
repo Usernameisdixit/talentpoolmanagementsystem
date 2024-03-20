@@ -104,7 +104,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 			e1.printStackTrace();
 		}
-		String sqls = "{call TPMS_ATTENDANCE(?,?,?,?,?)}";
+		String sqls = "{call TPMS_ATTENDANCE(?,?,?,?,?,?)}";
 		List<Map<String, Object>> attendanceDetails = new ArrayList<>();
 		
 		DataSource ds = jdbcTemplate.getDataSource();
@@ -116,6 +116,7 @@ public class ActivityServiceImpl implements ActivityService {
 				attendanceQuerey.setString(4, year);
 				attendanceQuerey.setString(5, month);
 				attendanceQuerey.setString(6,resourceValue);
+				attendanceQuerey.setInt(7,0);
 
 				try (ResultSet rs = attendanceQuerey.executeQuery();) {
 					if (rs != null) {
