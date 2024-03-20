@@ -15,6 +15,10 @@ export class AllocationService {
     return this.http.get<any[]>(`${this.apiUrl}/platforms`);
   }
 
+  /**
+  * @param activityDate
+  * @description format: yyyy-MM-dd
+  */
   getResources(activityDate: string, platformId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/resources?activityDate=${activityDate}&platformId=${platformId}`);
   }
@@ -27,7 +31,15 @@ export class AllocationService {
     return this.http.post<any>(`${this.apiUrl}/saveAllocation`,data);
   }
 
-  getAllocationsByResource(resourceId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/allocationDetails?id=${resourceId}`);
+  /**
+  * @param activityDate
+  * @description format: yyyy-MM-dd
+  */
+  getAllocationsByResource(resourceId: number, activityDate: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/allocationDetails?id=${resourceId}&date=${activityDate}`);
+  }
+
+  getResourceById(resourceId: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/resource?id=${resourceId}`);
   }
 }
