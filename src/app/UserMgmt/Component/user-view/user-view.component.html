@@ -49,9 +49,12 @@
                 <div class="btn-group">
                   <button *ngIf="!user.deletedFlag" type="button" class="btn btn-primary" (click)="editUser(user.userId);">Edit</button>
                   <button *ngIf="user.deletedFlag" type="button" class="btn btn-primary" disabled>Edit</button>
-                  <td *ngIf="user.deletedFlag" id="toggleButton"> <button  class="btn btn-danger" (click)="deleteUser(user.userId,!user.deletedFlag);">Active</button></td>
-                  <td *ngIf="!user.deletedFlag" id="toggleButton"> <button class="btn btn-danger" (click)="deleteUser(user.userId,!user.deletedFlag);">InActive</button></td>
+                  &nbsp;
               </div>
+              <div class="btn-group">
+                <button *ngIf="user.deletedFlag" class="btn btn-danger" (click)="deleteUser(user.userId,!user.deletedFlag);">Active</button>
+                <button *ngIf="!user.deletedFlag" class="btn btn-danger" (click)="deleteUser(user.userId,!user.deletedFlag);">InActive</button>
+            </div>
               </td>
               
            </tr> 
