@@ -73,6 +73,12 @@ export class AttendanceNewComponent {
 
   onDateChange(newDate: Date | null) {
     this.selectedDate = newDate || undefined;
+    if(this.selectedActivity!=0){
+      this.selectedActivity=0;
+      this.attendanceDetails=[];
+      this.isPresents=false;
+    }
+    this.getDataByDateActivity();
   }
 
 
@@ -85,10 +91,10 @@ export class AttendanceNewComponent {
   }
 
   getDataByDateActivity() {
-    if (this.selectedActivity !== 0 && this.selectedDate != null) {
+    if (this.selectedActivity != 0 && this.selectedDate != null) {
       this.attendanceNewService.getDetailsByActivity(this.selectedActivity, this.selectedDate?.toLocaleString()).subscribe(
         (data: any) => {
-         
+          this.attendanceDetails = data;
           //Status for submit update Button
           for (let i = 0; i < data.length; i++) {
             if (data[i].check) {
@@ -110,7 +116,7 @@ export class AttendanceNewComponent {
           //is present for null case no data
           //this.isPresents = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
           this.isPresents = data.length > 0 ? true : false;
-          this.attendanceDetails = data;
+         
           console.log('Backend API Response:', this.isPresents);
           
       

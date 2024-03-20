@@ -11,7 +11,7 @@
                 <label for="date">Date:</label>
                 <div class="input-group">
                     <input id="date" class="form-control" type="text"
-                        (ngModelChange)="onDateChange($event);getActivity()" bsDatepicker [(ngModel)]="selectedDate"
+                        (ngModelChange)="onDateChange($event);getActivity();" bsDatepicker [(ngModel)]="selectedDate"
                         [maxDate]="maxDate" [bsConfig]="bsConfig" (change)="getDataByDateActivity()" />
                     <span class="input-group-text"><i class="material-icons">date_range</i></span>
                 </div>
@@ -32,6 +32,16 @@
             <div class="row justify-content-start">
                 <div class="col-md-12">
                     <div class="container" *ngIf="isPresents">
+                        <!-- <h4>{{attendanceDetails | json}}</h4> -->
+                        <div *ngIf="attendanceDetails.length > 0 && attendanceDetails[0]?.firstHalf.length > 0" class="activity-details">
+                            <span *ngIf="attendanceDetails[0]?.firstHalf[0]?.activityFor === '1'">
+                                <b>Activity: </b> First Half <b>Time: </b> {{ attendanceDetails[0]?.firstHalf[0]?.fromHours }} to {{ attendanceDetails[0]?.firstHalf[0]?.toHours }}
+                            </span>
+                            <span *ngIf="attendanceDetails[0]?.firstHalf[0]?.activityFor === '2'">
+                                <b>Activity: </b> Second Half <b>Time: </b> {{ attendanceDetails[0]?.firstHalf[0]?.fromHours }} to {{ attendanceDetails[0]?.firstHalf[0]?.toHours }}
+                            </span>
+                        </div>
+                        
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
