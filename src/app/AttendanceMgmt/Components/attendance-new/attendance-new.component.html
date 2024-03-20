@@ -1,0 +1,99 @@
+<div class="container mt-4">
+    <div class="row justify-content-start">
+        <div class="col-md-6 text">
+            <h2>Attendance</h2>
+        </div>
+    </div>
+    <div class="row justify-content-start">
+
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <div class="input-group">
+                    <input id="date" class="form-control" type="text"
+                        (ngModelChange)="onDateChange($event);getActivity()" bsDatepicker [(ngModel)]="selectedDate"
+                        [maxDate]="maxDate" [bsConfig]="bsConfig" (change)="getDataByDateActivity()" />
+                    <span class="input-group-text"><i class="material-icons">date_range</i></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="activity">Activity:</label>
+                <select id="activity" class="form-control" [(ngModel)]="selectedActivity"
+                    (change)="getDataByDateActivity()" (ngModelChange)="onSelectedActivityChange()">
+                    <option value=0 selected>--select--</option>
+                    <option *ngFor="let activity of activities" [value]="activity.id">{{ activity.name }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="container mt-4">
+            <div class="row justify-content-start">
+                <div class="col-md-12">
+                    <div class="container" *ngIf="isPresents">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="hidden" value={{uncheckCheckbox1}}>
+                                        <input type="checkbox" class="form-check-input"  [checked]="!uncheckCheckboxStatus[page - 1]"
+                                            (change)="checkAllFirst($event)" />
+                                        Sl No.</th>
+                                    <th>Resource Code</th>
+                                    <th> Resource Name </th>
+                                    <th>Platform</th>
+                                    <th>Designation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- <tr *ngFor="let detail of attendanceDetails; let i = index"> -->
+                                    <tr *ngFor="let detail of attendanceDetails | paginate :{
+                                        itemsPerPage : tableSize,
+                                        currentPage : page ,
+                                        totalItems: count
+                                        }; let i = index;">
+                                    <td>
+                                        <div *ngFor="let firstHalfObj of detail.firstHalf" class="form-check">
+                                            <input type="checkbox" class="form-check-input"
+                                                [checked]="firstHalfObj.isPresent === '1'"
+                                                (change)="togglePresentValue(firstHalfObj)" />
+                                            <label class="form-check-label">
+                                                {{ (page - 1) * tableSize + i + 1 }}
+                                            </label>
+                                            <input type="hidden" [value]="firstHalfObj.activityAllocateDetId">
+                                            <input type="hidden" [value]="firstHalfObj.isPresent">
+                                        </div>
+                                    </td>
+                                    <td>{{ detail.resourceCode }}</td>
+                                    <td>
+                                        {{ detail.resourceName }}
+                                    </td>
+                                    <td>{{ detail.domain }}</td>
+                                    <td>{{ detail.designation }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end" id="pagination" *ngIf="attendanceDetails.length!=0">
+                        <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)= "getTableDataChange($event)"></pagination-controls>
+                      </div>
+                    <!-- <div class="row justify-content-center mt-4" *ngIf="!isPresents">
+                        <div class="col-md-6 text-center">
+                            <p>Please Select Activity !</p>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+
+            <input type="hidden" value="{{isPresents}}">
+            <div class="row justify-content-center mt-2" *ngIf="selectedActivity !== 0 && isPresents">
+                <div class="col-md-3 text-center">
+                    <button type="button" class="btn btn-success" (click)="submitForm()">
+                        {{ status === 's' ? 'Save Attendance' : 'Update Attendance' }}
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>

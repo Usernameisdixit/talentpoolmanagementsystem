@@ -116,7 +116,7 @@ export class AttendanceGenerateServiceService {
   private getFirstHalfData(detail: any): string {
     let firstHalfData = '';
     detail.firstHalf.forEach((firstHalfObj, index, array) => {
-      firstHalfData += `${firstHalfObj.attendanceStatus} : ${firstHalfObj.activityName} (${firstHalfObj.fromHours} to ${firstHalfObj.toHours})`;
+      firstHalfData += `${firstHalfObj.activityName} (${firstHalfObj.fromHours} to ${firstHalfObj.toHours}) ${firstHalfObj.attendanceStatus}`;
       if (index < array.length - 1) {
         firstHalfData += '\n';
       }
@@ -127,7 +127,7 @@ export class AttendanceGenerateServiceService {
   private getSecondHalfData(detail: any): string {
     let secondHalfData = '';
     detail.secondHalf.forEach((secondHalfObj, index, array) => {
-      secondHalfData += `${secondHalfObj.attendanceStatus} : ${secondHalfObj.activityName} (${secondHalfObj.fromHours} to ${secondHalfObj.toHours})`;
+      secondHalfData += `${secondHalfObj.activityName} (${secondHalfObj.fromHours} to ${secondHalfObj.toHours}) ${secondHalfObj.attendanceStatus}`;
       if (index < array.length - 1) {
         secondHalfData += '\n';
       }
