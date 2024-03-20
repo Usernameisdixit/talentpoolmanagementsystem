@@ -68,6 +68,7 @@ import { ActivityDetailsComponent } from './ActivityMgmt/Components/activity-det
 import { ActivityNavbarComponent } from './ActivityMgmt/Components/activity-navbar/activity-navbar.component';
 import { EditAssessmentComponent } from './AssessmentMgmt/Components/edit-assessment/edit-assessment.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AttendanceNewComponent } from './AttendanceMgmt/Components/attendance-new/attendance-new.component';
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
   declarations: [
@@ -104,7 +105,8 @@ defineLocale('en-gb', enGbLocale); //
     ActivityListComponent,
     ActivityDetailsComponent,
     ActivityNavbarComponent,
-    EditAssessmentComponent
+    EditAssessmentComponent,
+    AttendanceNewComponent
 
   ],
   imports: [
