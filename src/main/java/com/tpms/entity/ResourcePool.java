@@ -55,8 +55,6 @@ public class ResourcePool {
 	private String email;
 
 	
-	private String status;
-
 	private Integer createdBy;
 
 	

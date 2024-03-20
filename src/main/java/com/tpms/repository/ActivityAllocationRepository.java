@@ -27,8 +27,8 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
 	List<ActivityAllocation> findByPlatformIdAndActivityDateBetweenAndDeletedFlagIsFalse(Long platformId, Date fromDate, Date toDate);
 
 	
-	@Query("SELECT alloc FROM ActivityAllocation alloc JOIN FETCH alloc.details det WHERE alloc.resourceId=:id AND alloc.deletedFlag=false and det.deletedFlag=false")
-	ActivityAllocation findByResourceId(Integer id);
+	@Query("SELECT alloc FROM ActivityAllocation alloc JOIN FETCH alloc.details det WHERE alloc.resourceId=:id AND alloc.activityDate=:activityDate AND alloc.deletedFlag=false and det.deletedFlag=false")
+	ActivityAllocation findByResourceId(Integer id, Date activityDate);
 
 
 

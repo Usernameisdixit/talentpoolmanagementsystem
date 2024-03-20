@@ -1,5 +1,6 @@
 package com.tpms.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.tpms.entity.Activity;
@@ -30,6 +31,8 @@ public interface ActivityService {
 
 	public ActivityAllocation saveAllocation(ActivityAllocation data);
 
-	public ActivityAllocation getAllocationDetailsByResource(Integer id);
+	public ActivityAllocation getAllocationDetailsByResource(Integer id, Date activityDate);
+
+	public ResourcePool getResource(Integer resourceId);
 
 }
