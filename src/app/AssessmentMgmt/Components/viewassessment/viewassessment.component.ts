@@ -24,6 +24,10 @@ export class ViewassessmentComponent implements OnInit {
   assessmentDetails: any;
   assessmentFromDate: any;
   assessmentToDate: any;
+  assessmentData: any[] = [];
+  assessmentDateRanges: any[] = [];
+  assessmentsForDateRange: any;
+  openAccordion: string | null = null;
 
   constructor(private apiService: AssessmentserviceService, private datePipe: DatePipe) {
     this.bsConfig = {
@@ -32,10 +36,25 @@ export class ViewassessmentComponent implements OnInit {
     };
   }
 
+
+
+
   ngOnInit(): void {
     this.fetchAssessments();
     this.fetchAssessmentDates();
    
+  }
+
+
+  getAssessmentDates(): string[] {
+  
+    const assessmentDates = this.assessments.map(assessment => assessment[7]); 
+    return Array.from(new Set(assessmentDates)); 
+  }
+
+  getAssessmentsByDate(date: string): any[] {
+  
+    return this.assessments.filter(assessment => assessment[7] === date);
   }
 
   fetchAssessmentDates() {
@@ -64,35 +83,65 @@ export class ViewassessmentComponent implements OnInit {
   }
 
   fetchAssessments() {
+   
     this.apiService.viewAssessmentDetails().subscribe(
       (data: AssessmentDto[]) => {
         this.assessments = data;
-        this.assessmentDetails=data;
-        this.assessmentFromDate=data[0][7];
-        this.assessmentToDate=data[0][8];
+        this.assessmentDetails = data;
+        this.groupAssessmentsByDateRange();
    
         this.showAssessmentTable = this.assessments.length > 0;
+  
+        if (this.assessments.length > 0) {
+        
+        
+          this.assessments.forEach(assessment => {
+            const assessmentFromDate = assessment[7];
+            const assessmentToDate = assessment[8];
+            
+          
+            
+          });
+
+
+
+        
+       
+          
+      
+        }
       },
       error => {
         console.log('Error fetching assessment details:', error);
       }
     );
   }
-
+  
   fetchAssessmentsByDate(date: string) {
+    this.assessmentDateRanges = [];
     this.apiService.viewAssessmentDetailsDateWise(date).subscribe(
       (data: AssessmentDto[]) => {
         this.assessments = data;
-        this.assessmentDetails=data;
-        this.assessmentFromDate=data[0][7];
    
-        this.assessmentToDate=data[0][8];
+        this.assessmentDetails = data;
+        this.groupAssessmentsByDateRange();
         this.showAssessmentTable = this.assessments.length > 0;
+  
         if (this.assessments.length === 0) {
           Swal.fire({
             icon: 'warning',
             title: 'No Assessments Found',
             text: 'There are no assessments evaluated on this date.',
+          });
+        } else {
+         
+          this.assessments.forEach(assessment => {
+            const assessmentFromDate = assessment[7];
+            const assessmentToDate = assessment[8];
+            
+            
+            console.log('Assessment from date:', assessmentFromDate);
+            console.log('Assessment to date:', assessmentToDate);
           });
         }
       },
@@ -101,10 +150,49 @@ export class ViewassessmentComponent implements OnInit {
       }
     );
   }
-
-  exportToPDF() {
+  
+  exportToPDFForDateRange(dateRange: any) {
     const doc = new jsPDF();
-    const data = this.getTableData();
+    const data = this.getTableDataForDateRange(dateRange);
+    const pageTitle = `Assessment Details ${dateRange.fromDate} to ${dateRange.toDate}`;
+    const textWidth = doc.getTextDimensions(pageTitle).w;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const x = (pageWidth - textWidth) / 2;
+    doc.text(pageTitle, x, 10);
+    (doc as any).autoTable({
+      head: [['Sl.No', 'Resource Name', 'Platform Name', 'Activity Name', 'Total Marks', 'Secured Marks', 'Cumulative Percentage','Remarks']],
+      body: data,
+      startY: 20,
+      margin: { top: 15 }
+    });
+    doc.save(`assessment-details-${dateRange.fromDate}-to-${dateRange.toDate}.pdf`);
+  }
+
+
+  private getTableDataForDateRange(dateRange: any): any[][] {
+    let mergedData: any[] = [];
+    let serialNumber = 1;
+    dateRange.assessments.forEach(assessment => {
+      const row: any[] = [
+        serialNumber++,
+        assessment[0],
+        assessment[1],
+        assessment[2],
+        assessment[3],
+        assessment[4],
+        'NA FOR NOW',
+        assessment[5],
+      ];
+      mergedData.push(row);
+    });
+    return mergedData;
+  }
+
+
+
+  exportToPDF(dateRange : any) {
+    const doc = new jsPDF();
+    const data = this.getTableDataForDateRange(dateRange);
     const pageTitle = 'Assessment Details';
     const textWidth = doc.getTextDimensions(pageTitle).w;
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -119,8 +207,8 @@ export class ViewassessmentComponent implements OnInit {
     doc.save('assessment-details.pdf');
   }
 
-  exportToExcel() {
-    const tableData = this.getTableData();
+  exportToExcel(dateRange : any) {
+    const tableData = this.getTableDataForDateRange(dateRange);
     const headerStyle = { bold: true };
     const header = [
       { v: 'Sl.No', s: headerStyle },
@@ -166,24 +254,6 @@ export class ViewassessmentComponent implements OnInit {
     saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
   }
 
-  private getTableData(): any[][] {
-    let mergedData: any[] = [];
-    let serialNumber = 1;
-    this.assessmentDetails.forEach(assessment => {
-      const row: any[] = [
-        serialNumber++,
-        assessment[0],
-        assessment[1],
-        assessment[2],
-        assessment[3],
-        assessment[4],
-        'NA FOR NOW',
-        assessment[5],
-      ];
-      mergedData.push(row);
-    });
-    return mergedData;
-  }
 
   getTotalPages(): number {
     return Math.ceil(this.assessments.length / this.itemsPerPage);
@@ -250,6 +320,60 @@ export class ViewassessmentComponent implements OnInit {
     return { resourceNameRowspan, platformNameRowspan };
   }
   
+  groupAssessmentsByDateRange(): void {
+    const groupedByDateRange = {};
   
+    for (const assessment of this.assessments) {
+      const fromDate = this.datePipe.transform(assessment[7], 'dd-MMM-yyyy');
+      const toDate = this.datePipe.transform(assessment[8], 'dd-MMM-yyyy');
+      const key = fromDate + ' to ' + toDate;
+      if (!groupedByDateRange[key]) {
+        groupedByDateRange[key] = [];
+      }
+      groupedByDateRange[key].push(assessment);
+    }
+  
+    for (const key in groupedByDateRange) {
+      if (groupedByDateRange.hasOwnProperty(key)) {
+        const dateRange = key.split(' to ');
+        this.assessmentDateRanges.push({
+          fromDate: dateRange[0],
+          toDate: dateRange[1],
+          assessments: groupedByDateRange[key]
+        });
+      }
+    }
+  }
+
+  calculateCumulativePercentage(assessments: any[]): number {
+    let totalSecuredMarks = 0;
+    let totalPossibleMarks = 0;
+
+    
+    assessments.forEach(assessment => {
+      totalSecuredMarks += assessment[4]; 
+      totalPossibleMarks += assessment[3]; 
+    });
+
+   
+    const cumulativePercentage = (totalSecuredMarks / totalPossibleMarks) * 100;
+    return cumulativePercentage;
+  }
+
+
+  toggleAccordion(date: string): void {
+    if (this.openAccordion === date) {
+      
+      this.openAccordion = null;
+    } else {
+      
+      this.openAccordion = date;
+    }
+  }
+
+  
+  isAccordionOpen(date: string): boolean {
+    return this.openAccordion === date;
+  }
 
 }
