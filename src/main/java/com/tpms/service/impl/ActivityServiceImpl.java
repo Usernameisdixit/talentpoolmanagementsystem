@@ -104,7 +104,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 			e1.printStackTrace();
 		}
-		String sqls = "{call TPMS_ATTENDANCE(?,?,?,?,?,?)}";
+		String sqls = "{call TPMS_ATTENDANCE(?,?,?,?,?,?,?)}";
 		List<Map<String, Object>> attendanceDetails = new ArrayList<>();
 		
 		DataSource ds = jdbcTemplate.getDataSource();
@@ -142,19 +142,23 @@ public class ActivityServiceImpl implements ActivityService {
 				}
 				try {
 					Integer resourceId = 0;
+					String activityDate="";
 					JSONObject resource = new JSONObject();
 					JSONArray firstHalfArray = new JSONArray();
 					JSONArray secondHalfArray = new JSONArray();
 					for (Map<String, Object> mapObject : attendanceDetails) {
 						Integer mapResourceId = Integer.valueOf((String) mapObject.get("resourceId"));
 						Integer intActivityFor = Integer.valueOf((String) mapObject.get("activityFor"));
+						String checkDate =  (String) mapObject.get("activityDate");
 						if (resourceId == 0) {
 							resourceId = mapResourceId;
-						} else if (resourceId != mapResourceId) {
+							activityDate=checkDate;
+						} else if (resourceId != mapResourceId || !(checkDate.equalsIgnoreCase(activityDate))) {
 							resource.put("firstHalf", firstHalfArray);
 							resource.put("secondHalf", secondHalfArray);
 							data.put(resource);
 							resourceId = mapResourceId;
+							activityDate=checkDate;
 							resource = new JSONObject();
 							firstHalfArray = new JSONArray();
 							secondHalfArray = new JSONArray();
