@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService{
 		u1.setPhoneNo(user.getPhoneNo());
 		u1.setEmail(user.getEmail());
 		
-		
+		//------- to update User -------
 		if(user.getUserId() != 0) {
 			User existUser=userRepository.findById(user.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User Not found with id = " + user.getUserId()));
 				 u1.setPassword(existUser.getPassword());
@@ -54,12 +54,13 @@ public class UserServiceImpl implements UserService{
 			u1.setIsFirstLogin(true);
 			u1.setPassword(passwordEncoder.encode(user.getPassword()));
 		}
-		Role role = roleRepository.findById(user.getRoleId()).get();
+		
+		// -------- to set Role at User entity class due to entity association --------
+		Role role = roleRepository.findById(user.getRoleId()).orElseThrow(() -> new ResourceNotFoundException("Role Not found with id = " + user.getRoleId()));
 		if(role != null) {
 			u1.setRole(role);
-		}else {
-			throw new ResourceNotFoundException("Role with ID " + user.getRoleId() + " not found");
 		}
+		
 		u1.setDeletedFlag(false);
 		
 		return userRepository.save(u1);
@@ -87,7 +88,11 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void deleteUserById(Integer intUserId,Boolean deletedFlag) {
 
-		userRepository.deleteUser(intUserId,deletedFlag);
+		try {
+		    userRepository.deleteUser(intUserId,deletedFlag);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -112,6 +117,7 @@ public class UserServiceImpl implements UserService{
 			 
 			   break;
 		   }
+		   default:{break;}
         }
         	
 		if(count>=1)
