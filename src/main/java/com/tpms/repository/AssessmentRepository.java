@@ -13,7 +13,7 @@ import com.tpms.entity.Assessment;
 public interface AssessmentRepository extends JpaRepository<Assessment, Integer> {
 
 
-	@Query(value = "SELECT  r.resourceName, r.platform, ac.activityName, a.doubleActivityMark, a.doubleSecuredMark, a.remark,a.asesmentId,a.activityFromDate,a.activityToDate,a.asesmentDate FROM assessment a " +
+	@Query(value = "SELECT  distinct r.resourceName, r.platform, ac.activityName, a.doubleActivityMark, a.doubleSecuredMark, a.remark,a.asesmentId,a.activityFromDate,a.activityToDate,a.asesmentDate FROM assessment a " +
 	        "JOIN resource_pool r ON a.resourceId = r.resourceId " +
 	        "JOIN activity ac ON a.activityId = ac.activityId " + " WHERE a.deletedFlag = 0", nativeQuery = true)
 	List<Object[]> findAllWithDetails();
@@ -44,6 +44,13 @@ public interface AssessmentRepository extends JpaRepository<Assessment, Integer>
                   "WHERE a.deletedFlag = 0 " +
                   "AND a.asesmentDate = :asesmentDate " , nativeQuery = true)
 		  List<Object[]> findAllWithDetailsByYearAndMonth(@Param("asesmentDate") Date asesmentDate);
+		  
+		  
+		  
+		  @Query(value = "SELECT distinct a.asesmentDate " +
+                  "FROM assessment a " +
+                  "WHERE a.deletedFlag = 0 " , nativeQuery = true)	  
+		  List<Date> findAllAsessmentDate();
 
 
 		

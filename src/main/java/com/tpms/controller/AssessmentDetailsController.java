@@ -143,7 +143,11 @@ public class AssessmentDetailsController {
 
         return ResponseEntity.ok().body(activities);
     }
-
+    
+    @GetMapping("/assessmentDates")
+    public List<Date> getAssessmentDates() {
+        return assessmentRepository.findAllAsessmentDate();
+    }
 
     
 }

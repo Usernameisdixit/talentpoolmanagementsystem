@@ -20,12 +20,13 @@ public interface ActivityAllocationDetailsRepository extends JpaRepository<Activ
     Map<String, Object> findAllDetails(@Param("activityAllocateDetId") Integer activityAllocateDetId);
 
 	List<ActivityAllocationDetails> findByActivityAllocation(ActivityAllocation activityAllocation);
-
 	
-	@Query(value = "SELECT ad.activityId, ad.activityDetails "
-	        + "FROM activity_allocation_details ad "
-	        + "JOIN activity_allocation aa ON ad.activityAllocateId = aa.activityAllocateId "
-	        + "WHERE aa.activityDate BETWEEN :fromDate AND :toDate", nativeQuery = true)
+	
+	@Query(value = "SELECT distinct act_det.activityId, act.activityName "
+	        + "FROM activity_allocation_details act_det "
+	        + "JOIN activity_allocation act_alloc ON act_det.activityAllocateId = act_alloc.activityAllocateId "
+	        + "JOIN activity act ON act_det.activityId = act.activityId "
+	        + "WHERE act_alloc.activityDate BETWEEN :fromDate AND :toDate", nativeQuery = true)
 	List<Object[]> getActivitiesBetweenDates(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
  
