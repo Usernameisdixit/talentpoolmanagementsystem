@@ -93,7 +93,7 @@ export class ActivityReportComponent {
         .subscribe(data => {
           this.isPresent = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
           if (this.isPresent) {
-            this.activityReportService.generateActivityReport(data, this.year, this.monthName, this.platform, formattedDate?.toLocaleString());
+            this.activityReportService.generateActivityReport(data, this.year, this.monthName, this.platform, formattedDate?.toLocaleString(),this.resourceValue);
             // Swal.fire({
             //   icon: 'success',
             //   title: 'PDF Generated',
@@ -133,7 +133,7 @@ export class ActivityReportComponent {
         .subscribe(data => {
           this.isPresent = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
           if (this.isPresent) {
-            this.activityReportService.generateActivityReportExcel(data, this.year, this.monthName, this.platform, formattedDate?.toLocaleString());
+            this.activityReportService.generateActivityReportExcel(data, this.year, this.monthName, this.platform, formattedDate?.toLocaleString(),this.resourceValue);
             // Swal.fire({
             //   icon: 'success',
             //   title: 'Excel Generated',

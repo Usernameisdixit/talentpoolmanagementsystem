@@ -71,6 +71,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AttendanceNewComponent } from './AttendanceMgmt/Components/attendance-new/attendance-new.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+
+
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
   declarations: [
@@ -108,7 +110,7 @@ defineLocale('en-gb', enGbLocale); //
     ActivityDetailsComponent,
     ActivityNavbarComponent,
     EditAssessmentComponent,
-    AttendanceNewComponent
+    AttendanceNewComponent,
 
   ],
   imports: [
