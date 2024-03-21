@@ -33,6 +33,7 @@ import { EditAssessmentComponent } from './AssessmentMgmt/Components/edit-assess
 import { AttendanceMgmtComponent } from './AttendanceMgmt/Components/attendance-mgmt/attendance-mgmt.component';
 import { AttendanceNewComponent } from './AttendanceMgmt/Components/attendance-new/attendance-new.component';
 
+
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
