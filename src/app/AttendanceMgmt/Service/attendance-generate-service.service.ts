@@ -26,7 +26,7 @@ export class AttendanceGenerateServiceService {
     const pdf = new jsPDF();
 
     // Static header content
-    pdf.text('Attendance Report', 10, 10);
+    pdf.text('Attendance Report', 75, 10);
     const fontSize = 10;
     pdf.setFontSize(fontSize);
     const fy = `Year: ${year}`;;
@@ -44,10 +44,10 @@ export class AttendanceGenerateServiceService {
     pdf.text(month, 100, 20);
     let head;
     if (resourceValue !== '0'&& selectedDate==null) {
-      head = [['Date', 'Resource Name', 'Platform', 'First Half', 'Second Half']];
+      head = [['Date','Resource Code', 'Resource Name', 'Platform', 'First Half', 'Second Half']];
 
     } else {
-      head = [['Resource Name', 'Platform', 'First Half', 'Second Half']];
+      head = [['Resource Code','Resource Name', 'Platform', 'First Half', 'Second Half']];
     }
 
 
@@ -82,7 +82,8 @@ export class AttendanceGenerateServiceService {
 
       if (resourceValue != 0 && selectedDate==null) {
         rowData.push(
-          detail.activityDate,
+          { content: detail.activityDate, styles: { fillColor: dataRowColor } },
+          { content: detail.resourceCode, styles: { fillColor: dataRowColor } },
           { content: detail.resourceName, styles: { fillColor: dataRowColor } },
           { content: detail.domain, styles: { fillColor: dataRowColor } },
           { content: firstHalfData, styles: { fillColor: dataRowColor } },
@@ -91,6 +92,7 @@ export class AttendanceGenerateServiceService {
       } else {
         rowData.push(
           // detail.activityDate,
+          { content: detail.resourceCode, styles: { fillColor: dataRowColor } },
           { content: detail.resourceName, styles: { fillColor: dataRowColor } },
           { content: detail.domain, styles: { fillColor: dataRowColor } },
           { content: firstHalfData, styles: { fillColor: dataRowColor } },
