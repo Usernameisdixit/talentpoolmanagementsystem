@@ -89,7 +89,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
 
-	public JSONArray getActivityReportData(String platform, String selectedDate, String year, String month) {
+	public JSONArray getActivityReportData(String platform, String selectedDate, String year, String month, String resourceValue) {
 		JSONArray data = new JSONArray();
 		 SimpleDateFormat inputFormat = new SimpleDateFormat("M/d/yyyy, h:mm:ss a");
 	     SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -104,7 +104,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 			e1.printStackTrace();
 		}
-		String sqls = "{call TPMS_ATTENDANCE(?,?,?,?,?)}";
+		String sqls = "{call TPMS_ATTENDANCE(?,?,?,?,?,?)}";
 		List<Map<String, Object>> attendanceDetails = new ArrayList<>();
 		
 		DataSource ds = jdbcTemplate.getDataSource();
@@ -115,6 +115,8 @@ public class ActivityServiceImpl implements ActivityService {
 				attendanceQuerey.setString(3, formattedDate);
 				attendanceQuerey.setString(4, year);
 				attendanceQuerey.setString(5, month);
+				attendanceQuerey.setString(6,resourceValue);
+				attendanceQuerey.setInt(7,0);
 
 				try (ResultSet rs = attendanceQuerey.executeQuery();) {
 					if (rs != null) {
@@ -251,9 +253,14 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 
-	public ActivityAllocation getAllocationDetailsByResource(Integer resourceId) {
-		return activityAllocRepo.findByResourceId(resourceId);
+	public ActivityAllocation getAllocationDetailsByResource(Integer resourceId, Date activityDate) {
+		return activityAllocRepo.findByResourceId(resourceId,activityDate);
 	}
 
+
+	@Override
+	public ResourcePool getResource(Integer resourceId) {
+		return resourceRepo.findById(resourceId).get();
+	}
 
 }

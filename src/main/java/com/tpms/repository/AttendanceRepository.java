@@ -21,10 +21,24 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Integer>
 
 	List<Attendance> findByActivityAllocateDetIdAndAtendanceDate(Integer intActivityAllocateDetId, Date finaldate);
 	
+	//Used for when attendance comes as platform and date basis
 	 @Query(value = "SELECT att.* FROM attendance att " +
 	           "INNER JOIN resource_pool resourcep ON resourcep.resourceId = att.resourceId " +
 	           "WHERE att.atendanceDate = :finaldate AND resourcep.platform = :platformName",nativeQuery = true)
 	List<Attendance> findByAttendanceDateAndPlatform(Date finaldate, String platformName);
+	 
+	//Used for when attendance comes as date basis as accordian
+	 @Query(value = "SELECT att.* FROM attendance att " +
+	           "INNER JOIN resource_pool resourcep ON resourcep.resourceId = att.resourceId " +
+	           "WHERE att.atendanceDate = :finaldate",nativeQuery = true)
+	List<Attendance> findByAttendanceDateAndPlatformNew(Date finaldate);
+	 
+	 @Query(value = "SELECT att.* FROM attendance att " +
+             "INNER JOIN activity_allocation alocation ON alocation.activityAllocateId = att.activityAllocateId " +
+             "INNER JOIN activity_allocation_details dtls ON dtls.activityAllocateDetId = att.activityAllocateDetId " +
+             "INNER JOIN activity activity ON activity.activityId = dtls.activityId " +
+             "WHERE alocation.activityDate = :finalDate AND activity.activityId = :selectedActivity", nativeQuery = true)
+	List<Attendance> findByAttendanceDateAndActivity(Date finalDate, Integer selectedActivity);
 
 
 }
