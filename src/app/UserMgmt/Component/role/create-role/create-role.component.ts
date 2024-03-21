@@ -16,7 +16,8 @@ export class CreateRoleComponent {
     private actRoute:ActivatedRoute,private roleMasterService:RoleServiceService) {
     this.RoleForm = this.formBuilder.group({
       roleName: [''],
-      roleId:[0]
+      roleId:[0],
+      deletedFlag:[false]
     })
   }
 
@@ -55,10 +56,12 @@ export class CreateRoleComponent {
   editRolePatch() {
     this.roleMasterService.editRole(this.roleId).subscribe((data: any) => {
       debugger
+      let deletedFlag = data.deletedFlag
       this.RoleForm.patchValue(
         {
           roleName: data.roleName,
-          roleId:data.roleId
+          roleId:data.roleId,
+          deletedFlag : data.deletedFlag
         }
       );
    
