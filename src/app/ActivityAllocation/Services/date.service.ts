@@ -5,15 +5,17 @@ import { Injectable } from '@angular/core';
 })
 export class DateService {
 
-  selectedDate!: Date;
+  // selectedDate!: Date;
 
   constructor() { }
 
   getDate(): Date {
-    return this.selectedDate;
+    // return this.selectedDate;
+    return new Date(localStorage.getItem("activityDate"));
   }
 
   setDate(date: Date): void {
-    this.selectedDate = date;
+    // this.selectedDate = date;
+    localStorage.setItem("activityDate",date.toString());
   }
 }

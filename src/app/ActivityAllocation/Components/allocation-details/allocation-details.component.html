@@ -1,6 +1,29 @@
 <div class="container">
     <h2>Activity Form</h2>
 
+    <div class="resource-info">
+        <div class="row">
+            <div class="col-sm-5">
+                <label for="session">Resource name:</label>
+                {{resource.resourceName}}
+            </div>
+            <div class="col-sm-5">
+                <label for="session">Resource code:</label>
+                {{resource.resourceCode}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-5">
+                <label for="session">Platform:</label>
+                {{resource.platform}}
+            </div>
+            <div class="col-sm-5">
+                <label for="session">Activity date:</label>
+                {{selectedDate | date:'dd-MMM-yyyy'}}
+            </div>
+        </div>
+    </div>
+    <hr>
     <div class="form-group">
         <label for="session">Activity for:</label>
         <select id="session" class="form-control" [(ngModel)]="selectedSession">

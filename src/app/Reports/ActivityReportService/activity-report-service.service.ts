@@ -15,13 +15,14 @@ export class ActivityReportServiceService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getActivityReportData(year: string, month: string, platform: string, selectedDate: string): Observable<any> {
+  getActivityReportData(year: string, month: string, platform: string, selectedDate: string,resourceValue : string): Observable<any> {
     const url = `${this.activityReportData}/activityReportData`;
     const params = {
       year: year,
       month: month,
       platform: platform,
-      selectedDate: selectedDate
+      selectedDate: selectedDate,
+      resourceValue : resourceValue
     };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post<any>(url, params, { headers });

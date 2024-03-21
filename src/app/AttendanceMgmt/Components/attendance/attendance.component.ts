@@ -63,13 +63,23 @@ export class AttendanceComponent {
     if (this.selectedFilter !== '0' && this.selectedDate != null) {
       this.attendanceService.getDetailsByPlatformId(this.selectedFilter,this.selectedDate?.toLocaleString()).subscribe(
         (data: any) => {
+          debugger;
           //Status for submit update Button
-          if (data[0].secondHalf.length == 0 || data[0].firstHalf.length) {
-            this.status = (data[0].check);
-            console.log(JSON.stringify(this.status));
+          //Previously used
+          // if (data[0].secondHalf.length == 0 || data[0].firstHalf.length) {
+          //   this.status = (data[0].check);
+          //   console.log(JSON.stringify(this.status));
+          // }
+
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].check) {
+              this.status = data[i].check;
+              break; // Stop the loop if a non-empty check property is found
+            }
           }
           //is present for null case no data
-          this.isPresents = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
+          // this.isPresents = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
+          this.isPresents = data.length > 0 ? true : false;
           this.attendanceDetails = data;
           console.log('Backend API Response:', this.isPresents);
           this.uncheckCheckbox1 = true;
@@ -181,7 +191,7 @@ export class AttendanceComponent {
     // for pagination
 indexNumber : number = 0;
 page : number = 1;
-tableSize : number = 10;
+tableSize : number = 1;
 count : number = 0;
 pageSizes = [10,20,30,40,50];
 

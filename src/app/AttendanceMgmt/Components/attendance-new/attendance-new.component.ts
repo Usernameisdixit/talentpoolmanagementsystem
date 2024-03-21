@@ -1,0 +1,202 @@
+import { Component } from '@angular/core';
+import { AttendanceNewService } from '../../Service/attendance-new.service';
+import Swal from 'sweetalert2';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { enGbLocale } from 'ngx-bootstrap/locale';
+
+@Component({
+  selector: 'app-attendance-new',
+  templateUrl: './attendance-new.component.html',
+  styleUrls: ['./attendance-new.component.css']
+})
+export class AttendanceNewComponent {
+
+  bsConfig: Partial<BsDatepickerConfig>;
+  constructor(private attendanceNewService: AttendanceNewService, private localeService: BsLocaleService) {
+    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
+    this.localeService.use('en-gb');
+  }
+
+  activities: { id: number; name: string; }[] = [];
+  selectedActivity: number = 0;
+  attendanceDetails: any = [];
+  selectedDate: Date | undefined;
+  isPresents: boolean = false;
+  status: any;
+  maxDate: Date | undefined;
+  uncheckCheckbox1: boolean = false; //check status for allcheckbox
+  uncheckCheckboxStatus: boolean[] = [];
+
+  ngOnInit(): void {
+    this.selectedDate = new Date();
+    this.maxDate = new Date();
+    this.uncheckCheckbox1 = false;
+    this.uncheckCheckboxStatus = Array<boolean>(this.pageSizes.length).fill(false);
+    this.getActivity();
+  }
+
+  //Check box Y & N
+  togglePresentValue(firstHalfObj: any) { // replace 'any' with the actual type of firstHalfObj
+    firstHalfObj.isPresent = firstHalfObj.isPresent === '1' ? '0' : '1';
+  }
+
+  getCurrentDate(): string {
+    const today = new Date();
+    const day = today.getDate();
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
+    const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+    return formattedDate;
+  }
+
+  //All CheckBox
+  // checkAllFirst(event: any): void {
+  //   this.attendanceDetails.forEach((detail: any) => {
+  //     detail.firstHalf.forEach((firstHalfObj: any) => {
+  //       firstHalfObj.isPresent = event.target.checked ? '1' : '0';
+  //     });
+  //   });
+  //   this.uncheckCheckbox1 = false;
+  // }
+
+    
+    checkAllFirst(event: any): void {  
+      this.uncheckCheckboxStatus[this.page - 1] = !event.target.checked;
+      this.attendanceDetails.slice(this.indexNumber, this.indexNumber + this.tableSize).forEach((detail: any) => {
+        detail.firstHalf.forEach((firstHalfObj: any) => {
+          firstHalfObj.isPresent = event.target.checked ? '1' : '0';
+        });
+      });
+    }
+
+
+  onDateChange(newDate: Date | null) {
+    this.selectedDate = newDate || undefined;
+    if(this.selectedActivity!=0){
+      this.selectedActivity=0;
+      this.attendanceDetails=[];
+      this.isPresents=false;
+    }
+    this.getDataByDateActivity();
+  }
+
+
+  getActivity() {
+    this.attendanceNewService.fetchActivities(this.selectedDate?.toLocaleString()).subscribe((data) => {
+      this.activities = data.map(activity => ({ id: activity.activityId, name: activity.activityName }));
+    }, error => {
+      console.error('Error fetching activities:', error);
+    });
+  }
+
+  getDataByDateActivity() {
+    if (this.selectedActivity != 0 && this.selectedDate != null) {
+      this.attendanceNewService.getDetailsByActivity(this.selectedActivity, this.selectedDate?.toLocaleString()).subscribe(
+        (data: any) => {
+          this.attendanceDetails = data;
+          //Status for submit update Button
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].check) {
+              this.status = data[i].check;
+              break; // Stop the loop if a non-empty check property is found
+            }
+          }
+          // if(this.status=='u'){
+          //   this.uncheckCheckbox1 = true;
+          // }else{
+          //   this.uncheckCheckbox1 = false;
+          // }
+
+          if (this.status === 'u') {
+            this.uncheckCheckboxStatus[this.page - 1] = true;
+          } else {
+            this.uncheckCheckboxStatus[this.page - 1] = false;
+          }
+          //is present for null case no data
+          //this.isPresents = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
+          this.isPresents = data.length > 0 ? true : false;
+         
+          console.log('Backend API Response:', this.isPresents);
+          
+      
+        },
+        (error: any) => {
+          console.error('Error fetching data from backend API:', error);
+        }
+      );
+
+    }
+  }
+
+  onSelectedActivityChange() {
+    if (this.page > 1) {
+      this.page = 1;
+    }
+  }
+
+
+  submitForm() {
+    let title: string;
+    if (this.status === 's') {
+      title = 'Do you want to save?';
+    } else if (this.status === 'u') {
+      title = 'Do you want to update?';
+    } else {
+      title = 'Do you want to proceed?';
+    }
+
+    Swal.fire({
+      title: title,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        
+        if (this.selectedDate !== undefined) {
+          this.attendanceNewService.submitAttendance(this.attendanceDetails, this.selectedDate.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })).subscribe(
+            (response: any) => {
+              if (response.success === 'Attendance Save Succesfully' && this.status === 's') {
+                Swal.fire('Attendance saved successfully!', '', 'success');
+                this.status = 'u';
+                this.uncheckCheckboxStatus[this.page - 1] = true;
+              } else if (response.success === 'Attendance Save Succesfully' && this.status === 'u') {
+                Swal.fire('Attendance update successfully!', '', 'success');
+                this.uncheckCheckboxStatus[this.page - 1] = true;
+              }
+              else {
+                Swal.fire('Error saving attendance', 'There was an error saving attendance.', 'error');
+              }
+              console.log('Response from Java controller:', response);
+            },
+            (error: any) => {
+              Swal.fire('Error saving attendance', 'There was an error saving attendance.', 'error');
+              console.error('Error sending data to Java controller:', error);
+            }
+          );
+        } else {
+          // Handle the case when selectedDate is undefined
+          Swal.fire('Error', 'Selected date is undefined.', 'error');
+        }
+      }
+    });
+  }
+
+      // for pagination
+indexNumber : number = 0;
+page : number = 1;
+tableSize : number = 10;
+count : number = 0;
+pageSizes = [10,20,30,40,50];
+
+//pagination functionality
+getTableDataChange(event : any){
+  this.page = event;
+  this.indexNumber = (this.page - 1) * this.tableSize;
+  console.log( this.uncheckCheckboxStatus[this.page - 1]);
+  this.getDataByDateActivity();
+}
+
+}

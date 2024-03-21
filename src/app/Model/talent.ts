@@ -2,6 +2,7 @@ export class Talent {
        
 	resourceId:number=0;
 	resourceName:string="";
+   designation:string="";
    resourceCode:string="";
    platform:string="";
    location:string="";
@@ -14,9 +15,9 @@ export class Talent {
    // dtmCreatedOn:string="";
 	updatedBy:string="";
 	dtmUpdatedOn:any="";
-	status:string="";
+	//status:string="";
 	deletedFlag:string="";
-
+   duration:string="";
 
    constructor(){}
 }

@@ -15,15 +15,28 @@
     </div>
     <div class="row">
       <div class="col-md-3">
-        <label for="platform">Platform <span class="required">*</span></label>
-        <select id="platform" class="form-control" [(ngModel)]="platformId">
-          <option value="0">All</option>
-          <option *ngFor="let platform of platforms" [value]="platform.platformId">{{ platform.platform }}</option>
-        </select>
+        <div class="form-group">
+          <label for="platform">Platform <span class="required">*</span></label>
+          <div class="input-group">
+            <select id="platform" class="form-control" [(ngModel)]="platformId" (ngModelChange)="setDate()">
+              <option value="0">All</option>
+              <option *ngFor="let platform of platforms" [value]="platform.platformId">{{ platform.platform }}</option>
+            </select>
+          </div>
+        </div>
       </div>
-      <div class="col-md-3">
+      <!-- <div class="col-md-3">
         <label for="activityDate">Activity Date <span class="required">*</span></label>
         <input type="date" id="activityDate" [(ngModel)]="activityDate" (change)="setDate()">
+      </div> -->
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="activityDate">Activity Date <span class="required">*</span></label>
+          <div class="input-group">
+            <input type="text" id="activityDate" [(ngModel)]="activityDate" class="bold-black" bsDatepicker [bsConfig]="bsConfig" autocomplete="off" (ngModelChange)="setDate()">
+            <span class="input-group-text"><i class="material-icons">date_range</i></span>
+          </div>
+        </div>
       </div>
     </div>
     <table class="activity-table">

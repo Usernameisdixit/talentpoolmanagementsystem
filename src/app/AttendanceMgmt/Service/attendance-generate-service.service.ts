@@ -12,7 +12,8 @@ import { HttpClient } from '@angular/common/http';
 export class AttendanceGenerateServiceService {
 
   private platformUrl = 'http://localhost:9999/tpms/getplatform';
-
+  private uniResName = 'http://localhost:9999/tpms/allResourceName';
+  finaly : number;
 
   constructor(private httpClient: HttpClient) { }
 
@@ -21,7 +22,7 @@ export class AttendanceGenerateServiceService {
     this.getPlatforms();
 
   }
-  generateAttendanceReport(attendanceDetails: any[], year: string, monthName: string, platformName: string, selectedDate: string): void {
+  generateAttendanceReport(attendanceDetails: any[], year: string, monthName: string, platformName: string, selectedDate: string,presentCount:number,absentCount:number): void {
     const pdf = new jsPDF();
     
     // Static header content
@@ -33,7 +34,6 @@ export class AttendanceGenerateServiceService {
     const platform = `Platform: ${platformName === '0' ? '' : platformName}`;
     const reportDate = `Date: ${selectedDate === undefined ? '' : selectedDate}`;
 
-    // Add additional information
     pdf.text(fy, 10, 20);
     pdf.text(month, 100, 20);
     pdf.text(platform, 10, 26);
@@ -74,10 +74,14 @@ export class AttendanceGenerateServiceService {
     });
 
     // Create auto table
-    
+    var finalY=null;
     autoTable(pdf, {
       head: [['Resource Name', 'Platform', 'First Half', 'Second Half']],
       body: data,
+      didDrawPage: function (data) {
+         finalY =Math.round( data.cursor.y); 
+        console.log("Final Y position after table:", finalY);
+    },
       startY: 30,              
       styles: {
         lineColor: [0, 0, 0],
@@ -92,7 +96,19 @@ export class AttendanceGenerateServiceService {
       },
       margin: { left: 10 }, 
     });
-
+    debugger;
+    if(presentCount==0 && absentCount==0){
+    
+    }else{
+    pdf.setFont("helvetica", "bold"); 
+    pdf.setFontSize(12); 
+    pdf.text(`SUMMARY`, 10, finalY + 10); 
+    pdf.setFont("helvetica", "normal");
+    pdf.setFontSize(12); 
+    pdf.text(`Total Activity: ${presentCount + absentCount}`, 10, finalY + 20);
+    pdf.text(`Present: ${presentCount}`, 75, finalY+20);
+    pdf.text(`Absent: ${absentCount}`, 140, finalY + 20);
+    }
     pdf.save('attendance_report.pdf');
   }
 
@@ -100,7 +116,7 @@ export class AttendanceGenerateServiceService {
   private getFirstHalfData(detail: any): string {
     let firstHalfData = '';
     detail.firstHalf.forEach((firstHalfObj, index, array) => {
-      firstHalfData += `${firstHalfObj.attendanceStatus} : ${firstHalfObj.activityName} (${firstHalfObj.fromHours} to ${firstHalfObj.toHours})`;
+      firstHalfData += `${firstHalfObj.activityName} (${firstHalfObj.fromHours} to ${firstHalfObj.toHours}) ${firstHalfObj.attendanceStatus}`;
       if (index < array.length - 1) {
         firstHalfData += '\n';
       }
@@ -111,7 +127,7 @@ export class AttendanceGenerateServiceService {
   private getSecondHalfData(detail: any): string {
     let secondHalfData = '';
     detail.secondHalf.forEach((secondHalfObj, index, array) => {
-      secondHalfData += `${secondHalfObj.attendanceStatus} : ${secondHalfObj.activityName} (${secondHalfObj.fromHours} to ${secondHalfObj.toHours})`;
+      secondHalfData += `${secondHalfObj.activityName} (${secondHalfObj.fromHours} to ${secondHalfObj.toHours}) ${secondHalfObj.attendanceStatus}`;
       if (index < array.length - 1) {
         secondHalfData += '\n';
       }
@@ -123,7 +139,7 @@ export class AttendanceGenerateServiceService {
     return this.httpClient.get<any[]>(this.platformUrl);
   }
 
-  generateAttendanceReportExcel(attendanceDetails: any[], year: string, monthName: string, platformName: string, selectedDate: string): void {
+  generateAttendanceReportExcel(attendanceDetails: any[], year: string, monthName: string, platformName: string, selectedDate: string,presentCount:number,absentCount:number): void {
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([], { skipHeader: true });
 
     // Set column widths
@@ -238,6 +254,24 @@ export class AttendanceGenerateServiceService {
         { v: secondHalfData, s: { alignment: { wrapText: true } } },
       ]);
     });
+    if(presentCount==0 && absentCount==0){
+    
+    }else{
+      data.push([
+        { v: ''},
+        { v: ''}, 
+        { v: '' }, 
+        { v: '' }
+    ]);
+      
+      data.push([
+        { v: `Total Acityvity: ${presentCount + absentCount}`, s: { font: { bold: true }, alignment: { wrapText: true } } },
+        { v: '', s: { font: { bold: true }, alignment: { wrapText: true } } }, 
+        { v: `Present: ${presentCount}`, s: { font: { bold: true }, alignment: { wrapText: true } } },
+        { v: `Present: ${absentCount}`, s: { font: { bold: true }, alignment: { wrapText: true } } },
+    ]);
+    }
+    
 
     // Add data to worksheet
     XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A7' });
@@ -248,6 +282,10 @@ export class AttendanceGenerateServiceService {
 
     // Save the workbook as an Excel file
     XLSX.writeFile(wb, 'attendance_report.xlsx');
+  }
+
+  getResource(value: string): Observable<any[]> {
+    return this.httpClient.get<any[]>(`http://localhost:9999/tpms/allResourceName?value=${encodeURIComponent(value)}`);
   }
 
 }
