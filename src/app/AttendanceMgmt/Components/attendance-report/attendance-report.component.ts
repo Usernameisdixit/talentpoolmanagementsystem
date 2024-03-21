@@ -224,7 +224,7 @@ export class AttendanceReportComponent {
             console.log("Total Absent:", this.totalAbsent);
               
             }
-            this.attendanceGeneratedService.generateAttendanceReportExcel(data,this.year, this.monthName, this.platform, formattedDate?.toLocaleString(),this.presentResult,this.absentResult);          
+            this.attendanceGeneratedService.generateAttendanceReportExcel(data,this.year, this.monthName, this.platform, formattedDate?.toLocaleString(),this.presentResult,this.absentResult,this.resourceValue);          
             // Swal.fire({
             //   icon: 'success',
             //   title: 'Excel Generated',

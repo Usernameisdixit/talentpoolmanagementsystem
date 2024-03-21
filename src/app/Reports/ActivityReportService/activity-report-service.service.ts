@@ -160,6 +160,7 @@ export class ActivityReportServiceService {
     if (resourceValue !== '0' && selectedDate == null) {
       ws['!cols'] = [
         {wch:20},//Date
+        { wch: 20 }, // Resource code
         { wch: 20 }, // Resource Name
         { wch: 15 }, // Platform
         { wch: 40 }, // First Half
@@ -167,6 +168,7 @@ export class ActivityReportServiceService {
       ];
     } else {
       ws['!cols'] = [
+        { wch: 20 }, // Resource code
         { wch: 20 }, // Resource Name
         { wch: 15 }, // Platform
         { wch: 40 }, // First Half
@@ -178,10 +180,10 @@ export class ActivityReportServiceService {
 
     let headerRow = [];
     if (resourceValue !== '0' && selectedDate == null) {
-      headerRow = ['Date', 'Resource Name', 'Platform', 'First Half', 'Second Half'];
+      headerRow = ['Date','Resource code', 'Resource Name', 'Platform', 'First Half', 'Second Half'];
 
     } else {
-      headerRow = ['Resource Name', 'Platform', 'First Half', 'Second Half'];
+      headerRow = ['Resource code','Resource Name', 'Platform', 'First Half', 'Second Half'];
     }
     XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A6' });
     for (let col = 0; col < headerRow.length; col++) {
@@ -237,9 +239,9 @@ export class ActivityReportServiceService {
       };
     }
     if (resourceValue !== '0' && selectedDate == null) {
-      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }]; // Merge cells
+      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 5 } }]; // Merge cells
     } else {
-      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }];
+      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }];
     }
     const data: any[] = [];
     const processedDates = new Set<string>();
@@ -260,9 +262,9 @@ export class ActivityReportServiceService {
           console.log(data.length);
           data.push([activityDate]);
           const currentRowIndex = data.length + 5;
-          ws['!merges'].push({ s: { r: currentRowIndex, c: 0 }, e: { r: currentRowIndex, c: 3 } });
+          ws['!merges'].push({ s: { r: currentRowIndex, c: 0 }, e: { r: currentRowIndex, c: 4 } });
           // Apply the fill color to each cell in the merged range
-          for (let col = 0; col < 4; col++) {
+          for (let col = 0; col < 5; col++) {
             const cellAddress = XLSX.utils.encode_cell({ r: currentRowIndex, c: col });
             ws[cellAddress] = {
               v: null,
@@ -290,6 +292,7 @@ export class ActivityReportServiceService {
       if (resourceValue != 0 && selectedDate == null) {
         rowData.push(
           { v: detail.activityDate, s: { alignment: { wrapText: true } } },
+          { v: detail.resourceCode, s: { alignment: { wrapText: true } } },
           { v: detail.resourceName, s: { alignment: { wrapText: true } } },
           { v: detail.domain, s: { alignment: { wrapText: true } } },
           { v: firstHalfData, s: { alignment: { wrapText: true } } },
@@ -297,6 +300,7 @@ export class ActivityReportServiceService {
         );
       } else {
         rowData.push(
+          { v: detail.resourceCode, s: { alignment: { wrapText: true } } },
           { v: detail.resourceName, s: { alignment: { wrapText: true } } },
           { v: detail.domain, s: { alignment: { wrapText: true } } },
           { v: firstHalfData, s: { alignment: { wrapText: true } } },
