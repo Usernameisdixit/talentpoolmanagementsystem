@@ -20,14 +20,16 @@
   <table class="table table-striped table-bordered" >
       <thead class="thead-dark">
         <tr class="text-align:center">
-  <th>ResourceId</th>
-  <th>ResourceName</th>
-  <th>ResourceCode</th>
+  <th><!--ResourceId-->Sl No</th>
+  <th>Res. Code</th>
+  <th>Res. Name</th>
+  <th>Designation</th>
   <th>Platform</th>
   <th>Location</th>
-  <th>Experience</th>
+  <th>Exp.</th>
   <th>Mobile</th>
   <th>Email</th>
+  <th>Duration</th>
   <th>Status</th>
   <th>Actions</th>
         </tr>
@@ -38,15 +40,17 @@
     itemsPerPage : tableSize,
     currentPage : page ,
     totalItems: count
-    };" class="text-align:center">
-  <td>{{c.resourceId}}</td>
-  <td>{{c.resourceName}}</td>
+    }; let i = index" class="text-align:center">
+  <td><!--{{c.resourceId}}-->{{i+1}}</td>
   <td>{{c.resourceCode}}</td>
+  <td>{{c.resourceName}}</td>
+  <td>{{c.designation}}</td>
   <td>{{c.platform}}</td>
   <td>{{c.location}}</td>
   <td>{{c.experience}}</td>
   <td>{{c.phoneNo}}</td>
   <td>{{c.email}}</td>
+  <td>{{c.duration}}</td>
   <td>
     <span class="status-badge status-{{ c.deletedFlag ? 'inactive' : 'active' }}">
       {{ c.deletedFlag ? 'Inactive' : 'Active' }}
@@ -54,11 +58,11 @@
   </td>
   <td>
     <div class="btn-group">
-      <button type="button" class="btn btn-primary" (click)="editalent(c.resourceId)">Edit</button>
+      <button type="button" class="btn btn-primary" (click)="editalent(c.resourceId)">Edit</button>  &nbsp;&nbsp;
      <!-- <button type="button" class="btn btn-danger" (click)="deletetalent($event, c.resourceId)">Delete</button> -->
-      <td *ngIf="c.deletedFlag" id="toggleButton"><button class="btn btn-danger" (click)="deletetalent($event, c.resourceId);">InActive</button></td>
+      <td *ngIf="!c.deletedFlag" id="toggleButton"><button class="btn btn-danger" (click)="deletetalent($event, c.resourceId);">InActive</button></td>
               
-      <td *ngIf="!c.deletedFlag" id="toggleButton"><button class="btn btn-success" (click)="deletetalent($event, c.resourceId);">Active</button></td>
+      <td *ngIf="c.deletedFlag" id="toggleButton"><button class="btn btn-success" (click)="deletetalent($event, c.resourceId);">Active</button></td>
       
     
     </div>

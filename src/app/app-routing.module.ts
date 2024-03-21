@@ -31,6 +31,7 @@ import { ActivityDetailsComponent } from './ActivityMgmt/Components/activity-det
 import { AddActivityComponent } from './ActivityMgmt/Components/add-activity/add-activity.component';
 import { EditAssessmentComponent } from './AssessmentMgmt/Components/edit-assessment/edit-assessment.component';
 import { AttendanceMgmtComponent } from './AttendanceMgmt/Components/attendance-mgmt/attendance-mgmt.component';
+import { AttendanceNewComponent } from './AttendanceMgmt/Components/attendance-new/attendance-new.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -72,7 +73,7 @@ const routes: Routes = [
        { path: 'add', component: AddActivityComponent , canActivate: [authGuard]},
        { path: 'editassesment/:id', component: EditAssessmentComponent , canActivate: [authGuard]},
        { path: 'atten', component: AttendanceMgmtComponent, canActivate: [authGuard]  },
-   
+       { path: 'takeAtten', component: AttendanceNewComponent, canActivate: [authGuard]  },
     ]
   }
 ];

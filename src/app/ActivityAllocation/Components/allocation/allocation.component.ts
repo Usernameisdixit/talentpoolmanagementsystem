@@ -4,6 +4,8 @@ import { DateService } from '../../Services/date.service';
 import { Platform } from 'src/app/Model/Platform';
 import { Resource } from 'src/app/Model/resource.model';
 import { Component, OnInit } from '@angular/core';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-allocation',
@@ -15,13 +17,20 @@ export class AllocationComponent implements OnInit {
   platforms:Platform[] = [];
   resources:Resource[] = [];
   activityDate: any;
-  platformId: any;
+  platformId: any = 0;
+  bsConfig: Partial<BsDatepickerConfig>;
  
-  constructor(private allocationService: AllocationService,
-              private router:Router, private dateService: DateService) { }
+  constructor(private allocationService: AllocationService, private router:Router,
+      private dateService: DateService, private localeService: BsLocaleService,
+      private datePipe: DatePipe) {
+    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
+    this.localeService.use('en-gb');
+  }
 
   ngOnInit(): void {
     this.getPlatforms();
+    this.activityDate = new Date();
+    this.setDate();
   }
 
   getPlatforms(): void {
@@ -31,7 +40,7 @@ export class AllocationComponent implements OnInit {
   }
 
   getResources(): void {
-    this.allocationService.getResources(this.activityDate,this.platformId).subscribe((data: any[]) => {
+    this.allocationService.getResources(this.datePipe.transform(this.activityDate,'yyyy-MM-dd'),this.platformId).subscribe((data: any[]) => {
       this.resources = data;
       this.resources.forEach(resource => {
         resource.isAllocatedActivity = resource.activityAlloc.length>0 ? true : false;
@@ -41,7 +50,7 @@ export class AllocationComponent implements OnInit {
   }
   
 
-  setDate(): void {debugger;
+  setDate(): void {
     this.dateService.setDate(this.activityDate);
     this.getResources();
   }
