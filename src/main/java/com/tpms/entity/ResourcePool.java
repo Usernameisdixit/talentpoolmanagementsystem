@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Data
@@ -35,6 +36,7 @@ public class ResourcePool {
 	
 	private String resourceCode;
 
+	private String designation;
 	
 	private String platform;
 
@@ -63,7 +65,8 @@ public class ResourcePool {
 	
 	private Byte deletedFlag;
 	
-
+	@Transient
+    private String duration;
 	
 	@OneToMany
 	@JoinColumn(name = "resourceId", referencedColumnName = "resourceId")

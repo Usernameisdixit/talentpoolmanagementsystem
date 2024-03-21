@@ -23,8 +23,9 @@ public class ResourcePoolHistory {
 	private String resourceName;
 
 	
-	private String resourceCode;
+	private String designation;
 
+	private String resourceCode;
 	
 	private String platform;
 
