@@ -1,0 +1,25 @@
+<mat-card class="custom-card">
+    <h1 mat-dialog-title class="text-primary">ResourcePool Report</h1>
+    <div class="row">
+        <div class="col-md-3 form-group">
+            <label for="allocationDate">Allocation Date :</label>
+            <select id="allocationDate" class="form-control">
+              <option value="0"></option> 
+            </select>
+        </div>
+        <div class="col-md-3 form-group">
+            <label for="resourceCode">Resource Code/No. :</label>
+            <select id="resourceCode" class="form-control">
+              <option value="0"></option> 
+            </select>
+        </div>
+    </div>
+    <div class="accordion">
+        <div class="accordion-header" (click)="toggle()">1-March-2024
+        </div>
+        <div class="accordion-body" *ngIf="isOpen">
+          hiiii...........
+        </div>
+      </div>
+
+</mat-card>
