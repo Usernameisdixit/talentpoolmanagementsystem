@@ -1,16 +1,18 @@
-<div>
+ <div>
+ 
+ 
   <div class="container d-flex justify-content-end mt-3">
   <div class="export-buttons">
     <button  (click)="exportToPDF()" class="btn btn-icon export-btn" title="Download PDF">
       <i class="fas fa-file-pdf fa-lg pdf-icon"></i>
     </button>
-    
+   
     <button (click)="exportToExcel()" class="btn btn-icon export-btn" title="Download Excel">
       <i class="fas fa-file-excel fa-lg excel-icon"></i>
     </button>
   </div>
   </div>
-
+ 
   <div class="container d-flex justify-content-center">
     <table class="table">
       <thead>
@@ -26,7 +28,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let activity of pagedActivities; let i = index" (click)="setActiveActivity(activity, i)" [ngClass]="{'even-row': i % 2 === 0, 'odd-row': i % 2 !== 0}">
+        <tr *ngFor="let activity of pagedActivities; let i = index" (click)="setActiveActivity(activity, i)" >
           <td>{{ activity.activityId }}</td>
           <td>{{ activity.activityRefNo }}</td>
           <td>{{ activity.activityName }}</td>
@@ -48,23 +50,24 @@
         </tr>
       </tbody>
     </table>
-    
-
-    
-
-
+   
+ 
+   
+ 
+ 
   </div>
-
-
+ 
+ 
   <div class="container d-flex justify-content-end mt-3">
-    <mat-paginator [pageSize]="pageSize" [length]="activities?.length" (page)="onPageChange($event)">
-    </mat-paginator>
-      </div>
+    <ngb-pagination
+    [collectionSize]="activities?.length"
+    [(page)]="currentPage"
+    [pageSize]="pageSize"
+    (pageChange)="onPageChange($event)">
+  </ngb-pagination>  </div>
+ 
 
-
-
-
-
+ 
+ 
+ 
 </div>
-
-

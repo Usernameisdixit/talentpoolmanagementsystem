@@ -1,83 +1,106 @@
-import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
-import { AssessmentDto } from 'src/app/Model/AssessmentDto';
+import { Component, OnInit } from '@angular/core';
 import { AssessmentserviceService } from '../../Service/assessmentservice.service';
+import { AssessmentDto } from 'src/app/Model/AssessmentDto';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-viewassessment',
   templateUrl: './viewassessment.component.html',
-  styleUrls: ['./viewassessment.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./viewassessment.component.css']
 })
 export class ViewassessmentComponent implements OnInit {
-  assessmentDetails: AssessmentDto[];
-  assessments: any[];
+  bsConfig: Partial<BsDatepickerConfig>;
+  assessmentDate: any;
+  assessmentDateArr : any[];
+  assessments: AssessmentDto[];
   showAssessmentTable: boolean = false;
   currentPage: number = 1;
   itemsPerPage: number = 10;
-  selectedYear: number;
-  selectedMonth: number;
-  weeks: { start: Date, end: Date }[] = [];
-  years: number[] = [];
-  months: string[] = [
-    'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+  assessmentDetails: any;
+  assessmentFromDate: any;
+  assessmentToDate: any;
 
-  constructor(private apiService: AssessmentserviceService, private cdr: ChangeDetectorRef) {
-    const currentYear = new Date().getFullYear();
-    this.years.push(currentYear);
+  constructor(private apiService: AssessmentserviceService, private datePipe: DatePipe) {
+    this.bsConfig = {
+      containerClass: 'theme-dark-blue',
+      dateInputFormat: 'DD-MMM-YYYY',
+    };
   }
 
   ngOnInit(): void {
     this.fetchAssessments();
+    this.fetchAssessmentDates();
+   
+  }
+
+  fetchAssessmentDates() {
+    this.apiService.getAssessmentDates().subscribe(
+      (dates: string[]) => {
+   
+        this.assessmentDateArr = dates.map(date => this.transformDate(date));
+       
+        console.log(this.assessmentDateArr);
+      },
+      error => {
+        console.error('Error fetching assessment dates:', error);
+      }
+    );
+  }
+  
+  transformDate(date: string): string {
+   
+    return this.datePipe.transform(new Date(date), 'dd-MMM-yyyy') || '';
+  }
+  
+
+  onDateSelected() {
+    const formattedAssessmentDate = this.datePipe.transform(this.assessmentDate, 'yyyy-MM-dd');
+    this.fetchAssessmentsByDate(formattedAssessmentDate);
   }
 
   fetchAssessments() {
-    if (this.selectedYear && this.selectedMonth) {
-      this.apiService.viewAssessmentDetails().subscribe(
-        (data) => {
-          // Filter assessments based on selected year and month
-          this.assessments = data.filter(assessment => {
-            const assessmentDate = new Date(assessment[9]);
-            return assessmentDate.getFullYear() == this.selectedYear && assessmentDate.getMonth() == this.selectedMonth;
-          });
-  
-          this.assessments.reduce((acc, assessment) => {
-            const assessmentDate = new Date(assessment[9]); 
-            const dateKey = assessmentDate.getDate(); 
-            if (!acc[dateKey]) {
-              acc[dateKey] = [];
-            }
-            acc[dateKey].push(assessment);
-            return acc;
-          }, {});
-  
-          
-          this.assessmentDetails = this.assessments;
-          console.log(this.assessments);
-          if (this.assessments.length === 0) {
-            this.weeks = [];
-          } else {
-            
-            this.updateWeeklyAssessmentData();
-            this.showAssessmentTable = true;
-          }
-          this.cdr.detectChanges();
-        },
-        error => {
-          console.log('Error fetching assessment details:', error);
-        }
-      );
-    }
+    this.apiService.viewAssessmentDetails().subscribe(
+      (data: AssessmentDto[]) => {
+        this.assessments = data;
+        this.assessmentDetails=data;
+        this.assessmentFromDate=data[0][7];
+        this.assessmentToDate=data[0][8];
+   
+        this.showAssessmentTable = this.assessments.length > 0;
+      },
+      error => {
+        console.log('Error fetching assessment details:', error);
+      }
+    );
   }
-  
-  
 
-  
+  fetchAssessmentsByDate(date: string) {
+    this.apiService.viewAssessmentDetailsDateWise(date).subscribe(
+      (data: AssessmentDto[]) => {
+        this.assessments = data;
+        this.assessmentDetails=data;
+        this.assessmentFromDate=data[0][7];
+   
+        this.assessmentToDate=data[0][8];
+        this.showAssessmentTable = this.assessments.length > 0;
+        if (this.assessments.length === 0) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'No Assessments Found',
+            text: 'There are no assessments evaluated on this date.',
+          });
+        }
+      },
+      error => {
+        console.log('Error fetching assessment details:', error);
+      }
+    );
+  }
 
   exportToPDF() {
     const doc = new jsPDF();
@@ -88,24 +111,12 @@ export class ViewassessmentComponent implements OnInit {
     const x = (pageWidth - textWidth) / 2;
     doc.text(pageTitle, x, 10);
     (doc as any).autoTable({
-      head: [['Sl.No', 'Resource Name', 'Platform Name', 'Activity Name', 'Total Marks', 'Secured Marks', 'Percentage', 'Remarks']],
+      head: [['Sl.No', 'Resource Name', 'Platform Name', 'Activity Name', 'Total Marks', 'Secured Marks', 'Cumulative Percentage','Remarks']],
       body: data,
       startY: 20,
       margin: { top: 15 }
     });
-    const currentDate = this.getCurrentFormattedDate();
-    const dateWidth = doc.getTextDimensions(currentDate).w;
-    const dateX = pageWidth - dateWidth - 10;
-    doc.text(currentDate, dateX, 5);
     doc.save('assessment-details.pdf');
-  }
-
-  getCurrentFormattedDate(): string {
-    const currentDate = new Date();
-    const day = currentDate.getDate();
-    const month = this.months[currentDate.getMonth()];
-    const year = currentDate.getFullYear();
-    return `${day} ${month} ${year}`;
   }
 
   exportToExcel() {
@@ -118,7 +129,7 @@ export class ViewassessmentComponent implements OnInit {
       { v: 'Activity Name', s: headerStyle },
       { v: 'Total Marks', s: headerStyle },
       { v: 'Secured Marks', s: headerStyle },
-      { v: 'Percentage', s: headerStyle },
+      { v: 'Cumulative Percentage', s: headerStyle },
       { v: 'Remarks', s: headerStyle }
     ];
     tableData.unshift(header);
@@ -158,86 +169,27 @@ export class ViewassessmentComponent implements OnInit {
   private getTableData(): any[][] {
     let mergedData: any[] = [];
     let serialNumber = 1;
-    const groupedAssessments = this.groupAssessmentsByResourcePlatform();
-    for (const key in groupedAssessments) {
-      if (groupedAssessments.hasOwnProperty(key)) {
-        const group = groupedAssessments[key];
-        const resourceName = group[0][0];
-        const platformName = group[0][1];
-        let isFirstRow = true;
-        let totalMarks = 0;
-        let marksObtained = 0;
-        const activityTotals: { [key: string]: { totalMarks: number, marksObtained: number } } = {};
-        group.forEach(assessment => {
-          const activityName = assessment[2];
-          const totalMarks = assessment[3];
-          const marksObtained = assessment[4];
-          if (!activityTotals[activityName]) {
-            activityTotals[activityName] = { totalMarks: 0, marksObtained: 0 };
-          }
-          activityTotals[activityName].totalMarks += totalMarks;
-          activityTotals[activityName].marksObtained += marksObtained;
-        });
-        const processedActivities: { [key: string]: boolean } = {};
-        group.forEach(assessment => {
-          const activityName = assessment[2];
-          const totalMarks = activityTotals[activityName].totalMarks;
-          const marksObtained = activityTotals[activityName].marksObtained;
-          const remarks = assessment[5];
-          const percentage = this.calculatePercentage(totalMarks, marksObtained);
-          if (!processedActivities[activityName]) {
-            const row: any[] = [
-              isFirstRow ? serialNumber++ : '',
-              isFirstRow ? resourceName : '',
-              isFirstRow ? platformName : '',
-              activityName,
-              totalMarks,
-              marksObtained,
-              percentage,
-              remarks
-            ];
-            mergedData.push(row);
-            processedActivities[activityName] = true;
-          } else {
-            const existingRow = mergedData.find(row => row[3] === activityName);
-            if (existingRow) {
-              existingRow[7] += ', ' + remarks;
-            }
-          }
-          isFirstRow = false;
-        });
-      }
-    }
-    return mergedData;
-  }
-
-  private groupAssessmentsByResourcePlatform(): { [key: string]: any[][] } {
-    const groupedAssessments: { [key: string]: any[][] } = {};
-    this.assessments.forEach(assessment => {
-      const resourceName = assessment[0];
-      const platformName = assessment[1];
-      const key = `${resourceName}_${platformName}`;
-      if (!groupedAssessments[key]) {
-        groupedAssessments[key] = [];
-      }
-      groupedAssessments[key].push(assessment);
+    this.assessmentDetails.forEach(assessment => {
+      const row: any[] = [
+        serialNumber++,
+        assessment[0],
+        assessment[1],
+        assessment[2],
+        assessment[3],
+        assessment[4],
+        'NA FOR NOW',
+        assessment[5],
+      ];
+      mergedData.push(row);
     });
-    return groupedAssessments;
-  }
-
-  calculatePercentage(totalMarks: number, marksObtained: number): string {
-    if (totalMarks === 0) {
-      return '0%';
-    }
-    const percentage = (marksObtained / totalMarks) * 100;
-    return percentage.toFixed(2) + '%';
+    return mergedData;
   }
 
   getTotalPages(): number {
     return Math.ceil(this.assessments.length / this.itemsPerPage);
   }
 
-  getCurrentPageAssessments(): any[] {
+  getCurrentPageAssessments(): AssessmentDto[] {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     return this.assessments.slice(startIndex, endIndex);
@@ -266,101 +218,38 @@ export class ViewassessmentComponent implements OnInit {
   }
 
   deleteAssessment(assessmentId: number) {
- 
-  }
-  updateWeeklyAssessmentData(): void {
-    this.weeks = [];
-    const groupedAssessments: { [weekNumber: number]: any[] } = {};
-    this.assessments.forEach(assessment => {
-      const fromDateStr = assessment[7];
-      const toDateStr = assessment[8];
-      const fromDate = new Date(fromDateStr);
-      const toDate = new Date(toDateStr);
-      
-      const startWeekNumber = this.getWeekNumber(fromDate);
-      const endWeekNumber = this.getWeekNumber(toDate);
-
-      for (let weekNumber = startWeekNumber; weekNumber <= endWeekNumber; weekNumber++) {
-        if (!groupedAssessments[weekNumber]) {
-          groupedAssessments[weekNumber] = [];
-        }
-        groupedAssessments[weekNumber].push({ assessment, fromDate, toDate }); 
-      }
-    });
-
-    for (const weekNumber in groupedAssessments) {
-      if (groupedAssessments.hasOwnProperty(weekNumber)) {
-        const weekAssessments = groupedAssessments[weekNumber];
-        const startDate = this.getFirstDateOfWeek(+weekNumber, this.selectedYear);
-        const endDate = this.getLastDateOfWeek(+weekNumber, this.selectedYear);
-        const fromDate = weekAssessments[0].fromDate; 
-        const toDate = weekAssessments[weekAssessments.length - 1].toDate; 
-        this.weeks.push({ start: fromDate, end: toDate});
-      }
-    }
-}
-
-
-
-  getFirstDateOfWeek(weekNumber: number, year: number): Date {
-    const januaryFirst = new Date(year, 0, 1);
-    const firstDayOfWeek = new Date(januaryFirst.getTime() + ((weekNumber - 1) * 7) * 86400000); 
-    return new Date(firstDayOfWeek.getFullYear(), firstDayOfWeek.getMonth(), firstDayOfWeek.getDate());
+    // Implement assessment deletion logic here
   }
 
-  getLastDateOfWeek(weekNumber: number, year: number): Date {
-    const firstDayOfWeek = this.getFirstDateOfWeek(weekNumber, year);
-    const lastDayOfWeek = new Date(firstDayOfWeek.getTime() + 6 * 86400000); 
-    return new Date(lastDayOfWeek.getFullYear(), lastDayOfWeek.getMonth(), lastDayOfWeek.getDate());
-  }
-
-  getWeekNumber(date: Date): number {
-    const onejan = new Date(date.getFullYear(), 0, 1);
-    return Math.ceil(((date.getTime() - onejan.getTime()) / 86400000 + onejan.getDay() + 1) / 7);
-  }
-
-  toggleCollapse(week: number): void {
-    const collapseElement = document.getElementById(`weekCollapse${week}`);
-    if (collapseElement) {
-      collapseElement.classList.toggle('show');
-      this.cdr.detectChanges();
-    }
-  }
-
-  isCollapsed(week: number): boolean {
-    const collapseElement = document.getElementById(`weekCollapse${week}`);
-    return collapseElement ? collapseElement.classList.contains('show') : false;
-  }
-
-  formatWeekRange(week: { start: Date, end: Date }): string {
-    const startDay = week.start.getDate();
-    const startMonth = this.months[week.start.getMonth()];
-    const startYear = week.start.getFullYear();
-    const endDay = week.end.getDate();
-    const endMonth = this.months[week.end.getMonth()];
-    const endYear = week.end.getFullYear();
+  
+  calculateRowspan(assessment: any): { resourceNameRowspan: number, platformNameRowspan: number } {
     
+    const resourceName = assessment[0];
+    const platformName = assessment[1];
+    let resourceNameRowspan = 1;
+    let platformNameRowspan = 1;
+  
    
-    if (startYear !== endYear) {
-        return `Assessment for Activities from ${startDay} ${startMonth} ${startYear}  to ${endDay} ${endMonth} ${endYear}`;
-    } else {
-        return `Assessment for Activities from ${startDay} ${startMonth} ${startYear} to ${endDay} ${endMonth} ${startYear}`;
+    for (let i = 1; i < this.getCurrentPageAssessments().length; i++) {
+      if (this.getCurrentPageAssessments()[i][0] === resourceName) {
+        resourceNameRowspan++;
+      } else {
+        break; 
+      }
     }
-}
-
-
-updateAssessmentTable() {
-  if (!this.selectedYear || !this.selectedMonth) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'Please select both year and month!',
-    });
-    return;
+  
+    
+    for (let i = 1; i < this.getCurrentPageAssessments().length; i++) {
+      if (this.getCurrentPageAssessments()[i][1] === platformName) {
+        platformNameRowspan++;
+      } else {
+        break;
+      }
+    }
+  
+    return { resourceNameRowspan, platformNameRowspan };
   }
-
-  this.showAssessmentTable = false; 
-  this.fetchAssessments(); 
-}
+  
+  
 
 }

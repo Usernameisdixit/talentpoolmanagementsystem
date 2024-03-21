@@ -18,7 +18,7 @@ export class AsessmentdetailsComponent implements OnInit {
   bsConfig: Partial<BsDatepickerConfig>;
 
   activityAllocations: any[];
-  totalMarks: number = 0;
+  totalMarks: number ;
   platforms: any[] = [];
   selectedPlatform: string = '';
   selectedPlatformName: string = '';
@@ -33,7 +33,15 @@ export class AsessmentdetailsComponent implements OnInit {
   itemsPerPage: number = 10;
   assessmentDate: Date;
   detailsRetrieved: boolean = false;
+  activities: any[]; 
+  selectedActivity: any;
+  hour: any;
+  remarks: any;
+  marks: number;
 
+
+ 
+  
  
 
   constructor(private http: HttpClient, private datePipe: DatePipe, private apiService: AssessmentserviceService,private route:Router) {
@@ -45,7 +53,22 @@ export class AsessmentdetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchPlatforms();
+    this.fetchActivities();
   }
+
+  onDateChange(): void {
+    this.fetchActivities();
+  }
+
+  fetchActivities(): void {
+    if (this.fromDate && this.toDate) {
+        this.apiService.getActivities(this.fromDate, this.toDate)
+            .subscribe((data: any) => {
+                this.activities = data;
+                console.log(data);
+            });
+    }
+}
 
   fetchPlatforms(): void {
     this.apiService.getPlatforms().subscribe(
@@ -59,49 +82,42 @@ export class AsessmentdetailsComponent implements OnInit {
   }
 
   validateAndGetDetails() {
-    const formattedFromDate = this.datePipe.transform(this.fromDate, 'yyyy-MM-dd');
-    const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
-
-    if (!this.selectedPlatform || !this.selectedYear || !formattedFromDate || !formattedToDate) {
-      Swal.fire('Validation Error', 'Please provide all required information.', 'error');
+    if (!this.selectedActivity || !this.fromDate || !this.toDate) {
+      Swal.fire('Warning', 'All fields are required', 'warning');
       return;
     }
+  
+    const formattedFromDate = this.datePipe.transform(this.fromDate, 'yyyy-MM-dd');
+    const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
+  
     this.showAssessmentTable = !this.showAssessmentTable;
     if (this.showAssessmentTable) {
-      this.apiService.getAssessmentDetails(this.selectedPlatformId, this.selectedYear, formattedFromDate, formattedToDate)
+      this.apiService.getAssessmentDetails(this.selectedActivity[0], formattedFromDate, formattedToDate)
         .subscribe((data: any[]) => {
           console.log(data);
           this.assessments = data;
           this.detailsRetrieved = true;
           console.log(this.assessments);
           this.assessmentDtos = this.mapAssessmentDtos(data);
-          // Display message if no records found
+  
           if (!this.assessments || this.assessments.length === 0) {
             Swal.fire('No Records Found', 'No assessment records found for the selected criteria', 'info');
           } 
-
         });
     }
   }
+  
 
   mapAssessmentDtos(data: any[]): AssessmentDto[] {
-    debugger;
+ 
     return data.map(item => ({
-      intActivityAllocateDetId: item.activityAllocateDetId,
-      intActivityId: item.activityDetails.activity.activityId,
-      intActivityAllocateId: item.activityAllocation.activityAllocateId,
-      activityName: item.activityDetails.activity.activityName,
-      activityRefNo: item.activityDetails.activity.activityRefNo,
-      activityDescription: 'Ok',
-      activityResponsPerson1: item.activityDetails.activity.responsPerson1,
-      activityAllocateId: item.activityAllocation.activityAllocateId,
-      resourceId: item.activityAllocation.resourceId,
-      platformId: item.activityAllocation.platformId,
+      intActivityId: this.selectedActivity[0],
+      resourceId: item[0],
       assessmentDate: this.assessmentDate,
-      marks: item.activityDetails.marks,
-      totalMarks: item.activityDetails.totalMarks,
-      hour: item.activityDetails.hour,
-      remarks: item.activityDetails.remarks,
+      marks: this.marks,
+      totalMarks: this.totalMarks,
+      hour: this.hour,
+      remarks: this.remarks,
       activityFromDate:new Date(this.fromDate),
       activityToDate:new Date(this.toDate),
     }));
@@ -118,10 +134,16 @@ export class AsessmentdetailsComponent implements OnInit {
 
   submitAssessments(): void {
 
-    if (!this.assessments || this.assessments.length === 0) {
-      Swal.fire('Warning', 'No assessment details available. Please get details first.', 'warning');
+    if (!this.selectedActivity || !this.fromDate || !this.toDate) {
+      Swal.fire('Warning', 'Please Selectall required fields', 'warning');
       return;
     }
+
+    if (!this.assessmentDate) {
+      Swal.fire('Warning', 'Please Select assessment date', 'warning');
+      return;
+    }
+    
   
     Swal.fire({
       title: 'Do you want to save?',
@@ -132,14 +154,14 @@ export class AsessmentdetailsComponent implements OnInit {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-        // If user confirms, proceed with submitting assessments
+
         const assessmentDtos: AssessmentDto[] = this.mapAssessmentDtos(this.assessments);
         this.apiService.submitAssessments(assessmentDtos).subscribe(
           (response: any) => {
             if (response && response.message) {
               console.log('Assessments submitted successfully:', response.message);
               Swal.fire('Success', response.message, 'success');
-              this.route.navigateByUrl('/viewasessment');
+              //this.route.navigateByUrl('/viewasessment');
             } else {
               console.error('Unexpected response:', response);
               Swal.fire('Error', 'Failed to submit assessments', 'error');
@@ -173,12 +195,12 @@ export class AsessmentdetailsComponent implements OnInit {
 
 
 updateTotalMarks(assessment: any): void {
-debugger;
+
   const sameActivityAssessments = this.assessments.filter(a =>
     a.activityDetails.activity.activityName === assessment.activityDetails.activity.activityName
   );
 
-  // Update total marks for all assessments with the same activity
+
   sameActivityAssessments.forEach(a => {
     a.activityDetails.totalMarks = assessment.activityDetails.totalMarks;
   });
@@ -221,4 +243,44 @@ getPageNumbers(): number[] {
   return Array.from({ length: this.getTotalPages() }, (_, index) => index + 1);
 }
   
+
+
+ updateAllTotalMarks(): void {
+  this.assessments.forEach(assessment => {
+      assessment.totalMarks = this.totalMarks;
+  });
+}
+
+
+resetFields() {
+  this.fromDate = null;
+  this.toDate = null;
+  this.selectedActivity = null;
+  this.totalMarks=null;
+  this.marks=null;
+  this.remarks=null;
+}
+
+
+confirmReset() {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'This action will reset all fields. Are you sure you want to proceed?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, reset it!',
+    cancelButtonText: 'No, cancel!',
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.resetFields();
+      Swal.fire(
+        'Reset!',
+        'All fields have been reset.',
+        'success'
+      );
+    }
+  });
+}
+
 }
