@@ -13,7 +13,7 @@ export class AttendanceGenerateServiceService {
 
   private platformUrl = 'http://localhost:9999/tpms/getplatform';
   private uniResName = 'http://localhost:9999/tpms/allResourceName';
-  finaly : number;
+  finaly: number;
 
   constructor(private httpClient: HttpClient) { }
 
@@ -22,22 +22,34 @@ export class AttendanceGenerateServiceService {
     this.getPlatforms();
 
   }
-  generateAttendanceReport(attendanceDetails: any[], year: string, monthName: string, platformName: string, selectedDate: string,presentCount:number,absentCount:number): void {
+  generateAttendanceReport(attendanceDetails: any[], year: string, monthName: string, platformName: string, selectedDate: string, presentCount: number, absentCount: number, resourceValue: any): void {
     const pdf = new jsPDF();
-    
+
     // Static header content
     pdf.text('Attendance Report', 10, 10);
     const fontSize = 10;
     pdf.setFontSize(fontSize);
     const fy = `Year: ${year}`;;
     const month = `Month: ${monthName}`;
-    const platform = `Platform: ${platformName === '0' ? '' : platformName}`;
-    const reportDate = `Date: ${selectedDate === undefined ? '' : selectedDate}`;
+    if (platformName != '0') {
+      const platform = `Platform: ${platformName === '0' ? '' : platformName}`;
+      pdf.text(platform, 10, 26);
+    }
+    if (selectedDate != undefined) {
+      const reportDate = `Date: ${selectedDate === undefined ? '' : selectedDate}`;
+      pdf.text(reportDate, 100, 26);
+    }
 
     pdf.text(fy, 10, 20);
     pdf.text(month, 100, 20);
-    pdf.text(platform, 10, 26);
-    pdf.text(reportDate, 100, 26);
+    let head;
+    if (resourceValue !== '0'&& selectedDate==null) {
+      head = [['Date', 'Resource Name', 'Platform', 'First Half', 'Second Half']];
+
+    } else {
+      head = [['Resource Name', 'Platform', 'First Half', 'Second Half']];
+    }
+
 
     // Table content
     const data = [];
@@ -54,60 +66,75 @@ export class AttendanceGenerateServiceService {
       const activityDate = detail.activityDate;
 
       // Check if the date has been processed
-      if (!processedDates.has(activityDate)) {
-        const dateRowColor = processedDates.has(activityDate) ? [255, 255, 255] : ['CEEEF5'];
-        data.push([{ content: activityDate, colSpan: 5, styles: { fillColor: dateRowColor, halign: 'left' } }]);
-        processedDates.add(activityDate);
+      if (resourceValue == "0") {
+        if (selectedDate == null && !processedDates.has(activityDate)) {
+          const dateRowColor = processedDates.has(activityDate) ? [255, 255, 255] : ['CEEEF5'];
+          data.push([{ content: activityDate, colSpan: 5, styles: { fillColor: dateRowColor, halign: 'left' } }]);
+          processedDates.add(activityDate);
+        }
       }
 
 
       const firstHalfData = this.getFirstHalfData(detail);
       const secondHalfData = this.getSecondHalfData(detail);
       const dataRowColor = [255, 255, 255];
-      data.push([
-        //detail.activityDate,
-        { content: detail.resourceName, styles: { fillColor: dataRowColor } },
-        { content: detail.domain, styles: { fillColor: dataRowColor } },
-        { content: firstHalfData, styles: { fillColor: dataRowColor } },
-        { content: secondHalfData, styles: { fillColor: dataRowColor } }
-      ]);
+      const rowData = [];
+
+      if (resourceValue != 0 && selectedDate==null) {
+        rowData.push(
+          detail.activityDate,
+          { content: detail.resourceName, styles: { fillColor: dataRowColor } },
+          { content: detail.domain, styles: { fillColor: dataRowColor } },
+          { content: firstHalfData, styles: { fillColor: dataRowColor } },
+          { content: secondHalfData, styles: { fillColor: dataRowColor } }
+        );
+      } else {
+        rowData.push(
+          // detail.activityDate,
+          { content: detail.resourceName, styles: { fillColor: dataRowColor } },
+          { content: detail.domain, styles: { fillColor: dataRowColor } },
+          { content: firstHalfData, styles: { fillColor: dataRowColor } },
+          { content: secondHalfData, styles: { fillColor: dataRowColor } }
+        );
+      }
+      data.push(rowData);
     });
 
     // Create auto table
-    var finalY=null;
+    var finalY = null;
     autoTable(pdf, {
-      head: [['Resource Name', 'Platform', 'First Half', 'Second Half']],
+      head: head,
       body: data,
       didDrawPage: function (data) {
-         finalY =Math.round( data.cursor.y); 
+        finalY = Math.round(data.cursor.y);
         console.log("Final Y position after table:", finalY);
-    },
-      startY: 30,              
+      },
+      startY: 30,
       styles: {
         lineColor: [0, 0, 0],
         lineWidth: 0.5,
       },
       headStyles: {
-        fillColor: [104, 211, 245], 
+        fillColor: [104, 211, 245],
         textColor: [9, 9, 9],
         lineColor: [0, 0, 0],
-        lineWidth: 0.5, 
-        fontStyle: 'bold', 
+        lineWidth: 0.5,
+        fontStyle: 'bold',
       },
-      margin: { left: 10 }, 
+      margin: { left: 10 },
     });
     debugger;
-    if(presentCount==0 && absentCount==0){
-    
-    }else{
-    pdf.setFont("helvetica", "bold"); 
-    pdf.setFontSize(12); 
-    pdf.text(`SUMMARY`, 10, finalY + 10); 
-    pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(12); 
-    pdf.text(`Total Activity: ${presentCount + absentCount}`, 10, finalY + 20);
-    pdf.text(`Present: ${presentCount}`, 75, finalY+20);
-    pdf.text(`Absent: ${absentCount}`, 140, finalY + 20);
+    if (presentCount == 0 && absentCount == 0) {
+
+    } else {
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(12);
+      pdf.text(`SUMMARY`, 10, finalY + 10);
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(12);
+      pdf.text(`Total Activity: ${presentCount + absentCount}`, 10, finalY + 20);
+      pdf.text(`Present: ${presentCount}`, 75, finalY + 20);
+      pdf.text(`Absent: ${absentCount}`, 140, finalY + 20);
     }
     pdf.save('attendance_report.pdf');
   }
@@ -139,7 +166,7 @@ export class AttendanceGenerateServiceService {
     return this.httpClient.get<any[]>(this.platformUrl);
   }
 
-  generateAttendanceReportExcel(attendanceDetails: any[], year: string, monthName: string, platformName: string, selectedDate: string,presentCount:number,absentCount:number): void {
+  generateAttendanceReportExcel(attendanceDetails: any[], year: string, monthName: string, platformName: string, selectedDate: string, presentCount: number, absentCount: number): void {
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([], { skipHeader: true });
 
     // Set column widths
@@ -154,19 +181,19 @@ export class AttendanceGenerateServiceService {
     const headerRow = ['Resource Name', 'Platform', 'First Half', 'Second Half'];
     XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A6' });
     for (let col = 0; col < headerRow.length; col++) {
-      const cellAddress = XLSX.utils.encode_cell({ r: 5, c: col }); 
+      const cellAddress = XLSX.utils.encode_cell({ r: 5, c: col });
       ws[cellAddress].s = {
         font: { bold: true },
         fill: {
           patternType: 'solid',
-          fgColor: { rgb: '52D8F9' }, 
+          fgColor: { rgb: '52D8F9' },
         },
         alignment: {
           wrapText: true,
         },
       };
     }
-   
+
     ws['A1'] = {
       v: 'Attendance Report',
       t: 's',
@@ -227,7 +254,7 @@ export class AttendanceGenerateServiceService {
         for (let col = 0; col < 4; col++) {
           const cellAddress = XLSX.utils.encode_cell({ r: currentRowIndex, c: col });
           ws[cellAddress] = {
-            v: null,  
+            v: null,
             s: {
               font: {
                 bold: true,
@@ -254,24 +281,24 @@ export class AttendanceGenerateServiceService {
         { v: secondHalfData, s: { alignment: { wrapText: true } } },
       ]);
     });
-    if(presentCount==0 && absentCount==0){
-    
-    }else{
+    if (presentCount == 0 && absentCount == 0) {
+
+    } else {
       data.push([
-        { v: ''},
-        { v: ''}, 
-        { v: '' }, 
+        { v: '' },
+        { v: '' },
+        { v: '' },
         { v: '' }
-    ]);
-      
+      ]);
+
       data.push([
         { v: `Total Acityvity: ${presentCount + absentCount}`, s: { font: { bold: true }, alignment: { wrapText: true } } },
-        { v: '', s: { font: { bold: true }, alignment: { wrapText: true } } }, 
+        { v: '', s: { font: { bold: true }, alignment: { wrapText: true } } },
         { v: `Present: ${presentCount}`, s: { font: { bold: true }, alignment: { wrapText: true } } },
         { v: `Present: ${absentCount}`, s: { font: { bold: true }, alignment: { wrapText: true } } },
-    ]);
+      ]);
     }
-    
+
 
     // Add data to worksheet
     XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A7' });

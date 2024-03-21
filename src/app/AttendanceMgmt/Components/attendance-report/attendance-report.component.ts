@@ -130,7 +130,7 @@ export class AttendanceReportComponent {
           this.totalAbsent=0;
             
           }
-            this.attendanceGeneratedService.generateAttendanceReport(data,this.year, this.monthName, this.platform, formattedDate?.toLocaleString(),this.presentResult,this.absentResult);
+            this.attendanceGeneratedService.generateAttendanceReport(data,this.year, this.monthName, this.platform, formattedDate?.toLocaleString(),this.presentResult,this.absentResult,this.resourceValue);
             // Swal.fire({
             //   icon: 'success',
             //   title: 'PDF Generated',

@@ -28,7 +28,7 @@ export class ActivityReportServiceService {
     return this.httpClient.post<any>(url, params, { headers });
   }
 
-  generateActivityReport(activityData: any[],year: string, monthName: string, platformName: string, selectedDate: string): void {
+  generateActivityReport(activityData: any[],year: string, monthName: string, platformName: string, selectedDate: string,resourceValue:any): void {
     const pdf = new jsPDF();
 
     // Static header content
@@ -38,15 +38,26 @@ export class ActivityReportServiceService {
      pdf.setFontSize(fontSize);
      const fy = `Year: ${year}`;  ;
      const month = `Month: ${monthName}`;
-     const platform = `Platform: ${platformName==='0'?'':platformName}`;
-     const reportDate = `Date: ${selectedDate===undefined?'':selectedDate}`;
+     if (platformName != '0') {
+      const platform = `Platform: ${platformName === '0' ? '' : platformName}`;
+      pdf.text(platform, 10, 26);
+    }
+    if (selectedDate != undefined) {
+      const reportDate = `Date: ${selectedDate === undefined ? '' : selectedDate}`;
+      pdf.text(reportDate, 100, 26);
+    }
      
      // Add additional information
      pdf.text(fy, 10, 20);
      pdf.text(month, 100, 20); 
-     pdf.text(platform , 10, 26);
-     pdf.text(reportDate, 100, 26);
+     
+     let head;
+    if (resourceValue !== '0'&& selectedDate==null) {
+      head = [['Date', 'Resource Name', 'Platform', 'First Half', 'Second Half']];
 
+    } else {
+      head = [['Resource Name', 'Platform', 'First Half', 'Second Half']];
+    }
     // Table content
     const data = [];
     const processedDates = new Set<string>();
@@ -62,28 +73,43 @@ export class ActivityReportServiceService {
       const activityDate = detail.activityDate;
 
       // Check if the date has been processed
-      if (!processedDates.has(activityDate)) {
+      if (resourceValue == "0") {
+      if (selectedDate == null && !processedDates.has(activityDate)) {
         const dateRowColor = processedDates.has(activityDate) ? [255, 255, 255] :['CEEEF5'];
         data.push([{ content: activityDate, colSpan: 5, styles: { fillColor: dateRowColor, halign: 'left' } }]);
         processedDates.add(activityDate);
       }
+    }
 
 
       const firstHalfData = this.getFirstHalfData(detail);
       const secondHalfData = this.getSecondHalfData(detail);
       const dataRowColor = [255, 255, 255];
-      data.push([
-        //detail.activityDate,
-        { content: detail.resourceName, styles: { fillColor: dataRowColor } },
-        { content: detail.domain, styles: { fillColor: dataRowColor } },
-        { content: firstHalfData, styles: { fillColor: dataRowColor } },
-        { content: secondHalfData, styles: { fillColor: dataRowColor } }
-      ]);
+      const rowData = [];
+
+      if (resourceValue != 0 && selectedDate==null) {
+        rowData.push(
+          detail.activityDate,
+          { content: detail.resourceName, styles: { fillColor: dataRowColor } },
+          { content: detail.domain, styles: { fillColor: dataRowColor } },
+          { content: firstHalfData, styles: { fillColor: dataRowColor } },
+          { content: secondHalfData, styles: { fillColor: dataRowColor } }
+        );
+      } else {
+        rowData.push(
+          // detail.activityDate,
+          { content: detail.resourceName, styles: { fillColor: dataRowColor } },
+          { content: detail.domain, styles: { fillColor: dataRowColor } },
+          { content: firstHalfData, styles: { fillColor: dataRowColor } },
+          { content: secondHalfData, styles: { fillColor: dataRowColor } }
+        );
+      }
+      data.push(rowData);
     });
 
     // Create auto table
     autoTable(pdf, {
-      head: [['Resource Name', 'Platform', 'First Half', 'Second Half']],
+      head: head,
       body: data,
       startY: 30,              
       styles: {
