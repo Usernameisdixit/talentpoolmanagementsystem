@@ -303,6 +303,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 							attendance.put("isPresent", rs.getString("isPresent"));
 							attendance.put("attendanceStatus", rs.getString("attendanceStatus"));
 							attendance.put("activityDate", rs.getString("activityDate"));
+							attendance.put("resourceCode", rs.getString("resourceCode"));
 							attendanceDetails.add(attendance);
 						}
 					}
@@ -336,6 +337,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 						resource.put("domain", mapObject.get("platform"));
 						resource.put("activityAllocateId", mapObject.get("activityAllocateId"));
 						resource.put("activityDate", mapObject.get("activityDate"));
+						resource.put("resourceCode", mapObject.get("resourceCode"));
 					}
 					JSONObject detailObject = new JSONObject();
 					detailObject.put("activityDetails", mapObject.get("activityDetails"));

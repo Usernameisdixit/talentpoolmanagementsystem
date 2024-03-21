@@ -135,6 +135,7 @@ public class ActivityServiceImpl implements ActivityService {
 							attendance.put("activityAllocateId", rs.getString("activityAllocateId"));
 							attendance.put("activityAllocateDetId", rs.getString("activityAllocateDetId"));
 							attendance.put("activityDate", rs.getString("activityDate"));
+							attendance.put("resourceCode", rs.getString("resourceCode"));
 							attendanceDetails.add(attendance);
 						}
 					}
@@ -169,6 +170,7 @@ public class ActivityServiceImpl implements ActivityService {
 							resource.put("domain", mapObject.get("platform"));
 							resource.put("activityAllocateId", mapObject.get("activityAllocateId"));
 							resource.put("activityDate", mapObject.get("activityDate"));
+							resource.put("resourceCode", mapObject.get("resourceCode"));
 						}
 						JSONObject detailObject = new JSONObject();
 						detailObject.put("activityDetails", mapObject.get("activityDetails"));
