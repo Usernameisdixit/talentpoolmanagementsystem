@@ -25,9 +25,7 @@ export class ActivityListComponent implements OnInit {
   title = '';
   message: any;
   pagedActivities: Activity[] = [];
-  pageSize = 3; // Number of items per page
-  currentPage = 1;
-  page=1
+  
 
 
   constructor(private activityService: ActivityService,private router: Router) {}
@@ -41,7 +39,7 @@ export class ActivityListComponent implements OnInit {
       next: (data) => {
         this.activities = data;
         console.log('Retrieved activities:', this.activities); 
-        this.setPage(this.currentPage);
+       // this.setPage(this.currentPage);
 
         console.log(data);
       },
@@ -50,18 +48,18 @@ export class ActivityListComponent implements OnInit {
   }
 
 
-  setPage(pageIndex: number): void {
-    const startIndex = (pageIndex - 1) * this.pageSize;
-    const endIndex = Math.min(startIndex + this.pageSize, this.activities.length);
-    this.pagedActivities = this.activities.slice(startIndex, endIndex);
-  }
+  // setPage(pageIndex: number): void {
+  //   const startIndex = (pageIndex - 1) * this.pageSize;
+  //   const endIndex = Math.min(startIndex + this.pageSize, this.activities.length);
+  //   this.pagedActivities = this.activities.slice(startIndex, endIndex);
+  // }
 
 
-  onPageChange(event: PageEvent): void {
+  // onPageChange(event: PageEvent): void {
     
-    this.currentPage = event.pageIndex + 1;
-    this.setPage(this.currentPage); 
-  }
+  //   this.currentPage = event.pageIndex + 1;
+  //   this.setPage(this.currentPage); 
+  // }
   
 
   getActivity(id: string): void {
@@ -229,4 +227,21 @@ private saveAsExcelFile(buffer: any, fileName: string): void {
   //     error: (e) => console.error(e)
   //   });
   // }
+
+   // for pagination
+   indexNumber : number = 0;
+   pageno : number = 1;
+   tableSize : number = 10;
+   count : number = 0;
+   pageSizes = [10,20,30,40,50];
+ 
+ //pagination functionality
+ getTableDataChange(event : any){
+   
+   this.pageno = event;
+   this.indexNumber = (this.pageno - 1) * this.tableSize;
+   console.log(this.indexNumber);
+   
+   this.retrieveActivities();
+ }
 }
