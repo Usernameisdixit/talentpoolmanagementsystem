@@ -48,8 +48,23 @@
 
             <!-- Activity Management -->
             <li>
-                <a routerLink="/activity" class="nav-link"><i class="fas fa-tasks"></i> Activity Management</a>
+                <a href="#submenu6" data-bs-toggle="collapse" class="nav-link dropdown align-middle dropdown-toggle sidebar-navlink">
+                    <i class="fas fa-tasks"></i> Activity Management 
+                </a>
+                <ul class="collapse" id="submenu6" data-bs-parent="#menu">
+                    <li>
+                        <a routerLink="/activity" class="nav-link"><i class="fas fa-user-tie"></i> Activity Allocation</a>
+                    </li>
+                    <li>
+                        <a routerLink="/bulk-allocation" class="nav-link"><i class="fas fa-users"></i> Activity Bulk Allocation</a>
+                    </li>
+                </ul>
             </li>
+
+
+            <!-- <li>
+                <a routerLink="/activity" class="nav-link"><i class="fas fa-tasks"></i> Activity Management</a>
+            </li> -->
 
             <!-- Attendance Management -->
             <li>

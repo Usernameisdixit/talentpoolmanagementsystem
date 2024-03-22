@@ -70,6 +70,7 @@ import { EditAssessmentComponent } from './AssessmentMgmt/Components/edit-assess
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AttendanceNewComponent } from './AttendanceMgmt/Components/attendance-new/attendance-new.component';
 import { JwtInterceptor } from './JwtInterceptor.service';
+import { BulkAllocationComponent } from './ActivityAllocation/Components/bulk-allocation/bulk-allocation.component';
 
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
@@ -109,7 +110,7 @@ defineLocale('en-gb', enGbLocale); //
     ActivityNavbarComponent,
     EditAssessmentComponent,
     AttendanceNewComponent,
-
+    BulkAllocationComponent
   ],
   imports: [
     BrowserModule,
