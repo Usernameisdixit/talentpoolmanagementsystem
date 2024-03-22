@@ -7,3 +7,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .space {
     margin-right: 10px;
 }
+
+.pdf-icon {
+    color: #ff5733; /* PDF icon color */
+  }
+  
+  .excel-icon {
+    color: #2e8b57; /* Excel icon color */
+  }

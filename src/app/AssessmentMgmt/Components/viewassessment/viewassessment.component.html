@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-md-6 col-lg-3">
         <div class="form-group">
-          <label for="assessmentDate">Assessment Date:<span>*</span></label>
+          <label for="assessmentDate">Assessment Date:</label>
           <select id="assessmentDate" class="form-control" [(ngModel)]="assessmentDate" (change)="onDateSelected()">
             <option *ngFor="let date of assessmentDateArr" [ngValue]="date">
               {{ date | date:'dd-MMM-yyyy' }}

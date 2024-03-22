@@ -28,7 +28,9 @@
             <span *ngIf="isUploading" class="spinner"></span>
             Upload 
         </button>
-        <button class="btn btn-danger space" type="reset"> Reset </button>
+        <button (click)="downloadTemplate()" class="btn btn-primary space">
+            Download Template
+        </button>
     </div>
     </div>
 </body>

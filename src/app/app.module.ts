@@ -70,6 +70,7 @@ import { EditAssessmentComponent } from './AssessmentMgmt/Components/edit-assess
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AttendanceNewComponent } from './AttendanceMgmt/Components/attendance-new/attendance-new.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ResourcehistoryComponent } from './ResourceMgmt/Components/resourcehistory/resourcehistory.component';
 
 
 
@@ -111,6 +112,7 @@ defineLocale('en-gb', enGbLocale); //
     ActivityNavbarComponent,
     EditAssessmentComponent,
     AttendanceNewComponent,
+    ResourcehistoryComponent,
 
   ],
   imports: [

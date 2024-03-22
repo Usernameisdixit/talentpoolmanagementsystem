@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-file-upload',
   templateUrl: './file-upload.component.html',
@@ -29,6 +30,8 @@ export class FileUploadComponent {
   onFileSelected(event): void {
     this.selectedFile = event.target.files[0];
   }
+
+ 
 
   onUpload(): void {
 
@@ -106,6 +109,22 @@ export class FileUploadComponent {
         this.selectedFile = null;
         this.allocationDate = null;
         this.isUploading = false;
+      });
+  }
+
+
+  downloadTemplate(): void {
+    const templateURL = 'http://localhost:9999/tpms/downloadTemplate'; 
+    this.http.get(templateURL, { responseType: 'blob' })
+      .subscribe((response: Blob) => {
+        const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'template.xlsx'; // Specify the filename for the downloaded file
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
       });
   }
 }
