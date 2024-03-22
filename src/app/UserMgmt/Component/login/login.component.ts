@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
             else{
               if (status === 'success') {
                 this.authService.isLoggedIn();
-                this.router.navigate(['/dashboard']);
+                this.router.navigate(['dashboard']);
                 this.loginService.getMessage("user logged in");
               } else {
                 this.errorMessage = 'Invalid credentials. Please try again.';
