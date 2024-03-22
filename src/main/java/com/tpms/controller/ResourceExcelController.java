@@ -134,7 +134,7 @@ public class ResourceExcelController {
 	        for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
 	            Row row = sheet.getRow(rowIndex);
 	            if (row != null) {
-	                int columnIndex = 3;
+	                int columnIndex = 4;
 	            
 	                    Cell cell = row.getCell(columnIndex);
 	                    if (cell != null && cell.getCellTypeEnum() == CellType.STRING) {

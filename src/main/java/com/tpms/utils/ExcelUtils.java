@@ -74,39 +74,39 @@ public static List<ResourcePoolHistory> convertExceltoListofEmployee(InputStream
 			
 			
 			switch(cid) {
-			case 0: 
+			case 1: 
 			//	ExcelEmp.setId((int)cell.getNumericCellValue());
 				tbl_resource_pool_history.setResourceCode(cellValue);
 			break;
-			case 1: 
+			case 2: 
 				//ExcelEmp.setEmp_name(cell.getStringCellValue());
 				tbl_resource_pool_history.setResourceName(cellValue);
 			break;
-			case 2: 
+			case 3: 
 				//ExcelEmp.setEmp_name(cell.getStringCellValue());
 				tbl_resource_pool_history.setDesignation(cellValue);
 			break;
-			case 3: 
+			case 4: 
 				//ExcelEmp.setEmp_email(cell.getStringCellValue());
 				tbl_resource_pool_history.setPlatform(cellValue);
 			break;
-			case 4:
+			case 5:
 				//ExcelEmp.setEmp_phone(cell.getStringCellValue().toString());
 				tbl_resource_pool_history.setEmail(cellValue);
 			break;
-			case 5: 
+			case 6: 
 				//ExcelEmp.setEmp_location(cell.getStringCellValue())
 				tbl_resource_pool_history.setPhoneNo(cellValue);
 			break;
-			case 6: 
+			case 7: 
 				//ExcelEmp.setEmp_location(cell.getStringCellValue())
 				tbl_resource_pool_history.setLocation(cellValue);
 			break;
-			case 7: 
+			case 8: 
 				//ExcelEmp.setEmp_location(cell.getStringCellValue())
 				tbl_resource_pool_history.setEngagementPlan(cellValue);
 			break;
-			case 8: 
+			case 9: 
 				//ExcelEmp.setEmp_location(cell.getStringCellValue())
 				tbl_resource_pool_history.setExperience(cellValue);
 			
