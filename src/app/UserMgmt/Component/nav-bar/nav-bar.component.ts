@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoginService } from '../../Service/login.service';  // Update the path
 import { User } from 'src/app/Model/user';
 import { AuthService } from 'src/app/auth.service';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-nav-bar',
   templateUrl: './nav-bar.component.html',
@@ -15,22 +16,28 @@ export class NavBarComponent implements OnInit{
   }
 userName: any;
   currentDate: Date;
-  constructor(private loginService: LoginService,public authService: AuthService) { 
+  isLoggedIn: boolean;
+  fullName: string;
+  formattedDate: string;
+  constructor(private loginService: LoginService,public authService: AuthService,private datePipe: DatePipe) { 
     this.users=[]
   }
   errormessage: any;
   successMessage: any;
   ngOnInit(): void {
+    //this.isLoggedIn=this.authService.isLoggedIn();
     //throw new Error('Method not implemented.');
     this.currentDate = new Date();
     // Update the currentDate every second
     setInterval(() => {
       this.currentDate = new Date();
+      this.formattedDate = this.datePipe.transform(this.currentDate, 'EEE MMM dd yyyy HH:mm:ss');
+
+      this.userName=this.authService.getUsername();
+      this.fullName=this.authService.getUserFullname();
     }, 1000);
-    this.userName=this.authService.getUsername();
   }
   logout() {
-    this.authService.clearAuthentication();
     localStorage.clear();
 }
 
