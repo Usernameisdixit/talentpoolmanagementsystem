@@ -9,25 +9,22 @@ export class AuthService {
   constructor() { }
 
   // Method to set authentication status in session storage
-  setAuthenticated(status: boolean): void {
-    debugger;
-    sessionStorage.setItem('authenticated', status ? 'true' : 'false');
-  }
-
-  // Method to check if the user is authenticated
-  isAuthenticated(): boolean {
-    
-    return sessionStorage.getItem('authenticated') === 'true';
-    
-  }
-
-  // Method to clear authentication status from session storage (logout)
-  clearAuthentication(): void {
-    sessionStorage.removeItem('authenticated');
+  isLoggedIn(){
+    // debugger;
+    let token=localStorage.getItem("token");
+    if(token==undefined || token==='' || token==null){
+      return false;
+    }else{
+      return true;
+    }
   }
 
   getUsername(): string | null {
     return localStorage.getItem('userName');
   }
+  getUserFullname(): string | null {
+    return localStorage.getItem('userFullName');
+  }
+
 
 }

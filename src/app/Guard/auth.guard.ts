@@ -1,16 +1,18 @@
 
-import { CanActivateFn } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
+import { LoginService } from '../UserMgmt/Service/login.service';
+import { inject } from '@angular/core';
+import { AuthService } from '../auth.service';
 
 
 
 export const authGuard: CanActivateFn = (route, state) => {
-  const isAuthenticated = sessionStorage.getItem('authenticated') === 'true';
-
-  if (!isAuthenticated) {
-    //route.url // Redirect to login page if not authenticated
-    return false; // Prevent access to the guarded route
+  const authService = inject(AuthService);
+  const router = inject(Router);
+  if(authService.isLoggedIn())
+  {    
+    return true;
   }
-
-  return true; // Allow access to the guarded route
-
+  router.navigate(['login']);
+  return false;
 };
