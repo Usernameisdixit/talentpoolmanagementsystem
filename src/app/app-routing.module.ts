@@ -36,7 +36,7 @@ import { AttendanceNewComponent } from './AttendanceMgmt/Components/attendance-n
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login' },
+  // { path: '**', redirectTo: '/login' },
   { path: 'login', component: LoginComponent },
   { path: 'forgotPassword', component: ForgotpasswordComponent },
   { path: 'restpassword/:email', component: RestpasswordComponent },
