@@ -35,10 +35,10 @@
                         <!-- <h4>{{attendanceDetails | json}}</h4> -->
                         <div *ngIf="attendanceDetails.length > 0 && attendanceDetails[0]?.firstHalf.length > 0" class="activity-details">
                             <span *ngIf="attendanceDetails[0]?.firstHalf[0]?.activityFor === '1'">
-                                <b>Activity: </b> First Half <b>Time: </b> {{ attendanceDetails[0]?.firstHalf[0]?.fromHours }} to {{ attendanceDetails[0]?.firstHalf[0]?.toHours }}
+                                <b>Activity For: </b> First Half &nbsp;&nbsp; <b>Time: </b> {{ attendanceDetails[0]?.firstHalf[0]?.fromHours }} to {{ attendanceDetails[0]?.firstHalf[0]?.toHours }}
                             </span>
                             <span *ngIf="attendanceDetails[0]?.firstHalf[0]?.activityFor === '2'">
-                                <b>Activity: </b> Second Half <b>Time: </b> {{ attendanceDetails[0]?.firstHalf[0]?.fromHours }} to {{ attendanceDetails[0]?.firstHalf[0]?.toHours }}
+                                <b>Activity: </b> Second Half &nbsp;&nbsp; <b>Time: </b> {{ attendanceDetails[0]?.firstHalf[0]?.fromHours }} to {{ attendanceDetails[0]?.firstHalf[0]?.toHours }}
                             </span>
                         </div>
                         
