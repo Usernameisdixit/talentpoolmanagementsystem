@@ -81,6 +81,9 @@ public class AssessmentDetailsController {
         }
     }
 
+    
+
+
  
     
     @PostMapping("/assessments")
@@ -119,16 +122,14 @@ public class AssessmentDetailsController {
 
     @PutMapping("/updateAssessment/{id}")
     public ResponseEntity<?> updateAssessment(@PathVariable Integer id, @RequestBody AssessmentDto assessmentDto) {
-     
-            assessmentService.updateAssessment(id, assessmentDto);
-            return ResponseEntity.ok().build();
-     
+    	
+          assessmentService.updateAssessment(id, assessmentDto);
+          return ResponseEntity.ok().build();  
       
     }
     
     @GetMapping("/getActivities")
-    public ResponseEntity<List<Object[]>> getActDetails(@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {
-      
+    public ResponseEntity<List<Object[]>> getActDetails(@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate) {  
         List<Object[]> activities = null; 
 
         try {
@@ -143,7 +144,11 @@ public class AssessmentDetailsController {
 
         return ResponseEntity.ok().body(activities);
     }
-
+    
+    @GetMapping("/assessmentDates")
+    public List<Date> getAssessmentDates() {
+        return assessmentRepository.findAllAsessmentDate();
+    }
 
     
 }

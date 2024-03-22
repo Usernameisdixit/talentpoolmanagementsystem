@@ -244,6 +244,7 @@ public class ResourcePoolServiceImpl {
 	public void updateBitDeletedFlagByFalse(Integer id) {
 		tbl_resource_pool_Repository.updateBitDeletedFlagByFalse(id);
 	}
+
 	
 	
 
