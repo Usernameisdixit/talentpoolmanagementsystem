@@ -1,12 +1,16 @@
 package com.tpms.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.io.OutputStream;
-
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
@@ -15,22 +19,28 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 
+import org.springframework.core.io.InputStreamResource;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,6 +51,7 @@ import com.tpms.entity.ResourcePool;
 import com.tpms.repository.PlatformRepository;
 import com.tpms.service.impl.ExcelUploadEmployeeServiceImpl;
 import com.tpms.service.impl.ResourcePoolServiceImpl;
+
 import com.tpms.utils.ExcelUtils;
 
 
@@ -59,16 +70,19 @@ public class ResourceExcelController {
 	private ExcelUploadEmployeeServiceImpl excelempservice;
 	
 	@Autowired
-	private ResourcePoolServiceImpl tbl_resource_pool_Service;
+	private ResourcePoolServiceImpl resourcepoolserviceimpl;
 	
 	@Value("${file.directory}")
 	private String fileDirectory;
+	
+	
 	
 	
 	@PostMapping("/upload")
 	public ResponseEntity<?> UploadExcel (@RequestParam("file") MultipartFile file,@RequestParam("allocationDate") LocalDate allocationDate) throws IOException{
 		byte[] fileContent = file.getBytes();
 		
+		 createDirectoryIfNotExists(fileDirectory);
 		String renamedFileName = renameFile(fileContent,file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf('.')));
 		 
 		 processExcelData(file); 
@@ -77,7 +91,7 @@ public class ResourceExcelController {
 		
 		if(ExcelUtils.CheckExcelFormat(file)) {
 			this.excelempservice.save(file,allocationDate);
-			this.tbl_resource_pool_Service.save(file,allocationDate);
+			this.resourcepoolserviceimpl.save(file,allocationDate);
 			this.excelempservice.insertFile(renamedFileName, allocationDate);
 			return ResponseEntity.ok().build();
 		}
@@ -86,13 +100,21 @@ public class ResourceExcelController {
 	}
 	
 	
+	private void createDirectoryIfNotExists(String directoryPath) throws IOException {
+	    Path path = Paths.get(directoryPath);
+	    if (!Files.exists(path)) {
+	        Files.createDirectories(path);
+	    }
+	
+	}
+	
 	public String renameFile(byte[] fileContent, String fileExtension) {
 
        
         SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
         String formattedDate = dateFormat.format(new Date());
         
-        String uniqueFileName = "Resource_File_Dt" + formattedDate + fileExtension;
+        String uniqueFileName = "Resource_File_" + formattedDate + fileExtension;
 
         try (OutputStream outputStream = new FileOutputStream(fileDirectory + File.separator + uniqueFileName)) {
 
@@ -112,7 +134,7 @@ public class ResourceExcelController {
 	        for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
 	            Row row = sheet.getRow(rowIndex);
 	            if (row != null) {
-	                int columnIndex = 4;
+	                int columnIndex = 3;
 	            
 	                    Cell cell = row.getCell(columnIndex);
 	                    if (cell != null && cell.getCellTypeEnum() == CellType.STRING) {
@@ -131,7 +153,7 @@ public class ResourceExcelController {
 	    	
 	    	 String platformCode = technologyName.substring(0, 2);
 	        if (platformRepository.findByPlatform(technologyName) != null) {
-	            System.out.println("Duplicate technology: " + technologyName);
+	           
 	            return;
 	        }
 
@@ -147,16 +169,17 @@ public class ResourceExcelController {
 	    
 		@GetMapping("/emp/uploadedData")
 		public List<ResourcePool> gettbl_resource_pool(){
-			return this.tbl_resource_pool_Service.getAllEmploye();
+			return this.resourcepoolserviceimpl.getAllEmploye();
 			
 		}
-		 
+		
+	
 	   
 		//Get Particular Resource From Talent Resource Pool
 		@GetMapping("/emp/talent/{id}")
 		public ResourcePool getTalentById(@PathVariable Integer id){ 
 			System.out.println(id);
-			return tbl_resource_pool_Service.getTalentById(id);
+			return resourcepoolserviceimpl.getTalentById(id);
 			//return new ResponseEntity<>(msg, HttpStatus.OK);
 		}
 		
@@ -165,7 +188,7 @@ public class ResourceExcelController {
 		@PostMapping("/emp/updatetalent")
 		public ResponseEntity<String> updateEmployee (@RequestBody ResourcePool emp){ 
 			
-			String msg =tbl_resource_pool_Service.addorUpdateEmployee(emp);
+			String msg =resourcepoolserviceimpl.addorUpdateEmployee(emp);
 			return new ResponseEntity<>(msg, HttpStatus.OK);
 		}
 	    
@@ -173,7 +196,7 @@ public class ResourceExcelController {
 		@DeleteMapping("/emp/talent/{id}")
 		public ResponseEntity<String> deleteEmployee (@PathVariable Integer id){ 
 		
-			String msg=tbl_resource_pool_Service.delete(id);
+			String msg=resourcepoolserviceimpl.delete(id);
 			return new ResponseEntity<>(msg, HttpStatus.OK);
 		}
 	    
@@ -181,11 +204,11 @@ public class ResourceExcelController {
 		@PostMapping("/emp/delete/talent/{id}")
 		public ResponseEntity<Map<String, Object>> deleteResource(@PathVariable(name = "id") Integer id) {
 
-			Byte result = tbl_resource_pool_Service.getDeletedFlagByRoleId(id);
+			Byte result = resourcepoolserviceimpl.getDeletedFlagByRoleId(id);
 			if (result == 1) {
-				tbl_resource_pool_Service.updateBitDeletedFlagByFalse(id);
+				resourcepoolserviceimpl.updateBitDeletedFlagByFalse(id);
 			} else {
-				tbl_resource_pool_Service.updateBitDeletedFlagById(id);
+				resourcepoolserviceimpl.updateBitDeletedFlagById(id);
 			}
 
 			Map<String, Object> response = new HashMap<>();
@@ -202,7 +225,55 @@ public class ResourceExcelController {
 	
 		
 		
-		
+
+		@GetMapping("/downloadTemplate")
+	    public ResponseEntity<InputStreamResource> downloadExcelTemplate() {
+	        try {
+	           
+	            Workbook workbook = new XSSFWorkbook();
+	            Sheet sheet = workbook.createSheet("EmployeeData");
+
+	            Font boldFont = workbook.createFont();
+	            boldFont.setBold(true);
+	            CellStyle boldStyle = workbook.createCellStyle();
+	            boldStyle.setFont(boldFont);
+	            
+	            
+	            Row headerRow = sheet.createRow(0);
+	            String[] headers = {"Employee Code", "Employee Name", "Designation", "Technology", "Email", "PhoneNo", "Location", "Engagement Plan", "Exp"};
+	            for (int i = 0; i < headers.length; i++) {
+	                Cell cell = headerRow.createCell(i);
+	                cell.setCellValue(headers[i]);
+	            }
+
+	            
+	            for (int i = 0; i < headers.length; i++) {
+	                sheet.autoSizeColumn(i);
+	            }
+
+	            
+	            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	            workbook.write(outputStream);
+	            byte[] templateBytes = outputStream.toByteArray();
+
+	            
+	            ByteArrayInputStream inputStream = new ByteArrayInputStream(templateBytes);
+	            InputStreamResource resource = new InputStreamResource(inputStream);
+
+	           
+	            HttpHeaders headersResponse = new HttpHeaders();
+	            headersResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+	            headersResponse.setContentDispositionFormData("attachment", "template.xlsx");
+
+	            
+	            return ResponseEntity.ok()
+	                    .headers(headersResponse)
+	                    .body(resource);
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            return ResponseEntity.status(500).build();
+	        }
+	    }
 		
 		
 	    
