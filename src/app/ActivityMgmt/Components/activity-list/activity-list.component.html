@@ -17,11 +17,11 @@
       <thead>
         <tr>
           <th>SLNo.</th>
-          <th>Activity RefNo</th>
+          <th style="width: 130px;">Activity RefNo</th>
           <th>Activity Name</th>
           <th>Activity Description</th>
-          <th>Activity Response Person1</th>
-          <th>Activity Response Person2</th>
+          <th style="width: 200px;">Activity Response Person1</th>
+          <th style="width: 200px;">Activity Response Person2</th>
           <th>Status</th>
           <th>Action</th>
         </tr>
@@ -44,10 +44,9 @@
           </td>
           <td>
             <div class="d-flex justify-content-between">
-              <button class="m-1 btn btn-sm btn-primary" (click)="editActivity(activity.activityId)">Edit</button>
-              <button class="m-1 btn btn-sm btn-danger" (click)="toggleDeletedFlag(activity)">
-                {{ activity.deletedFlag ? 'Activate' : 'Inactivate' }}
-              </button>
+              <button class="m-1 btn btn-sm btn-primary" (click)="editActivity(activity.activityId)"><i class="fas fa-edit"></i></button>
+              <button *ngIf="!activity.deletedFlag"  class="m-1 btn btn-sm btn-danger" (click)="toggleDeletedFlag(activity)"> <i class="fa-solid fa-check"></i></button>
+              <button *ngIf="activity.deletedFlag"  class="m-1 btn btn-sm btn-danger" (click)="toggleDeletedFlag(activity)"> <i class="fa-solid fa-xmark"></i></button>
             </div>
           </td>
         </tr>

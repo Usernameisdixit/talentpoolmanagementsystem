@@ -44,17 +44,17 @@
               <td>{{user.role.roleName}}</td>
               <td>{{user.email}}</td>
               <td>{{user.phoneNo}}</td>
-              <td id="toggleButton" *ngIf="user.deletedFlag" class="text-danger">InActive</td>
-              <td id="toggleButton" *ngIf="!user.deletedFlag" class="text-success">Active</td>
+              <td id="toggleButton" *ngIf="user.deletedFlag" class="text-danger text-bold">InActive</td>
+              <td id="toggleButton" *ngIf="!user.deletedFlag" class="text-success text-bold">Active</td>
               <td>
                 <div class="btn-group">
-                  <button *ngIf="!user.deletedFlag" type="button" class="btn btn-primary" (click)="editUser(user.userId);">Edit</button>
-                  <button *ngIf="user.deletedFlag" type="button" class="btn btn-primary" disabled>Edit</button>
+                  <button *ngIf="!user.deletedFlag" type="button" class="btn btn-primary btn-sm" (click)="editUser(user.userId);"><i class="fas fa-edit"></i></button>
+                  <button *ngIf="user.deletedFlag" type="button" class="btn btn-primary btn-sm" disabled><i class="fas fa-edit"></i></button>
                   &nbsp;
               </div>
               <div class="btn-group">
-                <button *ngIf="user.deletedFlag" class="btn btn-danger" (click)="deleteUser(user.userId,!user.deletedFlag);">Active</button>
-                <button *ngIf="!user.deletedFlag" class="btn btn-danger" (click)="deleteUser(user.userId,!user.deletedFlag);">InActive</button>
+                <button *ngIf="user.deletedFlag" class="btn btn-danger btn-sm" (click)="deleteUser(user.userId,!user.deletedFlag);"><i class="fa-solid fa-check"></i></button>
+                <button *ngIf="!user.deletedFlag" class="btn btn-danger btn-sm" (click)="deleteUser(user.userId,!user.deletedFlag);"><i class="fa-solid fa-xmark"></i></button>
             </div>
               </td>
               
