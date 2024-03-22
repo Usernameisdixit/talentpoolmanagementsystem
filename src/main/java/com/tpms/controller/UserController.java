@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,8 +45,14 @@ public class UserController {
 	
 	@PostMapping("/addUser")
 	public ResponseEntity<User> saveUser(@RequestBody UserDto user){
-		user.setPassword(password);
-		User userDetail=userService.saveUser(user);
+		User userDetail=null;
+		try {
+		  user.setPassword(password);
+		   userDetail=userService.saveUser(user);
+		  
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} 
 		
 		return ResponseEntity.ok().body(userDetail);
 	}

@@ -16,7 +16,6 @@ import javax.sql.DataSource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Limit;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -90,7 +89,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
 
-	public JSONArray getActivityReportData(String platform, String selectedDate, String year, String month) {
+	public JSONArray getActivityReportData(String platform, String selectedDate, String year, String month, String resourceValue) {
 		JSONArray data = new JSONArray();
 		 SimpleDateFormat inputFormat = new SimpleDateFormat("M/d/yyyy, h:mm:ss a");
 	     SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -105,7 +104,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 			e1.printStackTrace();
 		}
-		String sqls = "{call TPMS_ATTENDANCE(?,?,?,?,?)}";
+		String sqls = "{call TPMS_ATTENDANCE(?,?,?,?,?,?,?)}";
 		List<Map<String, Object>> attendanceDetails = new ArrayList<>();
 		
 		DataSource ds = jdbcTemplate.getDataSource();
@@ -116,6 +115,8 @@ public class ActivityServiceImpl implements ActivityService {
 				attendanceQuerey.setString(3, formattedDate);
 				attendanceQuerey.setString(4, year);
 				attendanceQuerey.setString(5, month);
+				attendanceQuerey.setString(6,resourceValue);
+				attendanceQuerey.setInt(7,0);
 
 				try (ResultSet rs = attendanceQuerey.executeQuery();) {
 					if (rs != null) {
@@ -134,6 +135,7 @@ public class ActivityServiceImpl implements ActivityService {
 							attendance.put("activityAllocateId", rs.getString("activityAllocateId"));
 							attendance.put("activityAllocateDetId", rs.getString("activityAllocateDetId"));
 							attendance.put("activityDate", rs.getString("activityDate"));
+							attendance.put("resourceCode", rs.getString("resourceCode"));
 							attendanceDetails.add(attendance);
 						}
 					}
@@ -141,19 +143,23 @@ public class ActivityServiceImpl implements ActivityService {
 				}
 				try {
 					Integer resourceId = 0;
+					String activityDate="";
 					JSONObject resource = new JSONObject();
 					JSONArray firstHalfArray = new JSONArray();
 					JSONArray secondHalfArray = new JSONArray();
 					for (Map<String, Object> mapObject : attendanceDetails) {
 						Integer mapResourceId = Integer.valueOf((String) mapObject.get("resourceId"));
 						Integer intActivityFor = Integer.valueOf((String) mapObject.get("activityFor"));
+						String checkDate =  (String) mapObject.get("activityDate");
 						if (resourceId == 0) {
 							resourceId = mapResourceId;
-						} else if (resourceId != mapResourceId) {
+							activityDate=checkDate;
+						} else if (resourceId != mapResourceId || !(checkDate.equalsIgnoreCase(activityDate))) {
 							resource.put("firstHalf", firstHalfArray);
 							resource.put("secondHalf", secondHalfArray);
 							data.put(resource);
 							resourceId = mapResourceId;
+							activityDate=checkDate;
 							resource = new JSONObject();
 							firstHalfArray = new JSONArray();
 							secondHalfArray = new JSONArray();
@@ -164,6 +170,7 @@ public class ActivityServiceImpl implements ActivityService {
 							resource.put("domain", mapObject.get("platform"));
 							resource.put("activityAllocateId", mapObject.get("activityAllocateId"));
 							resource.put("activityDate", mapObject.get("activityDate"));
+							resource.put("resourceCode", mapObject.get("resourceCode"));
 						}
 						JSONObject detailObject = new JSONObject();
 						detailObject.put("activityDetails", mapObject.get("activityDetails"));
@@ -199,8 +206,46 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 	
-	public List<ResourcePool> getResources() {
-		return resourceRepo.findAllActiveRecords();
+	public List<ResourcePool> getFilteredResources(String activityDate, Integer platformId) {
+		List<ResourcePool> resources = null;
+		List<ResourcePool> filteredResources = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			Date parsedDate = sdf.parse(activityDate);
+			resources = resourceRepo.findAllActiveRecords(parsedDate,platformId);
+//			resources.forEach(resource->resource.getActivityAlloc().forEach(alloc->{
+//				if(alloc.getActivityDate()==null || !parsedDate.equals(alloc.getActivityDate()))
+//					resource.getActivityAlloc().remove(alloc);
+//			}));
+//			Stream<ResourcePool> resourceStream = resources.stream();
+//			filteredResources = resourceStream.map(resource->
+//				new ResourcePool(
+//						resource.getActivityAlloc().stream()
+//						.filter(alloc->parsedDate.equals(alloc.getActivityDate())).toList()
+//						//.collect(Collectors.toList())
+//				)
+//			);
+//			for (ResourcePool resource : resources) {
+//				for (ActivityAllocation allocation : resource.getActivityAlloc()) {
+//					if(parsedDate.equals(allocation.getActivityDate()))
+//						resource.getActivityAlloc().
+//				}
+//			}
+			for(int i=0; i<resources.size(); i++) {
+				List<ActivityAllocation> activityAlloc = resources.get(i).getActivityAlloc();
+				int j = 0;
+				while(j<activityAlloc.size()) {
+					if(!parsedDate.equals(activityAlloc.get(j).getActivityDate()) || activityAlloc.get(j).getDeletedFlag())
+						activityAlloc.remove(j);
+					else
+						j++;
+				}
+				resources.get(i).setActivityAlloc(activityAlloc);
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return resources;
 	}
 
 
@@ -214,9 +259,14 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 
-	public ActivityAllocation getAllocationDetailsByResource(Integer resourceId) {
-		return activityAllocRepo.findByResourceId(resourceId);
+	public ActivityAllocation getAllocationDetailsByResource(Integer resourceId, Date activityDate) {
+		return activityAllocRepo.findByResourceId(resourceId,activityDate);
 	}
 
+
+	@Override
+	public ResourcePool getResource(Integer resourceId) {
+		return resourceRepo.findById(resourceId).get();
+	}
 
 }

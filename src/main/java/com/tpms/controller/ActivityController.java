@@ -1,5 +1,6 @@
 package com.tpms.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -87,7 +88,11 @@ public class ActivityController {
     String month = params.get("month");
     String platform = params.get("platform");
     String selectedDate = params.get("selectedDate");
-    JSONArray attendanceReportData = activityServiceImpl.getActivityReportData(platform, selectedDate,year,month);
+    String resourceValue = params.get("resourceValue");
+    if(resourceValue.equals("")) {
+        resourceValue="0";
+    }
+    JSONArray attendanceReportData = activityServiceImpl.getActivityReportData(platform, selectedDate,year,month,resourceValue);
 //    System.err.println("Report Data " + attendanceReportData);
     return attendanceReportData.toString();
 }
@@ -98,8 +103,8 @@ public class ActivityController {
 	}
 	
 	@GetMapping("resources")
-	List<ResourcePool> getResources() {
-		return activityService.getResources();
+	List<ResourcePool> getResources(String activityDate, Integer platformId) {
+		return activityService.getFilteredResources(activityDate,platformId);
 	}
 	
 	@GetMapping("activities")
@@ -113,10 +118,13 @@ public class ActivityController {
 	}
 	
 	@GetMapping("allocationDetails")
-	ActivityAllocation getAllocationDetailsByResource(@RequestParam("id") Integer resourceId) {
-		return activityService.getAllocationDetailsByResource(resourceId);
+	ActivityAllocation getAllocationDetailsByResource(@RequestParam("id") Integer resourceId, @RequestParam("date") Date activityDate) {
+		return activityService.getAllocationDetailsByResource(resourceId,activityDate);
 	}
 	
-	
+	@GetMapping("resource")
+	ResourcePool getResource(@RequestParam("id") Integer resourceId) {
+		return activityService.getResource(resourceId);
+	}
 
 }

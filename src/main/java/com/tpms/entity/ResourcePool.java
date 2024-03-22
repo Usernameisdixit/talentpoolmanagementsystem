@@ -1,21 +1,30 @@
 package com.tpms.entity;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name="resource_pool")
 public class ResourcePool {
+
+	public ResourcePool() {}
+	
+	public ResourcePool(List<ActivityAllocation> activityAlloc) {
+		this.activityAlloc = activityAlloc;
+	}
+
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +36,7 @@ public class ResourcePool {
 	
 	private String resourceCode;
 
+	private String designation;
 	
 	private String platform;
 
@@ -47,8 +57,6 @@ public class ResourcePool {
 	private String email;
 
 	
-	private String status;
-
 	private Integer createdBy;
 
 	
@@ -57,9 +65,10 @@ public class ResourcePool {
 	
 	private Byte deletedFlag;
 	
-
+	@Transient
+    private String duration;
 	
-	@OneToOne
+	@OneToMany
 	@JoinColumn(name = "resourceId", referencedColumnName = "resourceId")
-	private ActivityAllocation activityAlloc;
+	private List<ActivityAllocation> activityAlloc;
 }

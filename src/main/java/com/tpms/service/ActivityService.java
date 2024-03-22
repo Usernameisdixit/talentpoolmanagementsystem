@@ -1,5 +1,6 @@
 package com.tpms.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.tpms.entity.Activity;
@@ -24,12 +25,14 @@ public interface ActivityService {
 
     public List<Platform> fetchPlatforms();
 
-	public List<ResourcePool> getResources();
+	public List<ResourcePool> getFilteredResources(String activityDate, Integer platformId);
 	
 	public List<Activity> findAll();
 
 	public ActivityAllocation saveAllocation(ActivityAllocation data);
 
-	public ActivityAllocation getAllocationDetailsByResource(Integer id);
+	public ActivityAllocation getAllocationDetailsByResource(Integer id, Date activityDate);
+
+	public ResourcePool getResource(Integer resourceId);
 
 }

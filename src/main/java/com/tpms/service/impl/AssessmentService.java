@@ -40,7 +40,12 @@ public class AssessmentService {
     	Assessment assessment = new Assessment();
         assessment.setActivityId(assessmentDto.getIntActivityId());
     	assessment.setResourceId(assessmentDto.getResourceId());
-    	assessment.setAsesmentDate(LocalDate.now());
+    	assessment.setAsesmentDate(assessmentDto.getAssessmentDate());
+    	
+    	assessment.setActivityFromDate(assessmentDto.getActivityFromDate());
+    	
+    	assessment.setActivityToDate(assessmentDto.getActivityToDate());
+    	
         assessment.setDoubleActivityMark(assessmentDto.getTotalMarks());
         assessment.setDoubleSecuredMark(assessmentDto.getMarks());
         assessment.setAsesmentHours(assessmentDto.getHour());
@@ -70,6 +75,9 @@ public class AssessmentService {
        
         assessmentRepository.save(assessment);
     }
+
+
+	
 
 
 	

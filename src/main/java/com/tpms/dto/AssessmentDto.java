@@ -2,7 +2,7 @@ package com.tpms.dto;
 
 
 import java.time.LocalDate;
-
+import java.util.Date;
 
 import lombok.Data;
 @Data
@@ -17,11 +17,13 @@ public class AssessmentDto {
     private Long activityAllocateId;
     private Integer resourceId;
     private Long platformId;
-    private LocalDate activityDate;
+    private Date assessmentDate;
     private Double marks;
     private Double totalMarks;
     private String remarks;
     private String hour;
+    private Date activityFromDate;
+	private Date activityToDate;
     
     
     
