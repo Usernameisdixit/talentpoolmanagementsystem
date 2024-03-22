@@ -34,7 +34,7 @@ userName: any;
       this.formattedDate = this.datePipe.transform(this.currentDate, 'EEE MMM dd yyyy HH:mm:ss');
 
       this.userName=this.authService.getUsername();
-      this.fullName=this.authService.getUserFullname();
+      this.fullName=this.authService.getUserFullname();      
     }, 1000);
   }
   logout() {
