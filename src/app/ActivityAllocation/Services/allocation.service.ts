@@ -18,6 +18,7 @@ export class AllocationService {
   /**
   * @param activityDate
   * @description format: yyyy-MM-dd
+  * @returns Resource list with activity allocation data
   */
   getResources(activityDate: string, platformId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/resources?activityDate=${activityDate}&platformId=${platformId}`);
@@ -27,6 +28,10 @@ export class AllocationService {
     return this.http.get<any[]>(`${this.apiUrl}/activities`);
   }
 
+  /**
+   * @param data
+   * @description Saves activity allocation data for a resource
+   */
   saveActivities(data: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/saveAllocation`,data);
   }
@@ -41,5 +46,16 @@ export class AllocationService {
 
   getResourceById(resourceId: number): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/resource?id=${resourceId}`);
+  }
+
+  /**
+  * @returns Resource list without mapped entity data
+  */
+  getResourcesWithoutRelatedEntity(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/resources/exclude-related`);
+  }
+
+  saveBulkAllocation(markedResources: any[], allocData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/saveBulkAllocation`, {markedResources: markedResources, allocData: allocData});
   }
 }
