@@ -18,5 +18,10 @@ public interface PlatformRepository extends JpaRepository<Platform, Integer> {
 	 @Query(value = "SELECT * FROM platforms where deletedFlag=0", nativeQuery = true)
 	    List<Platform> getAllPlatform();
 
+	 /**
+	  * @return List of active platforms
+	  */
+	 List<Platform> findByDeletedFlagFalse();
+
 	
 }

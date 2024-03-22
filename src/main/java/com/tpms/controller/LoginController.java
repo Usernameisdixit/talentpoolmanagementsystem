@@ -1,21 +1,28 @@
 package com.tpms.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tpms.dto.JWTRequest;
 import com.tpms.entity.FormData;
 import com.tpms.entity.User;
 import com.tpms.repository.UserRepository;
+import com.tpms.security.JwtHelper;
+import com.tpms.service.impl.UserServiceDetails;
 
 /**
  *@author Jiban Jena
@@ -27,6 +34,12 @@ public class LoginController {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+    private UserServiceDetails userServiceDetails;
+
+    @Autowired
+    private JwtHelper helper;
 
 //	@Value("${server.servlet.session.timeout}")
 //	private Integer sessionTime;
@@ -38,23 +51,51 @@ public class LoginController {
 		return ResponseEntity.ok(users);
 	}
 	
-	
-	 @PostMapping("/login")
-	    public ResponseEntity<?> loginUser(@RequestBody FormData formData) {		 
-	        User user = userRepository.findByUserName(formData.getUsername());
-	         //System.out.println("session timeout"+sessionTime);
-	        if (user != null && BCrypt.checkpw(formData.getPassword(), user.getPassword())) {
-	        	if(user.getIsFirstLogin()) {
-	        		return ResponseEntity.ok(Map.of("status", "firstlogin", "message", 
-	        				"First time user logged in.","user",user));
-	        	}
-	        	else {
-	               return ResponseEntity.ok(Map.of("status", "success", "message", "Login successful","user",user));
-	        	}
-	        } else {
-	            return ResponseEntity.ok(Map.of("status", "error", "message", "Invalid credentials","user",user));
-	        }
-	    }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody JWTRequest request) {
+    	try {
+    	//UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
+    	User user=doAuthenticate(request.getUsername(), request.getPassword());
+
+        UserDetails userDetails = userServiceDetails.loadUserByUsername(request.getUsername());
+        String token =helper.generateToken(userDetails);
+        Date expiryTime=helper.getExpirationDateFromToken(token);
+        Date currentTime = new Date();
+        long tokenExpiryInMiliSeconds = expiryTime.getTime()-currentTime.getTime();
+        if (user.getIsFirstLogin()) {
+            return ResponseEntity.ok(Map.of("status", "firstlogin", "message", "First time user logged in.", "user", user));
+        } else {
+            return ResponseEntity.ok(Map.of("status", "success", "message", "Login successful", "token", token, "user", user,"tokenTime",tokenExpiryInMiliSeconds));
+        }
+    } catch (UsernameNotFoundException e) {
+        return ResponseEntity.ok(Map.of("status", "error", "message", "Invalid credentials"));
+    }
+    }
+    
+    
+    
+    
+   
+    
+    public User doAuthenticate(String username, String password) {
+        User user = userRepository.findByUserName(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new UsernameNotFoundException("Invalid credentials");
+        }
+        return user;
+    }
+    
+    
+    @ExceptionHandler(BadCredentialsException.class)
+    public String exceptionHandler() {
+        return "Credentials Invalid !!";
+    }
 	
 	
 	@PostMapping("/getEmail")

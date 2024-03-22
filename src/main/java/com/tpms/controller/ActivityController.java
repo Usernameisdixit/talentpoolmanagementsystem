@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tpms.dto.ResourcePoolProjection;
 import com.tpms.entity.Activity;
 import com.tpms.entity.ActivityAllocation;
 import com.tpms.entity.Platform;
@@ -102,11 +107,6 @@ public class ActivityController {
 		return activityService.fetchPlatforms();
 	}
 	
-	@GetMapping("resources")
-	List<ResourcePool> getResources(String activityDate, Integer platformId) {
-		return activityService.getFilteredResources(activityDate,platformId);
-	}
-	
 	@GetMapping("activities")
 	List<Activity> getActivities(String platform) {
 		return activityService.findAll();
@@ -122,9 +122,43 @@ public class ActivityController {
 		return activityService.getAllocationDetailsByResource(resourceId,activityDate);
 	}
 	
+	/**
+	 * @return Details of single resource without related entity data
+	 */
 	@GetMapping("resource")
-	ResourcePool getResource(@RequestParam("id") Integer resourceId) {
+	ResourcePoolProjection getResource(@RequestParam("id") Integer resourceId) {
 		return activityService.getResource(resourceId);
+	}
+	
+	/**
+	 * @return List of resources along with activity allocation data
+	 */
+	@GetMapping("resources")
+	List<ResourcePool> getResources(String activityDate, Integer platformId) {
+		return activityService.getFilteredResources(activityDate,platformId);
+	}
+	
+	/**
+	 * @return List of resources without related entity data
+	 */
+	@GetMapping("resources/exclude-related")
+	List<ResourcePoolProjection> getResourcesWithoutRelatedEntities() {
+		return activityService.findAllWithoutRelatedEntity();
+	}
+	
+	@PostMapping("saveBulkAllocation")
+	void saveBulkAllocation(/*@RequestBody String data*/) {
+		String data = "{\"markedResources\":[{\"resourceId\":1,\"platformId\":1},{\"resourceId\":2,\"platformId\":1},{\"resourceId\":22,\"platformId\":1},{\"resourceId\":4,\"platformId\":2}],\"allocData\":{\"activityDate\":\"2024-03-22T04:49:50.000Z\",\"details\":[{\"activityFor\":\"1\",\"activity\":{\"activityId\":\"5\",\"activityName\":\" Java \"},\"fromHours\":\"11:45\",\"toHours\":\"12:35\",\"activityDetails\":\"zczx\"},{\"activityFor\":\"2\",\"activity\":{\"activityId\":\"6\",\"activityName\":\" ReactJS \"},\"fromHours\":\"15:35\",\"toHours\":\"16:45\",\"activityDetails\":\"bvvvn\"}]}}";
+		JSONArray markedResources = null;
+		ActivityAllocation allocData = null;
+		try {
+			JSONObject json = new JSONObject(data);
+			markedResources = json.getJSONArray("markedResources");
+			allocData = (new ObjectMapper()).readValue(json.getString("allocData"), ActivityAllocation.class);
+		} catch (JSONException | JsonProcessingException e) {
+			e.printStackTrace();
+		}  
+		activityService.saveBulkAllocation(markedResources,allocData);
 	}
 
 }

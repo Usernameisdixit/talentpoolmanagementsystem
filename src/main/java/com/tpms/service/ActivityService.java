@@ -3,6 +3,9 @@ package com.tpms.service;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONArray;
+
+import com.tpms.dto.ResourcePoolProjection;
 import com.tpms.entity.Activity;
 import com.tpms.entity.ActivityAllocation;
 import com.tpms.entity.Platform;
@@ -33,6 +36,10 @@ public interface ActivityService {
 
 	public ActivityAllocation getAllocationDetailsByResource(Integer id, Date activityDate);
 
-	public ResourcePool getResource(Integer resourceId);
+	public ResourcePoolProjection getResource(Integer resourceId);
+
+	public List<ResourcePoolProjection> findAllWithoutRelatedEntity();
+
+	public void saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData);
 
 }
