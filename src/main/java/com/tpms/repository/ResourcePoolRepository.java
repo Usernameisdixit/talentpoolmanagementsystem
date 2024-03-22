@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.tpms.dto.ResourcePoolProjection;
 import com.tpms.entity.ResourcePool;
 
 import jakarta.transaction.Transactional;
@@ -41,5 +42,11 @@ public interface ResourcePoolRepository extends JpaRepository<ResourcePool, Inte
 	@Transactional
 	@Query("UPDATE ResourcePool r SET r.deletedFlag = 0 WHERE r.resourceId = :id")
 	void updateBitDeletedFlagByFalse(Integer id);
+	
+	@Query("FROM ResourcePool r WHERE r.resourceId=:id AND r.deletedFlag=0")
+	ResourcePoolProjection findByIdWithoutRelatedEntity(Integer id);
+	
+	@Query("FROM ResourcePool r WHERE r.deletedFlag=0")
+	List<ResourcePoolProjection> findAllWithoutRelatedEntity();
 
 }

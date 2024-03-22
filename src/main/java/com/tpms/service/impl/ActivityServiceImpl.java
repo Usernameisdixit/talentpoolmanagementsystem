@@ -14,11 +14,13 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.tpms.dto.ResourcePoolProjection;
 import com.tpms.entity.Activity;
 import com.tpms.entity.ActivityAllocation;
 import com.tpms.entity.Platform;
@@ -202,7 +204,7 @@ public class ActivityServiceImpl implements ActivityService {
     
     
 	public List<Platform> fetchPlatforms() {
-		return platformRepo.findAll();
+		return platformRepo.findByDeletedFlagFalse();
 	}
 
 	
@@ -265,8 +267,34 @@ public class ActivityServiceImpl implements ActivityService {
 
 
 	@Override
-	public ResourcePool getResource(Integer resourceId) {
-		return resourceRepo.findById(resourceId).get();
+	public ResourcePoolProjection getResource(Integer resourceId) {
+		return resourceRepo.findByIdWithoutRelatedEntity(resourceId);
+	}
+
+
+	@Override
+	public List<ResourcePoolProjection> findAllWithoutRelatedEntity() {
+		return resourceRepo.findAllWithoutRelatedEntity();
+	}
+
+
+	@Override
+	public void saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData) {
+		int length = markedResources.length();
+		List<ActivityAllocation> activityAllocList = new ArrayList<>();
+		for (int i = 0; i < length; i++) {
+			ActivityAllocation activityAllocation = new ActivityAllocation();
+			try {
+				activityAllocation.setResourceId(markedResources.getJSONObject(i).getInt("resourceId"));
+				activityAllocation.setPlatformId(markedResources.getJSONObject(i).getInt("platformId"));
+				activityAllocation.setActivityDate(allocData.getActivityDate());
+				activityAllocation.setDetails(allocData.getDetails());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			activityAllocList.add(activityAllocation);
+		}
+		activityAllocRepo.saveAll(activityAllocList);
 	}
 
 }
