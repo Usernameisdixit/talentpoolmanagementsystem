@@ -17,11 +17,11 @@
       <thead>
         <tr>
           <th>SLNo.</th>
-          <th>ActivityRefNo</th>
-          <th>ActivityName</th>
-          <th>ActivityDescription</th>
-          <th>ActivityResponsPerson1</th>
-          <th>ActivityResponsPerson2</th>
+          <th>Activity RefNo</th>
+          <th>Activity Name</th>
+          <th>Activity Description</th>
+          <th>Activity Response Person1</th>
+          <th>Activity Response Person2</th>
           <th>Status</th>
           <th>Action</th>
         </tr>
@@ -45,7 +45,7 @@
           <td>
             <div class="d-flex justify-content-between">
               <button class="m-1 btn btn-sm btn-primary" (click)="editActivity(activity.activityId)">Edit</button>
-              <button class="m-1 btn btn-sm" [ngStyle]="{ 'background-color': activity.deletedFlag ? 'green' : 'red' }" (click)="toggleDeletedFlag(activity)">
+              <button class="m-1 btn btn-sm btn-danger" (click)="toggleDeletedFlag(activity)">
                 {{ activity.deletedFlag ? 'Activate' : 'Inactivate' }}
               </button>
             </div>
