@@ -78,7 +78,16 @@ export class FileUploadComponent {
       return;
     }
 
-    const formattedDate = this.datePipe.transform(this.allocationDate, 'yyyy-MM-dd');
+    Swal.fire({
+      title: 'Confirm Upload',
+      text: 'Are you sure you want to upload this file ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, upload it!',
+      cancelButtonText: 'No, cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const formattedDate = this.datePipe.transform(this.allocationDate, 'yyyy-MM-dd');
     const formData = new FormData();
     formData.append('file', this.selectedFile);
     formData.append('allocationDate', formattedDate);
@@ -90,7 +99,7 @@ export class FileUploadComponent {
         Swal.fire({
           icon: 'success',
           title: 'Success!',
-          text: 'Platform data saved successfully'
+          text: 'Resource and Platform data saved successfully'
         });
         this.route.navigateByUrl('/talents');
         this.selectedFile = null;
@@ -99,7 +108,7 @@ export class FileUploadComponent {
 
       }, error => {
         console.error('Error uploading file', error);
-        // Display error message using SweetAlert
+       
         Swal.fire({
           icon: 'error',
           title: 'Error!',
@@ -109,7 +118,12 @@ export class FileUploadComponent {
         this.selectedFile = null;
         this.allocationDate = null;
         this.isUploading = false;
-      });
+        });
+      }
+    });
+
+
+    
   }
 
 
@@ -121,7 +135,7 @@ export class FileUploadComponent {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'template.xlsx'; // Specify the filename for the downloaded file
+        a.download = 'template.xlsx'; 
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);

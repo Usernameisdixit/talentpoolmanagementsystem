@@ -21,6 +21,8 @@ export class IdleService {
 
   private resetTimer(): void {
     clearTimeout(this.timeoutId);
-    this.timeoutId = setTimeout(() => this.userInactive.emit(), 3000000); // Set timeout to 5 minutes (300,000 milliseconds)
+    const delayTime = localStorage.getItem("tokenTime");
+    const delayMilliseconds = delayTime ? parseInt(delayTime) : 3000000; // Default is 5 minutes 
+    this.timeoutId = setTimeout(() => this.userInactive.emit(), delayMilliseconds);    
   }
 }

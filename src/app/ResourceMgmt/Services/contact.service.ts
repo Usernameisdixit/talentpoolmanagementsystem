@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, throwError } from 'rxjs';
 import { Talent } from 'src/app/Model/talent';
+import { ResourceHistory } from 'src/app/Model/ResourceHistory';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContactService {
+
+
 
   private baseUrl="http://localhost:9999/tpms/emp"
 
@@ -23,6 +26,40 @@ getTalent():Observable<Talent[]>{
 return this.httpClient.get<Talent[]>(`${this.baseUrl}/uploadedData`);
 
 }
+
+getResourceDetailsWithFileName():Observable<ResourceHistory[]>{
+
+  return this.httpClient.get<ResourceHistory[]>(`${this.baseUrl}/getResourceDetailsWithFileName`);
+  
+  }
+
+  downloadExcelFile(fileName: string): Observable<Blob> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+
+    return this.httpClient.get(`${this.baseUrl}/download/${fileName}`, {
+      headers: headers,
+      responseType: 'blob' 
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<any> {
+    let errorMessage = 'An error occurred';
+    if (error.error instanceof ErrorEvent) {
+    
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+    
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.error(errorMessage);
+    return throwError(errorMessage);
+  }
+
 
 findContactByResourceNumber(id:number):Observable<Talent>{
   return this.httpClient.get<Talent>(`${this.baseUrl}/talent/${id}`);

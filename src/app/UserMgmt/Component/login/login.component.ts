@@ -28,15 +28,17 @@ export class LoginComponent implements OnInit {
   }
   onSubmit() {
     debugger;
-  
-    //if (this.credentials.username && this.credentials.password) {
-      if (this.credentials.username) {
+        if (this.credentials.username) {
         if (this.credentials.password) {
           this.loginService.sendData(this.credentials).subscribe(
-            (response) => {
+            (response:any) => {
               debugger;
 
               const responseObject = JSON.parse(response);
+              const tokenTime=responseObject?.tokenTime;
+              localStorage.setItem("tokenTime",tokenTime);
+              const jwtToken=responseObject?.token;
+              localStorage.setItem("token",jwtToken)
               const status = responseObject?.status;
               const user = responseObject?.user;
               const email=user?.email;
@@ -47,22 +49,15 @@ export class LoginComponent implements OnInit {
     localStorage.setItem("userId",user?.userId);
     localStorage.setItem("userFullName",userFullName);          
     localStorage.setItem("user", JSON.stringify(user));
-    const storedUserString = localStorage.getItem('user');
-    if (storedUserString) {
-      const storedUser = JSON.parse(storedUserString);
-      // Now you can use the 'storedUser' object
-      console.log(storedUser.userId+" user session id");
-    } else {
-      console.error('User not found in sessionStorage.');
-    }
-
+    const receivedToken=localStorage.getItem('token'); 
+        if(receivedToken){
               if(status==='firstlogin'){
                 this.router.navigate(['restpassword',email]);
               }
             else{
               if (status === 'success') {
-                this.authService.setAuthenticated(true);
-                this.router.navigate(['/dashboard']);
+                this.authService.isLoggedIn();
+                this.router.navigate(['dashboard']);
                 this.loginService.getMessage("user logged in");
               } else {
                 this.errorMessage = 'Invalid credentials. Please try again.';
@@ -71,7 +66,12 @@ export class LoginComponent implements OnInit {
                   this.errorMessage = '';
                 }, 2000);
               }}
-            },
+            }else{
+              this.errorMessage = "Ooops! You dont't have the token.";
+              setTimeout(() => {
+                this.errorMessage = '';
+              }, 2000);
+              }},
             (error) => {
               this.router.navigate(['login']);
               setTimeout(() => {

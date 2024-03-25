@@ -20,7 +20,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ForgotpasswordComponent } from './UserMgmt/Component/forgotpassword/forgotpassword.component';
 import {MatCardModule} from '@angular/material/card';
 import { RestpasswordComponent } from './UserMgmt/Component/restpassword/restpassword.component';
@@ -69,6 +69,8 @@ import { ActivityNavbarComponent } from './ActivityMgmt/Components/activity-navb
 import { EditAssessmentComponent } from './AssessmentMgmt/Components/edit-assessment/edit-assessment.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AttendanceNewComponent } from './AttendanceMgmt/Components/attendance-new/attendance-new.component';
+import { JwtInterceptor } from './JwtInterceptor.service';
+import { BulkAllocationComponent } from './ActivityAllocation/Components/bulk-allocation/bulk-allocation.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ResourcehistoryComponent } from './ResourceMgmt/Components/resourcehistory/resourcehistory.component';
 
@@ -112,7 +114,9 @@ defineLocale('en-gb', enGbLocale); //
     ActivityNavbarComponent,
     EditAssessmentComponent,
     AttendanceNewComponent,
-    ResourcehistoryComponent,
+    BulkAllocationComponent,
+    ResourcehistoryComponent
+
 
   ],
   imports: [
@@ -144,7 +148,7 @@ defineLocale('en-gb', enGbLocale); //
     NgbModule,
     MatAutocompleteModule
   ],
-  providers: [DatePipe,MatSnackBar],
+  providers: [DatePipe,MatSnackBar,{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 

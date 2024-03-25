@@ -14,7 +14,7 @@ export class ForgotpasswordComponent implements OnInit{
  
   constructor(private loginService: LoginService,private router: Router) { }
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    //throw new Error('Method not implemented.');
   }
   onSubmit() {
      //alert(this.email)

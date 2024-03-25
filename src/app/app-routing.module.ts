@@ -32,11 +32,13 @@ import { AddActivityComponent } from './ActivityMgmt/Components/add-activity/add
 import { EditAssessmentComponent } from './AssessmentMgmt/Components/edit-assessment/edit-assessment.component';
 import { AttendanceMgmtComponent } from './AttendanceMgmt/Components/attendance-mgmt/attendance-mgmt.component';
 import { AttendanceNewComponent } from './AttendanceMgmt/Components/attendance-new/attendance-new.component';
+import { BulkAllocationComponent } from './ActivityAllocation/Components/bulk-allocation/bulk-allocation.component';
 import { ResourcehistoryComponent } from './ResourceMgmt/Components/resourcehistory/resourcehistory.component';
 
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // { path: '**', redirectTo: '/login' },
   { path: 'login', component: LoginComponent },
   { path: 'forgotPassword', component: ForgotpasswordComponent },
   { path: 'restpassword/:email', component: RestpasswordComponent },
@@ -65,7 +67,8 @@ const routes: Routes = [
        {path: "activityReport", component:ActivityReportComponent,canActivate: [authGuard]},
        { path: 'assessmentreport', component: AssessmentreportComponent, canActivate: [authGuard]  },
        {path: "activity", component:AllocationComponent,canActivate: [authGuard]},
-       { path: 'editallocdetails/:id', component: AllocationDetailsComponent,   },
+       { path: 'editallocdetails/:id', component: AllocationDetailsComponent, canActivate: [authGuard]},
+       {path: "bulk-allocation", component:BulkAllocationComponent, canActivate: [authGuard]},
        { path : "role", component:CreateRoleComponent, canActivate: [authGuard]},
        { path : "viewRole", component:ViewRoleComponent, canActivate: [authGuard]},
        { path : "edit/:roleId", component:CreateRoleComponent, canActivate: [authGuard]},

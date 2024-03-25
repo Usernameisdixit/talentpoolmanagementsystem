@@ -4,4 +4,23 @@
     justify-content: flex-end;
   }
 
- 
+  .accordion-header {
+    padding: 10px 15px;
+  }
+  
+  .btn-download {
+    font-size: 25px;
+  }
+  .download-container {
+    background-color: whitesmoke; /* Choose your preferred color */
+    padding: 5px;
+    border-radius: 12px ;
+  }
+  .search-container input {
+    width: 250px; /* Adjust the width as needed */
+    height: auto;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  
