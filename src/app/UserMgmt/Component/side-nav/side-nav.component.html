@@ -53,28 +53,26 @@
                 </ul>
             </li>
 
+            <!-- Activity Management -->
             <li>
-                <a href="#submenu3" data-bs-toggle="collapse" class="nav-link dropdown align-middle dropdown-toggle sidebar-navlink">
-                    <i class="fas fa-bars"></i> Activity Management
+                <a href="#submenu6" data-bs-toggle="collapse" class="nav-link dropdown align-middle dropdown-toggle sidebar-navlink">
+                    <i class="fas fa-tasks"></i> Activity Management 
                 </a>
-                <ul class="collapse" id="submenu3" data-bs-parent="#menu">
+                <ul class="collapse" id="submenu6" data-bs-parent="#menu">
                     <li>
-                        <a routerLink="add" class="nav-link"><i class="fas fa-plus"></i> Add Activity</a>
-                    </li>
-                    <!-- Add more submenu items if needed -->
-                    <li>
-                        <a routerLink="activities" class="nav-link"><i class="fas fa-eye"></i> View Activity</a>
+                        <a routerLink="/activity" class="nav-link"><i class="fas fa-user-tie"></i> Activity Allocation</a>
                     </li>
                     <li>
-                        <a routerLink="/activity" class="nav-link"><i class="fas fa-tasks"></i> Activity Allocation</a>
+                        <a routerLink="/bulk-allocation" class="nav-link"><i class="fas fa-users"></i> Activity Bulk Allocation</a>
                     </li>
                 </ul>
             </li>
-            
 
 
-            <!-- Activity Management -->
-           
+            <!-- <li>
+                <a routerLink="/activity" class="nav-link"><i class="fas fa-tasks"></i> Activity Management</a>
+            </li> -->
+
             <!-- Attendance Management -->
             <li>
                 <a routerLink="/takeAtten" class="nav-link"><i class="fas fa-calendar-alt"></i> Attendance Management</a>

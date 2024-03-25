@@ -254,7 +254,7 @@ export class UserComponent {
   }
   }
 
-  // to restrict blanck character in text fields
+  // to restrict blank character in text fields
 
   preventSpaces(event: KeyboardEvent) {
     if (event.key === ' ') {

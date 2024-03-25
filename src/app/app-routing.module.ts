@@ -49,6 +49,7 @@ const routes: Routes = [
     component: AppLayoutComponent,
     canActivateChild: [authGuard],
     children: [
+      
       { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard]},
       { path: 'navbar', component: NavBarComponent, canActivate: [authGuard]  }
       ,

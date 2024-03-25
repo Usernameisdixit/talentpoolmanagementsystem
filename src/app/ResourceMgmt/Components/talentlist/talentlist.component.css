@@ -16,17 +16,12 @@
 
 
 .status-active {
-  background-color: #28a745;
-  color: #fff;
+  color: #28a745;
 }
 
 .status-inactive {
-  background-color: #dc3545;
-  color: #fff;
+  color: #dc3545;
 }
-
-  
- 
 
   .export-buttons {
   margin-top: 20px;
@@ -50,4 +45,16 @@
 .btn-light:hover {
   background-color: #e2e6ea;
   color: #000;
+}
+
+.pdf-icon {
+  color: #ff5733;
+}
+
+.excel-icon {
+  color: #2e8b57; 
+}
+
+.button-container {
+  display: flex;
 }

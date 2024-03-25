@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DateService } from '../../Services/date.service';
 import { DatePipe } from '@angular/common';
 import { Platform } from 'src/app/Model/Platform';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'app-bulk-allocation',
@@ -26,11 +27,12 @@ export class BulkAllocationComponent {
   resourceId: any;
   selectedDate!: Date;
   allocateId: any;
-  resource: Resource;
+  // resource: Resource;
 
   platforms: Platform[];
   resources: Resource[];
   markedResources: any[] = [];
+  bsConfig: Partial<BsDatepickerConfig>;
 
   activityForm: FormGroup = new FormGroup({
     session: new FormControl(),
@@ -42,22 +44,23 @@ export class BulkAllocationComponent {
 
   constructor(private allocationService: AllocationService, private router: Router,
               private activatedRoute: ActivatedRoute, private dateService: DateService,
-              private datePipe: DatePipe) {
+              private datePipe: DatePipe, private localeService: BsLocaleService) {
                 this.activatedRoute.paramMap.subscribe(params => {
                   this.resourceId = params.get('id');
                 });
+                this.localeService.use('en-gb');
               }
 
   ngOnInit(): void {
     this.getActivityList();
-    this.selectedDate = this.dateService.getDate();
-    this.allocationService.getAllocationsByResource(this.resourceId,this.datePipe.transform(this.selectedDate)).subscribe(data => {
-      this.allocateId = data.activityAllocateId;
-      this.dynamicArray = data.details.map((item: DynamicGrid) => item as DynamicGrid);
-    });
-    this.allocationService.getResourceById(this.resourceId).subscribe(data=>{
-      this.resource = data;
-    });
+    // this.selectedDate = this.dateService.getDate();
+    // this.allocationService.getAllocationsByResource(this.resourceId,this.datePipe.transform(this.selectedDate)).subscribe(data => {
+    //   this.allocateId = data.activityAllocateId;
+    //   this.dynamicArray = data.details.map((item: DynamicGrid) => item as DynamicGrid);
+    // });
+    // this.allocationService.getResourceById(this.resourceId).subscribe(data=>{
+    //   this.resource = data;
+    // });
 
     this.allocationService.getPlatforms().subscribe(data=>{
       this.platforms = data;
@@ -75,8 +78,10 @@ export class BulkAllocationComponent {
   }
 
   removeRow(event: any, index: number): void {
-    this.dynamicArray[index].deletedFlag = 1;
-    event.target.parentNode.innerText = "Marked for removal";
+    event.target.parentNode.parentNode.remove();
+    if (index !== -1) {
+      this.dynamicArray.splice(index, 1);
+    }
   }
 
   getActivityList(): void {
