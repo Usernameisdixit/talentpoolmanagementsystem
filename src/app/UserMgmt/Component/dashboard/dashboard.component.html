@@ -9,10 +9,11 @@
           <mat-card-title>Resource</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <p>Total Resource: 1000</p>
+          <p>Total Resource: {{resources}}</p>
+          <p>Last Allocation Date: {{allocationDate}}</p>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-button color="primary">View Details</button>
+          <button mat-button color="primary" routerLink="/talents">View Details</button>
         </mat-card-actions>
       </mat-card>
   
