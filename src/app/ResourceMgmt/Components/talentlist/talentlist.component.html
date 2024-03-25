@@ -1,4 +1,5 @@
-<div  class="container">
+
+<div  class="container mt-3">
   
 
   <div class="top-heading position-relative">
@@ -31,7 +32,7 @@
   <th>Email</th>
   <th>Duration</th>
   <th>Status</th>
-  <th>Actions</th>
+  <th>Action</th>
         </tr>
   
       </thead>
@@ -57,15 +58,14 @@
     </span>
   </td>
   <td>
-    <div class="btn-group">
-      <button type="button" class="btn btn-primary" (click)="editalent(c.resourceId)">Edit</button>  &nbsp;&nbsp;
+    <div class="button-container">
+      <button type="button" class="btn btn-primary btn-sm" (click)="editalent(c.resourceId)"><i class="fas fa-edit"></i></button>&nbsp;
      <!-- <button type="button" class="btn btn-danger" (click)="deletetalent($event, c.resourceId)">Delete</button> -->
-      <td *ngIf="!c.deletedFlag" id="toggleButton"><button class="btn btn-danger" (click)="deletetalent($event, c.resourceId);">InActive</button></td>
+     
+      <button *ngIf="!c.deletedFlag" class="btn btn-danger btn-sm" (click)="deletetalent($event, c.resourceId);"><i class="fa-solid fa-xmark"></i></button>
               
-      <td *ngIf="c.deletedFlag" id="toggleButton"><button class="btn btn-success" (click)="deletetalent($event, c.resourceId);">Active</button></td>
-      
-    
-    </div>
+      <button *ngIf="c.deletedFlag" class="btn btn-success btn-sm" (click)="deletetalent($event, c.resourceId);"><i class="fa-solid fa-check"></i></button>
+     </div>
   </td>
   
      <tbody>
