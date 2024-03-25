@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import java.util.List;
+
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import com.tpms.entity.ResourcePoolHistory;
 import com.tpms.repository.ExcelUploadHistoryRepository;
 import com.tpms.repository.ResourcePoolHistoryRepository;
 import com.tpms.utils.ExcelUtils;
+
+import jakarta.transaction.Transactional;
 
 
 
@@ -28,19 +31,32 @@ public class ExcelUploadEmployeeServiceImpl {
 	@Autowired
 	 private ExcelUploadHistoryRepository exceluploadrepo;
 	
-	
+	@Transactional
 	public void save(MultipartFile file, LocalDate allocationDate) {
-		
-		try {
-			List<ResourcePoolHistory> ExcelEmp=ExcelUtils.convertExceltoListofEmployee(file.getInputStream(),allocationDate);
-			this.ExcelEmpRepo.saveAll(ExcelEmp);
-		} catch (IOException e) {
-		
-			e.printStackTrace();
-		}
-		
+	    try {
+	        List<ResourcePoolHistory> ExcelEmp = ExcelUtils.convertExceltoListofEmployee(file.getInputStream(), allocationDate);
+
+	        ExcelEmp.removeIf(resources -> resources.getResourceCode() == null);
+
+	        
+	        List<ResourcePoolHistory> existingRecords = this.ExcelEmpRepo.findByAllocationDate(allocationDate);
+	       if(!existingRecords.isEmpty())
+	       {
+	    	   ExcelEmpRepo.deleteByAllocationDate(allocationDate);
+	    	   ExcelEmpRepo.saveAll(ExcelEmp);
+
+	       }
+	       else 
+	       {
+	    	   this.ExcelEmpRepo.saveAll(ExcelEmp);  
+	       }
+	            
+	        
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
 	}
-	
+
 	public List<ResourcePoolHistory> getAllEmploye(){
 		return this.ExcelEmpRepo.findAll();
 		

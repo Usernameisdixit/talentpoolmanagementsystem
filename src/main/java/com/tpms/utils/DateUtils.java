@@ -1,14 +1,14 @@
 package com.tpms.utils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
+
 
 public class DateUtils {
 	public static String monthDayDifference(String date1, String date2) {
 		
-		DateTimeFormatter f = DateTimeFormatter.ofPattern ( "yyyy-MM-dd" );
+		//DateTimeFormatter f = DateTimeFormatter.ofPattern ( "yyyy-MM-dd" );
 	  
 		//LocalDateTime locadatetime1= LocalDateTime.parse(date1, f);
 		//LocalDateTime locadatetime2= LocalDateTime.parse(date2, f);

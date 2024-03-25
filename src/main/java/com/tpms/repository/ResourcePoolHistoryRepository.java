@@ -1,11 +1,12 @@
 package com.tpms.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.tpms.dto.ResourcePoolHistoryDto;
+
 import com.tpms.entity.ResourcePoolHistory;
 
 public interface ResourcePoolHistoryRepository extends JpaRepository<ResourcePoolHistory, Integer> {
@@ -13,8 +14,25 @@ public interface ResourcePoolHistoryRepository extends JpaRepository<ResourcePoo
 	/*@Query(value = "select distinct resourceCode, resourceName,  min(allocationDate), max(allocationDate) from ResourcePoolHistory  group by resourceCode, resourceName order by resourceName")
 	public List<ResourcePoolHistoryDto> MinMaxAllocationDate();*/
 	
-	@Query(value = "select distinct resourceCode, resourceName,  min(allocationDate), max(allocationDate) from resource_pool_history  group by resourceCode, resourceName order by resourceName", nativeQuery = true)
-	public List<Object[]> MinMaxAllocationDate();
+	@Query(value = "SELECT resourceCode, resourceName, " +
+            "DATE_FORMAT(MIN(allocationDate), '%Y-%m-%d') AS minAllocationDate, " +
+            "DATE_FORMAT(MAX(allocationDate), '%Y-%m-%d') AS maxAllocationDate " +
+            "FROM resource_pool_history " +
+            "GROUP BY resourceCode, resourceName " +
+            "ORDER BY resourceName", nativeQuery = true)
+		List<Object[]> MinMaxAllocationDate();
+
+	List<ResourcePoolHistory> findByAllocationDate(LocalDate allocationDate);
+
+	void deleteByAllocationDate(LocalDate allocationDate);
+
+	 @Query(value = "SELECT r.resourceHistoryId, r.resourceName, r.resourceCode, r.designation, " +
+	            "r.platform, r.location, r.engagementPlan, r.experience, r.allocationDate AS resourceAllocationDate, " +
+	            "e.allocationDate AS excelAllocationDate, r.phoneNo, r.email, e.fileName " +
+	            "FROM resource_pool_history r " +
+	            "LEFT JOIN excel_upload_history e ON r.allocationDate = e.allocationDate " +
+	            "WHERE r.deletedFlag =0 AND e.deletedFlag=0 ", nativeQuery = true)
+	 		List<Object[]> getResourceDetailsWithFileNameR();
 	
 	
 }

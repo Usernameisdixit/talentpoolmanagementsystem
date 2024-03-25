@@ -3,10 +3,10 @@ package com.tpms.controller;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,6 +48,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
+import com.tpms.entity.ResourcePoolHistory;
 import com.tpms.repository.PlatformRepository;
 import com.tpms.service.impl.ExcelUploadEmployeeServiceImpl;
 import com.tpms.service.impl.ResourcePoolServiceImpl;
@@ -173,7 +174,11 @@ public class ResourceExcelController {
 			
 		}
 		
-	
+		@GetMapping("/emp/getResourceDetailsWithFileName")
+		public List<Object[]> getResourceDetailsWithFileNameC(){
+			return this.resourcepoolserviceimpl.getResourceDetailsWithFileNameS();
+			
+		}
 	   
 		//Get Particular Resource From Talent Resource Pool
 		@GetMapping("/emp/talent/{id}")
@@ -223,7 +228,31 @@ public class ResourceExcelController {
 			return ResponseEntity.ok().body(response);
 		}
 	
-		
+		  @GetMapping("/emp/download/{fileName}")
+		    public ResponseEntity<byte[]> downloadExcel(@PathVariable String fileName) throws IOException {  // Construct the file path
+		       
+		    	String filePath = fileDirectory + fileName;
+
+		   
+		        File file = new File(filePath);
+		        if (!file.exists()) {
+		            
+		            return ResponseEntity.notFound().build();
+		        }
+
+		     
+		        byte[] excelBytes;
+		        try (InputStream inputStream = new FileInputStream(file)) {
+		            excelBytes = inputStream.readAllBytes();
+		        }
+
+		      
+		        HttpHeaders headers = new HttpHeaders();
+		        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		        headers.setContentDispositionFormData("attachment", fileName);
+
+		        // Return the byte array as a ResponseEntity
+		        return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);}
 		
 
 		@GetMapping("/downloadTemplate")
@@ -231,19 +260,22 @@ public class ResourceExcelController {
 	        try {
 	           
 	            Workbook workbook = new XSSFWorkbook();
-	            Sheet sheet = workbook.createSheet("EmployeeData");
+	            Sheet sheet = workbook.createSheet("ResourceData");
 
 	            Font boldFont = workbook.createFont();
 	            boldFont.setBold(true);
+	            boldFont.setFontName("Arial");
+	            boldFont.setFontHeightInPoints((short) 12);
 	            CellStyle boldStyle = workbook.createCellStyle();
 	            boldStyle.setFont(boldFont);
 	            
 	            
 	            Row headerRow = sheet.createRow(0);
-	            String[] headers = {"Employee Code", "Employee Name", "Designation", "Technology", "Email", "PhoneNo", "Location", "Engagement Plan", "Exp"};
+	            String[] headers = {"SL No","Employee Code", "Employee Name", "Designation", "Technology", "Email", "PhoneNo", "Location", "Engagement Plan", "Exp"};
 	            for (int i = 0; i < headers.length; i++) {
 	                Cell cell = headerRow.createCell(i);
 	                cell.setCellValue(headers[i]);
+	                cell.setCellStyle(boldStyle);
 	            }
 
 	            

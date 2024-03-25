@@ -3,7 +3,7 @@ package com.tpms.service.impl;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
+
 import java.util.ArrayList;
 
 import java.util.Date;
@@ -17,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tpms.dto.ResourcePoolHistoryDto;
 import com.tpms.entity.ResourcePool;
 import com.tpms.entity.ResourcePoolHistory;
-import com.tpms.entity.Role;
+
 import com.tpms.repository.ResourcePoolHistoryRepository;
 import com.tpms.repository.ResourcePoolRepository;
 import com.tpms.utils.DateUtils;
@@ -70,11 +70,19 @@ public class ResourcePoolServiceImpl {
 
 						/*************************Updated Data that is not Present in Excel (Tagged Resources)******************/
 						if (ResourceCodepool != null) {
-						    tbl_resource_poolMatch.removeIf(obj -> {
+						    for (ResourcePool obj : tbl_resource_poolMatch) {
 						        String resourceCode = obj.getResourceCode();
-						        return resourceCode != null && resourceCode.equalsIgnoreCase(ResourceCodepool);
-						    });
+						        if (resourceCode != null && resourceCode.equalsIgnoreCase(ResourceCodepool)) {
+						          
+						            if (obj.getDeletedFlag() == 1) {
+						                obj.setDeletedFlag((byte) 0); 
+						            }
+						            tbl_resource_poolMatch.remove(obj); 
+						            break; 
+						        }
+						    }
 						}
+
 
 						/***************Excel Data Uploaded that is not Matched Current Data(New Resources)******************/				
 						if (ResourceCodeExcel != null) {
@@ -127,7 +135,8 @@ public class ResourcePoolServiceImpl {
 					Emp.setAllocationDate(allocationDate);
 					Emp.setDeletedFlag((byte) 0);
 					//Emp.setStatus("A");
-					tbl_resource_poolNotMatch1.add(Emp);
+					if(Emp.getResourceCode()!=null)
+						tbl_resource_poolNotMatch1.add(Emp);
 				
 				
 			this.tbl_resource_pool_Repository.saveAll(tbl_resource_poolNotMatch1);
@@ -153,7 +162,9 @@ public class ResourcePoolServiceImpl {
 					Emp.setAllocationDate(allocationDate);
 					Emp.setDeletedFlag((byte) 0);
 					//Emp.setStatus("A");
-					tbl_resource_poolNotMatch1.add(Emp);
+					if(Emp.getResourceCode()!=null)
+						tbl_resource_poolNotMatch1.add(Emp);
+				
 				}
 				
 				this.tbl_resource_pool_Repository.saveAll(tbl_resource_poolNotMatch1);	
@@ -243,6 +254,11 @@ public class ResourcePoolServiceImpl {
 	
 	public void updateBitDeletedFlagByFalse(Integer id) {
 		tbl_resource_pool_Repository.updateBitDeletedFlagByFalse(id);
+	}
+
+	public List<Object[]> getResourceDetailsWithFileNameS() {
+	
+		return tbl_resource_pool_Repository_history.getResourceDetailsWithFileNameR();
 	}
 
 	
