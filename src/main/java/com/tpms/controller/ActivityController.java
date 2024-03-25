@@ -147,8 +147,7 @@ public class ActivityController {
 	}
 	
 	@PostMapping("saveBulkAllocation")
-	void saveBulkAllocation(/*@RequestBody String data*/) {
-		String data = "{\"markedResources\":[{\"resourceId\":1,\"platformId\":1},{\"resourceId\":2,\"platformId\":1},{\"resourceId\":22,\"platformId\":1},{\"resourceId\":4,\"platformId\":2}],\"allocData\":{\"activityDate\":\"2024-03-22T04:49:50.000Z\",\"details\":[{\"activityFor\":\"1\",\"activity\":{\"activityId\":\"5\",\"activityName\":\" Java \"},\"fromHours\":\"11:45\",\"toHours\":\"12:35\",\"activityDetails\":\"zczx\"},{\"activityFor\":\"2\",\"activity\":{\"activityId\":\"6\",\"activityName\":\" ReactJS \"},\"fromHours\":\"15:35\",\"toHours\":\"16:45\",\"activityDetails\":\"bvvvn\"}]}}";
+	void saveBulkAllocation(@RequestBody String data) {
 		JSONArray markedResources = null;
 		ActivityAllocation allocData = null;
 		try {
