@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -12,14 +13,14 @@ export class DashboardComponent  implements OnInit{
 
   resources:any;
   allocationDate: any;
-  constructor(private  contactService:ContactService){}
+  constructor(private  contactService:ContactService,private datePipe:DatePipe){}
 
   ngOnInit(): void {
     //throw new Error('Method not implemented.');
     this.contactService.getResources().subscribe((response:any)=>{
       this.resources=response.resources;
-      this.allocationDate=response.allocationDate;
-      console.log("All resources with Date",this.resources,this.allocationDate);
+      const inputDate = new Date(response.allocationDate);
+      this.allocationDate = this.datePipe.transform(inputDate, 'd MMMM yyyy');
     })
   }
   }
