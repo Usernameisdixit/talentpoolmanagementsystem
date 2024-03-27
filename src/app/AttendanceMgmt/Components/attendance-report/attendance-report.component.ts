@@ -45,7 +45,7 @@ export class AttendanceReportComponent {
   monthName : string ='';
   year: string = '';
   month: string = '0';
-  platform: string = '0';
+  platform: string = '-1';
   attendanceDetails: any[] = [];
   months: { value: string; name: string; }[] = [];
   platforms: any[] = [];
@@ -55,7 +55,7 @@ export class AttendanceReportComponent {
   ngOnInit() {
     console.log(this.options);
     this.loadPlatforms();
-    this.platform = '0';
+    this.platform = '-1';
     this.year = this.getCurrentYear().toString();
     this.month = '0'; 
     // Populate months array
@@ -77,18 +77,31 @@ export class AttendanceReportComponent {
 
 
   generatePDF() {
+    console.log(this.inputType==='platform');
     this.resourceValue = this.myControl.value;
     if(!this.resourceValue){
       this.resourceValue="0";
      }
     this.clearResourceInput();
-    console.log("hi"+this.resourceValue);
     this.getMonthName(parseInt(this.month)-1)
-    if (this.month === '0') {
+    if (this.month === '0') { 
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
         text: 'Please choose a month before generating the PDF!',
+      });
+    }else if(this.inputType==='resource' && this.resourceValue === '0'){
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Please Enter Resource before generating the PDF!',
+        });
+      
+    }else if(this.inputType==='platform' && this.platform === '-1'){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please Select Platform generating the PDF!',
       });
     } else {
       if(typeof(this.resourceValue)=='object'){
@@ -99,7 +112,6 @@ export class AttendanceReportComponent {
         .subscribe(data => {
           this.isPresent = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
           if (this.isPresent) {
-          debugger;
            if(this.resourceValue=="0") {
             this.presentResult=0;
             this.absentResult=0
@@ -160,7 +172,7 @@ export class AttendanceReportComponent {
   resetForm() {
     this.myControl.reset();
     this.month = '0';
-    this.platform = '0';
+    this.platform = '-1';
     this.selectedDate = null;
     this.myControl.reset();
    // window.location.reload();
@@ -189,7 +201,6 @@ export class AttendanceReportComponent {
           this.isPresent = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
           if (this.isPresent) {
             console.log(data);
-            debugger;
             if(this.resourceValue=="0") {
               this.presentResult=0;
               this.absentResult=0
@@ -275,12 +286,11 @@ export class AttendanceReportComponent {
 
   clearPlatformInput() {
     if (this.inputType !== 'platform') {
-      this.platform = '0'; 
+      this.platform = '-1'; 
     }
   }
 
   clearResourceInput() {
-    debugger;
     if (this.inputType !== 'resource') {
       this.myControl.reset();
       this.resourceValue="0";
