@@ -23,7 +23,7 @@ public interface ResourcePoolRepository extends JpaRepository<ResourcePool, Inte
 	List<ResourcePool> findByPlatform(String platform);
 
 	@Query("SELECT r FROM ResourcePool r"
-			+ " LEFT JOIN r.activityAlloc a ON a.activityDate=:activityDate AND (a is null or a.deletedFlag=false)"
+			+ " LEFT JOIN r.activityAlloc a ON a.activityFromDate=:activityDate AND (a is null or a.deletedFlag=false)"
 			+ " LEFT JOIN a.details d ON (d is null or d.deletedFlag=false)"
 			+ " LEFT JOIN Platform p ON r.platform=p.platform"
 			+ " WHERE r.deletedFlag=0"

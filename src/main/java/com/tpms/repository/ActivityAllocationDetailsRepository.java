@@ -26,7 +26,7 @@ public interface ActivityAllocationDetailsRepository extends JpaRepository<Activ
 	        + "FROM activity_allocation_details act_det "
 	        + "JOIN activity_allocation act_alloc ON act_det.activityAllocateId = act_alloc.activityAllocateId "
 	        + "JOIN activity act ON act_det.activityId = act.activityId "
-	        + "WHERE act_alloc.activityDate BETWEEN :fromDate AND :toDate", nativeQuery = true)
+	        + "WHERE act_alloc.activityFromDate BETWEEN :fromDate AND :toDate", nativeQuery = true)
 	List<Object[]> getActivitiesBetweenDates(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
  

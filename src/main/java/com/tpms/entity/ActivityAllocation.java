@@ -27,7 +27,9 @@ public class ActivityAllocation {
 
 	private Integer platformId;
 
-	private Date activityDate;
+	private Date activityFromDate;
+	
+	private Date activityToDate;
 
 	private Integer createdBy;
 

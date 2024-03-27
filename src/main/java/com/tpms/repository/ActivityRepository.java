@@ -22,7 +22,7 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 	@Query(value="SELECT distinct a.* FROM activity a " +
 	           "INNER JOIN activity_allocation_details aloDetails ON a.activityId = aloDetails.activityId " +
 	           "INNER JOIN activity_allocation allocation ON allocation.activityAllocateId = aloDetails.activityAllocateId " +
-	           "WHERE allocation.activityDate = :selectedDate",nativeQuery = true)
+	           "WHERE allocation.activityFromDate = :selectedDate",nativeQuery = true)
 	List<Activity> getActvitiesByDate(String selectedDate);
 	
 }
