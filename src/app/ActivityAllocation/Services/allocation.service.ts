@@ -58,4 +58,8 @@ export class AllocationService {
   saveBulkAllocation(markedResources: any[], allocData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/saveBulkAllocation`, {markedResources: markedResources, allocData: allocData});
   }
+
+  getPlatformIdByName(platformName: string): Observable<number> {
+    return this.http.get<any>(`${this.apiUrl}/platformsIdByName?platformName=${platformName}`);
+  }
 }

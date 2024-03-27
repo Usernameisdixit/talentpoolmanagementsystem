@@ -73,4 +73,8 @@ deleteByResourceNumber(id:number):Observable<string>{
   return this.httpClient.post(`${this.baseUrl}/delete/talent/${id}`,id, {responseType:"text"});
 }
 
+getResources(): Observable<any[]> {
+  return this.httpClient.get<any[]>('http://localhost:9999/tpms/getActiveResorces');
+}
+
 }

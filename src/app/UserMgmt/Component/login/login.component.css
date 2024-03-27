@@ -68,3 +68,12 @@
   width: 100%;
 }
 
+.card{
+  margin-top: 50px;
+
+}
+
+.example::-webkit-scrollbar {
+  display: none;
+}
+
