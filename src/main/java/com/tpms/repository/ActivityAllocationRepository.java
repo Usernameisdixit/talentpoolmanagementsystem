@@ -29,7 +29,7 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
              "INNER JOIN activity_allocation_details aa ON a.activityAllocateId = aa.activityAllocateId " +
              "INNER JOIN resource_pool r ON r.resourceId = a.resourceId " +
              "INNER JOIN activity act ON act.activityId = aa.activityId " +
-             "INNER JOIN platforms p ON p.platformId = a.platformId " +
+             "LEFT JOIN platforms p ON p.platformId = a.platformId " +
              "WHERE aa.activityId = :activityId " +
              "AND a.activityDate BETWEEN :fromDate AND :toDate", nativeQuery = true)
 	   List<Object[]> findByPlatformIdAndActivityDateBetweenAndDeletedFlagIsFalse(Integer activityId, Date fromDate, Date toDate);
