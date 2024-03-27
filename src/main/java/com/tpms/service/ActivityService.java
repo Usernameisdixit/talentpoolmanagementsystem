@@ -34,7 +34,7 @@ public interface ActivityService {
 
 	public ActivityAllocation saveAllocation(ActivityAllocation data);
 
-	public ActivityAllocation getAllocationDetailsByResource(Integer id, Date activityDate);
+	public String getAllocationDetailsByResource(Integer id, Date activityDate);
 
 	public ResourcePoolProjection getResource(Integer resourceId);
 

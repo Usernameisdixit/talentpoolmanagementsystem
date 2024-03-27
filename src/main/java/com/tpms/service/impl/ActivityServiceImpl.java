@@ -261,8 +261,16 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 
-	public ActivityAllocation getAllocationDetailsByResource(Integer resourceId, Date activityDate) {
-		return activityAllocRepo.findByResourceId(resourceId,activityDate);
+	public String getAllocationDetailsByResource(Integer resourceId, Date activityDate) {
+		String result = null;
+		try {
+			activityAllocRepo.findByResourceId(resourceId,activityDate);
+			result = "success";
+		}catch(Exception e){
+			result = "fail";
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 
