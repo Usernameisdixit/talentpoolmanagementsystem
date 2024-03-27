@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import com.tpms.dto.ResourcePoolProjection;
 import com.tpms.entity.Activity;
 import com.tpms.entity.ActivityAllocation;
+import com.tpms.entity.ActivityAllocationDetails;
 import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
 import com.tpms.repository.ActivityAllocationRepository;
@@ -237,7 +238,7 @@ public class ActivityServiceImpl implements ActivityService {
 				List<ActivityAllocation> activityAlloc = resources.get(i).getActivityAlloc();
 				int j = 0;
 				while(j<activityAlloc.size()) {
-					if(!parsedDate.equals(activityAlloc.get(j).getActivityDate()) || activityAlloc.get(j).getDeletedFlag())
+					if(!parsedDate.equals(activityAlloc.get(j).getActivityFromDate()) || activityAlloc.get(j).getDeletedFlag())
 						activityAlloc.remove(j);
 					else
 						j++;
@@ -288,21 +289,43 @@ public class ActivityServiceImpl implements ActivityService {
 
 	@Override
 	public void saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData) {
-		int length = markedResources.length();
-		List<ActivityAllocation> activityAllocList = new ArrayList<>();
-		for (int i = 0; i < length; i++) {
-			ActivityAllocation activityAllocation = new ActivityAllocation();
-			try {
-				activityAllocation.setResourceId(markedResources.getJSONObject(i).getInt("resourceId"));
-				activityAllocation.setPlatformId(markedResources.getJSONObject(i).getInt("platformId"));
-				activityAllocation.setActivityDate(allocData.getActivityDate());
-				activityAllocation.setDetails(allocData.getDetails());
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			activityAllocList.add(activityAllocation);
-		}
-		activityAllocRepo.saveAll(activityAllocList);
+	    List<ActivityAllocation> activityAllocList = new ArrayList<>();
+
+	    for (int i = 0; i < markedResources.length(); i++) {
+	        try {
+	            JSONObject resource = markedResources.getJSONObject(i);
+
+	            ActivityAllocation activityAllocation = new ActivityAllocation();
+	            activityAllocation.setResourceId(resource.getInt("resourceId"));
+	            activityAllocation.setPlatformId(resource.getInt("platformId"));
+	            activityAllocation.setActivityFromDate(allocData.getActivityFromDate());
+
+	           
+	            List<ActivityAllocationDetails> detailsList = new ArrayList<>();
+	            for (ActivityAllocationDetails originalDetail : allocData.getDetails()) {
+	                ActivityAllocationDetails newDetail = new ActivityAllocationDetails();
+	               
+	                newDetail.setActivityFor(originalDetail.getActivityFor());
+	                newDetail.setFromHours(originalDetail.getFromHours());
+	                newDetail.setToHours(originalDetail.getToHours());
+	                newDetail.setActivityDetails(originalDetail.getActivityDetails());
+	                newDetail.setActivity(originalDetail.getActivity());
+	              
+	                newDetail.setActivityAllocation(activityAllocation);
+	               
+	                detailsList.add(newDetail);
+	            }
+	          
+	            activityAllocation.setDetails(detailsList);
+
+	          
+	            activityAllocList.add(activityAllocation);
+	        } catch (JSONException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    activityAllocRepo.saveAll(activityAllocList);
 	}
 
 
