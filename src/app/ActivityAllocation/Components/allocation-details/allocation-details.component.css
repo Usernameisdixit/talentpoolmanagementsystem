@@ -1,3 +1,7 @@
 .resource-info {
     font-size: medium;
 }
+
+.required {
+    color: red;
+}
