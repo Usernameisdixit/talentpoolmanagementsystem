@@ -17,8 +17,8 @@
   </div>
 </div>
 <div class="table-responsive mt-2" id="userTable">
-  <table class="table table-striped table-bordered">
-    <thead class="thead-dark">
+  <table>
+    <thead>
        <tr>
          <th>Sl No</th>
          <th>User Full Name</th>
@@ -44,8 +44,8 @@
               <td>{{user.role.roleName}}</td>
               <td>{{user.email}}</td>
               <td>{{user.phoneNo}}</td>
-              <td id="toggleButton" *ngIf="user.deletedFlag" class="text-danger text-bold">InActive</td>
-              <td id="toggleButton" *ngIf="!user.deletedFlag" class="text-success text-bold">Active</td>
+              <td id="toggleButton" *ngIf="user.deletedFlag" class="status-inactive">InActive</td>
+              <td id="toggleButton" *ngIf="!user.deletedFlag" class="status-active">Active</td>
               <td>
                 <div class="btn-group">
                   <button *ngIf="!user.deletedFlag" type="button" class="btn btn-primary btn-sm" (click)="editUser(user.userId);"><i class="fas fa-edit"></i></button>
@@ -67,7 +67,7 @@
       </tbody>
     </table>
     </div>
-    <div class="d-flex justify-content-end" id="pagination" *ngIf="userList">
+    <div class="d-flex justify-content-end mt-2" id="pagination" *ngIf="userList">
       <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)= "getTableDataChange($event)"></pagination-controls>
     </div>
   </div>

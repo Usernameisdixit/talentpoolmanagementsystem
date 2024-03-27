@@ -16,17 +16,12 @@
 
 
 .status-active {
-  background-color: #28a745;
-  color: #fff;
+  color: #28a745;
 }
 
 .status-inactive {
-  background-color: #dc3545;
-  color: #fff;
+  color: #dc3545;
 }
-
-  
- 
 
   .export-buttons {
   margin-top: 20px;
@@ -50,4 +45,51 @@
 .btn-light:hover {
   background-color: #e2e6ea;
   color: #000;
+}
+
+.pdf-icon {
+  color: #ff5733;
+}
+
+.excel-icon {
+  color: #2e8b57; 
+}
+
+.button-container {
+  display: flex;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 800px;
+  margin: 0 auto; 
+}
+
+th, td {
+  border: 1px solid #dfdddd; 
+  padding: 8px;
+}
+
+/* Header row styles */
+th {
+  background-color: #40c0c7; 
+  color: #0e0d0d; 
+  font-weight: bold; 
+  
+}
+
+/* Alternate row colors */
+tr:nth-child(even) {
+  background-color: #f0eeee; 
+}
+
+/* Hover effect on rows */
+tr:hover {
+  background-color: #f5f5f5; 
+}
+
+.hover-button:hover + .hidden-text {
+  display: block; /* Show the text when the button is hovered */
 }
