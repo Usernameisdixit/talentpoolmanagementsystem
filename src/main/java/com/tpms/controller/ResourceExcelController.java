@@ -28,9 +28,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.core.io.InputStreamResource;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,7 +38,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,11 +45,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
-import com.tpms.entity.ResourcePoolHistory;
+import com.tpms.repository.ExcelUploadHistoryRepository;
 import com.tpms.repository.PlatformRepository;
+import com.tpms.repository.ResourcePoolRepository;
 import com.tpms.service.impl.ExcelUploadEmployeeServiceImpl;
 import com.tpms.service.impl.ResourcePoolServiceImpl;
-
 import com.tpms.utils.ExcelUtils;
 
 
@@ -72,6 +69,12 @@ public class ResourceExcelController {
 	
 	@Autowired
 	private ResourcePoolServiceImpl resourcepoolserviceimpl;
+	
+	@Autowired
+	private ResourcePoolRepository resourcePoolRepository;
+	
+	@Autowired
+	private ExcelUploadHistoryRepository excelUploadHistoryRepository;
 	
 	@Value("${file.directory}")
 	private String fileDirectory;
@@ -306,6 +309,16 @@ public class ResourceExcelController {
 	            return ResponseEntity.status(500).build();
 	        }
 	    }
+		
+		// Dashboard part [Resource]
+		@GetMapping("/getActiveResorces")
+		public ResponseEntity<?> getActiveResorces() {
+			// Integer resources = resourcePoolRepository.findAll().size();
+			List<ResourcePool> resourceList = resourcePoolRepository.findAll();
+			Integer resources = (int) resourceList.stream().count();
+			LocalDate allocationDate = excelUploadHistoryRepository.findLatestDate();
+			return ResponseEntity.ok(Map.of("resources", resources, "allocationDate", allocationDate));
+		}
 		
 		
 	    

@@ -1,6 +1,7 @@
 package com.tpms.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -118,8 +121,21 @@ public class ActivityController {
 	}
 	
 	@GetMapping("allocationDetails")
-	ActivityAllocation getAllocationDetailsByResource(@RequestParam("id") Integer resourceId, @RequestParam("date") Date activityDate) {
-		return activityService.getAllocationDetailsByResource(resourceId,activityDate);
+	ResponseEntity<Map<String, Object>> getAllocationDetailsByResource(@RequestParam("id") Integer resourceId, @RequestParam("date") Date activityDate) {
+		Map<String, Object> response = new HashMap<>();
+		try {
+		String result= activityService.getAllocationDetailsByResource(resourceId,activityDate);
+		if(result=="success") {
+			response.put("status", 200);
+			response.put("success", "Attendance Save Succesfully");
+			}else {
+				response.put("Error", "Error");
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			response.put("Error", "Error");
+		}
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	/**
@@ -159,5 +175,11 @@ public class ActivityController {
 		}  
 		activityService.saveBulkAllocation(markedResources,allocData);
 	}
+	
+	 @GetMapping("/platformsIdByName")
+	    public Integer getPlatformIdByName(@RequestParam("platformName") String platformName) {
+	        Integer platFormId= activityService.platformIdByName(platformName);
+	        return platFormId;
+	    }
 
 }

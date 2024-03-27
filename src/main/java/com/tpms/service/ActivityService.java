@@ -34,12 +34,14 @@ public interface ActivityService {
 
 	public ActivityAllocation saveAllocation(ActivityAllocation data);
 
-	public ActivityAllocation getAllocationDetailsByResource(Integer id, Date activityDate);
+	public String getAllocationDetailsByResource(Integer id, Date activityDate);
 
 	public ResourcePoolProjection getResource(Integer resourceId);
 
 	public List<ResourcePoolProjection> findAllWithoutRelatedEntity();
 
 	public void saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData);
+
+	public Integer platformIdByName(String platformName);
 
 }
