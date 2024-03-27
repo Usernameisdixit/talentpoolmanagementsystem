@@ -56,7 +56,14 @@ button.mat-icon-button {
   background-color: #f0f0f0;
   color: #103477; /* Change text color on hover */
 }
+.user-info {
+  display: flex;
+  align-items: center;
+}
 
+.date {
+  font-size: 12px;
+}
 
 
 

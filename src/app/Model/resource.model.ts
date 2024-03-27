@@ -17,4 +17,6 @@ export class Resource {
     deletedFlag!: boolean;
     isAllocatedActivity!: boolean;
     activityAlloc: any[];
+    selected: any;
+    platformId: any;
 }

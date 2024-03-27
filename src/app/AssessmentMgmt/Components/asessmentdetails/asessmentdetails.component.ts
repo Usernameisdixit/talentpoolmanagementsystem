@@ -195,6 +195,7 @@ export class AsessmentdetailsComponent implements OnInit {
 
 
 updateTotalMarks(assessment: any): void {
+  debugger;
 
   const sameActivityAssessments = this.assessments.filter(a =>
     a.activityDetails.activity.activityName === assessment.activityDetails.activity.activityName

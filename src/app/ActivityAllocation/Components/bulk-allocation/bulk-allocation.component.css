@@ -1,3 +1,29 @@
 /* .alloc-btn {
     padding-bottom: 50px;
 } */
+
+
+
+.custom-label {
+    margin-right: 12px; /* Add some space between the checkbox and label */
+    font-size: 20px;
+ 
+   
+
+}
+/* Add custom styles for checkboxes */
+.custom-checkbox {
+    margin-top: 0.3rem;
+
+  }
+  
+  /* Add padding and margin to the accordion */
+  .mat-expansion-panel {
+    margin-bottom: 10px;
+  }
+  
+  /* Add padding to the panel title */
+  .mat-expansion-panel-header {
+    padding: 10px;
+  }
+  

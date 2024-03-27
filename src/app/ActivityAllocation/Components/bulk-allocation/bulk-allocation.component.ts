@@ -8,6 +8,7 @@ import { DateService } from '../../Services/date.service';
 import { DatePipe } from '@angular/common';
 import { Platform } from 'src/app/Model/Platform';
 import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-bulk-allocation',
@@ -25,6 +26,7 @@ export class BulkAllocationComponent {
   selectedActivityTo: any;
   selectedDetails: any;
   resourceId: any;
+  platformId :any;
   selectedDate!: Date;
   allocateId: any;
   // resource: Resource;
@@ -46,7 +48,9 @@ export class BulkAllocationComponent {
               private activatedRoute: ActivatedRoute, private dateService: DateService,
               private datePipe: DatePipe, private localeService: BsLocaleService) {
                 this.activatedRoute.paramMap.subscribe(params => {
+                  console.log(params);
                   this.resourceId = params.get('id');
+            
                 });
                 this.localeService.use('en-gb');
               }
@@ -97,13 +101,45 @@ export class BulkAllocationComponent {
   }
 
   submitForm(): void {
-    const data = {activityDate: this.selectedDate, details: this.dynamicArray};
-    // this.allocationService.saveActivities(data).subscribe();
-    // this.router.navigateByUrl('/activity').then(() => {
-    //   this.router.navigate([this.router.url]);
-    // });
-    this.allocationService.saveBulkAllocation(this.markedResources,data).subscribe();
+
+    if (this.dynamicArray.length === 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Please add add more details.',
+      });
+      return;
+    }
+
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to save the activity allocation details?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, save it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const data = {activityDate: this.selectedDate, details: this.dynamicArray};
+        this.allocationService.saveBulkAllocation(this.markedResources, data).subscribe(() => {
+          Swal.fire(
+            'Saved!',
+            'Activity allocation details has been saved successfully.',
+            'success'
+          );
+        }, () => {
+          Swal.fire(
+            'Error!',
+            'An error occurred while saving your data.',
+            'error'
+          );
+        });
+      }
+    });
   }
+  
 
   toggle(event: Event, resourceId: number, platformId: number): void {
     if((event.target as HTMLInputElement).checked)
@@ -112,5 +148,85 @@ export class BulkAllocationComponent {
     this.markedResources = this.markedResources.filter(r=>r.resourceId!=resourceId);
     console.log(this.markedResources);
   }
+
+
+  // selectAllResources(event: any) {
+  //   debugger;
+  //   const isChecked = event.target.checked;
+  //   for (let resource of this.resources) {
+  //       resource.selected = isChecked;
+  //       if (isChecked) {
+  //           this.markedResources.push({"resourceId": resource.resourceId, "platformId": resource.platformId});
+       
+  //       } else {
+  //           this.markedResources = this.markedResources.filter(r => r.resourceId !== resource.resourceId);
+  //       }
+  //   }
+  // }
+  
+
+  selectAllResources(event: any) {
+    const isChecked = event.target.checked;
+    if (isChecked) {
+      this.markedResources = [];
+      for (let platform of this.platforms) {
+        
+        for (let resource of this.resources) {
+          resource.selected = isChecked;
+          if (resource.platform.trim() === platform.platform.trim()) {
+            this.markedResources.push({ "resourceId": resource.resourceId, "platformId": platform.platformId });
+          }
+        }
+      }
+    } else {
+      this.markedResources = [];
+    }
+  }
+
+  selectAllPlatforms(event: any): void {
+    const isChecked = event.target.checked;
+  
+    if (isChecked) {
+      this.markedResources = [];
+  
+     
+      for (let platform of this.platforms) {
+        for (let resource of this.resources) {
+          if (resource.platform.trim() === platform.platform.trim()) {
+            this.markedResources.push({"resourceId": resource.resourceId, "platformId": platform.platformId});
+          }
+        }
+      }
+    } else {
+    
+      this.markedResources = [];
+    }
+  }
+  
+
+
+
+
+
+  togglePlatform(event: any, platform: any) {
+    const isChecked = event.target.checked;
+  
+    platform.selected = isChecked;
+  
+    
+    for (let resource of this.resources) {
+      
+      if (resource.platform.trim() === platform.platform.trim()) {
+       
+        resource.selected = isChecked;
+        this.markedResources.push({"resourceId": resource.resourceId, "platformId": platform.platformId});
+      }
+    }
+  }
+  
+
+
+
+  
 
 }
