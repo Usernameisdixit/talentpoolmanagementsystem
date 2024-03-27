@@ -159,5 +159,11 @@ public class ActivityController {
 		}  
 		activityService.saveBulkAllocation(markedResources,allocData);
 	}
+	
+	 @GetMapping("/platformsIdByName")
+	    public Integer getPlatformIdByName(@RequestParam("platformName") String platformName) {
+	        Integer platFormId= activityService.platformIdByName(platformName);
+	        return platFormId;
+	    }
 
 }

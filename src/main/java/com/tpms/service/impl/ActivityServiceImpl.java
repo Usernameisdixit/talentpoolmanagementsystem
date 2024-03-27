@@ -297,4 +297,11 @@ public class ActivityServiceImpl implements ActivityService {
 		activityAllocRepo.saveAll(activityAllocList);
 	}
 
+
+	@Override
+	public Integer platformIdByName(String platformName) {
+		Integer id=platformRepo.findPlatformIdByPlatform(platformName);
+		return id;
+	}
+
 }

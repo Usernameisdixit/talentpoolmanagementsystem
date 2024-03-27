@@ -42,4 +42,6 @@ public interface ActivityService {
 
 	public void saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData);
 
+	public Integer platformIdByName(String platformName);
+
 }

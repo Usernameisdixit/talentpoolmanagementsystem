@@ -23,5 +23,8 @@ public interface PlatformRepository extends JpaRepository<Platform, Integer> {
 	  */
 	 List<Platform> findByDeletedFlagFalse();
 
+		 @Query(value = "SELECT distinct platformId FROM platforms where deletedFlag=0 and platform=:platformName", nativeQuery = true)
+	 Integer findPlatformIdByPlatform(String platformName);
+
 	
 }
