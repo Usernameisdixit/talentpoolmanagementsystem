@@ -294,6 +294,7 @@ export class AttendanceReportComponent {
     if (this.inputType !== 'resource') {
       this.myControl.reset();
       this.resourceValue="0";
+      this.options1=[];
     }
   }
  
