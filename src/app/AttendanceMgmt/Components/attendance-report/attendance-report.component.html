@@ -32,12 +32,23 @@
             </select>
         </div>
     </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="date">Date:</label>
+            <div class="input-group">
+                <input id="date" class="form-control" type="text" [(ngModel)]="selectedDate" bsDatepicker
+                    [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }" placeholder="Select date" />
+                <span class="input-group-text"><i class="material-icons">date_range</i></span>
+            </div>
+        </div>
+    </div>
     <!-- <div class="col-md-3"> -->
     <div class="col-md-3" *ngIf="inputType === 'platform'">
         <div class="form-group">
-            <label for="platform">Platform:</label>
+            <label for="platform">Platform: <span class="required">*</span></label>
             <select id="platform" [(ngModel)]="platform" class="form-control">
-                <option value='0' selected>--Select--</option>
+                <option value='-1' selected>--Select--</option>
+                <option value='0' selected>All</option>
                 <option *ngFor="let platform of platforms" [value]="platform.platform">{{ platform.platform }}
                 </option>
             </select>
@@ -46,7 +57,7 @@
 
     <div class="col-md-3" *ngIf="inputType === 'resource'">
         <div class="form-group">
-            <label for="date">Resorce:</label>
+            <label for="date">Resorce: <span class="required">*</span></label>
             <div class="input-group">
                 <input id="date" class="form-control" type="text" matInput [formControl]="myControl"
                     [matAutocomplete]="auto" />
@@ -59,23 +70,14 @@
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="date">Date:</label>
-            <div class="input-group">
-                <input id="date" class="form-control" type="text" [(ngModel)]="selectedDate" bsDatepicker
-                    [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }" placeholder="Select date" />
-                <span class="input-group-text"><i class="material-icons">date_range</i></span>
-            </div>
-        </div>
-    </div>
+    
     <div class="row justify-content-center mt-4">
         <div class="col-md-6 text-center">
             <button type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button>
             <div class="button-space"></div>
             <button type="button" class="btn btn-success" (click)="generateExcel()">Generate Excel</button>
             <div class="button-space"></div>
-            <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button>
+            <!-- <button type="button" class="btn btn-danger" (click)="resetForm()">Reset</button> -->
         </div>
     </div>
 

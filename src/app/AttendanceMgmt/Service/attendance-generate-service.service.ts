@@ -23,33 +23,76 @@ export class AttendanceGenerateServiceService {
 
   }
   generateAttendanceReport(attendanceDetails: any[], year: string, monthName: string, platformName: string, selectedDate: string, presentCount: number, absentCount: number, resourceValue: any): void {
+    debugger;
     const pdf = new jsPDF();
-
     // Static header content
     pdf.text('Attendance Report', 75, 10);
     const fontSize = 10;
     pdf.setFontSize(fontSize);
     const fy = `Year: ${year}`;;
     const month = `Month: ${monthName}`;
-    if (platformName != '0') {
-      const platform = `Platform: ${platformName === '0' ? '' : platformName}`;
+    if (platformName != '-1') {
+      const platform = `Platform: ${platformName === '0' ? 'All' : platformName}`;
       pdf.text(platform, 10, 26);
+    }else{
+      if (selectedDate != undefined && resourceValue==0){
+      const reportDate = `Date: ${selectedDate === undefined ? '' : selectedDate}`;
+       pdf.text(reportDate, 10, 26);
+      }
     }
+    if (platformName != '-1' && resourceValue==0){
     if (selectedDate != undefined) {
       const reportDate = `Date: ${selectedDate === undefined ? '' : selectedDate}`;
       pdf.text(reportDate, 100, 26);
     }
+  }
 
     pdf.text(fy, 10, 20);
     pdf.text(month, 100, 20);
+    let startYPosForTable=0;
+    if(resourceValue!=0){
+      const resourceNameExtr =  attendanceDetails[0].resourceName ;
+      const name = `Name: ${resourceNameExtr}`; 
+      const resourceCodeExtr =  attendanceDetails[0].resourceCode ;
+      const code = `Resource Code: ${resourceCodeExtr}`; 
+      const date = `Date: ${selectedDate}`;
+      const plaName=attendanceDetails[0].domain
+      const plat = `Platform: ${plaName}`; 
+      if(platformName == '-1' && selectedDate == undefined){
+        pdf.text(name, 10, 26);
+        pdf.text(code, 100, 26);
+        pdf.text(plat, 10, 32);
+        // pdf.text(code, 100, 26);
+       } else if(platformName == '-1' && selectedDate != null){
+        pdf.text(name, 10, 26);
+        pdf.text(code, 100, 26);
+        pdf.text(plat, 10, 32);
+        pdf.text(date, 100, 32);
+      
+      }else{
+        pdf.text(name, 10, 26);
+        pdf.text(code, 100, 26);
+        startYPosForTable=30;
+      }
+    }
+    if(  resourceValue == '0' ){
+      startYPosForTable=30;
+    }else{
+      startYPosForTable=40;
+    }
+
     let head;
     if (resourceValue !== '0'&& selectedDate==null) {
-      head = [['Date','Resource Code', 'Resource Name', 'Platform', 'First Half', 'Second Half']];
-
-    } else {
+      head = [['Date', 'First Half', 'Second Half']];
+    }else if(resourceValue !== '0'&& selectedDate!=null){
+      head =[['Date', 'First Half', 'Second Half']];
+    }else if(platformName!='0'){
+      head = [['Resource Code','Resource Name', 'First Half', 'Second Half']];
+    } else{
       head = [['Resource Code','Resource Name', 'Platform', 'First Half', 'Second Half']];
     }
 
+    
 
     // Table content
     const data = [];
@@ -83,13 +126,30 @@ export class AttendanceGenerateServiceService {
       if (resourceValue != 0 && selectedDate==null) {
         rowData.push(
           { content: detail.activityDate, styles: { fillColor: dataRowColor } },
-          { content: detail.resourceCode, styles: { fillColor: dataRowColor } },
-          { content: detail.resourceName, styles: { fillColor: dataRowColor } },
-          { content: detail.domain, styles: { fillColor: dataRowColor } },
+          // { content: detail.resourceCode, styles: { fillColor: dataRowColor } },
+          // { content: detail.resourceName, styles: { fillColor: dataRowColor } },
+          // { content: detail.domain, styles: { fillColor: dataRowColor } },
           { content: firstHalfData, styles: { fillColor: dataRowColor } },
           { content: secondHalfData, styles: { fillColor: dataRowColor } }
         );
-      } else {
+      } else if(resourceValue != 0 && selectedDate!=null) {
+        rowData.push(
+          { content: detail.activityDate, styles: { fillColor: dataRowColor } },
+          // { content: detail.domain, styles: { fillColor: dataRowColor } },
+          { content: firstHalfData, styles: { fillColor: dataRowColor } },
+          { content: secondHalfData, styles: { fillColor: dataRowColor } }
+        );
+        }else if(platformName!='0'){
+          rowData.push(
+            // detail.activityDate,
+            { content: detail.resourceCode, styles: { fillColor: dataRowColor } },
+            { content: detail.resourceName, styles: { fillColor: dataRowColor } },
+            // { content: detail.domain, styles: { fillColor: dataRowColor } },
+            { content: firstHalfData, styles: { fillColor: dataRowColor } },
+            { content: secondHalfData, styles: { fillColor: dataRowColor } }
+          );
+
+      }else{
         rowData.push(
           // detail.activityDate,
           { content: detail.resourceCode, styles: { fillColor: dataRowColor } },
@@ -104,6 +164,7 @@ export class AttendanceGenerateServiceService {
 
     // Create auto table
     var finalY = null;
+    
     autoTable(pdf, {
       head: head,
       body: data,
@@ -111,7 +172,7 @@ export class AttendanceGenerateServiceService {
         finalY = Math.round(data.cursor.y);
         console.log("Final Y position after table:", finalY);
       },
-      startY: 30,
+      startY: startYPosForTable,
       styles: {
         lineColor: [0, 0, 0],
         lineWidth: 0.5,
@@ -125,16 +186,15 @@ export class AttendanceGenerateServiceService {
       },
       margin: { left: 10 },
     });
-    debugger;
     if (presentCount == 0 && absentCount == 0) {
 
     } else {
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(12);
-      pdf.text(`SUMMARY`, 10, finalY + 10);
+      pdf.text(`Summary`, 10, finalY + 10);
       pdf.setFont("helvetica", "normal");
       pdf.setFontSize(12);
-      pdf.text(`Total Activity: ${presentCount + absentCount}`, 10, finalY + 20);
+      pdf.text(`Total Activity Session: ${presentCount + absentCount}`, 10, finalY + 20);
       pdf.text(`Present: ${presentCount}`, 75, finalY + 20);
       pdf.text(`Absent: ${absentCount}`, 140, finalY + 20);
     }
@@ -145,7 +205,7 @@ export class AttendanceGenerateServiceService {
   private getFirstHalfData(detail: any): string {
     let firstHalfData = '';
     detail.firstHalf.forEach((firstHalfObj, index, array) => {
-      firstHalfData += `${firstHalfObj.activityName} (${firstHalfObj.fromHours} to ${firstHalfObj.toHours}) ${firstHalfObj.attendanceStatus}`;
+      firstHalfData += `${firstHalfObj.activityName} (${firstHalfObj.fromHours} to ${firstHalfObj.toHours}) : ${firstHalfObj.attendanceStatus}`;
       if (index < array.length - 1) {
         firstHalfData += '\n';
       }
@@ -156,7 +216,7 @@ export class AttendanceGenerateServiceService {
   private getSecondHalfData(detail: any): string {
     let secondHalfData = '';
     detail.secondHalf.forEach((secondHalfObj, index, array) => {
-      secondHalfData += `${secondHalfObj.activityName} (${secondHalfObj.fromHours} to ${secondHalfObj.toHours}) ${secondHalfObj.attendanceStatus}`;
+      secondHalfData += `${secondHalfObj.activityName} (${secondHalfObj.fromHours} to ${secondHalfObj.toHours}) : ${secondHalfObj.attendanceStatus}`;
       if (index < array.length - 1) {
         secondHalfData += '\n';
       }
@@ -271,7 +331,6 @@ export class AttendanceGenerateServiceService {
     attendanceDetails.forEach(detail => {
       const activityDate = detail.activityDate;
       // Check if the date has been processed
-      debugger;
       if (resourceValue == "0") {
       if (selectedDate == null && !processedDates.has(activityDate)) {
         const dateRowColor = processedDates.has(activityDate) ? 'white' : 'red';

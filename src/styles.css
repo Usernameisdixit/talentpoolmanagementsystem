@@ -2,7 +2,9 @@
 /* In styles.css */
 @import "~@fortawesome/fontawesome-free/css/all.css";
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body::-webkit-scrollbar{ margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
+    display: none;
+}
 
 .space {
     margin-right: 10px;
@@ -10,8 +12,59 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .pdf-icon {
     color: #ff5733; /* PDF icon color */
-  }
+}
   
-  .excel-icon {
+.excel-icon {
     color: #2e8b57; /* Excel icon color */
-  }
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 800px;
+  margin: 0 auto; 
+}
+
+th, td {
+  border: 1px solid #dfdddd; 
+  padding: 8px;
+}
+
+/* Header row styles */
+th {
+  background-color: #40c0c7; 
+  color: #0e0d0d; 
+  font-weight: bold; 
+  
+}
+
+/* Alternate row colors */
+tr:nth-child(even) {
+  background-color: #f0eeee; 
+}
+
+/* Hover effect on rows */
+tr:hover {
+  background-color: #f5f5f5; 
+}
+
+.hover-button:hover + .hidden-text {
+  display: block; /* Show the text when the button is hovered */
+}
+
+ .card-body {
+  margin: 20px auto; 
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1{
+  color: white;
+  padding: 0 1rem;
+  background: #fff;
+  min-height: 50px;
+  background: rgb(9, 10, 10);
+  margin: 0 ;
+  font-size: 25px;
+}

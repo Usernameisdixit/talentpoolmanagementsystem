@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx-js-style';
+import { DatePipe } from '@angular/common';
 // import * as XLSX from 'xlsx';
 
 @Injectable({
@@ -11,24 +12,31 @@ import * as XLSX from 'xlsx-js-style';
 })
 export class ActivityReportServiceService {
 
-  private activityReportData = 'http://localhost:9999/tpms';
+  private baseurl = 'http://localhost:9999/tpms';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private datePipe: DatePipe) { }
 
-  getActivityReportData(year: string, month: string, platform: string, selectedDate: string, resourceValue: string): Observable<any> {
-    const url = `${this.activityReportData}/activityReportData`;
+  getActivityReportData(platform: string, resourceValue: string, selectedDate: string): Observable<any> {
+    const url = `${this.baseurl}/activityReportData`;
+    let datesArray: string[] = selectedDate.split(" to ");
+    let fromDate: string = datesArray[0];
+    let toDate: string = datesArray[1];   
     const params = {
-      year: year,
-      month: month,
+      fromDate:fromDate,
+      toDate:toDate,
       platform: platform,
-      selectedDate: selectedDate,
       resourceValue: resourceValue
     };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post<any>(url, params, { headers });
   }
 
+  getAllDate(month: any, year: any): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseurl}/getDistinctDate?month=${month}&year=${year}`);
+  }
+
   generateActivityReport(activityData: any[], year: string, monthName: string, platformName: string, selectedDate: string, resourceValue: any): void {
+    debugger;
     const pdf = new jsPDF();
 
     // Static header content
@@ -39,24 +47,54 @@ export class ActivityReportServiceService {
     pdf.setFontSize(fontSize);
     const fy = `Year: ${year}`;;
     const month = `Month: ${monthName}`;
-    if (platformName != '0') {
-      const platform = `Platform: ${platformName === '0' ? '' : platformName}`;
-      pdf.text(platform, 10, 26);
+    // if (platformName != '0') {
+    //   const platform = `Platform: ${platformName === '0' ? '' : platformName}`;
+    //   pdf.text(platform, 10, 26);
+    //   pdf.text(platform+"jhgfd", 100, 26);
+    // }
+    
+    const dateRangeString = selectedDate;
+    const [startDateStr, endDateStr] = dateRangeString.split(' to ');
+   
+    const [day1, month1, year1] = startDateStr.split('-').map(Number);
+    const startDateObject = new Date(year1, month1 - 1, day1);
+    const formattedDate = startDateObject ? this.datePipe.transform(startDateObject, 'dd-MMM-yyyy') : '';
+    
+    const [day2, month2, year2] = endDateStr.split('-').map(Number);
+    const endDateObject = new Date(year2, month2 - 1, day2);
+    const formattedDate1 = endDateObject ? this.datePipe.transform(endDateObject, 'dd-MMM-yyyy') : null;
+    
+    const finalDate=formattedDate +" to " +formattedDate1;
+    
+    let startYpos=0;
+    if(platformName=='0' && resourceValue==0){
+      pdf.text("Activity Session: "+finalDate, 10, 26);
+      startYpos=30;
+    }else if(platformName!='0'){
+      pdf.text("Platform: "+platformName, 10, 26);
+      pdf.text("Activity Session: "+finalDate, 100, 26);
+      startYpos=30;
+    }else if(resourceValue!='0'){
+      const plaName=activityData[0].domain
+      const code =  activityData[0].resourceCode ;
+      pdf.text("Resource Name: "+resourceValue, 10, 26);
+      pdf.text("resourcecode: "+code, 100, 26);
+      pdf.text("Platform: "+plaName, 10, 32);
+      pdf.text("Activity Session: "+finalDate, 100, 32);
+      startYpos=40;
     }
-    if (selectedDate != undefined) {
-      const reportDate = `Date: ${selectedDate === undefined ? '' : selectedDate}`;
-      pdf.text(reportDate, 100, 26);
-    }
+   
 
     // Add additional information
     pdf.text(fy, 10, 20);
     pdf.text(month, 100, 20);
 
     let head;
-    if (resourceValue !== '0' && selectedDate == null) {
-      head = [['Date', 'Resource Code', 'Resource Name', 'Platform', 'First Half', 'Second Half']];
-
-    } else {
+    if (resourceValue !== '0' ) {
+      head = [['First Half', 'Second Half']];
+    } else if(platformName!='0') {
+      head = [['Resource Code', 'Resource Name', 'First Half', 'Second Half']];
+    }else{
       head = [['Resource Code', 'Resource Name', 'Platform', 'First Half', 'Second Half']];
     }
     // Table content
@@ -88,16 +126,20 @@ export class ActivityReportServiceService {
       const dataRowColor = [255, 255, 255];
       const rowData = [];
 
-      if (resourceValue != 0 && selectedDate == null) {
+      if (resourceValue != '0' ) {
         rowData.push(
-          { content: detail.activityDate, styles: { fillColor: dataRowColor } },
-          { content: detail.resourceCode, styles: { fillColor: dataRowColor } },
-          { content: detail.resourceName, styles: { fillColor: dataRowColor } },
-          { content: detail.domain, styles: { fillColor: dataRowColor } },
           { content: firstHalfData, styles: { fillColor: dataRowColor } },
           { content: secondHalfData, styles: { fillColor: dataRowColor } }
         );
-      } else {
+      } else if(platformName!='0') {
+        rowData.push(
+          { content: detail.resourceCode, styles: { fillColor: dataRowColor } },
+          { content: detail.resourceName, styles: { fillColor: dataRowColor } },
+          // { content: detail.domain, styles: { fillColor: dataRowColor } },
+          { content: firstHalfData, styles: { fillColor: dataRowColor } },
+          { content: secondHalfData, styles: { fillColor: dataRowColor } }
+        );
+      }else{
         rowData.push(
           { content: detail.resourceCode, styles: { fillColor: dataRowColor } },
           { content: detail.resourceName, styles: { fillColor: dataRowColor } },
@@ -106,6 +148,7 @@ export class ActivityReportServiceService {
           { content: secondHalfData, styles: { fillColor: dataRowColor } }
         );
       }
+      
       data.push(rowData);
     });
 
@@ -113,7 +156,7 @@ export class ActivityReportServiceService {
     autoTable(pdf, {
       head: head,
       body: data,
-      startY: 30,
+      startY: startYpos,
       styles: {
         lineColor: [0, 0, 0],
         lineWidth: 0.5,
@@ -159,7 +202,7 @@ export class ActivityReportServiceService {
     // Set column widths
     if (resourceValue !== '0' && selectedDate == null) {
       ws['!cols'] = [
-        {wch:20},//Date
+        { wch: 20 },//Date
         { wch: 20 }, // Resource code
         { wch: 20 }, // Resource Name
         { wch: 15 }, // Platform
@@ -180,10 +223,10 @@ export class ActivityReportServiceService {
 
     let headerRow = [];
     if (resourceValue !== '0' && selectedDate == null) {
-      headerRow = ['Date','Resource code', 'Resource Name', 'Platform', 'First Half', 'Second Half'];
+      headerRow = ['Date', 'Resource code', 'Resource Name', 'Platform', 'First Half', 'Second Half'];
 
     } else {
-      headerRow = ['Resource code','Resource Name', 'Platform', 'First Half', 'Second Half'];
+      headerRow = ['Resource code', 'Resource Name', 'Platform', 'First Half', 'Second Half'];
     }
     XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A6' });
     for (let col = 0; col < headerRow.length; col++) {

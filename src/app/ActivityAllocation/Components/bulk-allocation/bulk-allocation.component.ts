@@ -27,7 +27,8 @@ export class BulkAllocationComponent {
   selectedDetails: any;
   resourceId: any;
   platformId :any;
-  selectedDate!: Date;
+  selectedFromDate!: Date;
+  selectedToDate!: Date;
   allocateId: any;
   // resource: Resource;
 
@@ -52,6 +53,7 @@ export class BulkAllocationComponent {
                   this.resourceId = params.get('id');
             
                 });
+                this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
                 this.localeService.use('en-gb');
               }
 
@@ -122,7 +124,7 @@ export class BulkAllocationComponent {
       confirmButtonText: 'Yes, save it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        const data = {activityDate: this.selectedDate, details: this.dynamicArray};
+        const data = {activityFromDate: this.selectedFromDate, activityToDate: this.selectedToDate, details: this.dynamicArray};
         this.allocationService.saveBulkAllocation(this.markedResources, data).subscribe(() => {
           Swal.fire(
             'Saved!',
@@ -203,11 +205,6 @@ export class BulkAllocationComponent {
     }
   }
   
-
-
-
-
-
   togglePlatform(event: any, platform: any) {
     const isChecked = event.target.checked;
   
@@ -224,9 +221,9 @@ export class BulkAllocationComponent {
     }
   }
   
-
-
-
-  
+  setToDate(): void {
+    const daysTillFriday: number = 5 - this.selectedFromDate.getDay();
+    this.selectedToDate = new Date(this.selectedFromDate.getTime() + (daysTillFriday*24*60*60*1000));
+  }
 
 }
