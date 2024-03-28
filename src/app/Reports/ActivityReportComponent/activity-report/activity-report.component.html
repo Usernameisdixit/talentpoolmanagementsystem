@@ -26,12 +26,24 @@
     <div class="col-md-3">
         <div class="form-group">
             <label for="month">Month: <span class="required">*</span></label>
-            <select id="month" [(ngModel)]="month" class="form-control">
+            <select id="month" [(ngModel)]="month" (change)="onMonthChange()" class="form-control">
                 <option value='0' selected>--Select--</option>
                 <option *ngFor="let option of months" [value]="option.value">{{ option.name }}</option>
             </select>
         </div>
     </div>
+
+    <div class="col-md-3">
+        <div class="form-group">
+          <label for="date">Date: <span class="required">*</span></label>
+          <div class="input-group">
+            <select id="date" class="form-control" [(ngModel)]="selectedDate">
+                <option value='0' selected>--Select--</option>
+                <option *ngFor="let date of availableDates" [value]="date">{{ date }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
     <div class="col-md-3" *ngIf="inputType === 'platform'">
         <div class="form-group">
             <label for="platform">Platform:</label>
@@ -58,22 +70,13 @@
         </div>
     </div>
 
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="date">Date:</label>
-            <div class="input-group">
-                <input id="date" class="form-control" type="text" [(ngModel)]="selectedDate" bsDatepicker
-                    [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }" placeholder="Select date" />
-                <span class="input-group-text"><i class="material-icons">date_range</i></span>
-            </div>
-        </div>
-    </div>
+    
 
     <div class="row justify-content-center mt-4">
         <div class="col-md-6 text-center">
             <button type="button" class="btn btn-success button-space" (click)="generateActPDF()">Generate PDF</button>
             <button type="button" class="btn btn-success button-space" (click)="generateActExcel()">Generate Excel</button> 
-             <button type="button" class="btn btn-danger button-space" (click)="resetForm()">Reset</button> 
+             <!-- <button type="button" class="btn btn-danger button-space" (click)="resetForm()">Reset</button>  -->
         </div>
     </div>
     </div>
