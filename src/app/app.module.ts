@@ -73,6 +73,7 @@ import { JwtInterceptor } from './JwtInterceptor.service';
 import { BulkAllocationComponent } from './ActivityAllocation/Components/bulk-allocation/bulk-allocation.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ResourcehistoryComponent } from './ResourceMgmt/Components/resourcehistory/resourcehistory.component';
+import { TimePipe } from './ActivityAllocation/CustomPipes/time.pipe';
 
 
 
@@ -115,7 +116,8 @@ defineLocale('en-gb', enGbLocale); //
     EditAssessmentComponent,
     AttendanceNewComponent,
     BulkAllocationComponent,
-    ResourcehistoryComponent
+    ResourcehistoryComponent,
+    TimePipe
 
 
   ],
