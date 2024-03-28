@@ -1,21 +1,15 @@
 <div class="bootstrap-wrapper">
     <div class="container">
-        <div class="row justify-content-center ">
+        <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card horizontal-card textured-card">
-                    <div class="row">
-                        <!-- Left side: Static content -->
-                        <div class="col-lg-6 static-content">
-                            <div class="content-wrapper">
-                                <h2>Welcome To Talent Management System</h2>
-                                <p>Unlock your potential. Dive into our talent pool management system</p>
-                            </div>
-                        </div>
+                    <div class="row ustify-content-center">
+                      
                         <!-- Right side: Login form -->
-                        <div class="col-lg-6 white-background">
-                            <div class="card-body">
+                        <div class="gap-2 col-lg-6 mx-auto mt-4">
+                            
                                 <div class="text-center mb-4">
-                                    <img class="img-fluid" style="width: 100px;" src="assets/login.png" alt="">
+                                    <img class="img-fluid" src="assets/login.png" alt="">
                                     <h1 class="mt-3">Login Here!!</h1>
                                 </div>
                                 <div class="error-container" style="text-align: center">
@@ -35,13 +29,12 @@
                                         </button>
                                     </mat-form-field>
                                     <div class="container text-center">
-                                        <button mat-raised-button color="primary" (click)="onSubmit()">Login</button>
-                                    </div>
-                                    <div class="container text-center mt-3">
+                                        <button mat-raised-button color="primary" (click)="onSubmit()">Login</button> &nbsp;&nbsp;&nbsp;
+                                
                                         <a routerLink="/forgotPassword">Forgot Your Password?</a>
                                     </div>
                                 </form>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
