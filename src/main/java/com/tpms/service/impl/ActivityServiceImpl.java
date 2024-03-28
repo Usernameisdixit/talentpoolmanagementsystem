@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -92,32 +94,20 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
 
-	public JSONArray getActivityReportData(String platform, String selectedDate, String year, String month, String resourceValue) {
+	public JSONArray getActivityReportData(String platform, String fromDate, String toDate, String resourceValue) {
 		JSONArray data = new JSONArray();
-		 SimpleDateFormat inputFormat = new SimpleDateFormat("M/d/yyyy, h:mm:ss a");
-	     SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
-	     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	     String formattedDate=null;
-		try {
-			if(selectedDate!=null && !selectedDate.equals("undefined")) {
-			Date date = inputFormat.parse(selectedDate);
-           formattedDate = outputFormat.format(date);
-			}
-		} catch (ParseException e1) {
-
-			e1.printStackTrace();
-		}
 		String sqls = "{call TPMS_ATTENDANCE(?,?,?,?,?,?,?)}";
 		List<Map<String, Object>> attendanceDetails = new ArrayList<>();
-		
+		String fromParseDate=getDate(fromDate);
+		String toParseDate=getDate(toDate);
 		DataSource ds = jdbcTemplate.getDataSource();
 		if (ds != null) {
 			try (Connection con = ds.getConnection(); CallableStatement attendanceQuerey = con.prepareCall(sqls);) {
 				attendanceQuerey.setString(1, "ACTIVITY_REPORT");
 				attendanceQuerey.setString(2, platform);
-				attendanceQuerey.setString(3, formattedDate);
-				attendanceQuerey.setString(4, year);
-				attendanceQuerey.setString(5, month);
+				attendanceQuerey.setString(3, fromParseDate);
+				attendanceQuerey.setString(4, toParseDate);
+				attendanceQuerey.setString(5, null);
 				attendanceQuerey.setString(6,resourceValue);
 				attendanceQuerey.setInt(7,0);
 
@@ -333,6 +323,20 @@ public class ActivityServiceImpl implements ActivityService {
 	public Integer platformIdByName(String platformName) {
 		Integer id=platformRepo.findPlatformIdByPlatform(platformName);
 		return id;
+	}
+
+
+	@Override
+	public List<String> getAllDistinctDateRange(String year, String month) {
+		return activityAllocRepo.getAllDistinctDateRange(year,month);
+	}
+	
+	public String getDate(String str) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDate date = LocalDate.parse(str, formatter);
+        DateTimeFormatter targetFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = date.format(targetFormatter);
+		return formattedDate;
 	}
 
 }

@@ -92,15 +92,17 @@ public class ActivityController {
 	
 	@PostMapping("activityReportData")
 	public String getActivityReportData(@RequestBody Map<String, String> params) {
-    String year = params.get("year");
-    String month = params.get("month");
+    String fromDate = params.get("fromDate");
+    String toDate = params.get("toDate");
     String platform = params.get("platform");
-    String selectedDate = params.get("selectedDate");
     String resourceValue = params.get("resourceValue");
     if(resourceValue.equals("")) {
         resourceValue="0";
     }
-    JSONArray attendanceReportData = activityServiceImpl.getActivityReportData(platform, selectedDate,year,month,resourceValue);
+    if(resourceValue.equals("")||platform.equals("-1")) {
+    	platform="0";
+    }
+    JSONArray attendanceReportData = activityServiceImpl.getActivityReportData(platform,fromDate,toDate,resourceValue);
 //    System.err.println("Report Data " + attendanceReportData);
     return attendanceReportData.toString();
 }
@@ -181,5 +183,11 @@ public class ActivityController {
 	        Integer platFormId= activityService.platformIdByName(platformName);
 	        return platFormId;
 	    }
+	 
+	 @GetMapping("getDistinctDate")
+		public List<String> getAllDistinctDateRange(@RequestParam("year") String year,@RequestParam("month") String month) {
+	    List<String> getAllDaterange=activityService.getAllDistinctDateRange(year,month);
+		 return getAllDaterange;
+	}
 
 }

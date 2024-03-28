@@ -597,7 +597,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public List<String> getAllNames(String search) {
 		String searchLowerCase = search.toLowerCase();
 		List<String> allUniName=resourcePoolRepository.findAll().stream()
-                .map(ResourcePool::getResourceName)
+//                .map(ResourcePool::getResourceName+"("+ResourcePool::getResourceName+")")
+                .map(x -> x.getResourceName()+"("+x.getResourceCode()+")")
                 .filter(resourceName -> resourceName.toLowerCase().contains(searchLowerCase))
                 .distinct()
                 .collect(Collectors.toList());
