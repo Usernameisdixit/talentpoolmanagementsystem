@@ -1,36 +1,49 @@
 <div class="container">
   <h2 class="mb-4">Bulk Activity Allocation Form</h2>
 
-  <!-- Activity selection -->
-  <div class="form-group col-md-6">
-    <label for="activity">Activity:</label>
-    <select id="activity" class="form-control" (change)="onActivitySelect($event)">
-      <option *ngFor="let activity of activities" [value]="activity.activityId">{{ activity.activityName }}</option>
-    </select>
-  </div>
-
-  <!-- Session selection -->
-  <div class="form-group col-md-6">
-    <label for="session">Activity for:</label>
-    <select id="session" class="form-control" [(ngModel)]="selectedSession">
-      <option value="1">1st half</option>
-      <option value="2">2nd half</option>
-    </select>
-  </div>
-
-  <!-- Date selection -->
-  <div class="form-group col-md-6">
-    <label>Activity Date <span class="required">*</span></label>
-    <div class="input-group">
-      <input type="text" [(ngModel)]="selectedDate" class="form-control bold-black" bsDatepicker [bsConfig]="bsConfig" autocomplete="off">
-      <div class="input-group-append">
-        <span class="input-group-text"><i class="material-icons">date_range</i></span>
+  <div class="row">
+    <!-- Date selection -->
+    <div class="form-group col-md-6">
+      <label>Activity From Date <span class="required">*</span></label>
+      <div class="input-group">
+        <input type="text" [(ngModel)]="selectedFromDate" class="form-control bold-black" bsDatepicker [bsConfig]="bsConfig" autocomplete="off" [disabled]="dynamicArray.length>0" (ngModelChange)="setToDate()">
+        <div class="input-group-append">
+          <span class="input-group-text"><i class="material-icons">date_range</i></span>
+        </div>
       </div>
+    </div>
+    <div class="form-group col-md-6">
+      <label>Activity To Date <span class="required">*</span></label>
+      <div class="input-group">
+        <input type="text" [(ngModel)]="selectedToDate" class="form-control bold-black" bsDatepicker [bsConfig]="bsConfig" autocomplete="off" [disabled]="dynamicArray.length>0">
+        <div class="input-group-append">
+          <span class="input-group-text"><i class="material-icons">date_range</i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="row">
+    <!-- Activity selection -->
+    <div class="form-group col-md-6">
+      <label for="activity">Activity:</label>
+      <select id="activity" class="form-control" (change)="onActivitySelect($event)">
+        <option *ngFor="let activity of activities" [value]="activity.activityId">{{ activity.activityName }}</option>
+      </select>
+    </div>
+
+    <!-- Session selection -->
+    <div class="form-group col-md-6">
+      <label for="session">Activity for:</label>
+      <select id="session" class="form-control" [(ngModel)]="selectedSession">
+        <option value="1">1st half</option>
+        <option value="2">2nd half</option>
+      </select>
     </div>
   </div>
 
   <!-- Activity timing -->
-  <div class="form-row">
+  <div class="form-row row">
     <div class="form-group col-md-6">
       <label for="selectedActivityFrom">Activity from:</label>
       <input type="time" class="form-control" [(ngModel)]="selectedActivityFrom">
@@ -41,10 +54,12 @@
     </div>
   </div>
 
-  <!-- Activity details -->
-  <div class="form-group">
-    <label for="selectedDetails">Activity Details:</label>
-    <textarea class="form-control" [(ngModel)]="selectedDetails"></textarea>
+  <div class="row">
+    <!-- Activity details -->
+    <div class="form-group col-md-6">
+      <label for="selectedDetails">Activity Details:</label>
+      <textarea class="form-control" [(ngModel)]="selectedDetails"></textarea>
+    </div>
   </div>
 
   <!-- Add more button -->
@@ -66,8 +81,8 @@
       <tr *ngFor="let dynamic of dynamicArray; let i = index;">
         <td>{{ dynamic.activityFor }}</td>
         <td>{{ dynamic.activity.activityName }}</td>
-        <td>{{ dynamic.fromHours }}</td>
-        <td>{{ dynamic.toHours }}</td>
+        <td>{{ dynamic.fromHours | convertTo12Hr }}</td>
+        <td>{{ dynamic.toHours | convertTo12Hr }}</td>
         <td>{{ dynamic.activityDetails }}</td>
         <td><button class="btn btn-danger btn-sm" (click)="removeRow($event,i)">Remove</button></td>
       </tr>
@@ -94,6 +109,14 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Resource Name</th>
+              <th>Resource Code</th>
+              <th>Designation</th>
+              <th>Years of experience</th>
+            </tr>
+          </thead>
           <tbody>
             <ng-container *ngFor="let resource of resources">
               <tr *ngIf="resource.platform.trim() == platform.platform.trim()">
@@ -105,6 +128,9 @@
                     </label>
                   </div>
                 </td>
+                <td>{{resource.resourceCode}}</td>
+                <td>{{resource.designation}}</td>
+                <td>{{resource.experience}}</td>
               </tr>
             </ng-container>
           </tbody>

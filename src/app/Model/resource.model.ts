@@ -19,4 +19,5 @@ export class Resource {
     activityAlloc: any[];
     selected: any;
     platformId: any;
+    designation!: string;
 }
