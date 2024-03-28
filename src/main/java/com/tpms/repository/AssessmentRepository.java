@@ -3,6 +3,7 @@ package com.tpms.repository;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -51,6 +52,18 @@ public interface AssessmentRepository extends JpaRepository<Assessment, Integer>
                   "FROM assessment a " +
                   "WHERE a.deletedFlag = 0 " , nativeQuery = true)	  
 		  List<Date> findAllAsessmentDate();
+
+		  
+		  
+		  @Query("SELECT DISTINCT DATE(a.activityFromDate) AS maxFromDate, DATE(a.activityToDate) AS maxToDate " +
+			       "FROM ActivityAllocation a " +
+			       "WHERE a.deletedFlag = false " +
+			       "ORDER BY maxFromDate DESC, maxToDate DESC")
+			List<Map<String, Date>> getFromToDate();
+
+
+		    @Query("SELECT COUNT(a) > 0 FROM Assessment a WHERE a.activityId = :activityId AND a.activityFromDate >= :fromDate AND a.activityToDate <= :toDate")
+		    boolean existsByActivityIdAndDateRange(@Param("activityId") Integer activityId, @Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
 
 		

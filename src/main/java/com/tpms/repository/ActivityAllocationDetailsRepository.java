@@ -22,11 +22,15 @@ public interface ActivityAllocationDetailsRepository extends JpaRepository<Activ
 	List<ActivityAllocationDetails> findByActivityAllocation(ActivityAllocation activityAllocation);
 	
 	
-	@Query(value = "SELECT distinct act_det.activityId, act.activityName "
-	        + "FROM activity_allocation_details act_det "
-	        + "JOIN activity_allocation act_alloc ON act_det.activityAllocateId = act_alloc.activityAllocateId "
-	        + "JOIN activity act ON act_det.activityId = act.activityId "
-	        + "WHERE act_alloc.activityFromDate BETWEEN :fromDate AND :toDate", nativeQuery = true)
+
+	
+	@Query(value = "SELECT DISTINCT  act_det.activityId, act.activityName " +
+            "FROM activity_allocation_details act_det " +
+            "JOIN activity_allocation act_alloc ON act_det.activityAllocateId = act_alloc.activityAllocateId " +
+            "JOIN activity act ON act_det.activityId = act.activityId " +
+            "WHERE act_alloc.activityFromDate >= STR_TO_DATE(:fromDate, '%Y-%m-%d') " +
+            "AND act_alloc.activityToDate <= STR_TO_DATE(:toDate, '%Y-%m-%d')", nativeQuery = true)
+
 	List<Object[]> getActivitiesBetweenDates(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
  

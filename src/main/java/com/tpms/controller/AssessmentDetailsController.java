@@ -2,12 +2,14 @@ package com.tpms.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 import java.util.List;
 import java.util.Locale;
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -57,10 +59,19 @@ public class AssessmentDetailsController {
     
     @Autowired
     private AssessmentRepository assessmentRepository;
+    
+   
 
     @GetMapping("/getPlatforms")
     public List<Platform> getPlatforms() {
         return platformRepository.findAll();
+    }
+    
+    @GetMapping("/getFromToDate")
+    public List<Map<String, Date>> getFromToDate() {
+    	
+    	List<Map<String, Date>>  fromToDate  = assessmentRepository.getFromToDate();
+        return fromToDate;
     }
 
     @GetMapping("/api/assessment-details")
@@ -92,7 +103,7 @@ public class AssessmentDetailsController {
     }
     
     @GetMapping("/viewAssesmentDetails")
-    public ResponseEntity<List<Object[]>> viewAssesmentDeatisl(Model model) {
+    public ResponseEntity<List<Object[]>> viewAssesmentDetails(Model model) {
         List<Object[]> assessmentDetails = assessmentRepository.findAllWithDetails();
         return ResponseEntity.ok().body(assessmentDetails);
         
@@ -133,7 +144,7 @@ public class AssessmentDetailsController {
         List<Object[]> activities = null; 
 
         try {
-            SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)", Locale.ENGLISH);
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)", Locale.ENGLISH);
             Date from = formatter.parse(fromDate);
             Date toDt = formatter.parse(toDate);
             activities = activityAllocationDetailsRepository.getActivitiesBetweenDates(from, toDt);
@@ -150,5 +161,28 @@ public class AssessmentDetailsController {
         return assessmentRepository.findAllAsessmentDate();
     }
 
+  
+
+    @GetMapping("/checkAssessments")
+    public boolean checkAssessments(@RequestParam("activityId") Integer activityId,
+            @RequestParam("fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date fromDate,
+            @RequestParam("toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date toDate) {
+    	
+    	 boolean assessmentExists = false;
+        try {
+       
+           assessmentExists = assessmentRepository.existsByActivityIdAndDateRange(activityId, fromDate, toDate);
+           
+           
+        } catch (DateTimeParseException e) {
+        	e.printStackTrace();
+        	
+        }
+        return assessmentExists;
+    }
+
+    
+    
+    
     
 }
