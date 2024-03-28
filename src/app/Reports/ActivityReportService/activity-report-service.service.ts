@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx-js-style';
+import { DatePipe } from '@angular/common';
 // import * as XLSX from 'xlsx';
 
 @Injectable({
@@ -13,7 +14,7 @@ export class ActivityReportServiceService {
 
   private baseurl = 'http://localhost:9999/tpms';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private datePipe: DatePipe) { }
 
   getActivityReportData(platform: string, resourceValue: string, selectedDate: string): Observable<any> {
     const url = `${this.baseurl}/activityReportData`;
@@ -35,6 +36,7 @@ export class ActivityReportServiceService {
   }
 
   generateActivityReport(activityData: any[], year: string, monthName: string, platformName: string, selectedDate: string, resourceValue: any): void {
+    debugger;
     const pdf = new jsPDF();
 
     // Static header content
@@ -50,13 +52,27 @@ export class ActivityReportServiceService {
     //   pdf.text(platform, 10, 26);
     //   pdf.text(platform+"jhgfd", 100, 26);
     // }
+    
+    const dateRangeString = selectedDate;
+    const [startDateStr, endDateStr] = dateRangeString.split(' to ');
+   
+    const [day1, month1, year1] = startDateStr.split('-').map(Number);
+    const startDateObject = new Date(year1, month1 - 1, day1);
+    const formattedDate = startDateObject ? this.datePipe.transform(startDateObject, 'dd-MMM-yyyy') : '';
+    
+    const [day2, month2, year2] = endDateStr.split('-').map(Number);
+    const endDateObject = new Date(year2, month2 - 1, day2);
+    const formattedDate1 = endDateObject ? this.datePipe.transform(endDateObject, 'dd-MMM-yyyy') : null;
+    
+    const finalDate=formattedDate +" to " +formattedDate1;
+    
     let startYpos=0;
     if(platformName=='0' && resourceValue==0){
-      pdf.text("Date:"+selectedDate, 10, 26);
+      pdf.text("Activity Session: "+finalDate, 10, 26);
       startYpos=30;
     }else if(platformName!='0'){
       pdf.text("Platform: "+platformName, 10, 26);
-      pdf.text("Date: "+selectedDate, 100, 26);
+      pdf.text("Activity Session: "+finalDate, 100, 26);
       startYpos=30;
     }else if(resourceValue!='0'){
       const plaName=activityData[0].domain
@@ -64,7 +80,7 @@ export class ActivityReportServiceService {
       pdf.text("Resource Name: "+resourceValue, 10, 26);
       pdf.text("resourcecode: "+code, 100, 26);
       pdf.text("Platform: "+plaName, 10, 32);
-      pdf.text("Date: "+selectedDate, 100, 32);
+      pdf.text("Activity Session: "+finalDate, 100, 32);
       startYpos=40;
     }
    

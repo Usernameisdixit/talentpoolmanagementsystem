@@ -87,7 +87,13 @@ export class ActivityReportComponent {
         title: 'Oops...',
         text: 'Please choose a month before generating the PDF!',
       });
-    } else {
+    } else if(this.selectedDate=='0'){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please choose a Date before generating the PDF!',
+      });
+    }else {
       if(typeof(this.resourceValue)=='object'){
         this.resourceValue=this.resourceValue.name;
       }
@@ -200,7 +206,6 @@ export class ActivityReportComponent {
   }
 
   clearResourceInput() {
-    debugger;
     if (this.inputType !== 'resource') {
       this.myControl.reset();
       this.resourceValue="0";
