@@ -127,7 +127,8 @@ public class AttendanceController {
 	    String resourceValue = params.get("resourceValue");
 	    if(resourceValue.equals("")) {
 	        resourceValue="0";
-	    }else {
+	    }
+	    if(resourceValue.equals("")||platform.equals("-1")) {
 	    	platform="0";
 	    }
 	    JSONArray attendanceReportData = attendanceService.getAttendanceReportData(platform, selectedDate,year,month,resourceValue);
