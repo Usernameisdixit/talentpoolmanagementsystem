@@ -44,4 +44,6 @@ public interface ActivityService {
 
 	public Integer platformIdByName(String platformName);
 
+	public List<String> getAllDistinctDateRange(String year, String month);
+
 }

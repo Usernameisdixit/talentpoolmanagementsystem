@@ -38,6 +38,11 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
 	@Query("SELECT alloc FROM ActivityAllocation alloc JOIN FETCH alloc.details det WHERE alloc.resourceId=:id AND alloc.activityFromDate=:activityDate AND alloc.deletedFlag=false and det.deletedFlag=false")
 	ActivityAllocation findByResourceId(Integer id, Date activityDate);
 
+	 @Query(value = "SELECT DISTINCT CONCAT(DATE_FORMAT(activityFromDate, '%d-%m-%Y'), ' to ', DATE_FORMAT(activityToDate, '%d-%m-%Y')) AS dates " +
+             "FROM activity_allocation " +
+             "WHERE MONTH(activityFromDate) = :month AND YEAR(activityFromDate) = :year", nativeQuery = true)
+	List<String> getAllDistinctDateRange(String year, String month);
+
 
 
 }
