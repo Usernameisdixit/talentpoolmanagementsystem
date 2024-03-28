@@ -88,6 +88,7 @@ export class ViewassessmentComponent implements OnInit {
       (data: AssessmentDto[]) => {
         this.assessments = data;
         this.assessmentDetails = data;
+      
         this.groupAssessmentsByDateRange();
    
         this.showAssessmentTable = this.assessments.length > 0;
@@ -173,6 +174,7 @@ export class ViewassessmentComponent implements OnInit {
     let mergedData: any[] = [];
     let serialNumber = 1;
     dateRange.assessments.forEach(assessment => {
+      const cumulativePercentage = this.calculateCumulativePercentage([assessment])
       const row: any[] = [
         serialNumber++,
         assessment[0],
@@ -180,7 +182,7 @@ export class ViewassessmentComponent implements OnInit {
         assessment[2],
         assessment[3],
         assessment[4],
-        'NA FOR NOW',
+        cumulativePercentage.get(assessment[0])+'%',
         assessment[5],
       ];
       mergedData.push(row);
@@ -321,44 +323,77 @@ export class ViewassessmentComponent implements OnInit {
   }
   
   groupAssessmentsByDateRange(): void {
-    const groupedByDateRange = {};
-  
+    const groupedByDateRange: { [key: string]: any } = {};
+
     for (const assessment of this.assessments) {
       const fromDate = this.datePipe.transform(assessment[7], 'dd-MMM-yyyy');
       const toDate = this.datePipe.transform(assessment[8], 'dd-MMM-yyyy');
-      const key = fromDate + ' to ' + toDate;
+
+      const key = `${fromDate} to ${toDate}`;
       if (!groupedByDateRange[key]) {
-        groupedByDateRange[key] = [];
+        groupedByDateRange[key] = {};
       }
-      groupedByDateRange[key].push(assessment);
+
+      const resourcePlatformKey = `${assessment[0]}-${assessment[1]}`;
+
+      if (!groupedByDateRange[key][resourcePlatformKey]) {
+        groupedByDateRange[key][resourcePlatformKey] = [];
+      }
+
+      groupedByDateRange[key][resourcePlatformKey].push(assessment);
     }
-  
+
     for (const key in groupedByDateRange) {
       if (groupedByDateRange.hasOwnProperty(key)) {
         const dateRange = key.split(' to ');
+        const assessments = [];
+        for (const resourcePlatformKey in groupedByDateRange[key]) {
+          if (groupedByDateRange[key].hasOwnProperty(resourcePlatformKey)) {
+            assessments.push(...groupedByDateRange[key][resourcePlatformKey]);
+          }
+        }
         this.assessmentDateRanges.push({
           fromDate: dateRange[0],
           toDate: dateRange[1],
-          assessments: groupedByDateRange[key]
+          assessments: assessments
         });
       }
     }
   }
 
-  calculateCumulativePercentage(assessments: any[]): number {
-    let totalSecuredMarks = 0;
-    let totalPossibleMarks = 0;
 
-    
-    assessments.forEach(assessment => {
-      totalSecuredMarks += assessment[4]; 
-      totalPossibleMarks += assessment[3]; 
-    });
+
+
+  calculateCumulativePercentage(assessments: any[]): Map<number, number> {
+   
+    const cumulativePercentages = new Map<number, { totalSecuredMarks: number; totalPossibleMarks: number }>();
 
    
-    const cumulativePercentage = (totalSecuredMarks / totalPossibleMarks) * 100;
-    return cumulativePercentage;
-  }
+    assessments.forEach(assessment => {
+        const resourceId = assessment[0];
+        const securedMarks = assessment[4];
+        const possibleMarks = assessment[3];
+console.log(resourceId,securedMarks,possibleMarks);
+      
+        if (!cumulativePercentages.has(resourceId)) {
+            cumulativePercentages.set(resourceId, { totalSecuredMarks: 0, totalPossibleMarks: 0 });
+        }
+
+       
+        const resourceData = cumulativePercentages.get(resourceId);
+        resourceData.totalSecuredMarks += securedMarks;
+        resourceData.totalPossibleMarks += possibleMarks;
+        cumulativePercentages.set(resourceId, resourceData);
+    });
+
+    const cumulativePercentagesResult = new Map<number, number>();
+    cumulativePercentages.forEach((value, key) => {
+      const cumulativePercentage = (value.totalSecuredMarks / value.totalPossibleMarks) * 100;
+      cumulativePercentagesResult.set(key, cumulativePercentage);
+  });
+
+  return cumulativePercentagesResult;
+}
 
 
   toggleAccordion(date: string): void {

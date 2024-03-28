@@ -61,7 +61,7 @@
                   <td>{{ assessment[2] }}</td>
                   <td>{{ assessment[3] }}</td>
                   <td>{{ assessment[4] }}</td>
-                  <td>{{ calculateCumulativePercentage(dateRange.assessments) }}%</td>
+                  <td>{{ calculateCumulativePercentage(dateRange.assessments).get(assessment[0]) }}%</td>
                   <td>{{ assessment[5] }}</td>
                   <td class="text-center">
                     <button class="btn btn-primary">Edit</button>
