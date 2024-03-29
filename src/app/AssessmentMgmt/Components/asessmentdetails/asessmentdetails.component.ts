@@ -147,6 +147,63 @@ export class AsessmentdetailsComponent implements OnInit {
         });
     }
   }
+
+
+  // validateAndGetDetails() {
+  //   if (!this.selectedActivity) {
+  //     Swal.fire('Warning', 'All fields are required', 'warning');
+  //     return;
+  //   }
+  
+  //   const formattedFromDate = this.datePipe.transform(this.fromDate, 'yyyy-MM-dd');
+  //   const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
+  
+  //   this.showAssessmentTable = !this.showAssessmentTable;
+  
+    
+  //   this.apiService.checkAssessments(this.selectedActivity, this.fromDate.toISOString(), this.toDate.toISOString())
+  //     .subscribe((result: boolean) => {
+  //       if (result) {
+        
+  //         this.apiService.getAssessmentDetails(this.selectedActivity, formattedFromDate, formattedToDate)
+  //           .subscribe((data: any[]) => {
+  //             console.log(data);
+  //             this.assessments = data;
+  //             data.forEach(obj => {
+               
+  //              this.assessmentDate = new Date(obj[11]);
+  //              this.totalMarks = obj[8];
+  //              this.marks = obj[9];
+  //              this.hour = obj[10];
+  //              this.remarks = obj[12]
+              
+  //             });
+  //             this.detailsRetrieved = true;
+  //             console.log(this.assessmentDate);
+  //             this.assessmentDtos = this.mapAssessmentDtos(data);
+  
+  //             if (!this.assessments || this.assessments.length === 0) {
+  //               Swal.fire('No Records Found', 'No assessment records found for the selected criteria', 'info');
+  //             }
+  //           });
+  //       } else {
+          
+  //         this.apiService.getAssessmentDetails(this.selectedActivity, formattedFromDate, formattedToDate)
+  //           .subscribe((data: any[]) => {
+  //             console.log(data);
+  //             this.assessments = data;
+  //             this.detailsRetrieved = true;
+  //             console.log(this.assessments);
+  //             this.assessmentDtos = this.mapAssessmentDtos(data);
+  
+  //             if (!this.assessments || this.assessments.length === 0) {
+  //               Swal.fire('No Records Found', 'No assessment records found for the selected criteria', 'info');
+  //             }
+  //           });
+  //       }
+  //     });
+  // }
+  
   
 
   mapAssessmentDtos(data: any[]): AssessmentDto[] {
@@ -381,23 +438,23 @@ getMonthIndex(month: string): number {
 
 
 
-onActivityChange()
-{
+// onActivityChange()
+// {
 
- debugger;
-  if (this.selectedActivity && this.fromDate && this.toDate) {
-      this.apiService.checkAssessments(this.selectedActivity, this.fromDate.toISOString(), this.toDate.toISOString())
-          .subscribe((result: boolean) => {
-              if (result) {
-                  Swal.fire('Assessment Already Done', 'Assessment for this activity session has already been completed.', 'info');
-              } else {
-                  this.validateAndGetDetails();
-              }
-          });
-  }
+//  debugger;
+//   if (this.selectedActivity && this.fromDate && this.toDate) {
+//       this.apiService.checkAssessments(this.selectedActivity, this.fromDate.toISOString(), this.toDate.toISOString())
+//           .subscribe((result: boolean) => {
+//               if (result) {
+//                   Swal.fire('Assessment Already Done', 'Assessment for this activity session has already been completed.', 'info');
+//               } else {
+//                   this.validateAndGetDetails();
+//               }
+//           });
+//   }
 
 
-}
+// }
 
 
 }

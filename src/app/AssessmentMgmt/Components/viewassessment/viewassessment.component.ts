@@ -16,7 +16,7 @@ import { saveAs } from 'file-saver';
 export class ViewassessmentComponent implements OnInit {
   bsConfig: Partial<BsDatepickerConfig>;
   assessmentDate: any;
-  assessmentDateArr : any[];
+  assessmentDateArr: any[];
   assessments: AssessmentDto[];
   showAssessmentTable: boolean = false;
   currentPage: number = 1;
@@ -36,33 +36,17 @@ export class ViewassessmentComponent implements OnInit {
     };
   }
 
-
-
-
   ngOnInit(): void {
     this.fetchAssessments();
     this.fetchAssessmentDates();
+  }
+
    
-  }
-
-
-  getAssessmentDates(): string[] {
-  
-    const assessmentDates = this.assessments.map(assessment => assessment[7]); 
-    return Array.from(new Set(assessmentDates)); 
-  }
-
-  getAssessmentsByDate(date: string): any[] {
-  
-    return this.assessments.filter(assessment => assessment[7] === date);
-  }
 
   fetchAssessmentDates() {
     this.apiService.getAssessmentDates().subscribe(
       (dates: string[]) => {
-   
         this.assessmentDateArr = dates.map(date => this.transformDate(date));
-       
         console.log(this.assessmentDateArr);
       },
       error => {
@@ -70,12 +54,10 @@ export class ViewassessmentComponent implements OnInit {
       }
     );
   }
-  
+
   transformDate(date: string): string {
-   
     return this.datePipe.transform(new Date(date), 'dd-MMM-yyyy') || '';
   }
-  
 
   onDateSelected() {
     const formattedAssessmentDate = this.datePipe.transform(this.assessmentDate, 'yyyy-MM-dd');
@@ -83,67 +65,33 @@ export class ViewassessmentComponent implements OnInit {
   }
 
   fetchAssessments() {
-   
     this.apiService.viewAssessmentDetails().subscribe(
       (data: AssessmentDto[]) => {
         this.assessments = data;
         this.assessmentDetails = data;
-      
         this.groupAssessmentsByDateRange();
-   
         this.showAssessmentTable = this.assessments.length > 0;
-  
-        if (this.assessments.length > 0) {
-        
-        
-          this.assessments.forEach(assessment => {
-            const assessmentFromDate = assessment[7];
-            const assessmentToDate = assessment[8];
-            
-          
-            
-          });
-
-
-
-        
-       
-          
-      
-        }
       },
       error => {
         console.log('Error fetching assessment details:', error);
       }
     );
   }
-  
+
   fetchAssessmentsByDate(date: string) {
     this.assessmentDateRanges = [];
     this.apiService.viewAssessmentDetailsDateWise(date).subscribe(
       (data: AssessmentDto[]) => {
         this.assessments = data;
-   
         this.assessmentDetails = data;
         this.groupAssessmentsByDateRange();
         this.showAssessmentTable = this.assessments.length > 0;
-  
         if (this.assessments.length === 0) {
           Swal.fire({
             icon: 'warning',
             title: 'No Assessments Found',
             text: 'There are no assessments evaluated on this date.',
           });
-        } else {
-         
-          this.assessments.forEach(assessment => {
-            const assessmentFromDate = assessment[7];
-            const assessmentToDate = assessment[8];
-            
-            
-            console.log('Assessment from date:', assessmentFromDate);
-            console.log('Assessment to date:', assessmentToDate);
-          });
         }
       },
       error => {
@@ -151,7 +99,7 @@ export class ViewassessmentComponent implements OnInit {
       }
     );
   }
-  
+
   exportToPDFForDateRange(dateRange: any) {
     const doc = new jsPDF();
     const data = this.getTableDataForDateRange(dateRange);
@@ -161,7 +109,7 @@ export class ViewassessmentComponent implements OnInit {
     const x = (pageWidth - textWidth) / 2;
     doc.text(pageTitle, x, 10);
     (doc as any).autoTable({
-      head: [['Sl.No', 'Resource Name', 'Platform Name', 'Activity Name', 'Total Marks', 'Secured Marks', 'Cumulative Percentage','Remarks']],
+      head: [['Sl.No', 'Resource Name', 'Platform Name', 'Activity Name', 'Total Marks', 'Secured Marks', 'Cumulative Percentage', 'Remarks']],
       body: data,
       startY: 20,
       margin: { top: 15 }
@@ -169,12 +117,11 @@ export class ViewassessmentComponent implements OnInit {
     doc.save(`assessment-details-${dateRange.fromDate}-to-${dateRange.toDate}.pdf`);
   }
 
-
   private getTableDataForDateRange(dateRange: any): any[][] {
     let mergedData: any[] = [];
     let serialNumber = 1;
     dateRange.assessments.forEach(assessment => {
-      const cumulativePercentage = this.calculateCumulativePercentage([assessment])
+      const cumulativePercentage = this.calculateCumulativePercentage([assessment]);
       const row: any[] = [
         serialNumber++,
         assessment[0],
@@ -182,7 +129,7 @@ export class ViewassessmentComponent implements OnInit {
         assessment[2],
         assessment[3],
         assessment[4],
-        cumulativePercentage.get(assessment[0])+'%',
+        cumulativePercentage.get(assessment[0]) + '%',
         assessment[5],
       ];
       mergedData.push(row);
@@ -190,9 +137,7 @@ export class ViewassessmentComponent implements OnInit {
     return mergedData;
   }
 
-
-
-  exportToPDF(dateRange : any) {
+  exportToPDF(dateRange: any) {
     const doc = new jsPDF();
     const data = this.getTableDataForDateRange(dateRange);
     const pageTitle = 'Assessment Details';
@@ -201,7 +146,7 @@ export class ViewassessmentComponent implements OnInit {
     const x = (pageWidth - textWidth) / 2;
     doc.text(pageTitle, x, 10);
     (doc as any).autoTable({
-      head: [['Sl.No', 'Resource Name', 'Platform Name', 'Activity Name', 'Total Marks', 'Secured Marks', 'Cumulative Percentage','Remarks']],
+      head: [['Sl.No', 'Resource Name', 'Platform Name', 'Activity Name', 'Total Marks', 'Secured Marks', 'Cumulative Percentage', 'Remarks']],
       body: data,
       startY: 20,
       margin: { top: 15 }
@@ -209,7 +154,7 @@ export class ViewassessmentComponent implements OnInit {
     doc.save('assessment-details.pdf');
   }
 
-  exportToExcel(dateRange : any) {
+  exportToExcel(dateRange: any) {
     const tableData = this.getTableDataForDateRange(dateRange);
     const headerStyle = { bold: true };
     const header = [
@@ -256,7 +201,6 @@ export class ViewassessmentComponent implements OnInit {
     saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
   }
 
-
   getTotalPages(): number {
     return Math.ceil(this.assessments.length / this.itemsPerPage);
   }
@@ -293,122 +237,156 @@ export class ViewassessmentComponent implements OnInit {
     // Implement assessment deletion logic here
   }
 
-  
-  calculateRowspan(assessment: any): { resourceNameRowspan: number, platformNameRowspan: number } {
-    
-    const resourceName = assessment[0];
-    const platformName = assessment[1];
-    let resourceNameRowspan = 1;
-    let platformNameRowspan = 1;
-  
-   
-    for (let i = 1; i < this.getCurrentPageAssessments().length; i++) {
-      if (this.getCurrentPageAssessments()[i][0] === resourceName) {
-        resourceNameRowspan++;
-      } else {
-        break; 
-      }
-    }
-  
-    
-    for (let i = 1; i < this.getCurrentPageAssessments().length; i++) {
-      if (this.getCurrentPageAssessments()[i][1] === platformName) {
-        platformNameRowspan++;
-      } else {
-        break;
-      }
-    }
-  
-    return { resourceNameRowspan, platformNameRowspan };
-  }
-  
   groupAssessmentsByDateRange(): void {
-    const groupedByDateRange: { [key: string]: any } = {};
+    const groupedByDateRange = {};
 
     for (const assessment of this.assessments) {
       const fromDate = this.datePipe.transform(assessment[7], 'dd-MMM-yyyy');
       const toDate = this.datePipe.transform(assessment[8], 'dd-MMM-yyyy');
-
-      const key = `${fromDate} to ${toDate}`;
+      const key = fromDate + ' to ' + toDate;
       if (!groupedByDateRange[key]) {
-        groupedByDateRange[key] = {};
+        groupedByDateRange[key] = [];
       }
-
-      const resourcePlatformKey = `${assessment[0]}-${assessment[1]}`;
-
-      if (!groupedByDateRange[key][resourcePlatformKey]) {
-        groupedByDateRange[key][resourcePlatformKey] = [];
-      }
-
-      groupedByDateRange[key][resourcePlatformKey].push(assessment);
+      groupedByDateRange[key].push(assessment);
     }
 
     for (const key in groupedByDateRange) {
       if (groupedByDateRange.hasOwnProperty(key)) {
-        const dateRange = key.split(' to ');
-        const assessments = [];
-        for (const resourcePlatformKey in groupedByDateRange[key]) {
-          if (groupedByDateRange[key].hasOwnProperty(resourcePlatformKey)) {
-            assessments.push(...groupedByDateRange[key][resourcePlatformKey]);
+        const assessmentsInDateRange = groupedByDateRange[key];
+        const sortedAssessments = assessmentsInDateRange.sort((a, b) => {
+          const resourceComparison = a[0].localeCompare(b[0]);
+          if (resourceComparison === 0) {
+            return a[1].localeCompare(b[1]);
+          } else {
+            return resourceComparison;
           }
-        }
+        });
+        const dateRange = key.split(' to ');
         this.assessmentDateRanges.push({
           fromDate: dateRange[0],
           toDate: dateRange[1],
-          assessments: assessments
+          assessments: sortedAssessments
         });
       }
     }
   }
 
-
-
-
   calculateCumulativePercentage(assessments: any[]): Map<number, number> {
-   
     const cumulativePercentages = new Map<number, { totalSecuredMarks: number; totalPossibleMarks: number }>();
-
-   
     assessments.forEach(assessment => {
-        const resourceId = assessment[0];
-        const securedMarks = assessment[4];
-        const possibleMarks = assessment[3];
-console.log(resourceId,securedMarks,possibleMarks);
-      
-        if (!cumulativePercentages.has(resourceId)) {
-            cumulativePercentages.set(resourceId, { totalSecuredMarks: 0, totalPossibleMarks: 0 });
-        }
-
-       
-        const resourceData = cumulativePercentages.get(resourceId);
-        resourceData.totalSecuredMarks += securedMarks;
-        resourceData.totalPossibleMarks += possibleMarks;
-        cumulativePercentages.set(resourceId, resourceData);
+      const resourceId = assessment[0];
+      const securedMarks = assessment[4];
+      const possibleMarks = assessment[3];
+      if (!cumulativePercentages.has(resourceId)) {
+        cumulativePercentages.set(resourceId, { totalSecuredMarks: 0, totalPossibleMarks: 0 });
+      }
+      const resourceData = cumulativePercentages.get(resourceId);
+      resourceData.totalSecuredMarks += securedMarks;
+      resourceData.totalPossibleMarks += possibleMarks;
+      cumulativePercentages.set(resourceId, resourceData);
     });
 
     const cumulativePercentagesResult = new Map<number, number>();
     cumulativePercentages.forEach((value, key) => {
       const cumulativePercentage = (value.totalSecuredMarks / value.totalPossibleMarks) * 100;
       cumulativePercentagesResult.set(key, cumulativePercentage);
-  });
+    });
 
-  return cumulativePercentagesResult;
-}
-
+    return cumulativePercentagesResult;
+  }
 
   toggleAccordion(date: string): void {
     if (this.openAccordion === date) {
-      
       this.openAccordion = null;
     } else {
-      
       this.openAccordion = date;
     }
   }
 
-  
   isAccordionOpen(date: string): boolean {
     return this.openAccordion === date;
   }
 
+
+
+ 
+  
+
+
+//   calculateRowspan(assessment: any): { resourceNameRowspan: number, platformNameRowspan: number } {
+//     debugger;
+//     const resourceName = assessment[0];
+//     const platformName = assessment[1];
+//     let resourceNameRowspan = 1;
+//     let platformNameRowspan = 1;
+  
+//     const assessments = this.getCurrentPageAssessments(); // Get assessments for the current page
+  
+//     // Calculate rowspan for resource name
+//     for (let i = 1; i < assessments.length; i++) {
+//         if (assessments[i][0] === resourceName) {
+//             resourceNameRowspan++;
+//         } else {
+//             break; // Exit loop when the next resource name is different
+//         }
+//     }
+  
+//     // Calculate rowspan for platform name
+//     for (let i = 1; i < assessments.length; i++) {
+//         if (assessments[i][1] === platformName) {
+//             platformNameRowspan++;
+//         } else {
+//             break; // Exit loop when the next platform name is different
+//         }
+//     }
+  
+//     return { resourceNameRowspan, platformNameRowspan };
+// }
+
+
+// Inside your component class
+getResourceGroups(assessments: any[]): any[] {
+  const resourceGroups = [];
+  let currentResourceName: string | null = null;
+  let currentPlatformName: string | null = null;
+  let group: any = null;
+
+  for (const assessment of assessments) {
+    const resourceName = assessment[0];
+    const platformName = assessment[1];
+
+    if (resourceName !== currentResourceName || platformName !== currentPlatformName) {
+      // Start a new group
+      if (group) {
+        // If a group already exists, push it to the resourceGroups array
+        resourceGroups.push(group);
+      }
+      // Initialize a new group
+      group = {
+        resourceName,
+        platformName,
+        rowspan: 0,
+        assessments: []
+      };
+      // Update current resource and platform names
+      currentResourceName = resourceName;
+      currentPlatformName = platformName;
+    }
+
+    // Add assessment to the current group
+    group.assessments.push(assessment);
+    // Increment rowspan for the group
+    group.rowspan++;
+  }
+
+  // Push the last group to the resourceGroups array
+  if (group) {
+    resourceGroups.push(group);
+  }
+
+  return resourceGroups;
+}
+
+  
+  
 }
