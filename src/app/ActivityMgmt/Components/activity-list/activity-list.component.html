@@ -33,7 +33,7 @@
           currentPage : pageno ,
           totalItems: count
           }; let i = index;" (click)="setActiveActivity(activity, i)">
-          <td>{{ i+1}}</td>
+          <td>{{ (pageno - 1) * tableSize + i + 1 }}</td>
           <td>{{ activity.activityRefNo }}</td>
           <td>{{ activity.activityName }}</td>
           <td>{{ activity.description }}</td>

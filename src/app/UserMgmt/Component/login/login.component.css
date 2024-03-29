@@ -1,7 +1,7 @@
 .bootstrap-wrapper {
   background-color: #f5f5f5;
   padding: 20px;
- /* background-image: url('../assets/bg_login.jpg');*/
+ background-image: url('../../../../assets/bg_login.jpg');
 
   background-repeat: no-repeat;
   background-attachment: fixed;
