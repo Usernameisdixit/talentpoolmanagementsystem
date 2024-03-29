@@ -3,7 +3,7 @@
 @import "~@fortawesome/fontawesome-free/css/all.css";
 html, body { height: 100%; }
 body::-webkit-scrollbar{ margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
-    display: none;
+    display: non;
 }
 
 .space {
@@ -59,12 +59,4 @@ tr:hover {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-h1{
-  color: white;
-  padding: 0 1rem;
-  background: #fff;
-  min-height: 50px;
-  background: rgb(9, 10, 10);
-  margin: 0 ;
-  font-size: 25px;
-}
+
