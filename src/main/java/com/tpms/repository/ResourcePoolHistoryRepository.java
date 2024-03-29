@@ -16,7 +16,7 @@ public interface ResourcePoolHistoryRepository extends JpaRepository<ResourcePoo
 	
 	@Query(value = "SELECT resourceCode, resourceName, " +
             "DATE_FORMAT(MIN(allocationDate), '%Y-%m-%d') AS minAllocationDate, " +
-            "DATE_FORMAT(MAX(allocationDate), '%Y-%m-%d') AS maxAllocationDate " +
+            "DATE_FORMAT(NOW(), '%Y-%m-%d') AS maxAllocationDate " +
             "FROM resource_pool_history " +
             "GROUP BY resourceCode, resourceName " +
             "ORDER BY resourceName", nativeQuery = true)
