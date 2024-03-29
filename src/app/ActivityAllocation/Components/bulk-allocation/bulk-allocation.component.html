@@ -60,10 +60,11 @@
       <label for="selectedDetails">Activity Details:</label>
       <textarea class="form-control" [(ngModel)]="selectedDetails"></textarea>
     </div>
+    <!-- Add more button -->
+    <div class="form-group col-md-6">
+      <button class="btn btn-primary mt-3" [disabled]="!activities || activities.length === 0" (click)="addMore()"><i class="fa fa-plus" aria-hidden="true"></i></button>
+    </div>
   </div>
-
-  <!-- Add more button -->
-  <button class="btn btn-primary mt-3" [disabled]="!activities || activities.length === 0" (click)="addMore()"><i class="fa fa-plus" aria-hidden="true"></i></button>
 
   <!-- Dynamic table for activities -->
   <table class="table mt-4" *ngIf="dynamicArray && dynamicArray.length > 0">
@@ -71,18 +72,16 @@
       <tr>
         <th>Session</th>
         <th>Training</th>
-        <th>Activity from</th>
-        <th>Activity to</th>
+        <th>Activity time</th>
         <th>Details</th>
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let dynamic of dynamicArray; let i = index;">
-        <td>{{ dynamic.activityFor }}</td>
+        <td>{{ dynamic.activityFor==1?'1st half':'2nd half' }}</td>
         <td>{{ dynamic.activity.activityName }}</td>
-        <td>{{ dynamic.fromHours | convertTo12Hr }}</td>
-        <td>{{ dynamic.toHours | convertTo12Hr }}</td>
+        <td>{{ dynamic.fromHours | convertTo12Hr }} &ndash; {{ dynamic.toHours | convertTo12Hr }}</td>
         <td>{{ dynamic.activityDetails }}</td>
         <td><button class="btn btn-danger btn-sm" (click)="removeRow($event,i)">Remove</button></td>
       </tr>
