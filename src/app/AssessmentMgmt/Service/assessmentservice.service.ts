@@ -7,11 +7,8 @@ import { AssessmentDto } from 'src/app/Model/AssessmentDto';
   providedIn: 'root'
 })
 export class AssessmentserviceService {
-
- 
- 
   
-
+ 
   private platformUrl = 'http://localhost:9999/tpms/getPlatforms';
   apiUrl = 'http://localhost:9999/tpms/api/assessment-details';
   private baseUrl = 'http://localhost:9999/tpms';
@@ -37,6 +34,12 @@ export class AssessmentserviceService {
     params = params.append('fromDate', fromDate);
     params = params.append('toDate', toDate);
     return this.http.get<any[]>(url, { params: params });
+  }
+
+  checkAssessments(activityId: number, fromDate: any, toDate: any): Observable<boolean> {
+
+    const url = `${this.baseUrl}`+`/checkAssessments?activityId=${activityId}&fromDate=${fromDate}&toDate=${toDate}`;
+    return this.http.get<boolean>(url);
   }
 
   submitAssessments(assessments: any[]): Observable<any> {
@@ -75,7 +78,7 @@ export class AssessmentserviceService {
     return this.http.get(url);
   }
 
-  getActivities(fromDate: string, toDate: string): Observable<any[]> {
+  getActivities(fromDate: any, toDate: any): Observable<any[]> {
     const url = `${this.actUrl}`;
 
     let params = new HttpParams()
@@ -88,6 +91,10 @@ export class AssessmentserviceService {
   getAssessmentDates(): Observable<any[]> {
     const url = `${this.asessmentUrl}`;
     return this.http.get<Date[]>(url);
+  }
+
+  getFromToDate(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/getFromToDate`);
   }
   
 }

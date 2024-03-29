@@ -4,37 +4,45 @@
 
 <div class="container-fluid">
     <div class="row">
-   
+
         <div class="col-md-3">
+            <div class="form-group">
+                <label for="dateRange">Activity Session:<span>*</span></label>
+                <select id="dateRange" class="form-control" [(ngModel)]="selectedDateRange" (ngModelChange)="onDateChange()">
+                    <option *ngFor="let range of dateRanges" [ngValue]="range">{{ range }}</option>
+                </select>
+            </div>
+        </div>
+   
+        <div class="col-md-3" [hidden]="isHidden">
           <div class="form-group">
               <label for="fromDate">From Date:<span>*</span></label>
  <input type="text" id="fromDate" class="form-control" [(ngModel)]="fromDate" bsDatepicker [bsConfig]="bsConfig">
           </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3" [hidden]="isHidden">
         <div class="form-group">
             <label for="toDate">To Date:<span>*</span></label>
-            <input type="text" id="toDate" class="form-control" [(ngModel)]="toDate" bsDatepicker [bsConfig]="bsConfig"  (ngModelChange)="onDateChange()">
+            <input type="text" id="toDate" class="form-control" [(ngModel)]="toDate" bsDatepicker [bsConfig]="bsConfig">
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" >
         <div class="form-group">
             <label for="activity">Activity:<span>*</span></label>
-            <select id="activity" class="form-control" [(ngModel)]="selectedActivity">
+            <select id="activity" class="form-control" [(ngModel)]="selectedActivity" (ngModelChange)="validateAndGetDetails()">
+                <option value="" select="selected">Select</option>
                 <option *ngFor="let activity of activities" [value]="activity[0]">{{ activity[1] }}</option>
             </select>
         </div>
     </div>
 
-    <div class="col-md-3"><br>
+    <!-- <div class="col-md-3"><br>
         <div class="form-group"> 
             <label>&nbsp;</label>    
             <button class="btn btn-primary btn-sm " (click)="validateAndGetDetails()">Get Details</button>
         </div>
-    </div>
-    
-
-    <div class="row mt-3">
+    </div> -->
+ 
         
         <div class="col-md-3" *ngIf="detailsRetrieved">
             <div class="form-group">
@@ -43,7 +51,9 @@
             </div>
         </div>
 
-    </div>
+   
+
+  
 
     
 
@@ -52,6 +62,7 @@
             <table class="table table-bordered  table-hover" style="overflow-y: auto;">
                 <thead>
                     <tr>
+                        <th>Sl. No</th>
                         <th>Resource Code</th>
                         <th>Resource Name</th>
                         <th>Platform</th>
@@ -61,9 +72,15 @@
                         <th>
                             Total Marks <input type="number" class="form-control" [(ngModel)]="totalMarks" (input)="updateAllTotalMarks()">
                         </th>
-                        <th>Secured Marks</th>
-                        <th>Assessment Hour</th>
-                        <th>Assessment Remarks</th>
+                        <th>Secured Marks
+                            <input type="number" class="form-control" [(ngModel)]="marks" (input)="updateMarks()">
+                        </th>
+                        <th>Assessment Hour
+                            <input type="number" class="form-control" [(ngModel)]="hour" (input)="updateHours()">
+                        </th>
+                        <th>Assessment Remarks
+                            <input type="text" class="form-control" [(ngModel)]="remarks" (input)="updateRemarks()">
+                        </th>
                     </tr>
                 </thead>
                 
@@ -71,17 +88,18 @@
                     <ng-container *ngFor="let assessment of assessments; let i = index">
                       
                             <tr>
-                                <td >{{ assessment[1] }}</td>
-                                <td >{{ assessment[2] }}</td>
-                                <td >{{  assessment[6]}}</td>
-                                <td >{{  assessment[3]}}</td>
-                                <td >{{  assessment[4]}}</td>
-                                <td>{{ assessment[5]}}</td>
+                                <td>{{i+1}}</td>
+                                <td >{{assessment[2] }}</td>
+                                <td >{{assessment[3] }}</td>
+                                <td >{{assessment[4]}}</td>
+                                <td >{{assessment[5]}}</td>
+                                <td >{{assessment[6]}}</td>
+                                <td>{{ assessment[7]}}</td>
                                 <td><input type="text" [(ngModel)]="assessment.totalMarks" class="form-control" ></td>
-                                <td><input type="text" [(ngModel)]="assessment.marks" class="form-control"></td>
+                                <td><input type="text" [(ngModel)]="assessment.marks" class="form-control" (keyup)="validateSecuredMarks(assessment)"></td>
                                 <td><input type="text" [(ngModel)]="assessment.hour" class="form-control"></td>
                                 <td>
-                                    <textarea [(ngModel)]="remarks" class="form-control"></textarea>
+                                    <textarea [(ngModel)]="assessment.remarks" class="form-control"></textarea>
                                 </td>
                                 
                             </tr>
@@ -93,7 +111,7 @@
             </table>
         </div>
         <!-- For Pagination -->
-        <nav aria-label="Page navigation">
+        <!-- <nav aria-label="Page navigation">
             <ul class="pagination justify-content-end">
               <li class="page-item" [class.disabled]="currentPage === 1">
                 <button class="page-link" (click)="goToPreviousPage()" aria-label="Previous">
@@ -109,7 +127,7 @@
                 </button>
               </li>
             </ul>
-          </nav>
+          </nav> -->
     </div>
 
    

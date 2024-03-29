@@ -36,8 +36,6 @@
             </button>
           </div>
 
-          
-
           <div *ngIf="showAssessmentTable">
             <table class="table table-striped table-bordered">
               <thead>
@@ -50,25 +48,27 @@
                   <th>Secured Marks</th>
                   <th>Cumulative Percentage</th>
                   <th>Remarks</th>
-                  <th class="text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let assessment of dateRange.assessments; let i = index">
-                  <td>{{ i + 1 }}</td>
-                  <td>{{ assessment[0] }}</td>
-                  <td>{{ assessment[1] }}</td>
-                  <td>{{ assessment[2] }}</td>
-                  <td>{{ assessment[3] }}</td>
-                  <td>{{ assessment[4] }}</td>
-                  <td>{{ calculateCumulativePercentage(dateRange.assessments) }}%</td>
-                  <td>{{ assessment[5] }}</td>
-                  <td class="text-center">
-                    <button class="btn btn-primary">Edit</button>
-                    <span class="button-spacing"></span>
-                  </td>
-                </tr>
+                <ng-container *ngFor="let group of getResourceGroups(dateRange.assessments); let i = index">
+                  <tr *ngFor="let assessment of group.assessments; let j = index">
+                    <ng-container *ngIf="j === 0">
+                      <td [attr.rowspan]="group.rowspan">{{ i + 1 }}</td> 
+                    </ng-container>
+                    <ng-container *ngIf="j === 0">
+                    <td [attr.rowspan]="group.rowspan">{{ assessment[0] }}</td> 
+                    <td [attr.rowspan]="group.rowspan">{{ assessment[1] }}</td> 
+                  </ng-container>
+                    <td>{{ assessment[2] }}</td>
+                    <td>{{ assessment[3] }}</td>
+                    <td>{{ assessment[4] }}</td>
+                    <td>{{ calculateCumulativePercentage(group.assessments).get(assessment[0]) }}%</td>
+                    <td>{{ assessment[5] }}</td>
+                  </tr>
+                </ng-container>
               </tbody>
+              
             </table>
           </div>
         </div>
