@@ -289,7 +289,7 @@ public class ActivityServiceImpl implements ActivityService {
 	            activityAllocation.setResourceId(resource.getInt("resourceId"));
 	            activityAllocation.setPlatformId(resource.getInt("platformId"));
 	            activityAllocation.setActivityFromDate(allocData.getActivityFromDate());
-
+	            activityAllocation.setActivityToDate(allocData.getActivityToDate());
 	           
 	            List<ActivityAllocationDetails> detailsList = new ArrayList<>();
 	            for (ActivityAllocationDetails originalDetail : allocData.getDetails()) {
