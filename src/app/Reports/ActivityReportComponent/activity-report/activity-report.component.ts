@@ -27,7 +27,6 @@ export class ActivityReportComponent {
     this.localeService.use('en-gb'); // Use the defined locale
   }
 
-  selectedDate: Date = null;
 
   year: string = '';
   monthName: string = '';
@@ -43,11 +42,15 @@ export class ActivityReportComponent {
   myControl = new FormControl<string | User>('');
   options1: User[] = [];
   filteredOptions: Observable<User[]>;
+  selectedDate: string;
+  availableDates: string[] = []; 
   ngOnInit() {
     this.loadPlatforms();
     this.platform = '0';
     this.year = this.getCurrentYear().toString();
     this.month = '0'; 
+    this.selectedDate='0';
+    this.platform='0';
     // Populate months array
     this.months = Array.from({ length: 12 }, (_, i) => ({ value: (i + 1).toString(), name: this.getMonthName(i) }));
     this.getUniResourNames();
@@ -84,16 +87,22 @@ export class ActivityReportComponent {
         title: 'Oops...',
         text: 'Please choose a month before generating the PDF!',
       });
-    } else {
+    } else if(this.selectedDate=='0'){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please choose a Date before generating the PDF!',
+      });
+    }else {
       if(typeof(this.resourceValue)=='object'){
         this.resourceValue=this.resourceValue.name;
       }
-      const formattedDate = this.selectedDate ? this.datePipe.transform(this.selectedDate, 'dd-MMM-yyyy') : null;
-      this.activityReportService.getActivityReportData(this.year, this.month, this.platform, this.selectedDate?.toLocaleString(),this.resourceValue)
+      const formattedDate = null;
+      this.activityReportService.getActivityReportData(this.platform,this.resourceValue,this.selectedDate)
         .subscribe(data => {
           this.isPresent = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
           if (this.isPresent) {
-            this.activityReportService.generateActivityReport(data, this.year, this.monthName, this.platform, formattedDate?.toLocaleString(),this.resourceValue);
+            this.activityReportService.generateActivityReport(data, this.year, this.monthName, this.platform, this.selectedDate,this.resourceValue);
             // Swal.fire({
             //   icon: 'success',
             //   title: 'PDF Generated',
@@ -128,8 +137,8 @@ export class ActivityReportComponent {
       if(typeof(this.resourceValue)=='object'){
         this.resourceValue=this.resourceValue.name;
       }
-      const formattedDate = this.selectedDate ? this.datePipe.transform(this.selectedDate, 'dd-MMMM-yyyy') : null;
-      this.activityReportService.getActivityReportData(this.year, this.month, this.platform, this.selectedDate?.toLocaleString(),this.resourceValue)
+      const formattedDate = null;
+      this.activityReportService.getActivityReportData(this.platform,this.resourceValue,this.selectedDate)
         .subscribe(data => {
           this.isPresent = data[0].secondHalf.length == 0 && data[0].firstHalf.length == 0 ? false : true;
           if (this.isPresent) {
@@ -197,14 +206,18 @@ export class ActivityReportComponent {
   }
 
   clearResourceInput() {
-    debugger;
     if (this.inputType !== 'resource') {
       this.myControl.reset();
       this.resourceValue="0";
     }
   }
 
-
-
+  onMonthChange(){
+    this.activityReportService.getAllDate(this.month,this.year).subscribe(
+      (data:any[])=>{
+        this.availableDates=data;
+      },
+    );
+  }
 
 }

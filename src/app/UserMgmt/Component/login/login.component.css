@@ -1,12 +1,18 @@
 .bootstrap-wrapper {
   background-color: #f5f5f5;
   padding: 20px;
+  background-image: url('D:\images\bg_login.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 .horizontal-card {
   border: none;
-  border-radius: 10px;
+  border-radius: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: 450px;
+
 }
 
 .static-content {
@@ -73,7 +79,4 @@
 
 }
 
-.example::-webkit-scrollbar {
-  display: none;
-}
 
