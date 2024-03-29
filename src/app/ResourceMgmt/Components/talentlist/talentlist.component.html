@@ -42,7 +42,7 @@
     currentPage : page ,
     totalItems: count
     }; let i = index" class="text-align:center">
-  <td><!--{{c.resourceId}}-->{{i+1}}</td>
+  <td><!--{{c.resourceId}}-->{{ (page - 1) * tableSize + i + 1 }}</td>
   <td>{{c.resourceCode}}</td>
   <td>{{c.resourceName}}</td>
   <td>{{c.designation}}</td>
