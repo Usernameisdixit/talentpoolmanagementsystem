@@ -24,37 +24,39 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
 	Map<String, Object> findAllDetails(@Param("activityAllocateDetId") Integer activityAllocateDetId);
 	 
 
-//	@Query(value = "SELECT DISTINCT " +
-//            "    a.activityAllocateId, " +
-//            "    r.resourceId, " +
-//            "    r.resourceCode, " +
-//            "    r.resourceName, " +
-//            "    p.platform, " +
-//            "    r.designation, " +
-//            "    r.experience, " +
-//            "    act.activityName, " +
-//            "    asmt.doubleActivityMark AS assessmentDoubleActivityMark, " +
-//            "    asmt.doubleSecuredMark AS assessmentDoubleSecuredMark, " +
-//            "    asmt.asesmentHours AS assessmentHours, " +
-//            "    asmt.asesmentDate AS assessmentDate, " +
-//            "    asmt.remark AS assessmentRemark " +
-//            "FROM " +
-//            "    activity_allocation a " +
-//            "INNER JOIN " +
-//            "    activity_allocation_details aa ON a.activityAllocateId = aa.activityAllocateId " +
-//            "INNER JOIN " +
-//            "    resource_pool r ON r.resourceId = a.resourceId " +
-//            "INNER JOIN " +
-//            "    activity act ON act.activityId = aa.activityId " +
-//            "INNER JOIN " +
-//            "    assessment asmt ON asmt.activityId = act.activityId AND asmt.resourceId = r.resourceId " +
-//            "LEFT JOIN " +
-//            "    platforms p ON p.platformId = a.platformId " +
-//            "WHERE " +
-//            "    aa.activityId = :activityId " +
-//            "    AND a.activityFromDate >= :fromDate " +
-//            "    AND a.activityToDate <= :toDate", nativeQuery = true)
-//List<Object[]> findByPlatformIdAndActivityDateBetweenAndDeletedFlagIsFalse(Integer activityId, Date fromDate, Date toDate);
+	@Query(value = "SELECT DISTINCT " +
+            "    a.activityAllocateId, " +
+            "    r.resourceId, " +
+            "    r.resourceCode, " +
+            "    r.resourceName, " +
+            "    p.platform, " +
+            "    r.designation, " +
+            "    r.experience, " +
+            "    act.activityName, " +
+            "    asmt.doubleActivityMark AS assessmentDoubleActivityMark, " +
+            "    asmt.doubleSecuredMark AS assessmentDoubleSecuredMark, " +
+            "    asmt.asesmentHours AS assessmentHours, " +
+            "    asmt.asesmentDate AS assessmentDate, " +
+            "    asmt.remark AS assessmentRemark " +
+            "FROM " +
+            "    activity_allocation a " +
+            "INNER JOIN " +
+            "    activity_allocation_details aa ON a.activityAllocateId = aa.activityAllocateId " +
+            "INNER JOIN " +
+            "    resource_pool r ON r.resourceId = a.resourceId " +
+            "INNER JOIN " +
+            "    activity act ON act.activityId = aa.activityId " +
+            "INNER JOIN " +
+            "    assessment asmt ON asmt.activityId = act.activityId AND asmt.resourceId = r.resourceId " +
+            "LEFT JOIN " +
+            "    platforms p ON p.platformId = a.platformId " +
+            "WHERE " +
+            "    aa.activityId = :activityId " +
+            "    AND a.activityFromDate >= :fromDate " +
+            "    AND a.activityToDate <= :toDate", nativeQuery = true)
+		List<Object[]> getAssessmentDetails(Integer activityId, Date fromDate, Date toDate);
+		
+		
 	
 	@Query(value = "SELECT DISTINCT a.activityAllocateId, r.resourceId, r.resourceCode, r.resourceName,  p.platform ,r.designation, r.experience, act.activityName " +
             "FROM activity_allocation a " +
@@ -64,7 +66,7 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
             "LEFT JOIN platforms p ON p.platformId = a.platformId " +
             "WHERE aa.activityId = :activityId " +
             "AND a.activityFromDate >= :fromDate AND a.activityToDate <= :toDate", nativeQuery = true)
-List<Object[]> findByPlatformIdAndActivityDateBetweenAndDeletedFlagIsFalse(Integer activityId, Date fromDate, Date toDate);
+List<Object[]> getActivityDetails(Integer activityId, Date fromDate, Date toDate);
 
 
 	
