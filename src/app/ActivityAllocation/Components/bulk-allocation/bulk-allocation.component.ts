@@ -24,13 +24,11 @@ export class BulkAllocationComponent {
   selectedSession: any;
   selectedActivityFrom: any;
   selectedActivityTo: any;
-  selectedDetails: any;
   resourceId: any;
   platformId :any;
   selectedFromDate!: Date;
   selectedToDate!: Date;
   allocateId: any;
-  // resource: Resource;
 
   platforms: Platform[];
   resources: Resource[];
@@ -59,14 +57,6 @@ export class BulkAllocationComponent {
 
   ngOnInit(): void {
     this.getActivityList();
-    // this.selectedDate = this.dateService.getDate();
-    // this.allocationService.getAllocationsByResource(this.resourceId,this.datePipe.transform(this.selectedDate)).subscribe(data => {
-    //   this.allocateId = data.activityAllocateId;
-    //   this.dynamicArray = data.details.map((item: DynamicGrid) => item as DynamicGrid);
-    // });
-    // this.allocationService.getResourceById(this.resourceId).subscribe(data=>{
-    //   this.resource = data;
-    // });
 
     this.allocationService.getPlatforms().subscribe(data=>{
       this.platforms = data;
@@ -74,49 +64,6 @@ export class BulkAllocationComponent {
     this.allocationService.getResourcesWithoutRelatedEntity().subscribe(data=>{
       this.resources = data;
     });
-  }
-  
-  // addMore(): void {
-   
-
-  //   this.newDynamic = {activityFor: this.selectedSession, activity: this.activity,
-  //                   fromHours: this.selectedActivityFrom, toHours: this.selectedActivityTo,
-  //                   activityDetails: this.selectedDetails};
-  //   this.dynamicArray.push(this.newDynamic);
-  // }
-
-  addMore(): void {
-   
-    if (!this.selectedSession || !this.activity || !this.selectedActivityFrom || !this.selectedActivityTo || !this.selectedDetails) {
-       
-        Swal.fire("Please fill in all required fields.");
-        return; 
-    }
-
-   
-    if (this.selectedActivityFrom >= this.selectedActivityTo) {
-      Swal.fire("Activity 'From' time must be before 'To' time.");
-        return; 
-    }
-
-   
-    this.newDynamic = {
-        activityFor: this.selectedSession,
-        activity: this.activity,
-        fromHours: this.selectedActivityFrom,
-        toHours: this.selectedActivityTo,
-        activityDetails: this.selectedDetails
-    };
-
-    
-    this.dynamicArray.push(this.newDynamic);
-}
-
-  removeRow(event: any, index: number): void {
-    event.target.parentNode.parentNode.remove();
-    if (index !== -1) {
-      this.dynamicArray.splice(index, 1);
-    }
   }
 
   getActivityList(): void {
@@ -132,17 +79,14 @@ export class BulkAllocationComponent {
   }
 
   submitForm(): void {
-    
 
-    if (this.dynamicArray.length === 0) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Validation Error',
-        text: 'Please add add more details.',
-      });
-      return;
-    }
-
+    let arr: DynamicGrid[] = [];
+    let row: any = {};
+    row.activityFor = this.selectedSession;
+    row.activity = this.activity;
+    row.fromHours = this.selectedActivityFrom;
+    row.toHours = this.selectedActivityTo;
+    arr.push(row);
 
     Swal.fire({
       title: 'Are you sure?',
@@ -154,7 +98,7 @@ export class BulkAllocationComponent {
       confirmButtonText: 'Yes, save it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        const data = {activityFromDate: this.selectedFromDate, activityToDate: this.selectedToDate, details: this.dynamicArray};
+        const data = {activityFromDate: this.selectedFromDate, activityToDate: this.selectedToDate, details: arr};
         this.allocationService.saveBulkAllocation(this.markedResources, data).subscribe(() => {
           Swal.fire(
             'Saved!',
@@ -172,7 +116,6 @@ export class BulkAllocationComponent {
       }
     });
   }
-  
 
   toggle(event: Event, resourceId: number, platformId: number): void {
     if((event.target as HTMLInputElement).checked)
@@ -181,22 +124,6 @@ export class BulkAllocationComponent {
     this.markedResources = this.markedResources.filter(r=>r.resourceId!=resourceId);
     console.log(this.markedResources);
   }
-
-
-  // selectAllResources(event: any) {
-  //   debugger;
-  //   const isChecked = event.target.checked;
-  //   for (let resource of this.resources) {
-  //       resource.selected = isChecked;
-  //       if (isChecked) {
-  //           this.markedResources.push({"resourceId": resource.resourceId, "platformId": resource.platformId});
-       
-  //       } else {
-  //           this.markedResources = this.markedResources.filter(r => r.resourceId !== resource.resourceId);
-  //       }
-  //   }
-  // }
-  
 
   selectAllResources(event: any) {
     const isChecked = event.target.checked;
@@ -247,22 +174,6 @@ export class BulkAllocationComponent {
     }
   }
   
-  // togglePlatform(event: any, platform: any) {
-  //   const isChecked = event.target.checked;
-  
-  //   platform.selected = isChecked;
-  
-    
-  //   for (let resource of this.resources) {
-      
-  //     if (resource.platform.trim() === platform.platform.trim()) {
-       
-  //       resource.selected = isChecked;
-  //       this.markedResources.push({"resourceId": resource.resourceId, "platformId": platform.platformId});
-  //     }
-  //   }
-  // }
-  
   togglePlatform(event: any, platform: any) {
     const isChecked = event.target.checked;
     platform.selected = isChecked;
@@ -281,17 +192,34 @@ export class BulkAllocationComponent {
       }
     }
   
-   
     if (!resourceSelected) {
       this.markedResources = [];
     }
   }
-  
-
 
   setToDate(): void {
     const daysTillFriday: number = 5 - this.selectedFromDate.getDay();
     this.selectedToDate = new Date(this.selectedFromDate.getTime() + (daysTillFriday*24*60*60*1000));
+    this.fetchAllocationData();
   }
 
+  validate(): void {
+    if(this.selectedFromDate>this.selectedToDate) {
+      Swal.fire("'Activity from' time must be before 'Activity to' time");
+      this.selectedToDate = null;
+    }
+    else
+      this.fetchAllocationData();
+  }
+
+  edit(): void {
+
+  }
+
+  fetchAllocationData(): void {
+    this.allocationService.fetchDataByDateRange(this.datePipe.transform(this.selectedFromDate,"yyyy-MM-dd"),this.datePipe.transform(this.selectedToDate,"yyyy-MM-dd"))
+      .subscribe(data=>{
+        this.dynamicArray = data;
+      });
+  }
 }
