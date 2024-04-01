@@ -37,7 +37,7 @@
           </div>
 
           <div *ngIf="showAssessmentTable">
-            <table class="table table-striped table-bordered">
+            <table>
               <thead>
                 <tr>
                   <th>Sl.No</th>
@@ -50,11 +50,16 @@
                   <th>Remarks</th>
                 </tr>
               </thead>
+            
               <tbody>
-                <ng-container *ngFor="let group of getResourceGroups(dateRange.assessments); let i = index">
-                  <tr *ngFor="let assessment of group.assessments; let j = index">
+                <ng-container *ngFor="let group of getResourceGroups(dateRange.assessments) | paginate :{
+                  itemsPerPage : tableSize,
+                  currentPage : page ,
+                  totalItems: count
+                  }; let i = index">
+                  <tr *ngFor="let assessment of group.assessments; let j = index;">
                     <ng-container *ngIf="j === 0">
-                      <td [attr.rowspan]="group.rowspan">{{ i + 1 }}</td> 
+                      <td [attr.rowspan]="group.rowspan">{{ (page - 1) * tableSize + i + 1 }}</td> 
                     </ng-container>
                     <ng-container *ngIf="j === 0">
                     <td [attr.rowspan]="group.rowspan">{{ assessment[0] }}</td> 
@@ -70,7 +75,11 @@
               </tbody>
               
             </table>
+            <div class="d-flex justify-content-end mt-2" id="pagination">
+              <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)= "getTableDataChange($event)"></pagination-controls>
+            </div>
           </div>
+
         </div>
       </div>
     </div>

@@ -28,7 +28,9 @@ export class AsessmentdetailsComponent implements OnInit {
   fromDate: Date ;
   toDate: Date ;
   showAssessmentTable: boolean = false;
+  showActivityTable :  boolean = false;
   assessments: any[];
+  assessmentsExist: any[];
   assessmentDtos: AssessmentDto[] = [];
   currentPage: number = 1;
   itemsPerPage: number = 10;
@@ -122,7 +124,12 @@ export class AsessmentdetailsComponent implements OnInit {
 
  
 
+
+
+
+
   validateAndGetDetails() {
+
     if (!this.selectedActivity) {
       Swal.fire('Warning', 'All fields are required', 'warning');
       return;
@@ -131,78 +138,58 @@ export class AsessmentdetailsComponent implements OnInit {
     const formattedFromDate = this.datePipe.transform(this.fromDate, 'yyyy-MM-dd');
     const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
   
-    this.showAssessmentTable = !this.showAssessmentTable;
-    if (this.showAssessmentTable) {
-      this.apiService.getAssessmentDetails(this.selectedActivity, formattedFromDate, formattedToDate)
-        .subscribe((data: any[]) => {
-          console.log(data);
-          this.assessments = data;
-          this.detailsRetrieved = true;
-          console.log(this.assessments);
-          this.assessmentDtos = this.mapAssessmentDtos(data);
-  
-          if (!this.assessments || this.assessments.length === 0) {
-            Swal.fire('No Records Found', 'No assessment records found for the selected criteria', 'info');
-          } 
-        });
-    }
-  }
-
-
-  // validateAndGetDetails() {
-  //   if (!this.selectedActivity) {
-  //     Swal.fire('Warning', 'All fields are required', 'warning');
-  //     return;
-  //   }
-  
-  //   const formattedFromDate = this.datePipe.transform(this.fromDate, 'yyyy-MM-dd');
-  //   const formattedToDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
-  
-  //   this.showAssessmentTable = !this.showAssessmentTable;
+   this.assessments = [];
+   this.assessmentsExist = [];
+   this.assessmentDate = null;
+   this.totalMarks = null;
+   this.marks = null;
+  this.hour = null;
+  this.remarks =null;
   
     
-  //   this.apiService.checkAssessments(this.selectedActivity, this.fromDate.toISOString(), this.toDate.toISOString())
-  //     .subscribe((result: boolean) => {
-  //       if (result) {
-        
-  //         this.apiService.getAssessmentDetails(this.selectedActivity, formattedFromDate, formattedToDate)
-  //           .subscribe((data: any[]) => {
-  //             console.log(data);
-  //             this.assessments = data;
-  //             data.forEach(obj => {
+    this.apiService.checkAssessments(this.selectedActivity, this.fromDate.toISOString(), this.toDate.toISOString())
+      .subscribe((result: boolean) => {
+        if (result) {
+          this.showAssessmentTable = !this.showAssessmentTable;     
+          this.apiService.getAssessmentDetails(this.selectedActivity, formattedFromDate, formattedToDate)
+            .subscribe((data: any[]) => {
+              console.log(data);
+              this.assessmentsExist = data;
+              data.forEach(obj => {
                
-  //              this.assessmentDate = new Date(obj[11]);
-  //              this.totalMarks = obj[8];
-  //              this.marks = obj[9];
-  //              this.hour = obj[10];
-  //              this.remarks = obj[12]
+               this.assessmentDate = new Date(obj[11]);
+               this.totalMarks = obj[8];
+               this.marks = obj[9];
+               this.hour = obj[10];
+               this.remarks = obj[12]
               
-  //             });
-  //             this.detailsRetrieved = true;
-  //             console.log(this.assessmentDate);
-  //             this.assessmentDtos = this.mapAssessmentDtos(data);
+              });
+              this.detailsRetrieved = true;
+              console.log(this.assessmentDate);
+              this.assessmentDtos = this.mapAssessmentDtos(data);
   
-  //             if (!this.assessments || this.assessments.length === 0) {
-  //               Swal.fire('No Records Found', 'No assessment records found for the selected criteria', 'info');
-  //             }
-  //           });
-  //       } else {
+              if (!this.assessmentsExist || this.assessmentsExist.length === 0) {
+                Swal.fire('No Records Found', 'No assessment records found for the selected criteria', 'info');
+              }
+            });
+        } else {
+          this.showActivityTable = !this.showActivityTable;
           
-  //         this.apiService.getAssessmentDetails(this.selectedActivity, formattedFromDate, formattedToDate)
-  //           .subscribe((data: any[]) => {
-  //             console.log(data);
-  //             this.assessments = data;
-  //             this.detailsRetrieved = true;
-  //             console.log(this.assessments);
-  //             this.assessmentDtos = this.mapAssessmentDtos(data);
+          this.apiService.getActivityDetails(this.selectedActivity, formattedFromDate, formattedToDate)
+            .subscribe((data: any[]) => {
+              console.log(data);
+              this.assessments = data;
+              this.detailsRetrieved = true;
+              console.log(this.assessments);
+              this.assessmentDtos = this.mapAssessmentDtos(data);
   
-  //             if (!this.assessments || this.assessments.length === 0) {
-  //               Swal.fire('No Records Found', 'No assessment records found for the selected criteria', 'info');
-  //             }
-  //           });
-  //       }
-  //     });
-  // }
+              if (!this.assessments || this.assessments.length === 0) {
+                Swal.fire('No Records Found', 'No assessment records found for the selected criteria', 'info');
+              }
+            });
+        }
+      });
+  }
   
   
 
@@ -455,6 +442,22 @@ getMonthIndex(month: string): number {
 
 
 // }
+
+ // for pagination
+ indexNumber : number = 0;
+ page : number = 1;
+ tableSize : number = 10;
+ count : number = 0;
+
+//pagination functionality
+getTableDataChange(event : any , details : any[]){
+
+ this.page = event;
+ this.indexNumber = (this.page - 1) * this.tableSize;
+
+ this.assessments=details;
+
+}
 
 
 }

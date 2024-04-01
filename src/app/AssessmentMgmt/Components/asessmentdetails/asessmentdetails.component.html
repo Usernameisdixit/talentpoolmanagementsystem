@@ -1,4 +1,4 @@
-<!-- activity-allocation.component.html -->
+
 
 <h2 class="text-center">Assessment Evaluation</h2>
 
@@ -16,16 +16,18 @@
    
         <div class="col-md-3" [hidden]="isHidden">
           <div class="form-group">
-              <label for="fromDate">From Date:<span>*</span></label>
- <input type="text" id="fromDate" class="form-control" [(ngModel)]="fromDate" bsDatepicker [bsConfig]="bsConfig">
+                <label for="fromDate">From Date:<span>*</span></label>
+                 <input type="text" id="fromDate" class="form-control" [(ngModel)]="fromDate" bsDatepicker [bsConfig]="bsConfig">
           </div>
       </div>
+
       <div class="col-md-3" [hidden]="isHidden">
         <div class="form-group">
             <label for="toDate">To Date:<span>*</span></label>
             <input type="text" id="toDate" class="form-control" [(ngModel)]="toDate" bsDatepicker [bsConfig]="bsConfig">
         </div>
     </div>
+
     <div class="col-md-3" >
         <div class="form-group">
             <label for="activity">Activity:<span>*</span></label>
@@ -36,14 +38,7 @@
         </div>
     </div>
 
-    <!-- <div class="col-md-3"><br>
-        <div class="form-group"> 
-            <label>&nbsp;</label>    
-            <button class="btn btn-primary btn-sm " (click)="validateAndGetDetails()">Get Details</button>
-        </div>
-    </div> -->
- 
-        
+  
         <div class="col-md-3" *ngIf="detailsRetrieved">
             <div class="form-group">
                 <label for="assessmentDate">Assessment Date:<span>*</span></label>
@@ -51,15 +46,11 @@
             </div>
         </div>
 
-   
 
-  
-
-    
 
     <div class="row mt-3" *ngIf="assessments && assessments.length">
         <div class="col-md-12">
-            <table class="table table-bordered  table-hover" style="overflow-y: auto;">
+            <table>
                 <thead>
                     <tr>
                         <th>Sl. No</th>
@@ -69,11 +60,12 @@
                         <th>Designation</th>
                         <th>Experience</th>
                         <th class="text-center">Activity Name</th>
-                        <th>
+                        <th class="col-md-6">
                             Total Marks <input type="number" class="form-control" [(ngModel)]="totalMarks" (input)="updateAllTotalMarks()">
                         </th>
-                        <th>Secured Marks
-                            <input type="number" class="form-control" [(ngModel)]="marks" (input)="updateMarks()">
+                        
+                        <th class="col-md-6">
+                            Secured Marks <input type="number" class="form-control" [(ngModel)]="marks" (input)="updateMarks()">
                         </th>
                         <th>Assessment Hour
                             <input type="number" class="form-control" [(ngModel)]="hour" (input)="updateHours()">
@@ -85,10 +77,14 @@
                 </thead>
                 
                 <tbody>
-                    <ng-container *ngFor="let assessment of assessments; let i = index">
+                    <ng-container *ngFor="let assessment of assessments | paginate :{
+                        itemsPerPage : tableSize,
+                        currentPage : page ,
+                        totalItems: count
+                        }; let i = index;">                          
                       
                             <tr>
-                                <td>{{i+1}}</td>
+                                <td>{{ (page - 1) * tableSize + i + 1 }}</td>
                                 <td >{{assessment[2] }}</td>
                                 <td >{{assessment[3] }}</td>
                                 <td >{{assessment[4]}}</td>
@@ -110,29 +106,84 @@
                 
             </table>
         </div>
-        <!-- For Pagination -->
-        <!-- <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-end">
-              <li class="page-item" [class.disabled]="currentPage === 1">
-                <button class="page-link" (click)="goToPreviousPage()" aria-label="Previous">
-                  <span aria-hidden="true">Prev &laquo;</span>
-                </button>
-              </li>
-              <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="currentPage === page">
-                <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
-              </li>
-              <li class="page-item" [class.disabled]="currentPage === getTotalPages()">
-                <button class="page-link" (click)="goToNextPage()" aria-label="Next">
-                  <span aria-hidden="true">Next &raquo;</span>
-                </button>
-              </li>
-            </ul>
-          </nav> -->
+       
+
+            <div class="d-flex justify-content-end mt-2" id="pagination">
+            <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)= "getTableDataChange($event ,assessments)"></pagination-controls>
+          </div>
+
+    </div>
+<!-- Second Table Starts here -->
+    <div class="row mt-3" *ngIf="assessmentsExist && assessmentsExist.length">
+        <div class="col-md-12">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sl. No</th>
+                        <th>Resource Code</th>
+                        <th>Resource Name</th>
+                        <th>Platform</th>
+                        <th>Designation</th>
+                        <th>Experience</th>
+                        <th class="text-center">Activity Name</th>
+                        <th class="col-md-6">
+                            Total Marks 
+                        </th>
+                        
+                        <th class="col-md-6">
+                            Secured Marks 
+                        </th>
+
+                        <th>
+                            Assessment Hour 
+                        </th>
+                        <th>
+                            Assessment Remarks 
+                        </th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    <ng-container *ngFor="let assessment of assessmentsExist | paginate :{
+                        itemsPerPage : tableSize,
+                        currentPage : page ,
+                        totalItems: count
+                        }; let i = index;">                          
+                      
+                            <tr>
+                                <td>{{ (page - 1) * tableSize + i + 1 }}</td>
+                                <td >{{assessment[2] }}</td>
+                                <td >{{assessment[3] }}</td>
+                                <td >{{assessment[4]}}</td>
+                                <td >{{assessment[5]}}</td>
+                                <td >{{assessment[6]}}</td>
+                                <td>{{ assessment[7]}}</td>
+                                <td><input type="text" value="{{ assessment[8]}}" class="form-control" ></td>
+                                <td><input type="text" value="{{ assessment[9]}}" class="form-control" (keyup)="validateSecuredMarks(assessment)"></td>
+                                <td><input type="text" value="{{ assessment[10]}}" class="form-control"></td>
+                                <td>
+                                    <textarea value="{{ assessment[12]}}" class="form-control"></textarea>
+                                </td>
+                                
+                            </tr>
+                       
+            
+                    </ng-container>
+                </tbody>
+                
+            </table>
+        </div>
+       
+
+            <div class="d-flex justify-content-end mt-2" id="pagination">
+            <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)= "getTableDataChange($event,assessmentsExist)"></pagination-controls>
+          </div>
+
     </div>
 
-   
+    <!-- Ends  here -->
 
-
+ 
     <div class="row mt-3" *ngIf="detailsRetrieved">
         <div class="col-md-12 d-flex justify-content-center">
             <button class="btn btn-success space" (click)="submitAssessments()">Submit</button>
@@ -140,10 +191,7 @@
 
         </div>
     </div>
-    
-
-    
-
+  
     <div class="row mt-3">
         <div class="col-md-12">
             <ul>

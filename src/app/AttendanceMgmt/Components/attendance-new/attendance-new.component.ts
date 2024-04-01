@@ -192,11 +192,11 @@ count : number = 0;
 pageSizes = [10,20,30,40,50];
 
 //pagination functionality
-getTableDataChange(event : any){
+getTableDataChange(event : any , details : any[]){
   this.page = event;
   this.indexNumber = (this.page - 1) * this.tableSize;
-  console.log( this.uncheckCheckboxStatus[this.page - 1]);
-  this.getDataByDateActivity();
+
+  this.attendanceDetails=details;
 }
 
 }
