@@ -383,10 +383,26 @@ getResourceGroups(assessments: any[]): any[] {
   if (group) {
     resourceGroups.push(group);
   }
-
+  
   return resourceGroups;
 }
 
+
+ // for pagination
+ indexNumber : number = 0;
+ page : number = 1;
+ tableSize : number = 10;
+ count : number = 0;
+
+//pagination functionality
+getTableDataChange(event : any){
+ 
+ this.page = event;
+ this.indexNumber = (this.page - 1) * this.tableSize;
+ this.getResourceGroups(this.assessments);
+
+//  console.log(this.getUserDetails);
+}
   
   
 }

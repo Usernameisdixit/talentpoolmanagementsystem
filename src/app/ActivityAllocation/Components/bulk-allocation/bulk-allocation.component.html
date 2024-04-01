@@ -28,6 +28,7 @@
     <div class="form-group col-md-6">
       <label for="activity">Activity:</label>
       <select id="activity" class="form-control" (change)="onActivitySelect($event)">
+        <option value="" select="selected" >Select Activity</option>
         <option *ngFor="let activity of activities" [value]="activity.activityId">{{ activity.activityName }}</option>
       </select>
     </div>

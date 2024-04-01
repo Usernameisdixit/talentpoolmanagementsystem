@@ -76,12 +76,41 @@ export class BulkAllocationComponent {
     });
   }
   
+  // addMore(): void {
+   
+
+  //   this.newDynamic = {activityFor: this.selectedSession, activity: this.activity,
+  //                   fromHours: this.selectedActivityFrom, toHours: this.selectedActivityTo,
+  //                   activityDetails: this.selectedDetails};
+  //   this.dynamicArray.push(this.newDynamic);
+  // }
+
   addMore(): void {
-    this.newDynamic = {activityFor: this.selectedSession, activity: this.activity,
-                    fromHours: this.selectedActivityFrom, toHours: this.selectedActivityTo,
-                    activityDetails: this.selectedDetails};
+   
+    if (!this.selectedSession || !this.activity || !this.selectedActivityFrom || !this.selectedActivityTo || !this.selectedDetails) {
+       
+        Swal.fire("Please fill in all required fields.");
+        return; 
+    }
+
+   
+    if (this.selectedActivityFrom >= this.selectedActivityTo) {
+      Swal.fire("Activity 'From' time must be before 'To' time.");
+        return; 
+    }
+
+   
+    this.newDynamic = {
+        activityFor: this.selectedSession,
+        activity: this.activity,
+        fromHours: this.selectedActivityFrom,
+        toHours: this.selectedActivityTo,
+        activityDetails: this.selectedDetails
+    };
+
+    
     this.dynamicArray.push(this.newDynamic);
-  }
+}
 
   removeRow(event: any, index: number): void {
     event.target.parentNode.parentNode.remove();
@@ -103,6 +132,7 @@ export class BulkAllocationComponent {
   }
 
   submitForm(): void {
+    
 
     if (this.dynamicArray.length === 0) {
       Swal.fire({
@@ -131,6 +161,7 @@ export class BulkAllocationComponent {
             'Activity allocation details has been saved successfully.',
             'success'
           );
+          this.markedResources=[];
         }, () => {
           Swal.fire(
             'Error!',
@@ -172,6 +203,7 @@ export class BulkAllocationComponent {
     if (isChecked) {
       this.markedResources = [];
       for (let platform of this.platforms) {
+        platform.selected = isChecked;
         
         for (let resource of this.resources) {
           resource.selected = isChecked;
@@ -182,6 +214,13 @@ export class BulkAllocationComponent {
       }
     } else {
       this.markedResources = [];
+      for (let resource of this.resources) {
+        resource.selected = false;
+      }
+
+      for (let platform of this.platforms) {
+        platform.selected = false;
+      }
     }
   }
 
@@ -202,25 +241,54 @@ export class BulkAllocationComponent {
     } else {
     
       this.markedResources = [];
-    }
-  }
-  
-  togglePlatform(event: any, platform: any) {
-    const isChecked = event.target.checked;
-  
-    platform.selected = isChecked;
-  
-    
-    for (let resource of this.resources) {
-      
-      if (resource.platform.trim() === platform.platform.trim()) {
-       
-        resource.selected = isChecked;
-        this.markedResources.push({"resourceId": resource.resourceId, "platformId": platform.platformId});
+      for (let platform of this.platforms) {
+        platform.selected = false;
       }
     }
   }
   
+  // togglePlatform(event: any, platform: any) {
+  //   const isChecked = event.target.checked;
+  
+  //   platform.selected = isChecked;
+  
+    
+  //   for (let resource of this.resources) {
+      
+  //     if (resource.platform.trim() === platform.platform.trim()) {
+       
+  //       resource.selected = isChecked;
+  //       this.markedResources.push({"resourceId": resource.resourceId, "platformId": platform.platformId});
+  //     }
+  //   }
+  // }
+  
+  togglePlatform(event: any, platform: any) {
+    const isChecked = event.target.checked;
+    platform.selected = isChecked;
+  
+    
+    let resourceSelected = false;
+  
+    
+    for (let resource of this.resources) {
+      if (resource.platform.trim() === platform.platform.trim()) {
+        resource.selected = isChecked;
+        if (isChecked) {
+          resourceSelected = true;
+          this.markedResources.push({ "resourceId": resource.resourceId, "platformId": platform.platformId });
+        }
+      }
+    }
+  
+   
+    if (!resourceSelected) {
+      this.markedResources = [];
+    }
+  }
+  
+
+
   setToDate(): void {
     const daysTillFriday: number = 5 - this.selectedFromDate.getDay();
     this.selectedToDate = new Date(this.selectedFromDate.getTime() + (daysTillFriday*24*60*60*1000));

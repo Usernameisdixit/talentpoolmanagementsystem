@@ -7,6 +7,7 @@ import { AssessmentDto } from 'src/app/Model/AssessmentDto';
   providedIn: 'root'
 })
 export class AssessmentserviceService {
+
   
  
   private platformUrl = 'http://localhost:9999/tpms/getPlatforms';
@@ -33,6 +34,16 @@ export class AssessmentserviceService {
     params = params.append('activityId', activityId.toString());
     params = params.append('fromDate', fromDate);
     params = params.append('toDate', toDate);
+    return this.http.get<any[]>(url, { params: params });
+  }
+
+  getActivityDetails(selectedActivity: any, formattedFromDate: string, formattedToDate: string) {
+    const url = `${this.baseUrl}/getActivityDetails`;
+  
+    let params = new HttpParams();
+    params = params.append('activityId', selectedActivity.toString());
+    params = params.append('fromDate', formattedFromDate);
+    params = params.append('toDate', formattedToDate);
     return this.http.get<any[]>(url, { params: params });
   }
 
