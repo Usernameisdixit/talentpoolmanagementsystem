@@ -86,7 +86,7 @@
 }
 
 #sidebar {
-  position: fixed; /* Fixed positioning */
+   /* Fixed positioning */
   top: 0;
   left: 0;
   bottom: 0;
@@ -117,7 +117,7 @@
 #content {
     flex-grow: 1;
     padding-left: 250px;
-    padding-top: 80px;
+    padding-top: 0;
     
 }
 

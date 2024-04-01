@@ -1,6 +1,7 @@
 .export-buttons {
-    display: flex;
-    justify-content: flex-end;
+     display: flex;
+   /* justify-content: flex-end; */
+    margin-left: 900px;
   }
   
   .export-btn {

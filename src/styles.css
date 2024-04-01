@@ -3,7 +3,7 @@
 @import "~@fortawesome/fontawesome-free/css/all.css";
 html, body { height: 100%; }
 body::-webkit-scrollbar{ margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
-    display: non;
+    display: none;
 }
 
 .space {
@@ -52,11 +52,5 @@ tr:hover {
   display: block; /* Show the text when the button is hovered */
 }
 
- .card-body {
-  margin: 20px auto; 
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
 
 

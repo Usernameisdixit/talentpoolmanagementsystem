@@ -1,9 +1,15 @@
-h1{
-    margin-top: 60px;
-    text-align: center;
-    color: white;
-    min-height: 50px;
-    background-color: black;
-    font-size: 25px;
 
+div{
+    margin-top: 61px;
+    margin-left: 15rem !important;
+}
+h1{
+    
+    text-align: left;
+    color: rgb(0, 0, 0);
+    min-height: 50px;
+    background-color: rgb(180, 216, 252);
+    font-size: 20px;
+    padding-top: 20px;
+    padding-left: 30px;
 }
