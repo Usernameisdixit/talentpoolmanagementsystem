@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
+import org.springframework.data.repository.query.Param;
 
 import com.tpms.entity.ResourcePoolHistory;
 
@@ -33,6 +33,13 @@ public interface ResourcePoolHistoryRepository extends JpaRepository<ResourcePoo
 	            "LEFT JOIN excel_upload_history e ON r.allocationDate = e.allocationDate " +
 	            "WHERE r.deletedFlag =0 AND e.deletedFlag=0 ", nativeQuery = true)
 	 		List<Object[]> getResourceDetailsWithFileNameR();
+	
+	 		@Query(value = "SELECT resourceName, resourceCode, allocationDate " +
+	                "FROM resource_pool_history " +
+	                "WHERE resourceCode = :resourceCode " +
+	                "ORDER BY allocationDate", nativeQuery = true)
+	 List<Object[]> getAllResourceByCode(@Param("resourceCode") String resourceCode);
+
 	
 	
 }

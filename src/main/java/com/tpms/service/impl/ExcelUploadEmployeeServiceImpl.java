@@ -2,21 +2,29 @@ package com.tpms.service.impl;
 
 import java.io.IOException;
 import java.time.LocalDate;
-
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import java.util.Optional;
 
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tpms.dto.ResourcePoolHistoryDto;
 import com.tpms.entity.ExcelUploadHistory;
 import com.tpms.entity.ResourcePoolHistory;
 import com.tpms.repository.ExcelUploadHistoryRepository;
 import com.tpms.repository.ResourcePoolHistoryRepository;
 import com.tpms.utils.ExcelUtils;
 
+import io.jsonwebtoken.lang.Objects;
 import jakarta.transaction.Transactional;
 
 
@@ -82,6 +90,69 @@ public class ExcelUploadEmployeeServiceImpl {
 	        history.setDeletedFlag((byte) 0);
 	        exceluploadrepo.save(history);
 	    }
+	}
+
+	public JSONObject getDetails(String resourceCode) throws JSONException {
+		List<Object[]> resoHistList=ExcelEmpRepo.getAllResourceByCode(resourceCode);
+		String resourceName = null;
+		if (!resoHistList.isEmpty()) {
+		    Object[] firstRow = resoHistList.get(0);
+		    resourceName = (String) firstRow[0];
+		}
+		System.err.println(resoHistList);
+		// Parse the data and collect allocation dates for the resource
+        List<LocalDate> allocationDates = new ArrayList<>();
+        for (Object[] row : resoHistList) {
+            java.sql.Date allocationDateSQL = (java.sql.Date) row[2];
+          // Convert to LocalDate
+            LocalDate allocationDate = allocationDateSQL.toLocalDate(); 
+            allocationDates.add(allocationDate);
+        }
+        
+        // Determine the consecutive allocation periods
+        List<JSONObject> allocationPeriods = new ArrayList<>();
+        LocalDate startDate = null;
+        LocalDate endDate = null;
+        for (int i = 0; i < allocationDates.size(); i++) {
+            LocalDate currentDate = allocationDates.get(i);
+            
+            if (startDate == null) {
+                startDate = currentDate;
+                endDate = startDate.plusWeeks(1);
+            } else {
+                // Check if the current date is within the same week as the end date
+                if (currentDate.isBefore(endDate.plusWeeks(1).minusDays(1))) {
+                    endDate = endDate.plusWeeks(1);
+                } else {
+                    // Print the allocation period
+                    System.out.println("Allocation Period: " + startDate + " to " + endDate.minusDays(1));
+                    JSONObject allocationPeriod = new JSONObject();
+                    allocationPeriod.put("start_date", startDate.toString());
+                    allocationPeriod.put("end_date", endDate.minusDays(1).toString());
+                    allocationPeriods.add(allocationPeriod);
+                    startDate = currentDate;
+                    endDate = startDate.plusWeeks(1);
+                }
+            }
+        }
+        
+        if (startDate != null) {
+            System.out.println("Allocation Period: " + startDate + " to " + endDate.minusDays(1));
+            JSONObject allocationPeriod = new JSONObject();
+            allocationPeriod.put("start_date", startDate.toString());
+            allocationPeriod.put("end_date", endDate.minusDays(1).toString());
+            allocationPeriods.add(allocationPeriod);
+        }
+        // Create JSON object containing resource name and allocation periods
+        JSONObject resourceAllocation = new JSONObject();
+        resourceAllocation.put("resource_name",resourceName); 
+        JSONArray periodsArray = new JSONArray();
+        for (JSONObject period : allocationPeriods) {
+            periodsArray.put(period);
+        }
+        resourceAllocation.put("allocation_periods", periodsArray);
+        
+        return resourceAllocation;
 	}
 
 
