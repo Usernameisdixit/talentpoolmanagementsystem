@@ -26,6 +26,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
@@ -320,6 +322,14 @@ public class ResourceExcelController {
 			return ResponseEntity.ok(Map.of("resources", resources, "allocationDate", allocationDate));
 		}
 		
+		//Duration count
+		@GetMapping("/emp/durations")
+		public ResponseEntity<?> getDurationDetails(@RequestParam("code") String resourceCode) throws JSONException {
+			JSONObject details = excelempservice.getDetails(resourceCode);
+			System.out.println(details);
+			return ResponseEntity.ok(details.toString());
+		
+		}
 		
 	    
 }
