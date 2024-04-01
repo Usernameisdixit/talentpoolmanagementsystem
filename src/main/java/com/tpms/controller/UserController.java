@@ -22,12 +22,6 @@ import com.tpms.entity.User;
 import com.tpms.service.RoleService;
 import com.tpms.service.UserService;
 
-/**
- * 
- * @author kiran.swain
- *
- */
-
 
 @RestController
 @CrossOrigin("*")

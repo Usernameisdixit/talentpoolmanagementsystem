@@ -7,11 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tpms.entity.User;
 
-/**
- * 
- * @author kiran.swain
- *
- */
 public interface UserRepository extends JpaRepository<User, Integer> {
 
 	@Transactional
