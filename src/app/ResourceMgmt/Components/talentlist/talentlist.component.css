@@ -3,6 +3,7 @@
     top: -10px;
     left: 900px;
     right: 0;
+    display: flex;
 }
 
 /* Badge styling */
