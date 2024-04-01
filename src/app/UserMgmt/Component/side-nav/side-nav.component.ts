@@ -1,4 +1,4 @@
-import { Component ,ViewChild, ElementRef, AfterViewInit} from '@angular/core';
+import { Component ,ViewChild, ElementRef} from '@angular/core';
 
 @Component({
   selector: 'app-side-nav',
@@ -9,17 +9,14 @@ export class SideNavComponent {
   @ViewChild('sidebarMenu') sidebarMenu!: ElementRef;
 
   constructor() { }
+  
+  getListItem(event:MouseEvent){
+    alert("hii i am clicked");
+    const target = event.target as HTMLElement;
+    const listItemValue = target.textContent?.trim();
+    console.log(listItemValue);
+    localStorage.setItem("activeLink",listItemValue);
 
-  ngAfterViewInit(): void {
-    
-    const menuElement = this.sidebarMenu.nativeElement;
-
-    const listItems = menuElement.querySelectorAll('li');
-
-    listItems.forEach((item: HTMLElement) => {
-     // const listItemValue = item.textContent.trim();
-      console.log(item);
-    });
   }
 
 
