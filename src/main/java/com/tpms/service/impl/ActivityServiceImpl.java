@@ -298,7 +298,6 @@ public class ActivityServiceImpl implements ActivityService {
 	                newDetail.setActivityFor(originalDetail.getActivityFor());
 	                newDetail.setFromHours(originalDetail.getFromHours());
 	                newDetail.setToHours(originalDetail.getToHours());
-	                newDetail.setActivityDetails(originalDetail.getActivityDetails());
 	                newDetail.setActivity(originalDetail.getActivity());
 	              
 	                newDetail.setActivityAllocation(activityAllocation);
