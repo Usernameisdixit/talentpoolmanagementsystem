@@ -71,7 +71,7 @@ List<Object[]> getActivityDetails(Integer activityId, Date fromDate, Date toDate
 
 
 	
-	@Query("SELECT alloc FROM ActivityAllocation alloc JOIN FETCH alloc.details det WHERE alloc.details.resourceId=:id AND alloc.activityFromDate=:activityDate AND alloc.deletedFlag=false and det.deletedFlag=false")
+	@Query("SELECT alloc FROM ActivityAllocation alloc JOIN FETCH alloc.details det WHERE det.resourceId=:id AND alloc.activityFromDate=:activityDate AND alloc.deletedFlag=false and det.deletedFlag=false")
 	ActivityAllocation findByResourceId(Integer id, Date activityDate);
 
 	 @Query(value = "SELECT DISTINCT CONCAT(DATE_FORMAT(activityFromDate, '%d-%m-%Y'), ' to ', DATE_FORMAT(activityToDate, '%d-%m-%Y')) AS dates " +
