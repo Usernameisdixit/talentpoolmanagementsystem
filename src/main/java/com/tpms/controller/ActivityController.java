@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tpms.dto.ResourcePoolProjection;
 import com.tpms.entity.Activity;
 import com.tpms.entity.ActivityAllocation;
+import com.tpms.entity.ActivityAllocationDetails;
 import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
 import com.tpms.service.ActivityService;
@@ -34,112 +35,100 @@ import com.tpms.service.impl.ActivityServiceImpl;
 @CrossOrigin("*")
 @RestController
 public class ActivityController {
-	
-	
-	
+
 	@Autowired
 	ActivityService activityService;
-	
+
 	@Autowired
 	ActivityServiceImpl activityServiceImpl;
-	
-	
+
 	@GetMapping("/get/activity")
-	public List<Activity> getAllActivities()
-	{
+	public List<Activity> getAllActivities() {
 		return activityServiceImpl.getAllActivities();
-	
-		
+
 	}
-	
-	
+
 	@PostMapping("/save/activity")
-	public Activity SaveActivity(@RequestBody Activity activity)
-	{
+	public Activity SaveActivity(@RequestBody Activity activity) {
 		activity.setDeletedFlag(false);
 		return activityServiceImpl.SaveActivity(activity);
-		
+
 	}
-	
-	
+
 	@GetMapping("/get/activity/{activityId}")
-	public Activity getActivityById(@PathVariable Integer activityId)
-	{
-		return activityServiceImpl.getActivityById(activityId);	
-	
+	public Activity getActivityById(@PathVariable Integer activityId) {
+		return activityServiceImpl.getActivityById(activityId);
+
 	}
-	
-	
+
 	@DeleteMapping("/delete/activity/{activityId}")
-	public void deleteActivity(@PathVariable Integer activityId)
-	{
+	public void deleteActivity(@PathVariable Integer activityId) {
 		activityServiceImpl.deleteActivity(activityId);
-		
+
 	}
-	
-	
+
 	@PutMapping("/update/activity")
-	public Activity updateActivity(@RequestBody Activity activity)
-	{
+	public Activity updateActivity(@RequestBody Activity activity) {
 		return activityServiceImpl.updateActivity(activity);
 	}
-	
-	
+
 	@PutMapping("/update-deleted-flag/{activityId}")
 	public void updateDeletedFlag(@PathVariable Integer activityId, @RequestParam Boolean deletedFlag) {
-	    activityServiceImpl.updateDeletedFlag(activityId, deletedFlag);
+		activityServiceImpl.updateDeletedFlag(activityId, deletedFlag);
 	}
-	
+
 	@PostMapping("activityReportData")
 	public String getActivityReportData(@RequestBody Map<String, String> params) {
-    String fromDate = params.get("fromDate");
-    String toDate = params.get("toDate");
-    String platform = params.get("platform");
-    String resourceValue = params.get("resourceValue");
-    if(resourceValue.equals("")) {
-        resourceValue="0";
-    }
-    if(resourceValue.equals("")||platform.equals("-1")) {
-    	platform="0";
-    }
-    JSONArray attendanceReportData = activityServiceImpl.getActivityReportData(platform,fromDate,toDate,resourceValue);
+		String fromDate = params.get("fromDate");
+		String toDate = params.get("toDate");
+		String platform = params.get("platform");
+		String resourceValue = params.get("resourceValue");
+		if (resourceValue.equals("")) {
+			resourceValue = "0";
+		}
+		if (resourceValue.equals("") || platform.equals("-1")) {
+			platform = "0";
+		}
+		JSONArray attendanceReportData = activityServiceImpl.getActivityReportData(platform, fromDate, toDate,
+				resourceValue);
 //    System.err.println("Report Data " + attendanceReportData);
-    return attendanceReportData.toString();
-}
+		return attendanceReportData.toString();
+	}
 
 	@GetMapping("platforms")
 	List<Platform> getPlatforms() {
 		return activityService.fetchPlatforms();
 	}
-	
+
 	@GetMapping("activities")
 	List<Activity> getActivities(String platform) {
 		return activityService.findAll();
 	}
-	
+
 	@PostMapping("saveAllocation")
 	ActivityAllocation saveAllocation(@RequestBody ActivityAllocation data) {
 		return activityService.saveAllocation(data);
 	}
-	
+
 	@GetMapping("allocationDetails")
-	ResponseEntity<Map<String, Object>> getAllocationDetailsByResource(@RequestParam("id") Integer resourceId, @RequestParam("date") Date activityDate) {
+	ResponseEntity<Map<String, Object>> getAllocationDetailsByResource(@RequestParam("id") Integer resourceId,
+			@RequestParam("date") Date activityDate) {
 		Map<String, Object> response = new HashMap<>();
 		try {
-		String result= activityService.getAllocationDetailsByResource(resourceId,activityDate);
-		if(result=="success") {
-			response.put("status", 200);
-			response.put("success", "Attendance Save Succesfully");
-			}else {
+			String result = activityService.getAllocationDetailsByResource(resourceId, activityDate);
+			if (result == "success") {
+				response.put("status", 200);
+				response.put("success", "Attendance Save Succesfully");
+			} else {
 				response.put("Error", "Error");
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			response.put("Error", "Error");
 		}
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * @return Details of single resource without related entity data
 	 */
@@ -147,15 +136,15 @@ public class ActivityController {
 	ResourcePoolProjection getResource(@RequestParam("id") Integer resourceId) {
 		return activityService.getResource(resourceId);
 	}
-	
+
 	/**
 	 * @return List of resources along with activity allocation data
 	 */
 	@GetMapping("resources")
 	List<ResourcePool> getResources(String activityDate, Integer platformId) {
-		return activityService.getFilteredResources(activityDate,platformId);
+		return activityService.getFilteredResources(activityDate, platformId);
 	}
-	
+
 	/**
 	 * @return List of resources without related entity data
 	 */
@@ -163,7 +152,7 @@ public class ActivityController {
 	List<ResourcePoolProjection> getResourcesWithoutRelatedEntities() {
 		return activityService.findAllWithoutRelatedEntity();
 	}
-	
+
 	@PostMapping("saveBulkAllocation")
 	void saveBulkAllocation(@RequestBody String data) {
 		JSONArray markedResources = null;
@@ -174,20 +163,26 @@ public class ActivityController {
 			allocData = (new ObjectMapper()).readValue(json.getString("allocData"), ActivityAllocation.class);
 		} catch (JSONException | JsonProcessingException e) {
 			e.printStackTrace();
-		}  
-		activityService.saveBulkAllocation(markedResources,allocData);
+		}
+		activityService.saveBulkAllocation(markedResources, allocData);
+	}
+
+	@GetMapping("/platformsIdByName")
+	public Integer getPlatformIdByName(@RequestParam("platformName") String platformName) {
+		Integer platFormId = activityService.platformIdByName(platformName);
+		return platFormId;
+	}
+
+	@GetMapping("getDistinctDate")
+	public List<String> getAllDistinctDateRange(@RequestParam("year") String year,
+			@RequestParam("month") String month) {
+		List<String> getAllDaterange = activityService.getAllDistinctDateRange(year, month);
+		return getAllDaterange;
 	}
 	
-	 @GetMapping("/platformsIdByName")
-	    public Integer getPlatformIdByName(@RequestParam("platformName") String platformName) {
-	        Integer platFormId= activityService.platformIdByName(platformName);
-	        return platFormId;
-	    }
-	 
-	 @GetMapping("getDistinctDate")
-		public List<String> getAllDistinctDateRange(@RequestParam("year") String year,@RequestParam("month") String month) {
-	    List<String> getAllDaterange=activityService.getAllDistinctDateRange(year,month);
-		 return getAllDaterange;
+	@GetMapping("fetchDataByDateRange")
+	public List<ActivityAllocationDetails> fetchDataByDateRange(@RequestParam String activityFromDate, @RequestParam String activityToDate) {
+		return activityService.fetchDataByDateRange(activityFromDate,activityToDate);
 	}
 
 }

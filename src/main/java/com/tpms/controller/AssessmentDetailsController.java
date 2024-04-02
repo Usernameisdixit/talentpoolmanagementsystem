@@ -74,7 +74,7 @@ public class AssessmentDetailsController {
         return fromToDate;
     }
 
-    @GetMapping("/api/assessment-details")
+    @GetMapping("/getActivityDetails")
     public ResponseEntity<?> getActivityDetails(
             @RequestParam Integer activityId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String fromDate,
@@ -84,7 +84,7 @@ public class AssessmentDetailsController {
             Date toDt = new SimpleDateFormat("yyyy-MM-dd").parse(toDate);
 
             List<Object[]> activityAllocationDetails = activityallocationRepository
-                    .findByPlatformIdAndActivityDateBetweenAndDeletedFlagIsFalse(activityId, from, toDt);
+                    .getActivityDetails(activityId, from, toDt);
                   
             return ResponseEntity.ok(activityAllocationDetails);
         } catch (ParseException e) {
@@ -92,7 +92,23 @@ public class AssessmentDetailsController {
         }
     }
 
-    
+    @GetMapping("/api/assessment-details")
+    public ResponseEntity<?> getAssessmentDetails(
+            @RequestParam Integer activityId,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String fromDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String toDate) {
+        try {
+            Date from = new SimpleDateFormat("yyyy-MM-dd").parse(fromDate);
+            Date toDt = new SimpleDateFormat("yyyy-MM-dd").parse(toDate);
+
+            List<Object[]> activityAllocationDetails = activityallocationRepository
+                    .getAssessmentDetails(activityId, from, toDt);
+                  
+            return ResponseEntity.ok(activityAllocationDetails);
+        } catch (ParseException e) {
+            return ResponseEntity.badRequest().body("Invalid date format. Please provide dates in yyyy-MM-dd format.");
+        }
+    }
 
 
  

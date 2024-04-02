@@ -35,8 +35,6 @@ public class ActivityAllocationDetails {
 
 	private String toHours;
 
-	private String activityDetails;
-
 	private Integer createdBy;
 
 	private Integer updatedBy;

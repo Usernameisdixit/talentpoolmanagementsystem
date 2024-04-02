@@ -11,9 +11,10 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
+
 import java.time.LocalDate;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +90,7 @@ public class ResourceExcelController {
 		byte[] fileContent = file.getBytes();
 		
 		 createDirectoryIfNotExists(fileDirectory);
-		String renamedFileName = renameFile(fileContent,file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf('.')));
+		String renamedFileName = renameFile(fileContent,file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf('.')),allocationDate);
 		 
 		 processExcelData(file); 
 		 
@@ -114,25 +115,25 @@ public class ResourceExcelController {
 	
 	}
 	
-	public String renameFile(byte[] fileContent, String fileExtension) {
+	public String renameFile(byte[] fileContent, String fileExtension, LocalDate allocationDate) {
 
-       
-        SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
-        String formattedDate = dateFormat.format(new Date());
-        
-        String uniqueFileName = "Resource_File_" + formattedDate + fileExtension;
+	       
+		  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMyyyy");
+		    String formattedDate = allocationDate.format(formatter);
+      
+      String uniqueFileName = "Resource_File_" + formattedDate + fileExtension;
 
-        try (OutputStream outputStream = new FileOutputStream(fileDirectory + File.separator + uniqueFileName)) {
+      try (OutputStream outputStream = new FileOutputStream(fileDirectory + File.separator + uniqueFileName)) {
 
-            outputStream.write(fileContent);
+          outputStream.write(fileContent);
 
-            return uniqueFileName;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    
-    }
+          return uniqueFileName;
+      } catch (IOException e) {
+          e.printStackTrace();
+          return null;
+      }
+  
+  }
 	   private void processExcelData(MultipartFile file) throws IOException {
 	        Workbook workbook = new XSSFWorkbook(file.getInputStream());
 	        Sheet sheet = workbook.getSheetAt(0);

@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import com.tpms.dto.ResourcePoolProjection;
 import com.tpms.entity.Activity;
 import com.tpms.entity.ActivityAllocation;
+import com.tpms.entity.ActivityAllocationDetails;
 import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
 
@@ -45,5 +46,7 @@ public interface ActivityService {
 	public Integer platformIdByName(String platformName);
 
 	public List<String> getAllDistinctDateRange(String year, String month);
+
+	public List<ActivityAllocationDetails> fetchDataByDateRange(String activityFromDate, String activityToDate);
 
 }

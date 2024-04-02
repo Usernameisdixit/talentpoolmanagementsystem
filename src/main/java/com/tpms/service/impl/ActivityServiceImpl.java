@@ -298,7 +298,6 @@ public class ActivityServiceImpl implements ActivityService {
 	                newDetail.setActivityFor(originalDetail.getActivityFor());
 	                newDetail.setFromHours(originalDetail.getFromHours());
 	                newDetail.setToHours(originalDetail.getToHours());
-	                newDetail.setActivityDetails(originalDetail.getActivityDetails());
 	                newDetail.setActivity(originalDetail.getActivity());
 	              
 	                newDetail.setActivityAllocation(activityAllocation);
@@ -337,6 +336,18 @@ public class ActivityServiceImpl implements ActivityService {
         DateTimeFormatter targetFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = date.format(targetFormatter);
 		return formattedDate;
+	}
+
+
+	@Override
+	public List<ActivityAllocationDetails> fetchDataByDateRange(String activityFromDate, String activityToDate) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			return activityAllocRepo.fetchDataByDateRange(sdf.parse(activityFromDate),sdf.parse(activityToDate));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<>();
 	}
 
 }

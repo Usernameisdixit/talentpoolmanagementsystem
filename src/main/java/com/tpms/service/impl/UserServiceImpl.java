@@ -14,11 +14,6 @@ import com.tpms.repository.RoleRepository;
 import com.tpms.repository.UserRepository;
 import com.tpms.service.UserService;
 
-/**
- * 
- * @author kiran.swain
- *
- */
 @Service
 public class UserServiceImpl implements UserService{
 
