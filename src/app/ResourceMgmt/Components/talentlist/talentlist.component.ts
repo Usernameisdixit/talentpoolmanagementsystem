@@ -7,18 +7,21 @@ import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { RouterModule, RouterEvent } from '@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-talentlist',
   templateUrl: './talentlist.component.html',
   styleUrls: ['./talentlist.component.css']
 })
+
 export class TalentlistComponent implements OnInit {
 
   talent:Talent[]=[];
   delmsg:string="";
   c:Talent[];
- constructor(private service:ContactService, private router:Router){}
+  duration: any = [];
+ constructor(private service:ContactService, private router:Router,private datePipe: DatePipe){}
 
 
   ngOnInit(): void {
@@ -150,4 +153,25 @@ export class TalentlistComponent implements OnInit {
     saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
   }
 
+  getDetails(resource :any){
+    console.log(typeof(resource.resourceCode));
+    this.service.fetchDurations(resource.resourceCode).subscribe(data => {
+      this.duration=data;
+       console.log(data);
+  });
+  }
+
+  calculateDuration(startDate: string, endDate: string): number {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    return diffDays+1;
+  }
+
+  isAllocationDateLessThanCurrent(resource: any): boolean {
+    const allocationDate = new Date(resource.allocationDate);
+    const currentDate = new Date();
+    return allocationDate < currentDate;
+  }
 }

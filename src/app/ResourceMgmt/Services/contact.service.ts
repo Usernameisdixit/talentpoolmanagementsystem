@@ -77,4 +77,8 @@ getResources(): Observable<any[]> {
   return this.httpClient.get<any[]>('http://localhost:9999/tpms/getActiveResorces');
 }
 
+fetchDurations(code: string): Observable<string[]> {
+  return this.httpClient.get<string[]>(`${this.baseUrl}/durations?code=${code}`);
+}
+
 }
