@@ -95,25 +95,15 @@ public class UserServiceImpl implements UserService{
 		Integer count=0;
 		String result="not Exist";
 		
-		
-        switch(colName) {
-		   case "userName": {
-			   count=userRepository.getDuplicateNameCount(value);
+		 count=switch(colName) {
+		   case "userName"-> userRepository.getDuplicateNameCount(value);
 			 
-			   break;
-		   }
-		   case "phoneNo":{
-			   count=userRepository.getDuplicatePhnNoCount(value);
+		   case "phoneNo"-> userRepository.getDuplicatePhnNoCount(value);
 			 
-			   break;
-		   }
-		   case "email":{
-			   count=userRepository.getDuplicateEmailCount(value);
+		   case "email" ->  userRepository.getDuplicateEmailCount(value);
 			 
-			   break;
-		   }
-		   default:{break;}
-        }
+		   default -> throw new IllegalStateException("Invalid Data!!");
+        };
         	
 		if(count>=1)
 			result="Exist";
