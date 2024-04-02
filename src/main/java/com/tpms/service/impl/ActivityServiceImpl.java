@@ -330,7 +330,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 
 	@Override
-	public List<ActivityAllocationDetails> fetchDataByDateRange(String activityFromDate, String activityToDate) {
+	public List<ActivityAllocation> fetchDataByDateRange(String activityFromDate, String activityToDate) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			return activityAllocRepo.fetchDataByDateRange(sdf.parse(activityFromDate),sdf.parse(activityToDate));
