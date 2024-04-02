@@ -20,7 +20,7 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
     void updateDeletedFlag(@Param("activityId") Integer activityId, @Param("deletedFlag") boolean deletedFlag);
 	
 	@Query(value="SELECT distinct a.* FROM activity a " +
-	           "INNER JOIN activity_allocation_details aloDetails ON a.activityId = aloDetails.activityId " +
+	           "INNER JOIN activity_allocation_details aloDetails ON a.activityId = allocation.activityId " +
 	           "INNER JOIN activity_allocation allocation ON allocation.activityAllocateId = aloDetails.activityAllocateId " +
 	           "WHERE :selectedDate BETWEEN allocation.activityFromDate AND allocation.activityToDate",nativeQuery = true)
 	List<Activity> getActvitiesByDate(String selectedDate);
