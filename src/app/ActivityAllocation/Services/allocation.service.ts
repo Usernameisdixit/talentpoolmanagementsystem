@@ -62,4 +62,8 @@ export class AllocationService {
   getPlatformIdByName(platformName: string): Observable<number> {
     return this.http.get<any>(`${this.apiUrl}/platformsIdByName?platformName=${platformName}`);
   }
+
+  fetchDataByDateRange(activityFromDate: string, activityToDate: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/fetchDataByDateRange?activityFromDate=${activityFromDate}&activityToDate=${activityToDate}`);
+  }
 }

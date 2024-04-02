@@ -74,6 +74,7 @@ import { BulkAllocationComponent } from './ActivityAllocation/Components/bulk-al
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ResourcehistoryComponent } from './ResourceMgmt/Components/resourcehistory/resourcehistory.component';
 import { TimePipe } from './ActivityAllocation/CustomPipes/time.pipe';
+import { HeaderComponent } from './UserMgmt/Component/header/header.component';
 
 
 
@@ -117,7 +118,8 @@ defineLocale('en-gb', enGbLocale); //
     AttendanceNewComponent,
     BulkAllocationComponent,
     ResourcehistoryComponent,
-    TimePipe
+    TimePipe,
+    HeaderComponent
 
 
   ],

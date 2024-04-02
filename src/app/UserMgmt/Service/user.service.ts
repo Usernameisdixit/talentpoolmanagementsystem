@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Subject} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,8 @@ export class UserService {
   deleteUserUrl:string="http://localhost:9999/tpms/deleteUser/";
   duplicateCheckUrl:string="http://localhost:9999/tpms/duplicateCheck/";
   
+  private dataSubject = new Subject<any>();
+  title$ =this.dataSubject.asObservable();
 
   constructor(private http:HttpClient) { }
 
@@ -39,5 +42,9 @@ export class UserService {
   duplicateCheck(value:any,colName:any){
     return this.http.get(this.duplicateCheckUrl+`${value}/${colName}`);
   }
+  changeTitle(title:any){
+     this.dataSubject.next(title);
+  }
+
 
 }

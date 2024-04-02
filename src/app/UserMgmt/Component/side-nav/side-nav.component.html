@@ -4,12 +4,11 @@
        
         </div>
 
-        
 
         <ul class="list-unstyled components" id="menu" #sidebarMenu>
             <!-- Dashboard -->
-            <li>
-                <a href="dashboard" class="nav-link">
+            <li (click)="getListItem($event);">
+                <a routerLink="/dashboard" class="nav-link">
                     <i class="fas fa-tachometer-alt"></i> Dashboard
                 </a>
             </li>
@@ -22,10 +21,10 @@
                     <i class="fas fa-users"></i> User Management
                 </a>
                 <ul class="collapse" id="submenu1" data-bs-parent="#menu">
-                    <li>
+                    <li (click)="getListItem($event);">
                         <a routerLink="/addUser" class="nav-link"><i class="fas fa-user-plus"></i> Add User</a>
                     </li>
-                    <li>
+                    <li (click)="getListItem($event);">
                         <a routerLink="/viewUser" class="nav-link"><i class="fas fa-user"></i> View User</a>
                     </li>
                 </ul>
@@ -37,14 +36,14 @@
                     <i class="fas fa-cogs"></i> Resource Management
                 </a>
                 <ul class="collapse" id="submenu2" data-bs-parent="#menu">
-                    <li>
+                    <li (click)="getListItem($event);">
                         <a routerLink="/uploadExcel" class="nav-link"><i class="fas fa-file-upload"></i> Upload Resource File</a>
                     </li>
-                    <li>
+                    <li (click)="getListItem($event);">
                         <a routerLink="/talents" class="nav-link"><i class="fas fa-user-check"></i> View Resource List</a>
                     </li>
 
-                    <li>
+                    <li (click)="getListItem($event);">
                         <a routerLink="/resourceHistory" class="nav-link">
                             <i class="fas fa-user-check"></i> View Resource History
                         </a>
@@ -59,10 +58,10 @@
                     <i class="fas fa-tasks"></i> Activity Management 
                 </a>
                 <ul class="collapse" id="submenu6" data-bs-parent="#menu">
-                    <li>
+                    <li (click)="getListItem($event);">
                         <a routerLink="/activity" class="nav-link"><i class="fas fa-user-tie"></i> Activity Allocation</a>
                     </li>
-                    <li>
+                    <li (click)="getListItem($event);">
                         <a routerLink="/bulk-allocation" class="nav-link"><i class="fas fa-users"></i> Activity Bulk Allocation</a>
                     </li>
                 </ul>
@@ -74,7 +73,7 @@
             </li> -->
 
             <!-- Attendance Management -->
-            <li>
+            <li (click)="getListItem($event);">
                 <a routerLink="/takeAtten" class="nav-link"><i class="fas fa-calendar-alt"></i> Attendance Management</a>
             </li>
 
@@ -84,17 +83,17 @@
                     <i class="fas fa-clipboard"></i> Assessment Management
                 </a>
                 <ul class="collapse" id="submenu4" data-bs-parent="#menu">
-                    <li>
+                    <li (click)="getListItem($event);">
                         <a routerLink="/addassessment" class="nav-link"><i class="fas fa-plus-circle"></i> Create Assessment</a>
                     </li>
-                    <li>
+                    <li (click)="getListItem($event);">
                         <a routerLink="/viewasessment" class="nav-link"><i class="fas fa-eye"></i> View Assessment</a>
                     </li>
                 </ul>
             </li>
 
             <!-- Email Activity -->
-            <li>
+            <li (click)="getListItem($event);">
                 <a routerLink="/settings" class="nav-link"><i class="fas fa-envelope"></i> Communication</a>
             </li>
 
@@ -106,10 +105,10 @@
                     <i class="fas fa-chart-bar"></i> Reports 
                 </a>
                 <ul class="collapse" id="submenu5" data-bs-parent="#menu">
-                    <li>
+                    <li (click)="getListItem($event);">
                         <a routerLink="/attendanceReport" class="nav-link"><i class="fas fa-eye"></i>Attendance Report</a>
                     </li>
-                    <li>
+                    <li (click)="getListItem($event);">
                         <a routerLink="/activityReport" class="nav-link"><i class="fas fa-eye"></i> Activity Report</a>
                     </li>
 
@@ -124,7 +123,7 @@
           
 
             <!-- Disclaimer -->
-            <li>
+            <li (click)="getListItem($event);">
                 <a routerLink="/disclaimer" class="nav-link"><i class="fas fa-exclamation-circle"></i> Disclaimer</a>
             </li>
         </ul>

@@ -1,4 +1,5 @@
-import { Component ,ViewChild, ElementRef, AfterViewInit} from '@angular/core';
+import { Component} from '@angular/core';
+import { UserService } from '../../Service/user.service';
 
 @Component({
   selector: 'app-side-nav',
@@ -6,20 +7,18 @@ import { Component ,ViewChild, ElementRef, AfterViewInit} from '@angular/core';
   styleUrls: ['./side-nav.component.css']
 })
 export class SideNavComponent {
-  @ViewChild('sidebarMenu') sidebarMenu!: ElementRef;
+  constructor (private _userService:UserService){
 
-  constructor() { }
+  }
 
-  ngAfterViewInit(): void {
-    
-    const menuElement = this.sidebarMenu.nativeElement;
+  getListItem(event:MouseEvent){
+    //alert("hii i am clicked");
+    const target = event.target as HTMLElement;
+    const listItemValue = target.textContent?.trim();
+    console.log(listItemValue);
+    this._userService.changeTitle(listItemValue);
+    //localStorage.setItem("activeLink",listItemValue);
 
-    const listItems = menuElement.querySelectorAll('li');
-
-    listItems.forEach((item: HTMLElement) => {
-     // const listItemValue = item.textContent.trim();
-      console.log(item);
-    });
   }
 
 

@@ -1,10 +1,13 @@
 .footer {
-    position: fixed;
+    position: fixed; 
     bottom: 0;
-    background-color: #f2f2f2; /* dirty white color */
+    background-color: #dbdada; /* dirty white color */
     width: 100%;
-    padding: 10px 0;
-    text-align: center;
-    color:black; /* text color */
+    padding: 20px 0 0 ; 
+    margin-left: 250px;
+  }
+  .footer-bottom{
+     color:black; /* text color */
+     margin-left: 450px;
   }
   

@@ -52,12 +52,3 @@
   display: flex;
 }
 
-h1{
-  color: white;
-  padding: 0 1rem;
-  background: #fff;
-  min-height: 50px;
-  background: rgb(9, 10, 10);
-  margin: 0 ;
-  font-size: 25px;
-}

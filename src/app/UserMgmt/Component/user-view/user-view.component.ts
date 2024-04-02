@@ -35,7 +35,7 @@ export class UserViewComponent {
         this.userDetails=data;
       
         if (Object.keys(this.userDetails).length === 0) {
-           this.userList = false; // userDetails is empty
+           this.userList = false;
         }
         else{
            this.userList=true;
@@ -66,8 +66,6 @@ export class UserViewComponent {
       reverseButtons: true
       }).then((result) => {
          if (result.isConfirmed) {
-      
-           // User confirmed, proceed with deletion
             this.userService.deleteUser(userId,deletedFlag).subscribe((data: any) => {
           
             Swal.fire('InActivated', 'User InActivated', 'success');
@@ -88,7 +86,6 @@ export class UserViewComponent {
           reverseButtons: true
         }).then((result) => {
            if (result.isConfirmed) {
-               // User confirmed, proceed with deletion
                this.userService.deleteUser(userId,deletedFlag).subscribe((data: any) => {
                 Swal.fire('Activated', 'User Activated', 'success');
                 this.getUserDetails();
@@ -108,12 +105,9 @@ export class UserViewComponent {
 
 //pagination functionality
 getTableDataChange(event : any){
-  alert(event);
   this.page = event;
   this.indexNumber = (this.page - 1) * this.tableSize;
-  alert(this.indexNumber);
   this.getUserDetails();
-  console.log(this.getUserDetails);
 }
 
 
@@ -122,7 +116,6 @@ exportToPDF() {
   const doc = new jsPDF();
   const pageTitle = 'User Details';
 
-  // Get user details from the service and transform the data
   this.userService.getUserDetails().
     pipe(
        map((data: any[]) => {
@@ -131,26 +124,19 @@ exportToPDF() {
             ]);
         })
      ).subscribe((tableData) => {
-
           const textWidth = doc.getTextDimensions(pageTitle).w;
           const pageWidth = doc.internal.pageSize.getWidth();
           const x = (pageWidth - textWidth) / 2;
           doc.text(pageTitle, x, 10);
-
-          // Adding table to the PDF
           (doc as any).autoTable({
               head: [['Sl.No', 'User Full Name', 'User Name', 'Role', 'Email', 'Phone No.']],
               body: tableData,
               startY: 20,
               margin: { top: 15 }
             });
-
-          // Save the PDF
           doc.save('users-details.pdf');
        });
 }
-
-
 
 
 // excel export work
@@ -164,14 +150,9 @@ exportToExcel() {
            ]);
         })
       ).subscribe((tableData) => {
-             
-          // Add header row
             const header = ['Sl.No', 'User Full Name', 'User Name', 'Role', 'Email', 'Phone No'];
             tableData.unshift(header);
-
             const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
-            
-
             const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
             const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
             this.saveAsExcelFile(excelBuffer, 'user-details');
@@ -179,8 +160,6 @@ exportToExcel() {
         });
   }
 
-
-    
     
 // to save excel file
 private saveAsExcelFile(buffer: any, fileName: string): void {
