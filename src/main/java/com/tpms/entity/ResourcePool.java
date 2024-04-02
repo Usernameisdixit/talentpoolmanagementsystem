@@ -20,9 +20,9 @@ public class ResourcePool {
 
 	public ResourcePool() {}
 	
-	public ResourcePool(List<ActivityAllocation> activityAlloc) {
-		this.activityAlloc = activityAlloc;
-	}
+//	public ResourcePool(List<ActivityAllocation> activityAlloc) {
+//		this.activityAlloc = activityAlloc;
+//	}
 
 
 
@@ -68,7 +68,7 @@ public class ResourcePool {
 	@Transient
     private String duration;
 	
-	@OneToMany
-	@JoinColumn(name = "resourceId", referencedColumnName = "resourceId")
-	private List<ActivityAllocation> activityAlloc;
+//	@OneToMany
+//	@JoinColumn(name = "activityId", referencedColumnName = "activityId")
+//	private List<ActivityAllocation> activityAlloc;
 }

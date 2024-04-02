@@ -205,7 +205,7 @@ public class ActivityServiceImpl implements ActivityService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			Date parsedDate = sdf.parse(activityDate);
-			resources = resourceRepo.findAllActiveRecords(parsedDate,platformId);
+			resources = new ArrayList<>(); // resourceRepo.findAllActiveRecords(parsedDate,platformId);
 //			resources.forEach(resource->resource.getActivityAlloc().forEach(alloc->{
 //				if(alloc.getActivityDate()==null || !parsedDate.equals(alloc.getActivityDate()))
 //					resource.getActivityAlloc().remove(alloc);
@@ -225,7 +225,7 @@ public class ActivityServiceImpl implements ActivityService {
 //				}
 //			}
 			for(int i=0; i<resources.size(); i++) {
-				List<ActivityAllocation> activityAlloc = resources.get(i).getActivityAlloc();
+				List<ActivityAllocation> activityAlloc = new ArrayList(); // resources.get(i).getActivityAlloc();
 				int j = 0;
 				while(j<activityAlloc.size()) {
 					if(!parsedDate.equals(activityAlloc.get(j).getActivityFromDate()) || activityAlloc.get(j).getDeletedFlag())
@@ -233,7 +233,7 @@ public class ActivityServiceImpl implements ActivityService {
 					else
 						j++;
 				}
-				resources.get(i).setActivityAlloc(activityAlloc);
+//				resources.get(i).setActivityAlloc(activityAlloc);
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
