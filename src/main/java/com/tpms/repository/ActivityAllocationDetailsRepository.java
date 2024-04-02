@@ -14,7 +14,7 @@ import com.tpms.entity.ActivityAllocationDetails;
 
 public interface ActivityAllocationDetailsRepository extends JpaRepository<ActivityAllocationDetails, Integer> {
 
-	@Query(value = "SELECT ad.intActivityAllocateDetId, ad.intActivityAllocateId, ad.intActivityId, ad.intActivityFor, ad.vchFromHours, ad.vchToHours, ad.txtActivityDetails, ad.intCreatedBy, ad.dtmCreatedOn, ad.intUpdatedBy, ad.dtmUpdatedOn, ad.bitDeletedFlag, aa.intResourceId "
+	@Query(value = "SELECT ad.intActivityAllocateDetId, ad.intActivityAllocateId, aa.intActivityId, aa.intActivityFor, aa.vchFromHours, aa.vchToHours, ad.intCreatedBy, ad.dtmCreatedOn, ad.intUpdatedBy, ad.dtmUpdatedOn, ad.bitDeletedFlag, ad.intResourceId "
 			+ "FROM tbl_activity_allocation_details ad "
 			+ "JOIN tbl_activity_allocation aa ON ad.intActivityAllocateId = aa.intActivityAllocateId WHERE ad.intActivityAllocateDetId = :activityAllocateDetId", nativeQuery = true)
     Map<String, Object> findAllDetails(@Param("activityAllocateDetId") Integer activityAllocateDetId);
@@ -24,10 +24,10 @@ public interface ActivityAllocationDetailsRepository extends JpaRepository<Activ
 	
 
 	
-	@Query(value = "SELECT DISTINCT  act_det.activityId, act.activityName " +
+	@Query(value = "SELECT DISTINCT  act_alloc.activityId, act.activityName " +
             "FROM activity_allocation_details act_det " +
             "JOIN activity_allocation act_alloc ON act_det.activityAllocateId = act_alloc.activityAllocateId " +
-            "JOIN activity act ON act_det.activityId = act.activityId " +
+            "JOIN activity act ON act_alloc.activityId = act.activityId " +
             "WHERE act_alloc.activityFromDate >= STR_TO_DATE(:fromDate, '%Y-%m-%d') " +
             "AND act_alloc.activityToDate <= STR_TO_DATE(:toDate, '%Y-%m-%d')", nativeQuery = true)
 

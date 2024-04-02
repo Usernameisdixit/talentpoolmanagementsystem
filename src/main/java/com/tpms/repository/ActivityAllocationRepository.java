@@ -19,7 +19,7 @@ import com.tpms.entity.ActivityAllocationDetails;
 public interface ActivityAllocationRepository extends JpaRepository<ActivityAllocation, Long> {
 
 	
-	@Query(value = "SELECT ad.intActivityAllocateDetId, ad.intActivityAllocateId, ad.intActivityId, ad.intActivityFor, ad.vchFromHours, ad.vchToHours, ad.txtActivityDetails, ad.intCreatedBy, ad.dtmCreatedOn, ad.intUpdatedBy, ad.dtmUpdatedOn, ad.bitDeletedFlag, aa.intResourceId "
+	@Query(value = "SELECT ad.intActivityAllocateDetId, ad.intActivityAllocateId, aa.intActivityId, aa.intActivityFor, aa.vchFromHours, aa.vchToHours, ad.intCreatedBy, ad.dtmCreatedOn, ad.intUpdatedBy, ad.dtmUpdatedOn, ad.bitDeletedFlag, aa.intResourceId "
 			+ "FROM tbl_activity_allocation_details ad "
 			+ "JOIN tbl_activity_allocation aa ON ad.intActivityAllocateId = aa.intActivityAllocateId WHERE ad.intActivityAllocateDetId = :activityAllocateDetId", nativeQuery = true)
 	Map<String, Object> findAllDetails(@Param("activityAllocateDetId") Integer activityAllocateDetId);
@@ -65,13 +65,13 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
             "INNER JOIN resource_pool r ON r.resourceId = a.resourceId " +
             "INNER JOIN activity act ON act.activityId = aa.activityId " +
             "LEFT JOIN platforms p ON p.platformId = a.platformId " +
-            "WHERE aa.activityId = :activityId " +
+            "WHERE a.activityId = :activityId " +
             "AND a.activityFromDate >= :fromDate AND a.activityToDate <= :toDate", nativeQuery = true)
 List<Object[]> getActivityDetails(Integer activityId, Date fromDate, Date toDate);
 
 
 	
-	@Query("SELECT alloc FROM ActivityAllocation alloc JOIN FETCH alloc.details det WHERE alloc.resourceId=:id AND alloc.activityFromDate=:activityDate AND alloc.deletedFlag=false and det.deletedFlag=false")
+	@Query("SELECT alloc FROM ActivityAllocation alloc JOIN FETCH alloc.details det WHERE alloc.details.resourceId=:id AND alloc.activityFromDate=:activityDate AND alloc.deletedFlag=false and det.deletedFlag=false")
 	ActivityAllocation findByResourceId(Integer id, Date activityDate);
 
 	 @Query(value = "SELECT DISTINCT CONCAT(DATE_FORMAT(activityFromDate, '%d-%m-%Y'), ' to ', DATE_FORMAT(activityToDate, '%d-%m-%Y')) AS dates " +
