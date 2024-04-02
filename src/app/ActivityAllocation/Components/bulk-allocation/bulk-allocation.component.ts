@@ -214,8 +214,8 @@ export class BulkAllocationComponent {
       this.fetchAllocationData();
   }
 
-  edit(): void {
-
+  edit(activityAllocateId: number): void {
+    
   }
 
   fetchAllocationData(): void {
