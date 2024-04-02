@@ -15,11 +15,9 @@ public interface ResourcePoolHistoryRepository extends JpaRepository<ResourcePoo
 	public List<ResourcePoolHistoryDto> MinMaxAllocationDate();*/
 	
 	@Query(value = "SELECT resourceCode, resourceName, " +
-            "DATE_FORMAT((allocationDate), '%Y-%m-%d') AS minAllocationDate, " +
+            "allocationDate AS minAllocationDate, " +
             "DATE_FORMAT(NOW(), '%Y-%m-%d') AS maxAllocationDate " +
-            "FROM resource_pool " +
-            "GROUP BY resourceCode, resourceName " +
-            "ORDER BY resourceName", nativeQuery = true)
+            "FROM resource_pool ", nativeQuery = true)
 		List<Object[]> MinMaxAllocationDate();
 
 	List<ResourcePoolHistory> findByAllocationDate(LocalDate allocationDate);
