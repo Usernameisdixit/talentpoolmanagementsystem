@@ -17,7 +17,7 @@ export class SideNavComponent {
     const listItemValue = target.textContent?.trim();
     console.log(listItemValue);
     this._userService.changeTitle(listItemValue);
-    //localStorage.setItem("activeLink",listItemValue);
+    localStorage.setItem("activeLink",listItemValue);
 
   }
 

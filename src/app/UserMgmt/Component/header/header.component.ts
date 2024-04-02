@@ -12,17 +12,13 @@ export class HeaderComponent {
        
   }
 ngOnInit(){
- 
     this._userService.title$.subscribe(title=>{
-      alert(title);
+      debugger;
       
-      if(title===''){
-        this.title="Dashboard";
-      }
-      else{
         this.title = title;
-      }
     });
+    this.title=localStorage.getItem('activeLink');
+
   }
 
 }
