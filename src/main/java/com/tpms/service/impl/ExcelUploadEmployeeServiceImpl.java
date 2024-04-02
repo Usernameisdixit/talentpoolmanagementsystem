@@ -99,7 +99,6 @@ public class ExcelUploadEmployeeServiceImpl {
 		    Object[] firstRow = resoHistList.get(0);
 		    resourceName = (String) firstRow[0];
 		}
-		System.err.println(resoHistList);
 		// Parse the data and collect allocation dates for the resource
         List<LocalDate> allocationDates = new ArrayList<>();
         for (Object[] row : resoHistList) {
@@ -125,7 +124,6 @@ public class ExcelUploadEmployeeServiceImpl {
                     endDate = endDate.plusWeeks(1);
                 } else {
                     // Print the allocation period
-                    System.out.println("Allocation Period: " + startDate + " to " + endDate.minusDays(1));
                     JSONObject allocationPeriod = new JSONObject();
                     allocationPeriod.put("start_date", startDate.toString());
                     allocationPeriod.put("end_date", endDate.minusDays(1).toString());
@@ -137,7 +135,6 @@ public class ExcelUploadEmployeeServiceImpl {
         }
         
         if (startDate != null) {
-            System.out.println("Allocation Period: " + startDate + " to " + endDate.minusDays(1));
             JSONObject allocationPeriod = new JSONObject();
             allocationPeriod.put("start_date", startDate.toString());
             allocationPeriod.put("end_date", endDate.minusDays(1).toString());

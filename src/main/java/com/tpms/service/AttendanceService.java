@@ -10,17 +10,10 @@ import com.tpms.entity.Platform;
 
 public interface AttendanceService {
 	
-	public JSONArray  getAllDetails(String platformName, String selectedDate) ;
 
 	public List<Platform> getAllPlatform();
 
-	public String saveAttendance(JSONArray allData, String selectedDate);
-
 	public JSONArray getAttendanceReportData(String platform, String selectedDate, String year, String month, String resourceValue);
-
-	public JSONObject getAllDetailsNew(String selectedDate);
-
-	public String saveAttendances(JSONObject allData, String selectedDate);
 
 	public List<String> getAllNames(String value);
 

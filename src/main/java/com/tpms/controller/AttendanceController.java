@@ -30,21 +30,6 @@ public class AttendanceController {
 	@Autowired
 	private AttendanceService attendanceService;
 
-	//1st page platform/date 
-	@GetMapping("attendance")
-	public String getDetailsByPlatformId(@RequestParam String platformName, @RequestParam String selectedDate) {
-		JSONArray allDetails = attendanceService.getAllDetails(platformName, selectedDate);
-		return allDetails.toString();
-	}
-	
-	//2nd Accordian
-	@GetMapping("attendaceDetail")
-	public String getDetailsByDate(@RequestParam String selectedDate) {
-		JSONObject allDetails = attendanceService.getAllDetailsNew(selectedDate);
-		return allDetails.toString();
-	}
-	
-	//3rd on basis of activity
 	@GetMapping("attDataByActivity")
 	public String attendDetailsByActivity(@RequestParam Integer selectedActivity, @RequestParam String selectedDate) {
 		JSONArray allDetails = attendanceService.attendDetailsByActivity(selectedActivity, selectedDate);
@@ -58,46 +43,6 @@ public class AttendanceController {
 		return new ResponseEntity<>(platformDetails, HttpStatus.OK);
 	}
 
-	@PostMapping("submitAttendance")
-	public ResponseEntity<Map<String, Object>> saveAttendance(@RequestBody String data,
-			@RequestParam(name = "selectedDate") String selectedDate) {
-		Map<String, Object> response = new HashMap<>();
-		try {
-			JSONArray allData = new JSONArray(data);
-			String result=attendanceService.saveAttendance(allData, selectedDate);
-			if(result=="success") {
-			response.put("status", 200);
-			response.put("success", "Attendance Save Succesfully");
-			}else {
-				response.put("Error", "Error");
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-			response.put("Error", "Error");
-		}
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-	
-	@PostMapping("submitAttendances")
-	public ResponseEntity<Map<String, Object>> saveAttendances(@RequestBody String data,
-			@RequestParam(name = "selectedDate") String selectedDate) {
-		Map<String, Object> response = new HashMap<>();
-		try {
-			JSONObject details = new JSONObject(data);
- 			String result=attendanceService.saveAttendances(details, selectedDate);
- 			if(result=="success") {
- 				response.put("status", 200);
- 				response.put("success", "Attendance Save Succesfully");
- 				}else {
- 					response.put("Error", "Error");
- 				}
-		} catch (JSONException e) {
-			e.printStackTrace();
-			response.put("Error", "Error");
-		}
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-   
 	@PostMapping("saveAttendanceByActivity")
 	public ResponseEntity<Map<String, Object>> saveAttendanceByActivity(@RequestBody String data,
 			@RequestParam(name = "selectedDate") String selectedDate) {
