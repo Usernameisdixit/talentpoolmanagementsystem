@@ -97,7 +97,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 							attendance.put("activityFor", rs.getString("activityFor"));
 							attendance.put("resourceId", rs.getString("resourceId"));
 							attendance.put("resourceName", rs.getString("resourceName"));
-							attendance.put("activityDetails", rs.getString("activityDetails"));
 							attendance.put("fromHours", rs.getString("fromHours"));
 							attendance.put("toHours", rs.getString("toHours"));
 							attendance.put("activityName", rs.getString("activityName"));
@@ -145,7 +144,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 						resource.put("resourceCode", mapObject.get("resourceCode"));
 					}
 					JSONObject detailObject = new JSONObject();
-					detailObject.put("activityDetails", mapObject.get("activityDetails"));
 					detailObject.put("fromHours", mapObject.get("fromHours"));
 					detailObject.put("toHours", mapObject.get("toHours"));
 					detailObject.put("activityName", mapObject.get("activityName"));
@@ -179,13 +177,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 	public List<String> getAllNames(String search) {
 		String searchLowerCase = search.toLowerCase();
 		List<String> allUniName=resourcePoolRepository.findAll().stream()
-//                .map(ResourcePool::getResourceName+"("+ResourcePool::getResourceName+")")
                 .map(x -> x.getResourceName()+"("+x.getResourceCode()+")")
                 .filter(resourceName -> resourceName.toLowerCase().contains(searchLowerCase))
-                .distinct()
-                .collect(Collectors.toList());
-		List<String> allUniCode=resourcePoolRepository.findAll().stream()
-                .map(ResourcePool::getResourceCode)
                 .distinct()
                 .collect(Collectors.toList());
 		return allUniName;
@@ -251,7 +244,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 							attendance.put("activityFor", rs.getString("activityFor"));
 							attendance.put("resourceId", rs.getString("resourceId"));
 							attendance.put("resourceName", rs.getString("resourceName"));
-							attendance.put("activityDetails", rs.getString("activityDetails"));
 							attendance.put("fromHours", rs.getString("fromHours"));
 							attendance.put("toHours", rs.getString("toHours"));
 							attendance.put("activityName", rs.getString("activityName"));
@@ -295,7 +287,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 						resource.put("check", atteldanceListPresentNew.size() == 0 ? "s" : "u");
 					}
 					JSONObject detailObject = new JSONObject();
-					detailObject.put("activityDetails", mapObject.get("activityDetails"));
 					detailObject.put("fromHours", mapObject.get("fromHours"));
 					detailObject.put("toHours", mapObject.get("toHours"));
 					detailObject.put("activityName", mapObject.get("activityName"));
