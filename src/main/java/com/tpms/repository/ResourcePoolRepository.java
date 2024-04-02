@@ -49,4 +49,7 @@ public interface ResourcePoolRepository extends JpaRepository<ResourcePool, Inte
 	@Query("FROM ResourcePool r WHERE r.deletedFlag=0")
 	List<ResourcePoolProjection> findAllWithoutRelatedEntity();
 
+	 @Query(value = "SELECT * FROM resource_pool rp WHERE rp.deletedFlag = 0", nativeQuery = true)
+	    List<ResourcePool> findAllByDeletedFlag();
+
 }

@@ -146,6 +146,7 @@ public class ExcelUploadEmployeeServiceImpl {
         // Create JSON object containing resource name and allocation periods
         JSONObject resourceAllocation = new JSONObject();
         resourceAllocation.put("resource_name",resourceName); 
+        resourceAllocation.put("resource_code",resourceCode); 
         JSONArray periodsArray = new JSONArray();
         for (JSONObject period : allocationPeriods) {
             periodsArray.put(period);
