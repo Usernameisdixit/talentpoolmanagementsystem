@@ -10,6 +10,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -23,13 +25,19 @@ public class ActivityAllocation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long activityAllocateId;
 
-	private Integer resourceId;
-
-	private Integer platformId;
-
 	private Date activityFromDate;
 	
 	private Date activityToDate;
+	
+	@ManyToOne
+	@JoinColumn(name = "activityId")
+	private Activity activity;
+	
+	private Byte activityFor;
+
+	private String fromHours;
+
+	private String toHours;
 
 	private Integer createdBy;
 

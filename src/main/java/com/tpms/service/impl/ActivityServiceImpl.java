@@ -286,26 +286,26 @@ public class ActivityServiceImpl implements ActivityService {
 	            JSONObject resource = markedResources.getJSONObject(i);
 
 	            ActivityAllocation activityAllocation = new ActivityAllocation();
-	            activityAllocation.setResourceId(resource.getInt("resourceId"));
-	            activityAllocation.setPlatformId(resource.getInt("platformId"));
-	            activityAllocation.setActivityFromDate(allocData.getActivityFromDate());
-	            activityAllocation.setActivityToDate(allocData.getActivityToDate());
-	           
-	            List<ActivityAllocationDetails> detailsList = new ArrayList<>();
-	            for (ActivityAllocationDetails originalDetail : allocData.getDetails()) {
-	                ActivityAllocationDetails newDetail = new ActivityAllocationDetails();
-	               
-	                newDetail.setActivityFor(originalDetail.getActivityFor());
-	                newDetail.setFromHours(originalDetail.getFromHours());
-	                newDetail.setToHours(originalDetail.getToHours());
-	                newDetail.setActivity(originalDetail.getActivity());
-	              
-	                newDetail.setActivityAllocation(activityAllocation);
-	               
-	                detailsList.add(newDetail);
-	            }
+//	            activityAllocation.setResourceId(resource.getInt("resourceId"));
+//	            activityAllocation.setPlatformId(resource.getInt("platformId"));
+//	            activityAllocation.setActivityFromDate(allocData.getActivityFromDate());
+//	            activityAllocation.setActivityToDate(allocData.getActivityToDate());
+//	           
+//	            List<ActivityAllocationDetails> detailsList = new ArrayList<>();
+//	            for (ActivityAllocationDetails originalDetail : allocData.getDetails()) {
+//	                ActivityAllocationDetails newDetail = new ActivityAllocationDetails();
+//	               
+//	                newDetail.setActivityFor(originalDetail.getActivityFor());
+//	                newDetail.setFromHours(originalDetail.getFromHours());
+//	                newDetail.setToHours(originalDetail.getToHours());
+//	                newDetail.setActivity(originalDetail.getActivity());
+//	              
+//	                newDetail.setActivityAllocation(activityAllocation);
+//	               
+//	                detailsList.add(newDetail);
+//	            }
 	          
-	            activityAllocation.setDetails(detailsList);
+//	            activityAllocation.setDetails(detailsList);
 
 	          
 	            activityAllocList.add(activityAllocation);

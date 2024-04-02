@@ -25,15 +25,9 @@ public class ActivityAllocationDetails {
 	@JsonBackReference
 	private ActivityAllocation activityAllocation;
 
-	@ManyToOne
-	@JoinColumn(name = "activityId")
-	private Activity activity;
+	private Integer resourceId;
 
-	private Byte activityFor;
-
-	private String fromHours;
-
-	private String toHours;
+	private Integer platformId;
 
 	private Integer createdBy;
 
