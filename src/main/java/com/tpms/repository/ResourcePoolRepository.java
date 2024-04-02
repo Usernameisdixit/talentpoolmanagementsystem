@@ -22,13 +22,13 @@ public interface ResourcePoolRepository extends JpaRepository<ResourcePool, Inte
 
 	List<ResourcePool> findByPlatform(String platform);
 
-	@Query("SELECT r FROM ResourcePool r"
-			+ " LEFT JOIN r.activityAlloc a ON a.activityFromDate=:activityDate AND (a is null or a.deletedFlag=false)"
-			+ " LEFT JOIN a.details d ON (d is null or d.deletedFlag=false)"
-			+ " LEFT JOIN Platform p ON r.platform=p.platform"
-			+ " WHERE r.deletedFlag=0"
-			+ " AND (p.platformId=:platformId OR :platformId=0)")
-	List<ResourcePool> findAllActiveRecords(Date activityDate, Integer platformId);
+//	@Query("SELECT r FROM ResourcePool r"
+//			+ " LEFT JOIN r.activityAlloc a ON a.activityFromDate=:activityDate AND (a is null or a.deletedFlag=false)"
+//			+ " LEFT JOIN a.details d ON (d is null or d.deletedFlag=false)"
+//			+ " LEFT JOIN Platform p ON r.platform=p.platform"
+//			+ " WHERE r.deletedFlag=0"
+//			+ " AND (p.platformId=:platformId OR :platformId=0)")
+//	List<ResourcePool> findAllActiveRecords(Date activityDate, Integer platformId);
 	
 	@Query("SELECT r.deletedFlag FROM ResourcePool r WHERE r.resourceId = :id")
 	Byte getDeletedFlagByRoleId(@Param("id") Integer id);
