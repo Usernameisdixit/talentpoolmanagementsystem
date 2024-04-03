@@ -1,5 +1,4 @@
 <div class="container">
-  <h2 class="mb-4">Bulk Activity Allocation Form</h2>
 
   <div class="row">
     <!-- Date selection -->
@@ -71,7 +70,7 @@
         <td>{{ dynamic.activityFor==1?'1st half':'2nd half' }}</td>
         <td>{{ dynamic.activity.activityName }}</td>
         <td>{{ dynamic.fromHours | convertTo12Hr }} &ndash; {{ dynamic.toHours | convertTo12Hr }}</td>
-        <td><button class="btn btn-secondary btn-sm" (click)="edit()">Edit</button></td>
+        <td><button class="btn btn-secondary btn-sm" (click)="edit(dynamic.activityAllocateId)">Edit</button></td>
       </tr>
     </tbody>
   </table>

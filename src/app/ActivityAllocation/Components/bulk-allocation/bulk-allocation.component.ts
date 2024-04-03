@@ -98,7 +98,9 @@ export class BulkAllocationComponent {
       confirmButtonText: 'Yes, save it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        const data = {activityFromDate: this.selectedFromDate, activityToDate: this.selectedToDate, details: arr};
+        const data = {activityFromDate: this.selectedFromDate, activityToDate: this.selectedToDate,
+                      activityFor: this.selectedSession, activity: this.activity, fromHours: this.selectedActivityFrom,
+                      toHours: this.selectedActivityTo};
         this.allocationService.saveBulkAllocation(this.markedResources, data).subscribe(() => {
           Swal.fire(
             'Saved!',
@@ -212,8 +214,8 @@ export class BulkAllocationComponent {
       this.fetchAllocationData();
   }
 
-  edit(): void {
-
+  edit(activityAllocateId: number): void {
+    
   }
 
   fetchAllocationData(): void {
