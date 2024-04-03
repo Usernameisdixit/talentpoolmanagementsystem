@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tpms.dto.ResourcePoolProjection;
 import com.tpms.entity.Activity;
 import com.tpms.entity.ActivityAllocation;
-import com.tpms.entity.ActivityAllocationDetails;
 import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
 import com.tpms.service.ActivityService;
@@ -181,7 +180,7 @@ public class ActivityController {
 	}
 	
 	@GetMapping("fetchDataByDateRange")
-	public List<ActivityAllocationDetails> fetchDataByDateRange(@RequestParam String activityFromDate, @RequestParam String activityToDate) {
+	public List<ActivityAllocation> fetchDataByDateRange(@RequestParam String activityFromDate, @RequestParam String activityToDate) {
 		return activityService.fetchDataByDateRange(activityFromDate,activityToDate);
 	}
 

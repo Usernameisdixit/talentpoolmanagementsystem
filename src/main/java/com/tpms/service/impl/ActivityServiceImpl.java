@@ -279,42 +279,32 @@ public class ActivityServiceImpl implements ActivityService {
 
 	@Override
 	public void saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData) {
-	    List<ActivityAllocation> activityAllocList = new ArrayList<>();
+		
+		ActivityAllocation activityAllocation = new ActivityAllocation();
+		activityAllocation.setActivityFromDate(allocData.getActivityFromDate());
+		activityAllocation.setActivityToDate(allocData.getActivityToDate());
+		activityAllocation.setActivityFor(allocData.getActivityFor());
+		activityAllocation.setFromHours(allocData.getFromHours());
+		activityAllocation.setToHours(allocData.getToHours());
+		activityAllocation.setActivity(allocData.getActivity());
 
-	    for (int i = 0; i < markedResources.length(); i++) {
-	        try {
-	            JSONObject resource = markedResources.getJSONObject(i);
+		List<ActivityAllocationDetails> detailsList = new ArrayList<>();
+		try {
+			for (int i = 0; i < markedResources.length(); i++) {
+				JSONObject resource = markedResources.getJSONObject(i);
+				ActivityAllocationDetails newDetail = new ActivityAllocationDetails();
+				newDetail.setResourceId(resource.getInt("resourceId"));
+				newDetail.setPlatformId(resource.getInt("platformId"));
+				newDetail.setActivityAllocation(activityAllocation);
+				detailsList.add(newDetail);
+			}
+			
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 
-	            ActivityAllocation activityAllocation = new ActivityAllocation();
-//	            activityAllocation.setResourceId(resource.getInt("resourceId"));
-//	            activityAllocation.setPlatformId(resource.getInt("platformId"));
-//	            activityAllocation.setActivityFromDate(allocData.getActivityFromDate());
-//	            activityAllocation.setActivityToDate(allocData.getActivityToDate());
-//	           
-//	            List<ActivityAllocationDetails> detailsList = new ArrayList<>();
-//	            for (ActivityAllocationDetails originalDetail : allocData.getDetails()) {
-//	                ActivityAllocationDetails newDetail = new ActivityAllocationDetails();
-//	               
-//	                newDetail.setActivityFor(originalDetail.getActivityFor());
-//	                newDetail.setFromHours(originalDetail.getFromHours());
-//	                newDetail.setToHours(originalDetail.getToHours());
-//	                newDetail.setActivity(originalDetail.getActivity());
-//	              
-//	                newDetail.setActivityAllocation(activityAllocation);
-//	               
-//	                detailsList.add(newDetail);
-//	            }
-	          
-//	            activityAllocation.setDetails(detailsList);
-
-	          
-	            activityAllocList.add(activityAllocation);
-	        } catch (JSONException e) {
-	            e.printStackTrace();
-	        }
-	    }
-
-	    activityAllocRepo.saveAll(activityAllocList);
+		activityAllocation.setDetails(detailsList);
+		activityAllocRepo.save(activityAllocation);
 	}
 
 
@@ -340,7 +330,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 
 	@Override
-	public List<ActivityAllocationDetails> fetchDataByDateRange(String activityFromDate, String activityToDate) {
+	public List<ActivityAllocation> fetchDataByDateRange(String activityFromDate, String activityToDate) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			return activityAllocRepo.fetchDataByDateRange(sdf.parse(activityFromDate),sdf.parse(activityToDate));
