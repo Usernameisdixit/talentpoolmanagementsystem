@@ -1,6 +1,7 @@
 package com.tpms.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -30,5 +31,19 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 	           "INNER JOIN activity_allocation allocation ON a.activityId = allocation.activityId  " +
 	           "WHERE :selectedDate BETWEEN allocation.activityFromDate AND allocation.activityToDate",nativeQuery = true)
 	List<Activity> getActvitiesByDate(String selectedDate);
+	
+	
+	@Query(value="SELECT a.activityName, a.activityRefNo, " +
+	           "COUNT(*) AS total, " +
+	           "SUM(CASE WHEN atn.isPresent = 1 THEN 1 ELSE 0 END) AS presentCount, " +
+	           "SUM(CASE WHEN atn.isPresent = 0 THEN 1 ELSE 0 END) AS absentCount " +
+	           "FROM activity_allocation aa " +
+	           "JOIN activity a ON aa.activityId = a.activityId " +
+	           "LEFT JOIN attendance atn ON aa.activityAllocateId = atn.activityAllocateId " +
+	           "AND aa.activityAllocateId = atn.activityAllocateId " +
+	           "where atn.atendanceDate=:atendanceDate "+
+	           "GROUP BY a.activityName, a.activityRefNo", nativeQuery = true)
+
+	List<Map<String,String>> getActivityAttendanceSummary(String atendanceDate);
 	
 }
