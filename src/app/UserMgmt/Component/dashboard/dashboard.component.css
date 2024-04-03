@@ -39,3 +39,14 @@
 .extra-content h3 {
   margin-bottom: 10px;
 }
+
+/* Adjust the font size and padding */
+.custom-select .mat-select-panel {
+  font-size: 14px; /* Adjust as needed */
+  padding: 8px; /* Adjust as needed */
+}
+
+/* Adjust the height of each option */
+.custom-select .mat-option {
+  height: 40px; /* Adjust as needed */
+}

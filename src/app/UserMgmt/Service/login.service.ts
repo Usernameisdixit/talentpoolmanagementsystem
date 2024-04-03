@@ -8,6 +8,8 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 })
 export class LoginService {
   
+  selectedDate: string;
+  setSelectedActivityName: any;
 
   constructor(private httpClient:HttpClient) {
 
@@ -45,7 +47,19 @@ export class LoginService {
     
   }
   
-  
+  getAllocationDates(): Observable<any[]> {
+    return this.httpClient.get<any[]>('http://localhost:9999/tpms/getAllAllocationDate');
+  }
+
+  getResources(selectDate:string){
+    return this.httpClient.post<any>('http://localhost:9999/tpms/getActiveResources',selectDate)
+
+  }
+
+   getAttendance(selectedDate: string) {
+    return this.httpClient.post<any>('http://localhost:9999/tpms/getAttendanceData',selectedDate)
+      
+  }
 
 
 }
