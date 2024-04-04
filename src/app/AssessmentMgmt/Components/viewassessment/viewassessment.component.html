@@ -25,7 +25,7 @@
           <h3><b>Assessment evaluations for activity conducted from {{ dateRange.fromDate | date:'dd-MMM-yyyy' }} to {{ dateRange.toDate | date:'dd-MMM-yyyy' }}</b></h3>
         </button>
       </h2>
-      <div [id]="'collapse' + dateRange.fromDate" class="accordion-collapse collapse " [attr.aria-labelledby]="'heading' + dateRange.fromDate" data-bs-parent="#accordionExample">
+      <div [id]="'collapse' + dateRange.fromDate" class="accordion-collapse collapse show " [attr.aria-labelledby]="'heading' + dateRange.fromDate" data-bs-parent="#accordionExample">
         <div class="accordion-body">
           <div class="export-buttons text-right">
             <button *ngIf="showAssessmentTable" (click)="exportToPDF(dateRange)" class="btn btn-icon export-btn" title="Download PDF">
