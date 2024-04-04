@@ -9,7 +9,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 export class LoginService {
   
   selectedDate: string;
-  setSelectedActivityName: any;
+  selectedActivityName: number;
 
   constructor(private httpClient:HttpClient) {
 
@@ -61,5 +61,12 @@ export class LoginService {
       
   }
 
+  setSelectedActivityName(activityName: number) {
+    this.selectedActivityName = activityName;
+  }
+
+  setSelectedDate(selectedDate:string){
+    this.selectedDate=selectedDate;
+  }
 
 }

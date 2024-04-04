@@ -26,8 +26,8 @@ export class DashboardComponent  implements OnInit{
   selectedValue: string = '';
 
   constructor(private  contactService:ContactService,private datePipe:DatePipe,
-    private assessmentserviceService:AssessmentserviceService,private loginService:LoginService
-    ){
+    private assessmentserviceService:AssessmentserviceService,private loginService:LoginService,
+    private router:Router){
       
     }
   ngOnInit(): void {
@@ -37,7 +37,7 @@ export class DashboardComponent  implements OnInit{
       this.allocationDate = response.map(date => this.datePipe.transform(date, 'dd-MM-yyyy'));
     });
 
-    this.selectedDate=this.datePipe.transform(new Date(), 'dd-MM-yyyy');
+    this.selectedDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');
     this.loginService.getAttendance(this.datePipe.transform(this.selectedDate, 'yyyy-dd-MM')).subscribe((response:any)=>{
       debugger;
       this.attendanceData=response;
@@ -62,11 +62,12 @@ export class DashboardComponent  implements OnInit{
     });
   }
 
-  sendActivityNameandDate(activityName: any,selectedDate: string) {
+  sendActivityNameandDate(activityName: any) {
     //throw new Error('Method not implemented.');
       debugger;
-    this.loginService.setSelectedActivityName=activityName;
-    this.loginService.selectedDate=selectedDate
+    this.loginService.setSelectedActivityName(activityName);
+    this.router.navigate(['takeAtten']);
+    
     }
 
   }
