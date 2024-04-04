@@ -42,15 +42,15 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
             "INNER JOIN " +
             "    activity_allocation_details aa ON a.activityAllocateId = aa.activityAllocateId " +
             "INNER JOIN " +
-            "    resource_pool r ON r.resourceId = a.resourceId " +
+            "    resource_pool r ON r.resourceId = aa.resourceId " +
             "INNER JOIN " +
-            "    activity act ON act.activityId = aa.activityId " +
+            "    activity act ON act.activityId = a.activityId " +
             "INNER JOIN " +
             "    assessment asmt ON asmt.activityId = act.activityId AND asmt.resourceId = r.resourceId " +
             "LEFT JOIN " +
-            "    platforms p ON p.platformId = a.platformId " +
+            "    platforms p ON p.platformId = aa.platformId " +
             "WHERE " +
-            "    aa.activityId = :activityId " +
+            "    a.activityId = :activityId " +
             "    AND a.activityFromDate >= :fromDate " +
             "    AND a.activityToDate <= :toDate", nativeQuery = true)
 		List<Object[]> getAssessmentDetails(Integer activityId, Date fromDate, Date toDate);
@@ -60,9 +60,9 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
 	@Query(value = "SELECT DISTINCT a.activityAllocateId, r.resourceId, r.resourceCode, r.resourceName,  p.platform ,r.designation, r.experience, act.activityName " +
             "FROM activity_allocation a " +
             "INNER JOIN activity_allocation_details aa ON a.activityAllocateId = aa.activityAllocateId " +
-            "INNER JOIN resource_pool r ON r.resourceId = a.resourceId " +
-            "INNER JOIN activity act ON act.activityId = aa.activityId " +
-            "LEFT JOIN platforms p ON p.platformId = a.platformId " +
+            "INNER JOIN resource_pool r ON r.resourceId = aa.resourceId " +
+            "INNER JOIN activity act ON act.activityId = a.activityId " +
+            "LEFT JOIN platforms p ON p.platformId = aa.platformId " +
             "WHERE a.activityId = :activityId " +
             "AND a.activityFromDate >= :fromDate AND a.activityToDate <= :toDate", nativeQuery = true)
 List<Object[]> getActivityDetails(Integer activityId, Date fromDate, Date toDate);
