@@ -38,7 +38,7 @@ export class DashboardComponent  implements OnInit{
     });
 
     this.selectedDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');
-    this.loginService.getAttendance(this.datePipe.transform(this.selectedDate, 'yyyy-dd-MM')).subscribe((response:any)=>{
+    this.loginService.getAttendance(this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd')).subscribe((response:any)=>{
       debugger;
       this.attendanceData=response;
       console.log(this.attendanceData);
@@ -83,7 +83,7 @@ export class DashboardComponent  implements OnInit{
     return this.datePipe.transform(new Date(date), 'dd-MMM-yyyy') || '';
   }
 
-
+//Dashboard->For Resource
   sendDate() {
     debugger;
     
@@ -100,7 +100,7 @@ export class DashboardComponent  implements OnInit{
       console.log(this.resources); 
     });
   }
-
+//Dashboard ->For Attendance
   sendActivityNameandDate(activityName: any) {
     //throw new Error('Method not implemented.');
       debugger;
