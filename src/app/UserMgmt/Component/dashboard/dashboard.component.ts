@@ -44,7 +44,7 @@ export class DashboardComponent  implements OnInit{
     //throw new Error('Method not implemented.');
     this.loginService.getAllocationDates().subscribe((response: any[]) => {
       console.log("API Response:", response);
-      this.allocationDate = response.map(date => this.datePipe.transform(date, 'dd-MM-yyyy'));
+      this.allocationDate = response.map(date => this.datePipe.transform(date, 'dd-MMM-yyyy'));
     });
 
     this.selectedDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');
@@ -119,11 +119,11 @@ export class DashboardComponent  implements OnInit{
     debugger;
     
     // Parse the date string into a Date object
-    const parts = this.selectDate.split('-'); // Assuming the date string format is 'dd-mm-yyyy'
-    const parsedDate = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0])); // Months are 0-based in JavaScript
+    // const parts = this.selectDate.split('-'); // Assuming the date string format is 'dd-mm-yyyy'
+    // const parsedDate = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0])); // Months are 0-based in JavaScript
   
     // Transform the parsed date into 'yyyy-MM-dd' format using datePipe
-    const formattedDate = this.datePipe.transform(parsedDate, 'yyyy-MM-dd');
+    const formattedDate = this.datePipe.transform(this.selectDate, 'yyyy-MM-dd');
     this.loginService.setSelectedDate(formattedDate);
       this.loginService.getResources(formattedDate).subscribe((response: any) => {
       debugger;
