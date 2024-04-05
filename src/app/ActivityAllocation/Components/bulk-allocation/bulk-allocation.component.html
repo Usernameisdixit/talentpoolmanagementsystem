@@ -26,7 +26,7 @@
     <!-- Activity selection -->
     <div class="form-group col-md-6">
       <label for="activity">Activity:</label>
-      <select id="activity" class="form-control" (change)="onActivitySelect($event)">
+      <select id="activity" class="form-control" [(ngModel)]="activity.activityId" (change)="onActivitySelect($event)">
         <option value="0">--select--</option>
         <option *ngFor="let activity of activities" [value]="activity.activityId">{{ activity.activityName }}</option>
       </select>
@@ -59,18 +59,18 @@
   <table class="table mt-4" *ngIf="dynamicArray && dynamicArray.length > 0">
     <thead class="thead-dark">
       <tr>
+        <th>Activity</th>
         <th>Session</th>
-        <th>Training</th>
-        <th>Activity time</th>
+        <th>Time</th>
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let dynamic of dynamicArray; let i = index;">
-        <td>{{ dynamic.activityFor==1?'1st half':'2nd half' }}</td>
         <td>{{ dynamic.activity.activityName }}</td>
+        <td>{{ dynamic.activityFor==1?'1st half':'2nd half' }}</td>
         <td>{{ dynamic.fromHours | convertTo12Hr }} &ndash; {{ dynamic.toHours | convertTo12Hr }}</td>
-        <td><button class="btn btn-secondary btn-sm" (click)="edit(dynamic.activityAllocateId)">Edit</button></td>
+        <td><button class="btn btn-secondary btn-sm" (click)="edit(dynamic)">Edit</button></td>
       </tr>
     </tbody>
   </table>
@@ -126,5 +126,5 @@
   </mat-accordion>
 
   <!-- Submit button -->
-  <button class="btn btn-success mt-3" (click)="submitForm()">Submit</button>
+  <button class="btn btn-success mt-3" (click)="submitForm()">{{editMode?'Update':'Submit'}}</button>
 </div>
