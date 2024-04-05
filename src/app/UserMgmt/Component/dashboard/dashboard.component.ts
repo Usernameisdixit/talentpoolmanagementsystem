@@ -93,6 +93,7 @@ export class DashboardComponent  implements OnInit{
   
     // Transform the parsed date into 'yyyy-MM-dd' format using datePipe
     const formattedDate = this.datePipe.transform(parsedDate, 'yyyy-MM-dd');
+    this.loginService.setSelectedDate(formattedDate);
       this.loginService.getResources(formattedDate).subscribe((response: any) => {
       debugger;
       this.resources = response;
