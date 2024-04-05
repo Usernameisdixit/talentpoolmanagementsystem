@@ -15,7 +15,7 @@ import { saveAs } from 'file-saver';
 })
 export class ViewassessmentComponent implements OnInit {
   bsConfig: Partial<BsDatepickerConfig>;
-  assessmentDate: any;
+  assessmentDate: string;
   assessmentDateArr: any[];
   assessments: AssessmentDto[];
   showAssessmentTable: boolean = false;
@@ -37,8 +37,21 @@ export class ViewassessmentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetchAssessments();
+    //passing the date as state from dashboard
+    this.assessmentDate = history.state.date;
+    if (this.assessmentDate) {
+      this.onDateSelected();
+      //flag is given for the 2 situations first is for from dashboard component and second is from direct view component
+      const isFromDashboard = history.state.fromDashboard === true;
+  
+      if (!isFromDashboard) {
+        this.fetchAssessments();
+      }
+      this.fetchAssessmentDates();
+    } else {
+      this.fetchAssessments();
     this.fetchAssessmentDates();
+    }
   }
 
    

@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { enGbLocale } from 'ngx-bootstrap/locale';
+import { LoginService } from 'src/app/UserMgmt/Service/login.service';
 
 @Component({
   selector: 'app-attendance-new',
@@ -13,7 +14,9 @@ import { enGbLocale } from 'ngx-bootstrap/locale';
 export class AttendanceNewComponent {
 
   bsConfig: Partial<BsDatepickerConfig>;
-  constructor(private attendanceNewService: AttendanceNewService, private localeService: BsLocaleService) {
+  selectActivity: any;
+  constructor(private attendanceNewService: AttendanceNewService, private localeService: BsLocaleService,
+    private loginService:LoginService) {
     this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
     this.localeService.use('en-gb');
   }
@@ -34,6 +37,13 @@ export class AttendanceNewComponent {
     this.uncheckCheckbox1 = false;
     this.uncheckCheckboxStatus = Array<boolean>(this.pageSizes.length).fill(false);
     this.getActivity();
+    this.selectActivity = this.loginService.selectedActivityName;
+    if(localStorage.getItem('activeLink')==='Dashboard'){
+  if (this.selectActivity) {
+    this.selectedActivity=this.selectActivity;
+    this.getDataByDateActivity();
+  }
+}
   }
 
   //Check box Y & N
