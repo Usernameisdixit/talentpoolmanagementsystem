@@ -63,21 +63,19 @@ export class DashboardComponent  implements OnInit{
       this.allocationDate = this.datePipe.transform(inputDate, 'd MMMM yyyy');
     })
 
-    this.fromDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');
-    this.toDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');
-
+   
     //var curr =new Date;
     //alert(this.fromDate);
     //alert(curr);
     
-   // var curr = new Date;
-   // var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()));
-    //var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+6));
-   // alert(firstday);
-    //alert(lastday);
+    var curr = new Date;
+    var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()));
+    var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+6));
+ 
+    this.fromDate=this.datePipe.transform(firstday, 'dd-MMM-yyyy');
+    this.toDate=this.datePipe.transform(lastday, 'dd-MMM-yyyy');
 
-
-    this.loginService.gettotalActivitiesPlanned(this.datePipe.transform(this.fromDate, 'yyyy-MM-dd'),this.datePipe.transform(this.toDate, 'yyyy-MM-dd')).subscribe((response: any) => {
+    this.loginService.gettotalActivitiesPlanned(this.datePipe.transform(firstday, 'yyyy-MM-dd'),this.datePipe.transform(lastday, 'yyyy-MM-dd')).subscribe((response: any) => {
       // debugger;
        this.ActivtiesPlanned = response;
       // console.log(this.ActivityData); 
