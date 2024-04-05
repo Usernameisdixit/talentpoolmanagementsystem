@@ -28,6 +28,7 @@ import com.tpms.entity.Activity;
 import com.tpms.entity.ActivityAllocation;
 import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
+import com.tpms.repository.ActivityRepository;
 import com.tpms.service.ActivityService;
 import com.tpms.service.impl.ActivityServiceImpl;
 
@@ -40,6 +41,9 @@ public class ActivityController {
 
 	@Autowired
 	ActivityServiceImpl activityServiceImpl;
+	
+	@Autowired
+	ActivityRepository activityRepository;
 
 	@GetMapping("/get/activity")
 	public List<Activity> getAllActivities() {
@@ -184,4 +188,10 @@ public class ActivityController {
 		return activityService.fetchDataByDateRange(activityFromDate,activityToDate);
 	}
 
+	 @PostMapping("/getAttendanceData")
+	    public ResponseEntity<?> receiveDataFromFrontend(@RequestBody String atendanceDate) {
+		 List<Map<String,String>> assessmentDetails = activityRepository.getActivityAttendanceSummary(atendanceDate);
+	        return ResponseEntity.ok(assessmentDetails);
+	    }
+	
 }
