@@ -26,12 +26,13 @@ export class DashboardComponent  implements OnInit{
   selectedDate: string;
   selectDate: string;
   selectedValue: string = '';
-
+  maxDate: Date;
   bsConfig: Partial<BsDatepickerConfig>;
   fromDate:any;
   toDate:any;
   ActivityData: any;
   ActivtiesPlanned : any;
+  atnDate: string;
 
   constructor(private  contactService:ContactService,private datePipe:DatePipe,
     private apiService: AssessmentserviceService,private loginService:LoginService,
@@ -42,12 +43,15 @@ export class DashboardComponent  implements OnInit{
     }
   ngOnInit(): void {
     //throw new Error('Method not implemented.');
+    this.maxDate=new Date();
     this.loginService.getAllocationDates().subscribe((response: any[]) => {
       console.log("API Response:", response);
       this.allocationDate = response.map(date => this.datePipe.transform(date, 'dd-MMM-yyyy'));
     });
 
-    this.selectedDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');
+    this.atnDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');
+
+    this.selectedDate=this.datePipe.transform(this.atnDate, 'dd-MMM-yyyy');
     this.loginService.getAttendance(this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd')).subscribe((response:any)=>{
       debugger;
       this.attendanceData=response;
@@ -114,6 +118,8 @@ export class DashboardComponent  implements OnInit{
     return this.datePipe.transform(new Date(date), 'dd-MMM-yyyy') || '';
   }
 
+
+
 //Dashboard->For Resource
   sendDate() {
     debugger;
@@ -132,12 +138,23 @@ export class DashboardComponent  implements OnInit{
     });
   }
 //Dashboard ->For Attendance
-  sendActivityNameandDate(activityName: any) {
+  sendActivityNameandDate(activityName: any,selectedDate:string) {
     //throw new Error('Method not implemented.');
       debugger;
-    this.loginService.setSelectedActivityName(activityName);
+      selectedDate=this.datePipe.transform(selectedDate,'yyyy-MM-dd')
+    this.loginService.setSelectedActivityName(activityName,selectedDate);
     this.router.navigate(['takeAtten']);
     
+    }
+
+    getDateFromAttendanceDashboard(atnDate:string){
+      debugger;
+      this.loginService.getAttendance(this.datePipe.transform(atnDate, 'yyyy-MM-dd')).subscribe((response:any)=>{
+        debugger;
+        this.attendanceData=response;
+        console.log(this.attendanceData);
+        
+      });
     }
 
   

@@ -61,8 +61,9 @@ export class LoginService {
       
   }
 
-  setSelectedActivityName(activityName: number) {
+  setSelectedActivityName(activityName: number,selectedDate:string) {
     this.selectedActivityName = activityName;
+    this.selectedDate=selectedDate;
   }
 
   setSelectedDate(selectedDate:string){

@@ -39,8 +39,9 @@ export class AttendanceNewComponent {
     this.getActivity();
     this.selectActivity = this.loginService.selectedActivityName;
     if(localStorage.getItem('activeLink')==='Dashboard'){
-  if (this.selectActivity) {
+  if (this.selectActivity && this.loginService.selectedDate) {
     this.selectedActivity=this.selectActivity;
+    this.selectedDate=new Date(this.loginService.selectedDate);
     this.getDataByDateActivity();
   }
 }

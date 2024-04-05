@@ -10,14 +10,16 @@
       <mat-card-content>
         <!-- <p>Last Allocation Date: {{allocationDate}}</p> -->
         <mat-form-field>
-          <mat-label style="font-weight: bold;">Allocation Date</mat-label>
-          <mat-select [(ngModel)]="selectDate" style="margin-top: 8px;">
-            <mat-option *ngFor="let date of allocationDate" [value]="date" (click)="sendDate()" >{{ date }}</mat-option>
+          <mat-select placeholder="Select Allocation Date" [(ngModel)]="selectDate" style="margin-top: 5px; margin-right: 8px;">
+            <mat-option *ngFor="let date of allocationDate" [value]="date" (click)="sendDate()">{{ date }}</mat-option>
           </mat-select>
+          <mat-icon matSuffix>date_range</mat-icon>
         </mat-form-field>
         
         
-        <p>Allocated Resources : {{resources}}</p>
+        
+        
+        <h4>Allocated Resources : {{resources}}</h4>
         
       </mat-card-content>
       <mat-card-actions>
@@ -75,12 +77,13 @@
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field> -->
+
+        <!-- working -->
         <mat-form-field>
-          <input matInput type="text" [value]="selectedDate" readonly>
+          <input matInput type="text"  bsDatepicker [(ngModel)]="atnDate"
+                      [maxDate]="maxDate" [bsConfig]="bsConfig"  (ngModelChange)="getDateFromAttendanceDashboard($event)">
           <mat-icon matSuffix>date_range</mat-icon>
         </mat-form-field>
-        
-        
         
         <!-- <div *ngFor="let atn of attendanceData">
           <p><b>{{atn.activityName}}</b> ->{{atn.total}}(Total) :{{atn.presentCount}} (present) : {{atn.absentCount}} (absent)</p>
@@ -106,7 +109,7 @@
                 <td>{{atn.total}}</td>
                 <td>{{atn.presentCount}}</td>
                 <td>{{atn.absentCount}}</td>
-                <td><button mat-button color="primary"  (click)="sendActivityNameandDate(atn.activityId)" >View</button></td>
+                <td><button mat-button color="primary"  (click)="sendActivityNameandDate(atn.activityId,atnDate)" >View</button></td>
               </tr>
             </tbody>
           </table>
