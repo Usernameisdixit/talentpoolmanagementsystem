@@ -33,7 +33,7 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 	List<Activity> getActvitiesByDate(String selectedDate);
 	
 	
-	@Query(value="SELECT a.activityName, a.activityRefNo, " +
+	@Query(value="SELECT a.activityId, a.activityName, a.activityRefNo, " +
 	           "COUNT(*) AS total, " +
 	           "SUM(CASE WHEN atn.isPresent = 1 THEN 1 ELSE 0 END) AS presentCount, " +
 	           "SUM(CASE WHEN atn.isPresent = 0 THEN 1 ELSE 0 END) AS absentCount " +
@@ -42,8 +42,15 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 	           "LEFT JOIN attendance atn ON aa.activityAllocateId = atn.activityAllocateId " +
 	           "AND aa.activityAllocateId = atn.activityAllocateId " +
 	           "where atn.atendanceDate=:atendanceDate "+
-	           "GROUP BY a.activityName, a.activityRefNo", nativeQuery = true)
+	           "GROUP BY a.activityName, a.activityRefNo,a.activityId", nativeQuery = true)
 
 	List<Map<String,String>> getActivityAttendanceSummary(String atendanceDate);
+	
+	@Query(value = "SELECT DISTINCT act.* " + "FROM activity act "
+			+ "INNER JOIN activity_allocation alo ON alo.activityId = act.activityId "
+			+ "INNER JOIN attendance att ON att.activityAllocateId = alo.activityAllocateId "
+			+ "WHERE att.atendanceDate >= :formattedFromDate "
+			+ "AND att.atendanceDate = :formattedToDate", nativeQuery = true)
+	List<Activity> getActvitiesByDateRange(String formattedFromDate, String formattedToDate);
 	
 }
