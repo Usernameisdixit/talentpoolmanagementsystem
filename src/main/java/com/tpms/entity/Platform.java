@@ -25,5 +25,5 @@ public class Platform {
 	
 	private Integer updatedBy;
 	
-	private Byte deletedFlag;
+	private byte deletedFlag;
 }
