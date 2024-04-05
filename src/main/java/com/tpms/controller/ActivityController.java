@@ -194,4 +194,23 @@ public class ActivityController {
 	        return ResponseEntity.ok(assessmentDetails);
 	    }
 	
+	 //DashboardPart
+	 @GetMapping("activityByFromToDate")
+		//public List<Activity> activityById(@RequestParam String selectedDate)
+		public ResponseEntity<?> activityByFromToDate(@RequestParam String activityFromDate,@RequestParam String activityToDate){
+		 //System.out.println(activityFromDate+"-----------------"+activityToDate);
+		 List<Map<String,String>> activitydata = activityRepository.getactivitydata(activityFromDate,activityToDate);
+		 //System.out.println(activitydata);
+		 return ResponseEntity.ok(activitydata);
+		}
+	
+
+	// Dashboard part [ActivtiesPlanned]
+	 @GetMapping("totalActivitiesPlanned")
+		public ResponseEntity<?> gettotalActivitiesPlanned(@RequestParam String activityFromDate, @RequestParam String activityToDate) {
+			Integer resources = activityRepository.findAllActivityFromtodate(activityFromDate, activityToDate);
+	//		System.out.println(resources);
+			return ResponseEntity.ok(resources);
+		}
+	
 }

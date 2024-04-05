@@ -53,4 +53,33 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 			+ "AND att.atendanceDate = :formattedToDate", nativeQuery = true)
 	List<Activity> getActvitiesByDateRange(String formattedFromDate, String formattedToDate);
 	
+	@Query(value="select distinct aa.activityName,\r\n"
+			+ "case when aal.activityFor=1 then '1st Half' \r\n"
+			+ "when aal.activityFor=2 then '2nd Half' end as activityFor, \r\n"
+			+ "aal.fromHours, aal.toHours ,aal.activityFromDate,aal.activitytoDate\r\n"
+			+ " from activity_allocation aal \r\n"
+			+ " inner join activity aa \r\n"
+			+ " on aal.activityId=aa.activityId\r\n"
+			+ "WHERE aal.activitytoDate between :activityFromDate and :activityToDate\r\n"
+			+ "order by aal.activityFromDate, aal.activitytoDate", nativeQuery = true)
+
+	List<Map<String,String>> getactivitydata(String activityFromDate, String activityToDate);
+	
+	
+	 @Query(value="select distinct count(*)\r\n"
+	 		+ " from activity_allocation aal \r\n"
+	 		+ " inner join activity aa \r\n"
+	 		+ " on aal.activityId=aa.activityId\r\n"
+	 		+ "WHERE aal.activitytoDate between :activityFromDate and :activityToDate\r\n"
+	 		+ "order by  aal.activityFromDate, aal.activitytoDate",nativeQuery = true)
+		Integer findAllActivityFromtodate(String activityFromDate, String activityToDate);
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
