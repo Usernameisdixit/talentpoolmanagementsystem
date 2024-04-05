@@ -1,115 +1,180 @@
 
 <div class="dashboard">
-    <div class="card-container">
-      <!-- Card 1 -->
-      <mat-card class="card">
-        <mat-card-header>
-          <div mat-card-avatar class="card-avatar"></div>
-          <mat-card-title>Resource</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <!-- <p>Last Allocation Date: {{allocationDate}}</p> -->
-          <mat-form-field>
-            <mat-label style="font-weight: bold;">Allocation Date</mat-label>
-            <mat-select [(ngModel)]="selectDate" style="margin-top: 8px;">
-              <mat-option *ngFor="let date of allocationDate" [value]="date" (click)="sendDate()" >{{ date }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          
-          
-          <p>Allocated Resources : {{resources}}</p>
-          
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button color="primary" routerLink="/resourceHistory">View Details</button>
-        </mat-card-actions>
-      </mat-card>
-  
-      <!-- Card 2 -->
-      <mat-card class="card">
-        <mat-card-header>
-          <div mat-card-avatar class="card-avatar"></div>
-          <mat-card-title>Activities</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>Total Activities Planned: 500</p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button color="primary">View Details</button>
-        </mat-card-actions>
-      </mat-card>
-  
-      <!-- Additional Cards -->
-      <!-- Card 3 -->
-      <mat-card class="card">
-        <mat-card-header>
-          <div mat-card-avatar class="card-avatar"></div>
-          <mat-card-title>Attendance</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <!-- <mat-form-field>
-            <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" >
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field> -->
-          <mat-form-field>
-            <input matInput type="text" [value]="selectedDate" readonly>
-            <mat-icon matSuffix>date_range</mat-icon>
-          </mat-form-field>
-          
-          
-          
-          <!-- <div *ngFor="let atn of attendanceData">
-            <p><b>{{atn.activityName}}</b> ->{{atn.total}}(Total) :{{atn.presentCount}} (present) : {{atn.absentCount}} (absent)</p>
-          </div> -->
+  <div class="card-container">
+    <!-- Card 1 -->
+    <mat-card class="card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-avatar"></div>
+        <mat-card-title>Resource</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- <p>Last Allocation Date: {{allocationDate}}</p> -->
+        <mat-form-field>
+          <mat-label style="font-weight: bold;">Allocation Date</mat-label>
+          <mat-select [(ngModel)]="selectDate" style="margin-top: 8px;">
+            <mat-option *ngFor="let date of allocationDate" [value]="date" (click)="sendDate()" >{{ date }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        
+        <p>Allocated Resources : {{resources}}</p>
+        
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" routerLink="/resourceHistory">View Details</button>
+      </mat-card-actions>
+    </mat-card>
 
-          <div class="card-body">
-            <table class="table table-striped table-bordered">
-              <thead class="thead-dark">
-                <tr class="text-align-center">
-                  <th>Sl No</th>
-                  <th>Activity Name</th>
-                  <th>Total</th>
-                  <th>Present</th>
-                  <th>Absent</th>
-                  <th>View Details</th>
-
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let atn of attendanceData ; let i=index" class="text-align-center">
-                  <td>{{i+1}}</td>
-                  <td>{{atn.activityName}}</td>
-                  <td>{{atn.total}}</td>
-                  <td>{{atn.presentCount}}</td>
-                  <td>{{atn.absentCount}}</td>
-                  <td><button mat-button color="primary"  (click)="sendActivityNameandDate(atn.activityId)" >View</button></td>
-                </tr>
-              </tbody>
-            </table>
+    <!-- Card 2 -->
+    <mat-card class="card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-avatar"></div>
+        <mat-card-title>Activities</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        
+        <div class="row">
+          <div  class="col-md-5">
+          <label for="fromDate">From Date:<span class="required">*</span></label>
+          <div class="input-group">
+              <input type="text" id="fromDate" [(ngModel)]="fromDate" name="fromDate" class="bold-black" bsDatepicker [bsConfig]="bsConfig" (ngModelChange)="sendActivityPlanneddata()">
+              <span class="input-group-text"><i class="material-icons">date_range</i></span>
           </div>
-
-        </mat-card-content>
+          </div>
+          <div  class="col-md-5">
+          <label for="toDate">To Date:<span class="required">*</span></label>
+          <div class="input-group">
+              <input type="text" id="toDate" [(ngModel)]="toDate" name="fromDate" class="bold-black" bsDatepicker [bsConfig]="bsConfig" (ngModelChange)="sendActivityPlanneddata()">
+              <span class="input-group-text"><i class="material-icons">date_range</i></span>
+          </div>
+        </div>
+        <div  class="col-md-2">
+          <br>
+         <!-- <button class="btn btn-primary"  data-bs-toggle="modal" href="#detailsModal" (click)="onviewActivity();">VIEW</button> -->
+        </div>
+      </div>
+      <br>
+      <p style="font-weight: bold;">Total Activities Planned: {{ActivtiesPlanned}}</p>
+     </mat-card-content>
+      <mat-card-actions>
        
-      </mat-card>
-  
-      <!-- Card 4 -->
-      <mat-card class="card">
-        <mat-card-header>
-          <div mat-card-avatar class="card-avatar"></div>
-          <mat-card-title>Assessment</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p>Assessment Date :<select id="assessmentDate" class="form-control" [(ngModel)]="assessmentDate" >
-            <option *ngFor="let date of assessmentDateArr" [ngValue]="date">
-              {{ date | date:'dd-MMM-yyyy' }}
-            </option>
-          </select></p>
-        </mat-card-content>
-        <mat-card-actions>
-          <button mat-button color="primary" (click)="redirectToViewAssessment(assessmentDate)">View Details</button>
-        </mat-card-actions>
-      </mat-card>
+        <button mat-button color="primary" data-bs-toggle="modal" href="#detailsModal" (click)="onviewActivity();">View Details</button>
+     </mat-card-actions>
+    </mat-card>
+
+    <!-- Additional Cards -->
+    <!-- Card 3 -->
+    <mat-card class="card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-avatar"></div>
+        <mat-card-title>Attendance</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <!-- <mat-form-field>
+          <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" >
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field> -->
+        <mat-form-field>
+          <input matInput type="text" [value]="selectedDate" readonly>
+          <mat-icon matSuffix>date_range</mat-icon>
+        </mat-form-field>
+        
+        
+        
+        <!-- <div *ngFor="let atn of attendanceData">
+          <p><b>{{atn.activityName}}</b> ->{{atn.total}}(Total) :{{atn.presentCount}} (present) : {{atn.absentCount}} (absent)</p>
+        </div> -->
+
+        <div class="card-body">
+          <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+              <tr class="text-align-center">
+                <th>Sl No</th>
+                <th>Activity Name</th>
+                <th>Total</th>
+                <th>Present</th>
+                <th>Absent</th>
+                <th>View Details</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let atn of attendanceData ; let i=index" class="text-align-center">
+                <td>{{i+1}}</td>
+                <td>{{atn.activityName}}</td>
+                <td>{{atn.total}}</td>
+                <td>{{atn.presentCount}}</td>
+                <td>{{atn.absentCount}}</td>
+                <td><button mat-button color="primary"  (click)="sendActivityNameandDate(atn.activityId)" >View</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </mat-card-content>
+     
+    </mat-card>
+
+    <!-- Card 4 -->
+    <mat-card class="card">
+      <mat-card-header>
+        <div mat-card-avatar class="card-avatar"></div>
+        <mat-card-title>Assessment</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Assessment Date :<select id="assessmentDate" class="form-control" [(ngModel)]="assessmentDate" >
+          <option *ngFor="let date of assessmentDateArr" [ngValue]="date">
+            {{ date | date:'dd-MMM-yyyy' }}
+          </option>
+        </select></p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" (click)="redirectToViewAssessment(assessmentDate)">View Details</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <div class="modal fade" id="detailsModal" aria-hidden="true" aria-labelledby="detailsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Activity Details From {{fromDate | date: 'dd-MMM-yyyy'}} to {{toDate | date: 'dd-MMM-yyyy'}}</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+ 
+          
+                <table style="font-weight: bold;">
+                  <caption></caption>
+                  <thead>
+                    <tr>
+                      <th>Sl. no</th>
+                      <th>Activity Name</th>
+                      <th>Activity For</th>
+                      <th>Fromhours</th>
+                      <th>Tohours</th>
+                      <th>Period</th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let atn of ActivityData ; let i=index" class="text-align-center">
+                      <td>{{i+1}}</td>
+                      <td>{{atn.activityName}}</td>
+                      <td>{{atn.activityFor}}</td>
+                      <td>{{atn.fromHours}}</td>
+                      <td>{{atn.toHours}}</td>
+                      <td>{{atn.activityFromDate | date: 'dd-MMM-yyyy'}} To {{atn.activitytoDate | date: 'dd-MMM-yyyy'}}</td>
+                     <tr> 
+                  </tbody>
+                </table>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+        </div>
+   
+      </div>
     </div>
     
-  </div>
+</div>

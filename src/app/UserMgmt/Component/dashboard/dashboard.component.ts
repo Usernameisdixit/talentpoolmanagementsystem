@@ -1,7 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd, NavigationExtras } from '@angular/router';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { filter } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 import { AssessmentserviceService } from 'src/app/AssessmentMgmt/Service/assessmentservice.service';
 import { ContactService } from 'src/app/ResourceMgmt/Services/contact.service';
 import { LoginService } from '../../Service/login.service';
@@ -25,9 +27,17 @@ export class DashboardComponent  implements OnInit{
   selectDate: string;
   selectedValue: string = '';
 
+  bsConfig: Partial<BsDatepickerConfig>;
+  fromDate:any;
+  toDate:any;
+  ActivityData: any;
+  ActivtiesPlanned : any;
+
   constructor(private  contactService:ContactService,private datePipe:DatePipe,
     private apiService: AssessmentserviceService,private loginService:LoginService,
     private router:Router){
+
+      this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
       
     }
   ngOnInit(): void {
@@ -52,6 +62,29 @@ export class DashboardComponent  implements OnInit{
       const inputDate = new Date(response.allocationDate);
       this.allocationDate = this.datePipe.transform(inputDate, 'd MMMM yyyy');
     })
+
+    this.fromDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');
+    this.toDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');
+
+    //var curr =new Date;
+    //alert(this.fromDate);
+    //alert(curr);
+    
+   // var curr = new Date;
+   // var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()));
+    //var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+6));
+   // alert(firstday);
+    //alert(lastday);
+
+
+    this.loginService.gettotalActivitiesPlanned(this.datePipe.transform(this.fromDate, 'yyyy-MM-dd'),this.datePipe.transform(this.toDate, 'yyyy-MM-dd')).subscribe((response: any) => {
+      // debugger;
+       this.ActivtiesPlanned = response;
+      // console.log(this.ActivityData); 
+      // alert(this.ActivtiesPlanned);
+     });
+    
+
 
   }
 
@@ -126,5 +159,70 @@ export class DashboardComponent  implements OnInit{
       this.router.navigate(['/viewasessment'], navigationExtras);
     }                         
   
+    onviewActivity(): void{
+
+
+      let fromdateMsg = '';
+      let todateMsg = '';
+    
+      const fromDate = this.datePipe.transform(this.fromDate, 'yyyy-MM-dd');
+      const toDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
+
+    if (!fromDate) {
+      fromdateMsg = 'Please select an Activity From date.\n';
+    }
+
+    if (!fromDate) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error!',
+        text: fromdateMsg
+      });
+      return;
+    }
+
+    if (!toDate) {
+      todateMsg = 'Please select an Activity To date.\n';
+    }
+
+    if (!toDate) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error!',
+        text: todateMsg
+      });
+      return;
+    }
+
+
+    const formData = new FormData();
+    formData.append('toDate', this.toDate);
+    formData.append('fromDate', this.fromDate);
+   
+
+    this.loginService.activityFromto(fromDate,toDate).subscribe((response: any) => {
+     // debugger;
+      this.ActivityData = response;
+     // console.log(this.ActivityData); 
+     // alert(this.ActivityData);
+    });
+    }
+
+    sendActivityPlanneddata() {
+
+      const fromDate = this.datePipe.transform(this.fromDate, 'yyyy-MM-dd');
+      const toDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
+
+      //alert(toDate);
+
+      this.loginService.gettotalActivitiesPlanned(fromDate,toDate).subscribe((response: any) => {
+        // debugger;
+         this.ActivtiesPlanned = response;
+        // console.log(this.ActivityData); 
+        // alert(this.ActivtiesPlanned);
+       });
+
+    }
+
     
   }
