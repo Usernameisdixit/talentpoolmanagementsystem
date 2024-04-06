@@ -3,7 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { DynamicGrid } from 'src/app/Model/dynamic-grid.model';
 import { Resource } from 'src/app/Model/resource.model';
 import { AllocationService } from '../../Services/allocation.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { DateService } from '../../Services/date.service';
 import { DatePipe } from '@angular/common';
 import { Platform } from 'src/app/Model/Platform';
@@ -20,7 +20,7 @@ export class BulkAllocationComponent {
   activities: any[] = [];
   dynamicArray: Array<DynamicGrid> = [];
   newDynamic: any = {};
-  activity: any = {activityName: null, activityId: null};
+  activity: any = {activityName: null, activityId: 0};
   selectedSession: any;
   selectedActivityFrom: any;
   selectedActivityTo: any;
@@ -29,6 +29,7 @@ export class BulkAllocationComponent {
   selectedFromDate!: Date;
   selectedToDate!: Date;
   allocateId: any;
+  editMode: boolean = false;
 
   platforms: Platform[];
   resources: Resource[];
@@ -63,6 +64,13 @@ export class BulkAllocationComponent {
     });
     this.allocationService.getResourcesWithoutRelatedEntity().subscribe(data=>{
       this.resources = data;
+    });
+    this.activatedRoute.queryParams.subscribe(params=>{
+      if(params['activityFromDate']!=null)
+        this.selectedFromDate = new Date(params['activityFromDate']);
+      if(params['activityToDate']!=null)
+        this.selectedToDate = new Date(params['activityToDate']);
+      this.fetchAllocationData();
     });
   }
 
@@ -100,13 +108,21 @@ export class BulkAllocationComponent {
       if (result.isConfirmed) {
         const data = {activityFromDate: this.selectedFromDate, activityToDate: this.selectedToDate,
                       activityFor: this.selectedSession, activity: this.activity, fromHours: this.selectedActivityFrom,
-                      toHours: this.selectedActivityTo};
+                      toHours: this.selectedActivityTo, activityAllocateId: this.allocateId};
         this.allocationService.saveBulkAllocation(this.markedResources, data).subscribe(() => {
           Swal.fire(
             'Saved!',
             'Activity allocation details has been saved successfully.',
             'success'
-          );
+          ).then(()=>{
+            // const queryParams = {activityFromDate:this.selectedFromDate, activityToDate:this.selectedToDate};
+          //   const navigatationExtras: NavigationExtras = {queryParams, skipLocationChange: true};
+          //   this.router.navigate(['/bulk-allocation'],navigatationExtras).then(()=>{
+          //     window.location.reload();
+          //   });
+            const queryParams = {queryParams: {activityFromDate:this.selectedFromDate, activityToDate:this.selectedToDate}};
+            this.router.navigate(['/bulk-allocation'],queryParams).then(()=>window.location.reload());
+          });
           this.markedResources=[];
         }, () => {
           Swal.fire(
@@ -121,7 +137,7 @@ export class BulkAllocationComponent {
 
   toggle(event: Event, resourceId: number, platformId: number): void {
     if((event.target as HTMLInputElement).checked)
-      this.markedResources.push({"resourceId":resourceId, "platformId":platformId});
+      this.markedResources.push({"resourceId":resourceId, "platformId":platformId, "activityAllocateDetId":null});
     else
     this.markedResources = this.markedResources.filter(r=>r.resourceId!=resourceId);
     console.log(this.markedResources);
@@ -137,7 +153,7 @@ export class BulkAllocationComponent {
         for (let resource of this.resources) {
           resource.selected = isChecked;
           if (resource.platform.trim() === platform.platform.trim()) {
-            this.markedResources.push({ "resourceId": resource.resourceId, "platformId": platform.platformId });
+            this.markedResources.push({ "resourceId": resource.resourceId, "platformId": platform.platformId, "activityAllocateDetId":null});
           }
         }
       }
@@ -163,7 +179,7 @@ export class BulkAllocationComponent {
       for (let platform of this.platforms) {
         for (let resource of this.resources) {
           if (resource.platform.trim() === platform.platform.trim()) {
-            this.markedResources.push({"resourceId": resource.resourceId, "platformId": platform.platformId});
+            this.markedResources.push({"resourceId": resource.resourceId, "platformId": platform.platformId, "activityAllocateDetId":null});
           }
         }
       }
@@ -189,7 +205,7 @@ export class BulkAllocationComponent {
         resource.selected = isChecked;
         if (isChecked) {
           resourceSelected = true;
-          this.markedResources.push({ "resourceId": resource.resourceId, "platformId": platform.platformId });
+          this.markedResources.push({ "resourceId": resource.resourceId, "platformId": platform.platformId, "activityAllocateDetId":null});
         }
       }
     }
@@ -214,8 +230,28 @@ export class BulkAllocationComponent {
       this.fetchAllocationData();
   }
 
-  edit(activityAllocateId: number): void {
-    
+  edit(row: DynamicGrid): void {
+    this.editMode = true;
+
+    this.activity = row.activity;
+    this.selectedSession = row.activityFor;
+    this.selectedActivityFrom = row.fromHours;
+    this.selectedActivityTo = row.toHours;
+    this.allocateId = row.activityAllocateId;
+    this.markedResources = [];
+    this.dynamicArray.forEach(alloc=>{
+      if(alloc.activityAllocateId == row.activityAllocateId) {
+        alloc.details.forEach(detail=>{
+          this.resources.forEach(resource=>{
+            if(resource.resourceId == detail.resourceId) {
+              resource.selected = true;
+              this.markedResources.push({"resourceId":detail.resourceId, "platformId":detail.platformId, "activityAllocateDetId":detail.activityAllocateDetId});
+            }
+          });
+        });
+        return;
+      }
+    });
   }
 
   fetchAllocationData(): void {

@@ -25,6 +25,7 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
     resourceHisDateWise: any[] = [];
     filteredResources: ResourceHistory[] = [];
     searchQuery: string = '';
+    dashboardDate: string;
 
   constructor(private service:ContactService, private router:Router,private datePipe: DatePipe,
     private loginService:LoginService){}
@@ -152,14 +153,20 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
     groupAssessmentsByDateRange(): void {
   debugger;
       const groupedByDateRange = {};
+
+      if(localStorage.getItem('activeLink')==='Dashboard'){
    
-      const dashboardDate = this.datePipe.transform(this.loginService.selectedDate, 'dd-MMM-yyyy');
+       this.dashboardDate = this.datePipe.transform(this.loginService.selectedDate, 'dd-MMM-yyyy');
+      }
+      else{
+         this.dashboardDate=null;
+      }
     
       for (const resource of this.resources) {
         const toDate = this.datePipe.transform(resource[8], 'dd-MMM-yyyy');
         
         
-        if (!dashboardDate || toDate === dashboardDate) {
+        if (!this.dashboardDate || toDate === this.dashboardDate) {
           const fileName = resource[12];
           const key = toDate + ' to ' + fileName;
     

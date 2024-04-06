@@ -61,12 +61,27 @@ export class LoginService {
       
   }
 
-  setSelectedActivityName(activityName: number) {
+  setSelectedActivityName(activityName: number,selectedDate:string) {
     this.selectedActivityName = activityName;
+    this.selectedDate=selectedDate;
   }
 
   setSelectedDate(selectedDate:string){
     this.selectedDate=selectedDate;
+  }
+
+
+  /* activityFromto(formData: any): Observable<any> {
+    return this.httpClient.post(`http://localhost:9999/tpms/activityByFromToDate`, formData,{ responseType : 'text'});
+    
+  }*/
+
+  activityFromto(activityFromDate: string, activityToDate: string): Observable<any[]> {
+    return this.httpClient.get<any[]>(`http://localhost:9999/tpms/activityByFromToDate?activityFromDate=${activityFromDate}&activityToDate=${activityToDate}`);
+  }
+
+  gettotalActivitiesPlanned(activityFromDate: string, activityToDate: string): Observable<any[]> {
+    return this.httpClient.get<any[]>(`http://localhost:9999/tpms/totalActivitiesPlanned?activityFromDate=${activityFromDate}&activityToDate=${activityToDate}`);
   }
 
 }

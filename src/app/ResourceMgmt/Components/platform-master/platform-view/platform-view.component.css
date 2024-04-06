@@ -1,0 +1,73 @@
+.export-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.export-btn {
+  margin-left: 10px;
+}
+
+.pdf-icon {
+  color: #ff5733; /* PDF icon color */
+}
+
+.excel-icon {
+  color: #2e8b57; /* Excel icon color */
+}
+
+.card-body {
+  margin: 30px auto;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.table th,
+.table td {
+  border: 1px solid #dfdddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #40c0c7;
+  color: #0e0d0d;
+  font-weight: bold;
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #f0eeee;
+}
+
+.table tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+.status-active {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.status-inactive {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.no-content {
+  display: block;
+  padding: 10px 0;
+  color: #777;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}

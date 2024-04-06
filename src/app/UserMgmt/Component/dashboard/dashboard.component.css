@@ -50,3 +50,9 @@
 .custom-select .mat-option {
   height: 40px; /* Adjust as needed */
 }
+
+::ng-deep .mat-select-placeholder {
+  color: black; /* Set the color to black */
+  font-size: 16px; /* Increase the font size */
+  font-weight: bold; /* Make the text slightly bold */
+}
