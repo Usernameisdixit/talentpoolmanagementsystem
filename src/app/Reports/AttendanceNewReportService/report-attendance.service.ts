@@ -141,8 +141,6 @@ export class ReportAttendanceService {
   }
 
   generateAteendanceExcel(reportType: string, attendanceData: any[], fromDate: Date, toDate: Date,activityHead:any[]) {
-    console.log(attendanceData.length);
-    console.log(attendanceData);
     const formatFromDate = new Date(fromDate);
     const formatFromday = formatFromDate.getDate();
     const formatFrommonth = formatFromDate.toLocaleString('default', { month: 'short' });
@@ -177,8 +175,9 @@ export class ReportAttendanceService {
     }else if(reportType=='summary'){
       const colWidths = [
         { wch: 20 }, // Date
-        { wch: 20 }, // Activity
-        { wch: 25 }, // Attendance Status
+        { wch: 20 }, // Resource Name
+        { wch: 25 }, // Platform
+        { wch: 15 }, // Designation
       ];
 
        const dynamicHeaders = activityHead.map(item => item.activityName);
@@ -194,7 +193,7 @@ export class ReportAttendanceService {
     } else if (reportType == 'resource') {
       XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A7' });
     }else if(reportType=='summary'){
-      XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A5' });
+      XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A6' });
     }
 
     for (let col = 0; col < headerRow.length; col++) {
@@ -204,7 +203,7 @@ export class ReportAttendanceService {
       } else if (reportType == 'resource') {
         rowNumber = 6;
       }else if(reportType=='summary'){
-        rowNumber = 4
+        rowNumber = 5
       }
       const cellAddress = XLSX.utils.encode_cell({ r: rowNumber, c: col });
       ws[cellAddress].s = {
@@ -268,27 +267,33 @@ export class ReportAttendanceService {
       };
     }
 
-
+    const colMergerd=activityHead.length+4;
     if (reportType == 'activity') {
       ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }]; // Merge cells
     } else if (reportType == 'resource') {
       ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }];
     }else if(reportType=='summary'){
-      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 10  } }];
+      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: colMergerd  } }];
     }
 
     const data: any[] = [];
     const processedDates = new Set<string>();
     attendanceData.forEach(detail => {
 
-      if (reportType == 'activity') {
+      if (reportType == 'activity' || reportType=='summary') {
         const atendanceDate = detail.atendanceDate;
         if (!processedDates.has(atendanceDate)) {
           const dateRowColor = processedDates.has(atendanceDate) ? 'white' : 'red';
           console.log(data.length);
           data.push([atendanceDate]);
           const currentRowIndex = data.length + 5;
-          ws['!merges'].push({ s: { r: currentRowIndex, c: 0 }, e: { r: currentRowIndex, c: 4 } });
+          let dateMerged;
+          if(reportType=='activity'){
+              dateMerged=4;
+          }else if(reportType=='summary'){
+              dateMerged=activityHead.length+4;
+          }
+          ws['!merges'].push({ s: { r: currentRowIndex, c: 0 }, e: { r: currentRowIndex, c: dateMerged } });
           // Apply the fill color to each cell in the merged range
           for (let col = 0; col < 5; col++) {
             const cellAddress = XLSX.utils.encode_cell({ r: currentRowIndex, c: col });
@@ -328,17 +333,28 @@ export class ReportAttendanceService {
           { v: detail.attendanceStatus, s: { alignment: { wrapText: true } } },
         );
       }else if(reportType=='summary'){
-        const dynamicHeaders=activityHead.map(item => item.activityName);
-        const isActivityMatched = dynamicHeaders.includes(detail.activityName);
+
+        console.log("inside excel");
+        console.log(detail);
         rowData.push(
           { v: detail.atendanceDate, s: { alignment: { wrapText: true } } },
         { v: detail.resourceCode, s: { alignment: { wrapText: true } } },
         { v: detail.resourceName, s: { alignment: { wrapText: true } } },
         { v: detail.designation, s: { alignment: { wrapText: true } } },
         { v: detail.platform, s: { alignment: { wrapText: true } } },
-        { v: isActivityMatched, s: { alignment: { wrapText: true } } }
+     
+        
         );
+        if (detail.activityAttenDetails) {
+        detail.activityAttenDetails.forEach(activityDetail => {
+          rowData.push(
+              { v: activityDetail.attendanceStatus, s: { alignment: { wrapText: true } } }
+          );
+      });
+    }
+     
       }
+
       data.push(rowData);
     });
 
@@ -348,7 +364,7 @@ export class ReportAttendanceService {
     } else if (reportType == 'resource') {
       XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A8' });
     }else if(reportType=='summary'){
-      XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A6' });
+      XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A7' });
     }
 
 

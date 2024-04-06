@@ -1,5 +1,4 @@
-<div class="container">
-    <h2 class="text-center mb-4">Attendance Report New</h2>
+<div class="">
     <div class="row justify-content-start maxscrn">
         <div class="col-md-12">
             <div class="form-check form-check-inline">
@@ -14,7 +13,7 @@
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="inputType" id="inputSummary" [(ngModel)]="inputType"
-                    value="summary">
+                    (change)="clearResourceInput();clearActivityInput()" value="summary">
                 <label class="form-check-label" for="inputSummary">Summary</label>
             </div>
         </div>
