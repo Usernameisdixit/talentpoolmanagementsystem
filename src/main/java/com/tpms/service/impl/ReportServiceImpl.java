@@ -87,7 +87,6 @@ public class ReportServiceImpl implements ReportService {
 					}
 
 				}
-				System.err.println(attendanceDetails);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -186,7 +185,6 @@ public class ReportServiceImpl implements ReportService {
 						resourceId = mapResourceId;
 						activityDate=checkDate;
 					} else if (resourceId != mapResourceId || !(checkDate.equalsIgnoreCase(activityDate))) {
-						System.err.println(activityAttenDetailsArray);
 						resource.put("activityAttenDetails", activityAttenDetailsArray);
 						data.put(resource);
 						resourceId = mapResourceId;
@@ -209,7 +207,7 @@ public class ReportServiceImpl implements ReportService {
 					activityAttenDetailsArray.put(detailObject);
 					
 				}
-				resource.put("activityAttenDetailsArray", activityAttenDetailsArray);
+				resource.put("activityAttenDetails", activityAttenDetailsArray);
 				data.put(resource);
 			} catch (Exception e) {
 				e.printStackTrace();
