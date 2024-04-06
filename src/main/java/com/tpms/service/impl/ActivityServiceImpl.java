@@ -28,6 +28,7 @@ import com.tpms.entity.ActivityAllocation;
 import com.tpms.entity.ActivityAllocationDetails;
 import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
+import com.tpms.repository.ActivityAllocationDetailsRepository;
 import com.tpms.repository.ActivityAllocationRepository;
 import com.tpms.repository.ActivityRepository;
 import com.tpms.repository.PlatformRepository;
@@ -47,10 +48,10 @@ public class ActivityServiceImpl implements ActivityService {
 	ResourcePoolRepository resourceRepo;
 	
 	@Autowired
-	ActivityRepository activityRepo;
+	ActivityAllocationRepository activityAllocRepo;
 	
 	@Autowired
-	ActivityAllocationRepository activityAllocRepo;
+	ActivityAllocationDetailsRepository detailsRepo;
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -243,7 +244,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 
 	public List<Activity> findAll() {
-		return activityRepo.findAll();
+		return activityRepository.findAll();
 	}
 
 	
@@ -280,7 +281,10 @@ public class ActivityServiceImpl implements ActivityService {
 	@Override
 	public void saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData) {
 		
+		List<ActivityAllocationDetails> allDetails = activityAllocRepo.findByActivityAllocateId(allocData.getActivityAllocateId());
+		
 		ActivityAllocation activityAllocation = new ActivityAllocation();
+		activityAllocation.setActivityAllocateId(allocData.getActivityAllocateId());
 		activityAllocation.setActivityFromDate(allocData.getActivityFromDate());
 		activityAllocation.setActivityToDate(allocData.getActivityToDate());
 		activityAllocation.setActivityFor(allocData.getActivityFor());
@@ -288,23 +292,29 @@ public class ActivityServiceImpl implements ActivityService {
 		activityAllocation.setToHours(allocData.getToHours());
 		activityAllocation.setActivity(allocData.getActivity());
 
-		List<ActivityAllocationDetails> detailsList = new ArrayList<>();
+		List<ActivityAllocationDetails> updatedList = new ArrayList<>();
 		try {
 			for (int i = 0; i < markedResources.length(); i++) {
 				JSONObject resource = markedResources.getJSONObject(i);
 				ActivityAllocationDetails newDetail = new ActivityAllocationDetails();
+				newDetail.setActivityAllocateDetId(resource.optInt("activityAllocateDetId")==0 ? null:resource.getInt("activityAllocateDetId"));
 				newDetail.setResourceId(resource.getInt("resourceId"));
 				newDetail.setPlatformId(resource.getInt("platformId"));
 				newDetail.setActivityAllocation(activityAllocation);
-				detailsList.add(newDetail);
+				updatedList.add(newDetail);
 			}
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
-		activityAllocation.setDetails(detailsList);
+		List<Integer> allocateDetIdList = updatedList.stream().map(e->e.getActivityAllocateDetId()).toList();
+		List<ActivityAllocationDetails> removalList = allDetails.stream()
+				.filter(e->!allocateDetIdList.contains(e.getActivityAllocateDetId()))
+				.toList();
+		activityAllocation.setDetails(updatedList);
 		activityAllocRepo.save(activityAllocation);
+		detailsRepo.deleteAll(removalList);
 	}
 
 
