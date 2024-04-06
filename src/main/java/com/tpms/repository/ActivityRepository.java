@@ -50,7 +50,8 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 			+ "INNER JOIN activity_allocation alo ON alo.activityId = act.activityId "
 			+ "INNER JOIN attendance att ON att.activityAllocateId = alo.activityAllocateId "
 			+ "WHERE att.atendanceDate >= :formattedFromDate "
-			+ "AND att.atendanceDate = :formattedToDate", nativeQuery = true)
+			+ "AND att.atendanceDate <= :formattedToDate "
+			+ "order by act.activityName", nativeQuery = true)
 	List<Activity> getActvitiesByDateRange(String formattedFromDate, String formattedToDate);
 	
 	@Query(value="select distinct aa.activityName,\r\n"
