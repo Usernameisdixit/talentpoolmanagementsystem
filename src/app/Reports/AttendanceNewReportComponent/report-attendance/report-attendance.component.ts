@@ -189,11 +189,9 @@ export class ReportAttendanceComponent {
       if (typeof (this.resourceValue) == 'object') {
         this.resourceValue = this.resourceValue.name;
       }
-      debugger;
-
       this.reportAttendanceService.attendanceData(this.inputType, this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString(), this.activity, this.resourceValue)
         .subscribe(data => {
-
+          debugger;
           if (data.length != 0) {
 
             //START NA LOGIC
@@ -211,12 +209,10 @@ export class ReportAttendanceComponent {
                 }
               });
 
-              // this.sortActivityAttenDetails(data.activityAttenDetails);
-              // Sort activityAttenDetails arrays within nested objects
               data.forEach(entry => {
                 this.sortActivityAttenDetails(entry.activityAttenDetails);
               });
-              console.log("required data")
+              console.log("ts data")
               console.log(data);
             }
             //END
@@ -236,11 +232,9 @@ export class ReportAttendanceComponent {
 
   sortActivityAttenDetails(activityAttenDetails) {
     debugger;
-    // Check if activityAttenDetails is defined
     if (activityAttenDetails) {
       // Sort the array based on activityName
       activityAttenDetails.sort((a, b) => {
-        // Remove leading/trailing whitespace and convert to uppercase for case-insensitive sorting
         const activityNameA = a.activityName.trim().toUpperCase();
         const activityNameB = b.activityName.trim().toUpperCase();
 

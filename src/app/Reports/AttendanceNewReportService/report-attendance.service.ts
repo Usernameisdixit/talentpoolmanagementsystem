@@ -235,10 +235,19 @@ export class ReportAttendanceService {
       },
     };
 
-    ws['A3'] = {
-      v: `Date Range: ${formatteFromdDate} to ${formattedToDate}`,
-      t: 's',
-    };
+    if(formatteFromdDate===formattedToDate){
+      ws['A3'] = {
+        v: `Date : ${formatteFromdDate}`,
+        t: 's',
+      };
+    }else{
+      ws['A3'] = {
+        v: `Date Range: ${formatteFromdDate} to ${formattedToDate}`,
+        t: 's',
+      };
+    }
+
+   
 
     if (reportType == 'activity') {
       ws['A4'] = {
@@ -279,12 +288,11 @@ export class ReportAttendanceService {
     const data: any[] = [];
     const processedDates = new Set<string>();
     attendanceData.forEach(detail => {
-
+     console.log(attendanceData.length);
       if (reportType == 'activity' || reportType=='summary') {
         const atendanceDate = detail.atendanceDate;
         if (!processedDates.has(atendanceDate)) {
           const dateRowColor = processedDates.has(atendanceDate) ? 'white' : 'red';
-          console.log(data.length);
           data.push([atendanceDate]);
           const currentRowIndex = data.length + 5;
           let dateMerged;
@@ -333,17 +341,13 @@ export class ReportAttendanceService {
           { v: detail.attendanceStatus, s: { alignment: { wrapText: true } } },
         );
       }else if(reportType=='summary'){
-
-        console.log("inside excel");
-        console.log(detail);
+        debugger;
         rowData.push(
           { v: detail.atendanceDate, s: { alignment: { wrapText: true } } },
         { v: detail.resourceCode, s: { alignment: { wrapText: true } } },
         { v: detail.resourceName, s: { alignment: { wrapText: true } } },
         { v: detail.designation, s: { alignment: { wrapText: true } } },
-        { v: detail.platform, s: { alignment: { wrapText: true } } },
-     
-        
+        { v: detail.platform, s: { alignment: { wrapText: true } } },      
         );
         if (detail.activityAttenDetails) {
         detail.activityAttenDetails.forEach(activityDetail => {
