@@ -52,14 +52,17 @@
                 </ul>
             </li>
 
-            <!-- Activity Management -->
+             <!-- Activity Management -->
             <li>
                 <a href="#submenu6" data-bs-toggle="collapse" class="nav-link dropdown align-middle dropdown-toggle sidebar-navlink">
                     <i class="fas fa-tasks"></i> Activity Management 
                 </a>
                 <ul class="collapse" id="submenu6" data-bs-parent="#menu">
                     <li (click)="getListItem($event);">
-                        <a routerLink="/activity" class="nav-link"><i class="fas fa-user-tie"></i> Activity Allocation</a>
+                        <a routerLink="/addActivity" class="nav-link"><i class="fas fa-user-tie"></i> Add Activity</a>
+                    </li>
+                    <li (click)="getListItem($event);">
+                        <a routerLink="/activities" class="nav-link"><i class="fas fa-user-tie"></i> View Activity</a>
                     </li>
                     <li (click)="getListItem($event);">
                         <a routerLink="/bulk-allocation" class="nav-link"><i class="fas fa-users"></i> Activity Bulk Allocation</a>
@@ -84,7 +87,7 @@
                 </a>
                 <ul class="collapse" id="submenu4" data-bs-parent="#menu">
                     <li (click)="getListItem($event);">
-                        <a routerLink="/addassessment" class="nav-link"><i class="fas fa-plus-circle"></i> Create Assessment</a>
+                        <a routerLink="/addassessment" class="nav-link"><i class="fas fa-plus-circle"></i>Assessment Evaluation</a>
                     </li>
                     <li (click)="getListItem($event);">
                         <a routerLink="/viewasessment" class="nav-link"><i class="fas fa-eye"></i> View Assessment</a>
@@ -112,9 +115,9 @@
                         <a routerLink="/activityReport" class="nav-link"><i class="fas fa-eye"></i> Activity Report</a>
                     </li>
 
-                    <!-- <li>
+                    <li (click)="getListItem($event);">
                         <a routerLink="/assessmentreport" class="nav-link"><i class="fas fa-eye"></i> Assessment Report</a>
-                    </li> -->
+                    </li>
 
                     
                 </ul>
