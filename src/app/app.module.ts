@@ -75,7 +75,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ResourcehistoryComponent } from './ResourceMgmt/Components/resourcehistory/resourcehistory.component';
 import { TimePipe } from './ActivityAllocation/CustomPipes/time.pipe';
 import { HeaderComponent } from './UserMgmt/Component/header/header.component';
-
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { ReportAttendanceComponent } from './Reports/AttendanceNewReportComponent/report-attendance/report-attendance.component';
 
 
 defineLocale('en-gb', enGbLocale); //
@@ -119,8 +122,8 @@ defineLocale('en-gb', enGbLocale); //
     BulkAllocationComponent,
     ResourcehistoryComponent,
     TimePipe,
-    HeaderComponent
-
+    HeaderComponent,
+    ReportAttendanceComponent
 
   ],
   imports: [
@@ -150,7 +153,11 @@ defineLocale('en-gb', enGbLocale); //
     MatDialogModule,
     MatSnackBarModule,
     NgbModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule
+    
   ],
   providers: [DatePipe,MatSnackBar,{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
   bootstrap: [AppComponent]

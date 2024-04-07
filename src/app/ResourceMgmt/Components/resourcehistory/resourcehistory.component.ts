@@ -9,6 +9,7 @@
   import { RouterModule, RouterEvent } from '@angular/router';
   import { ResourceHistory } from 'src/app/Model/ResourceHistory';
   import { DatePipe } from '@angular/common';
+import { LoginService } from 'src/app/UserMgmt/Service/login.service';
 
   @Component({
     selector: 'app-resourcehistory',
@@ -24,8 +25,10 @@
     resourceHisDateWise: any[] = [];
     filteredResources: ResourceHistory[] = [];
     searchQuery: string = '';
+    dashboardDate: string;
 
-  constructor(private service:ContactService, private router:Router,private datePipe: DatePipe){}
+  constructor(private service:ContactService, private router:Router,private datePipe: DatePipe,
+    private loginService:LoginService){}
 
 
     ngOnInit(): void {
@@ -148,17 +151,33 @@
 
 
     groupAssessmentsByDateRange(): void {
+  debugger;
       const groupedByDateRange = {};
+
+      if(localStorage.getItem('activeLink')==='Dashboard'){
+   
+       this.dashboardDate = this.datePipe.transform(this.loginService.selectedDate, 'dd-MMM-yyyy');
+      }
+      else{
+         this.dashboardDate=null;
+      }
+    
       for (const resource of this.resources) {
         const toDate = this.datePipe.transform(resource[8], 'dd-MMM-yyyy');
-        const fileName = resource[12];
-        const key = toDate + ' to ' + fileName;
-        if (!groupedByDateRange[key]) {
-          groupedByDateRange[key] = [];
+        
+        
+        if (!this.dashboardDate || toDate === this.dashboardDate) {
+          const fileName = resource[12];
+          const key = toDate + ' to ' + fileName;
+    
+          if (!groupedByDateRange[key]) {
+            groupedByDateRange[key] = [];
+          }
+          
+          groupedByDateRange[key].push(resource);
         }
-        groupedByDateRange[key].push(resource);
       }
-  
+    
       for (const key in groupedByDateRange) {
         if (groupedByDateRange.hasOwnProperty(key)) {
           const dateRange = key.split(' to ');
@@ -166,17 +185,15 @@
             toDate: dateRange[0],
             fileName: dateRange[1],
             resources: groupedByDateRange[key],
-            filteredResources: [] 
+            filteredResources: [],
           });
         }
       }
-  
-     
+    
       this.resourceHisDateWise.forEach(dateRange => {
         dateRange.filteredResources = [...dateRange.resources];
       });
     }
-
  
 
 
