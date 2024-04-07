@@ -9,7 +9,7 @@ export interface AssessmentDto {
     remarks: string,
     activityFromDate :Date;
     activityToDate:Date;
-
+    asesmentId:number;
    
   }
   

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,ElementRef,ViewChild} from '@angular/core';
 import Swal from 'sweetalert2';
 import { AssessmentDto } from 'src/app/Model/AssessmentDto';
 import { AssessmentserviceService } from '../../Service/assessmentservice.service';
@@ -41,12 +41,16 @@ export class AsessmentdetailsComponent implements OnInit {
   hour: any;
   remarks: any;
   marks: number;
+  status:string;
   
   dateRanges: string[] = [];
   selectedDateRange: string = '';
 
 
- 
+  @ViewChild('totalmarks') totalmarks: ElementRef;
+  @ViewChild('securedMarks') securedMarks: ElementRef;
+  @ViewChild('hours') hours: ElementRef;
+  @ViewChild('remark') remark: ElementRef;
   
  
 
@@ -146,17 +150,20 @@ export class AsessmentdetailsComponent implements OnInit {
   this.hour = null;
   this.remarks =null;
   
-    
+    debugger;
     this.apiService.checkAssessments(this.selectedActivity, this.fromDate.toISOString(), this.toDate.toISOString())
       .subscribe((result: boolean) => {
+        debugger;
         if (result) {
           this.showAssessmentTable = !this.showAssessmentTable;     
           this.apiService.getAssessmentDetails(this.selectedActivity, formattedFromDate, formattedToDate)
             .subscribe((data: any[]) => {
+              debugger;
               console.log(data);
               this.assessmentsExist = data;
               data.forEach(obj => {
-               
+                 console.log(obj);
+                 
                this.assessmentDate = new Date(obj[11]);
                this.totalMarks = obj[8];
                this.marks = obj[9];
@@ -165,8 +172,8 @@ export class AsessmentdetailsComponent implements OnInit {
               
               });
               this.detailsRetrieved = true;
-              console.log(this.assessmentDate);
               this.assessmentDtos = this.mapAssessmentDtos(data);
+              this.status='u';
   
               if (!this.assessmentsExist || this.assessmentsExist.length === 0) {
                 Swal.fire('No Records Found', 'No assessment records found for the selected criteria', 'info');
@@ -177,11 +184,12 @@ export class AsessmentdetailsComponent implements OnInit {
           
           this.apiService.getActivityDetails(this.selectedActivity, formattedFromDate, formattedToDate)
             .subscribe((data: any[]) => {
-              console.log(data);
+              debugger;
+              console.log("inside getActivityDetails===="+data);
               this.assessments = data;
               this.detailsRetrieved = true;
-              console.log(this.assessments);
               this.assessmentDtos = this.mapAssessmentDtos(data);
+              this.status='s';
   
               if (!this.assessments || this.assessments.length === 0) {
                 Swal.fire('No Records Found', 'No assessment records found for the selected criteria', 'info');
@@ -195,6 +203,7 @@ export class AsessmentdetailsComponent implements OnInit {
 
   mapAssessmentDtos(data: any[]): AssessmentDto[] {
     console.log(data);
+    if(this.status==='u'){
     return data.map(item => ({
       intActivityId: this.selectedActivity[0],
       resourceId: item[1],
@@ -205,7 +214,23 @@ export class AsessmentdetailsComponent implements OnInit {
       remarks: item.remarks,
       activityFromDate:new Date(this.fromDate),
       activityToDate:new Date(this.toDate),
+      asesmentId:item[0]
     }));
+  }
+  else{
+    return data.map(item => ({
+      intActivityId: this.selectedActivity[0],
+      resourceId: item[1],
+      assessmentDate: this.assessmentDate,
+      marks: item.marks,
+      totalMarks: item.totalMarks,
+      hour: item.hour,
+      remarks: item.remarks,
+      activityFromDate:new Date(this.fromDate),
+      activityToDate:new Date(this.toDate),
+      asesmentId:0
+    }));
+  }
   }
 
   
@@ -232,13 +257,13 @@ export class AsessmentdetailsComponent implements OnInit {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
-
         const assessmentDtos: AssessmentDto[] = this.mapAssessmentDtos(this.assessments);
         this.apiService.submitAssessments(assessmentDtos).subscribe(
           (response: any) => {
             if (response && response.message) {
               console.log('Assessments submitted successfully:', response.message);
               Swal.fire('Success', response.message, 'success');
+              this.status='u';
               //this.route.navigateByUrl('/viewasessment');
             } else {
               console.error('Unexpected response:', response);
@@ -256,6 +281,50 @@ export class AsessmentdetailsComponent implements OnInit {
     });
   }
   
+  updateAssessments() {
+/*    Swal.fire({
+      title: 'Do you want to update?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+       
+        const updatedAssessmentsData = this.assessmentsExist.map(assessment => {
+          return {
+            id: assessment.id, 
+            totalMarks: assessment.totalMarks,
+            securedMarks: assessment.securedMarks,
+            hours: assessment.hours,
+            remarks: assessment.remarks
+          };
+        });
+  
+        // Send data to the server for updating records
+        this.apiService.updateAssessments(updatedAssessmentsData).subscribe(
+          (response: any) => {
+            if (response && response.message) {
+              console.log('Assessments updated successfully:', response.message);
+              Swal.fire('Success', response.message, 'success');
+              // Optionally, you can reload data or perform any additional actions after successful update
+            } else {
+              console.error('Unexpected response:', response);
+              Swal.fire('Error', 'Failed to update assessments', 'error');
+            }
+          },
+          error => {
+            console.error('Error updating assessments:', error);
+            Swal.fire('Error', 'Failed to update assessments. Please try again later.', 'error');
+            // Optionally, you can handle specific error cases and display appropriate messages
+          }
+        );
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        // Handle cancel action if needed
+      }
+    });*/
+  }
 
 
 
@@ -327,6 +396,14 @@ getPageNumbers(): number[] {
  updateAllTotalMarks(): void {
   this.assessments.forEach(assessment => {
       assessment.totalMarks = this.totalMarks;
+      if(this.totalMarks>100){
+        Swal.fire({
+          icon: 'error',
+          title: 'Total marks must be 100!!',
+         });
+         this.totalMarks=0;
+         assessment.totalMarks=0;
+      }
   });
 }
 
@@ -449,15 +526,26 @@ getMonthIndex(month: string): number {
  tableSize : number = 10;
  count : number = 0;
 
-//pagination functionality
 getTableDataChange(event : any , details : any[]){
 
  this.page = event;
  this.indexNumber = (this.page - 1) * this.tableSize;
-
  this.assessments=details;
 
 }
+
+indexNumber1 : number = 0;
+ page1 : number = 1;
+ tableSize1 : number = 10;
+ count1 : number = 0;
+getTableDataChange1(event : any , details : any[]){
+
+  this.page1 = event;
+  this.indexNumber1 = (this.page1 - 1) * this.tableSize1;
+ 
+  this.assessmentsExist=details;
+ 
+ }
 
 
 }
