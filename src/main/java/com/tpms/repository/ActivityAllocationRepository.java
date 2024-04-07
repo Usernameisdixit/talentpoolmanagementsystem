@@ -23,36 +23,14 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
 	Map<String, Object> findAllDetails(@Param("activityAllocateDetId") Integer activityAllocateDetId);
 	 
 
-	@Query(value = "SELECT DISTINCT " +
-            "    a.activityAllocateId, " +
-            "    r.resourceId, " +
-            "    r.resourceCode, " +
-            "    r.resourceName, " +
-            "    p.platform, " +
-            "    r.designation, " +
-            "    r.experience, " +
-            "    act.activityName, " +
-            "    asmt.doubleActivityMark AS assessmentDoubleActivityMark, " +
-            "    asmt.doubleSecuredMark AS assessmentDoubleSecuredMark, " +
-            "    asmt.asesmentHours AS assessmentHours, " +
-            "    asmt.asesmentDate AS assessmentDate, " +
-            "    asmt.remark AS assessmentRemark " +
-            "FROM " +
-            "    activity_allocation a " +
-            "INNER JOIN " +
-            "    activity_allocation_details aa ON a.activityAllocateId = aa.activityAllocateId " +
-            "INNER JOIN " +
-            "    resource_pool r ON r.resourceId = aa.resourceId " +
-            "INNER JOIN " +
-            "    activity act ON act.activityId = a.activityId " +
-            "INNER JOIN " +
-            "    assessment asmt ON asmt.activityId = act.activityId AND asmt.resourceId = r.resourceId " +
-            "LEFT JOIN " +
-            "    platforms p ON p.platformId = aa.platformId " +
-            "WHERE " +
-            "    a.activityId = :activityId " +
-            "    AND a.activityFromDate >= :fromDate " +
-            "    AND a.activityToDate <= :toDate", nativeQuery = true)
+	@Query(value = "SELECT DISTINCT asmt.asesmentId, r.resourceId,  r.resourceCode,  r.resourceName, r.platform, r.designation, " +
+			 "r.experience, act.activityName,  asmt.doubleActivityMark AS assessmentDoubleActivityMark,  asmt.doubleSecuredMark AS assessmentDoubleSecuredMark, " +
+			 "asmt.asesmentHours AS assessmentHours, asmt.asesmentDate AS assessmentDate, asmt.remark AS assessmentRemark " +
+			 "FROM assessment asmt " +
+			 "INNER JOIN resource_pool r ON r.resourceId=asmt.resourceId " +
+			 "INNER JOIN activity act ON act.activityId=asmt.activityId " +
+			 "WHERE asmt.activityId = :activityId AND asmt.activityFromDate=:fromDate " +
+			 "AND asmt.activityToDate= :toDate", nativeQuery = true)
 		List<Object[]> getAssessmentDetails(Integer activityId, Date fromDate, Date toDate);
 		
 		

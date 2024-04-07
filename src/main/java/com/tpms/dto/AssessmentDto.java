@@ -10,6 +10,8 @@ public class AssessmentDto {
     private Long intActivityAllocateDetId;
     private Integer intActivityId;
     private Long intActivityAllocateId;
+    
+    private Integer asesmentId;
     private String activityName;
     private String activityRefNo;
     private String activityDescription;
