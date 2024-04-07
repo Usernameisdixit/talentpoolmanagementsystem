@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.tpms.entity.ActivityAllocation;
+import com.tpms.entity.ActivityAllocationDetails;
 
 
 
@@ -58,5 +59,8 @@ List<Object[]> getActivityDetails(Integer activityId, Date fromDate, Date toDate
 
 	@Query("FROM ActivityAllocation alloc WHERE alloc.activityFromDate=:activityFromDate AND alloc.activityToDate=:activityToDate AND alloc.deletedFlag=false")
 	List<ActivityAllocation> fetchDataByDateRange(Date activityFromDate, Date activityToDate);
+	
+	@Query("SELECT a.details FROM ActivityAllocation a WHERE a.activityAllocateId=:activityAllocateId")
+	List<ActivityAllocationDetails> findByActivityAllocateId(Long activityAllocateId);
 
 }
