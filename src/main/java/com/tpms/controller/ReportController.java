@@ -39,7 +39,7 @@ public class ReportController {
 	    String activityId = params.get("activityId");
 	    String resourceValue = params.get("resourceValue");
 	    ObjectMapper objectMapper = new ObjectMapper();
-	    if(!reportType.equals("summary")) {
+	    if(reportType.equals("activity")) {
 	    List<Map<String, Object>> attendanceReportData = reportService.getAttendanceData(reportType, fromDate,toDate,activityId,resourceValue);
 	    return objectMapper.writeValueAsString(attendanceReportData);
 	    }
