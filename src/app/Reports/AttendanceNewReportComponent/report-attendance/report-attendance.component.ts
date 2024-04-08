@@ -26,6 +26,7 @@ export class ReportAttendanceComponent {
   myControl = new FormControl<string | User>('');
   auto: any;
   activities: any[];
+  activitiesByUser: any[];
   options1: User[] = [];
   filteredOptions: Observable<User[]>;
   resourceValue: any;
@@ -135,11 +136,26 @@ export class ReportAttendanceComponent {
       if (typeof (this.resourceValue) == 'object') {
         this.resourceValue = this.resourceValue.name;
       }
-      debugger;
+      
       this.reportAttendanceService.attendanceData(this.inputType, this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString(), this.activity, this.resourceValue)
         .subscribe(data => {
           if (data.length != 0) {
-            this.reportAttendanceService.generateAteendancePdf(this.inputType, data, this.selectedFromDate, this.selectedToDate);
+            //RESOURCE LOGIC PDF
+            if(this.inputType=='resource'){
+              const uniqueActivityNames = new Set();
+              data.forEach(entry => {
+                entry.activityAttenDetails.forEach(detail => {
+                  uniqueActivityNames.add(detail.activityName);
+                });
+              });
+              this.activitiesByUser=Array.from(uniqueActivityNames).sort();
+
+              data.forEach(entry => {
+                this.sortActivityAttenDetails(entry.activityAttenDetails);
+              });
+            }
+            //END
+            this.reportAttendanceService.generateAteendancePdf(this.inputType, data, this.selectedFromDate, this.selectedToDate,this.activitiesByUser);
           } else {
             Swal.fire({
               icon: 'info',
@@ -216,7 +232,21 @@ export class ReportAttendanceComponent {
               console.log(data);
             }
             //END
-            this.reportAttendanceService.generateAteendanceExcel(this.inputType, data, this.selectedFromDate, this.selectedToDate, this.activities);
+
+            if(this.inputType=='resource'){
+              const uniqueActivityNames = new Set();
+              data.forEach(entry => {
+                entry.activityAttenDetails.forEach(detail => {
+                  uniqueActivityNames.add(detail.activityName);
+                });
+              });
+              this.activitiesByUser=Array.from(uniqueActivityNames).sort();
+
+              data.forEach(entry => {
+                this.sortActivityAttenDetails(entry.activityAttenDetails);
+              });
+            }
+            this.reportAttendanceService.generateAteendanceExcel(this.inputType, data, this.selectedFromDate, this.selectedToDate, this.activities,this.activitiesByUser);
           } else {
             Swal.fire({
               icon: 'info',
@@ -233,15 +263,14 @@ export class ReportAttendanceComponent {
   sortActivityAttenDetails(activityAttenDetails) {
     debugger;
     if (activityAttenDetails) {
-      // Sort the array based on activityName
+      // Sort the array  on activityName
       activityAttenDetails.sort((a, b) => {
         const activityNameA = a.activityName.trim().toUpperCase();
         const activityNameB = b.activityName.trim().toUpperCase();
 
-        // Perform standard alphabetical sorting
-        if (activityNameA < activityNameB) return -1; // activityNameA comes before activityNameB
-        if (activityNameA > activityNameB) return 1;  // activityNameA comes after activityNameB
-        return 0; // activityNameA and activityNameB are equal
+        if (activityNameA < activityNameB) return -1; 
+        if (activityNameA > activityNameB) return 1;  
+        return 0; 
       });
     } else {
       console.log("activityAttenDetails is undefined or null");

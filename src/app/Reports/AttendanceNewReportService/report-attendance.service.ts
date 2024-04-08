@@ -37,7 +37,7 @@ export class ReportAttendanceService {
     return this.httpClient.post<any>(url, params, { headers });
   }
 
-  generateAteendancePdf(reportType: string, attendanceData: any[], fromDate: Date, toDate: Date) {
+  generateAteendancePdf(reportType: string, attendanceData: any[], fromDate: Date, toDate: Date,activityHeadResource:any[]) {
     debugger;
     const pdf = new jsPDF();
     let startYpos = 0;
@@ -79,7 +79,7 @@ export class ReportAttendanceService {
     if (reportType == 'activity') {
       head = [['Resource Code', 'Resource Name', 'Designation', 'Platform', 'Attendance Status']];
     } else if (reportType == 'resource') {
-      head = [['Date', 'Activity', 'Attendance Status']];
+      head = [['Date',...activityHeadResource]];
     }
 
     // Table content
@@ -107,9 +107,17 @@ export class ReportAttendanceService {
       } else {
         rowData.push(
           { content: detail.atendanceDate, styles: { fillColor: dataRowColor } },
-          { content: detail.activityName, styles: { fillColor: dataRowColor } },
-          { content: detail.attendanceStatus, styles: { fillColor: dataRowColor } },
+          // { content: detail.activityName, styles: { fillColor: dataRowColor } },
+          // { content: detail.attendanceStatus, styles: { fillColor: dataRowColor } },
         );
+        if (detail.activityAttenDetails) {
+          detail.activityAttenDetails.forEach(activityDetail => {
+            
+            rowData.push(
+                { content: activityDetail.attendanceStatus, styles: { fillColor: dataRowColor } },
+            );
+        });
+      }
       }
       data.push(rowData);
     });
@@ -140,7 +148,7 @@ export class ReportAttendanceService {
     pdf.save('attendance_report.pdf');
   }
 
-  generateAteendanceExcel(reportType: string, attendanceData: any[], fromDate: Date, toDate: Date,activityHead:any[]) {
+  generateAteendanceExcel(reportType: string, attendanceData: any[], fromDate: Date, toDate: Date,activityHead:any[],activityHeadResource:any[]) {
     const formatFromDate = new Date(fromDate);
     const formatFromday = formatFromDate.getDate();
     const formatFrommonth = formatFromDate.toLocaleString('default', { month: 'short' });
@@ -166,12 +174,12 @@ export class ReportAttendanceService {
       ];
       headerRow = ['Resource Code', 'Resource Name', 'Designation', 'Platform', 'Attendance Status'];
     } else if (reportType == 'resource') {
-      ws['!cols'] = [
+      const colWidths= [
         { wch: 20 }, // Date
-        { wch: 20 }, // Activity
-        { wch: 25 }, // Attendance Status
       ];
-      headerRow = ['Date', 'Activity', 'Attendance Status'];
+      activityHeadResource.forEach(() => colWidths.push({ wch: 10 }));
+      ws['!cols'] = colWidths;
+      headerRow = ['Date',...activityHeadResource];
     }else if(reportType=='summary'){
       const colWidths = [
         { wch: 20 }, // Date
@@ -181,10 +189,9 @@ export class ReportAttendanceService {
       ];
 
        const dynamicHeaders = activityHead.map(item => item.activityName);
-        // Append additional column widths for dynamic headers
         dynamicHeaders.forEach(() => colWidths.push({ wch: 10 }));
         ws['!cols'] = colWidths;
-         headerRow = ['Date','Resource Code', 'Resource Name', 'Designation', 'Platform', ...dynamicHeaders];
+         headerRow = ['Resource Code', 'Resource Name', 'Designation', 'Platform', ...dynamicHeaders];
     }
    
     //Heading Start From
@@ -275,12 +282,14 @@ export class ReportAttendanceService {
         t: 's',
       };
     }
-
-    const colMergerd=activityHead.length+4;
+    
+    //HEADING MERGED
+    const colMergerd=activityHead.length+3;
+    const colMergerdResource=activityHeadResource.length;
     if (reportType == 'activity') {
       ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }]; // Merge cells
     } else if (reportType == 'resource') {
-      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }];
+      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: colMergerdResource } }];
     }else if(reportType=='summary'){
       ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: colMergerd  } }];
     }
@@ -299,7 +308,7 @@ export class ReportAttendanceService {
           if(reportType=='activity'){
               dateMerged=4;
           }else if(reportType=='summary'){
-              dateMerged=activityHead.length+4;
+              dateMerged=activityHead.length+3;
           }
           ws['!merges'].push({ s: { r: currentRowIndex, c: 0 }, e: { r: currentRowIndex, c: dateMerged } });
           // Apply the fill color to each cell in the merged range
@@ -337,13 +346,20 @@ export class ReportAttendanceService {
       } else if (reportType == 'resource') {
         rowData.push(
           { v: detail.atendanceDate, s: { alignment: { wrapText: true } } },
-          { v: detail.activityName, s: { alignment: { wrapText: true } } },
-          { v: detail.attendanceStatus, s: { alignment: { wrapText: true } } },
+          // { v: detail.activityName, s: { alignment: { wrapText: true } } },
+          // { v: detail.attendanceStatus, s: { alignment: { wrapText: true } } },
         );
+        if (detail.activityAttenDetails) {
+          detail.activityAttenDetails.forEach(activityDetail => {
+            rowData.push(
+                { v: activityDetail.attendanceStatus, s: { alignment: { wrapText: true } } }
+            );
+        });
+      }
       }else if(reportType=='summary'){
         debugger;
         rowData.push(
-          { v: detail.atendanceDate, s: { alignment: { wrapText: true } } },
+          // { v: detail.atendanceDate, s: { alignment: { wrapText: true } } },
         { v: detail.resourceCode, s: { alignment: { wrapText: true } } },
         { v: detail.resourceName, s: { alignment: { wrapText: true } } },
         { v: detail.designation, s: { alignment: { wrapText: true } } },
