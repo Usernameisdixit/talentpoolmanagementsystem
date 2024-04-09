@@ -33,6 +33,7 @@ export class DashboardComponent  implements OnInit{
   ActivityData: any;
   ActivtiesPlanned : any;
   atnDate: string;
+  alDate: any;
 
   constructor(private  contactService:ContactService,private datePipe:DatePipe,
     private apiService: AssessmentserviceService,private loginService:LoginService,
@@ -43,10 +44,14 @@ export class DashboardComponent  implements OnInit{
     }
   ngOnInit(): void {
     //throw new Error('Method not implemented.');
+    debugger;
     this.maxDate=new Date();
     this.loginService.getAllocationDates().subscribe((response: any[]) => {
+      debugger;
       console.log("API Response:", response);
       this.allocationDate = response.map(date => this.datePipe.transform(date, 'dd-MMM-yyyy'));
+      this.alDate=this.allocationDate[0];
+      this.sendDate(this.alDate);
     });
 
     this.atnDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');
@@ -86,9 +91,21 @@ export class DashboardComponent  implements OnInit{
       // alert(this.ActivtiesPlanned);
      });
     
-
-
   }
+
+  closeModal() {
+    const modal = document.getElementById('detailsModal1');
+    if (modal) {
+      modal.classList.remove('show');
+      //document.body.classList.remove('modal-open');
+      modal.style.display = 'none';
+      const modalBackdrop = document.getElementsByClassName('modal-backdrop')[0];
+      if (modalBackdrop) {
+        modalBackdrop.remove();
+      }
+    }
+  }
+  
 
   fetchAssessmentDates() {
     this.apiService.getAssessmentDates().subscribe(
@@ -121,15 +138,10 @@ export class DashboardComponent  implements OnInit{
 
 
 //Dashboard->For Resource
-  sendDate() {
+  sendDate(alDate:string) {
     debugger;
-    
-    // Parse the date string into a Date object
-    // const parts = this.selectDate.split('-'); // Assuming the date string format is 'dd-mm-yyyy'
-    // const parsedDate = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0])); // Months are 0-based in JavaScript
-  
     // Transform the parsed date into 'yyyy-MM-dd' format using datePipe
-    const formattedDate = this.datePipe.transform(this.selectDate, 'yyyy-MM-dd');
+    const formattedDate = this.datePipe.transform(this.alDate, 'yyyy-MM-dd');
     this.loginService.setSelectedDate(formattedDate);
       this.loginService.getResources(formattedDate).subscribe((response: any) => {
       debugger;

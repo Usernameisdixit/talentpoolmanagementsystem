@@ -1,7 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 /* In styles.css */
 @import "~@fortawesome/fontawesome-free/css/all.css";
-
+body{
+  overflow: auto !important;
+}
 body::-webkit-scrollbar{ margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
     display: none;
 }
