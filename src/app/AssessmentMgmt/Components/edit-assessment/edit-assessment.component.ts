@@ -53,7 +53,7 @@ export class EditAssessmentComponent implements OnInit {
     );
   }
   
-  updateAssessment() {
+ /* updateAssessment() {
     Swal.fire({
       title: 'Confirm',
       text: 'Are you sure you want to update this assessment?',
@@ -90,7 +90,7 @@ export class EditAssessmentComponent implements OnInit {
         );
       }
     });
-  }
+  }*/
 
   cancelEdit() {
     Swal.fire({
