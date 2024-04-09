@@ -22,7 +22,6 @@ export class CreateRoleComponent {
   }
 
   ngOnInit(): void {
-    debugger;
     this.actRoute.params.subscribe((params: { [x: string]: any; }) => {
       console.log();
       this.roleId = params['roleId'];
@@ -37,7 +36,6 @@ export class CreateRoleComponent {
   }
 
   saveRole() {
-    debugger;
     // alert("inside createRole");
     const formData = this.RoleForm.value;
     this.RoleForm.value.id=this.roleId;
