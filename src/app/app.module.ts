@@ -79,6 +79,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ReportAttendanceComponent } from './Reports/AttendanceNewReportComponent/report-attendance/report-attendance.component';
+import { PlatformViewComponent } from './ResourceMgmt/Components/platform-master/platform-view/platform-view.component';
+import { PlatformComponent } from './ResourceMgmt/Components/platform-master/platform/platform.component';
 
 
 defineLocale('en-gb', enGbLocale); //
@@ -123,7 +125,9 @@ defineLocale('en-gb', enGbLocale); //
     ResourcehistoryComponent,
     TimePipe,
     HeaderComponent,
-    ReportAttendanceComponent
+    ReportAttendanceComponent,
+    PlatformViewComponent,
+    PlatformComponent
 
   ],
   imports: [

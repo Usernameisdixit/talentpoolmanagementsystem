@@ -35,6 +35,8 @@ import { AttendanceNewComponent } from './AttendanceMgmt/Components/attendance-n
 import { BulkAllocationComponent } from './ActivityAllocation/Components/bulk-allocation/bulk-allocation.component';
 import { ResourcehistoryComponent } from './ResourceMgmt/Components/resourcehistory/resourcehistory.component';
 import { ReportAttendanceComponent } from './Reports/AttendanceNewReportComponent/report-attendance/report-attendance.component';
+import { PlatformComponent } from './ResourceMgmt/Components/platform-master/platform/platform.component';
+import { PlatformViewComponent } from './ResourceMgmt/Components/platform-master/platform-view/platform-view.component';
 
 
 const routes: Routes = [
@@ -83,6 +85,9 @@ const routes: Routes = [
        { path: 'takeAtten', component: AttendanceNewComponent, canActivate: [authGuard]  },
        { path: 'resourceHistory', component: ResourcehistoryComponent, canActivate: [authGuard]  },
        { path: 'attendanceReportGen', component: ReportAttendanceComponent, canActivate: [authGuard]  },
+       { path : 'addPlatform', component: PlatformComponent, canActivate: [authGuard]},
+       { path : 'viewPlatform', component: PlatformViewComponent, canActivate: [authGuard]},
+       { path : 'editPlatform/:platformId', component: PlatformComponent, canActivate: [authGuard] },
     ]
   }
 ];

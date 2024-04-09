@@ -1,7 +1,7 @@
 /* app-layout.component.css */
 .main-content {
     margin-left: 200px; /* Adjust according to your side navigation width */ 
-    height: 100vh; 
+    height: 10vh; 
     overflow: hidden;
   }
   

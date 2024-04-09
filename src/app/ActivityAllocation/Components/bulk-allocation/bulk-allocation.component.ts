@@ -21,7 +21,7 @@ export class BulkAllocationComponent {
   dynamicArray: Array<DynamicGrid> = [];
   newDynamic: any = {};
   activity: any = {activityName: null, activityId: 0};
-  selectedSession: any;
+  selectedSession: any = 0;
   selectedActivityFrom: any;
   selectedActivityTo: any;
   resourceId: any;
@@ -30,6 +30,7 @@ export class BulkAllocationComponent {
   selectedToDate!: Date;
   allocateId: any;
   editMode: boolean = false;
+  existingResources: Resource[] = [];
 
   platforms: Platform[];
   resources: Resource[];
@@ -88,6 +89,9 @@ export class BulkAllocationComponent {
 
   submitForm(): void {
 
+    if(!this.isValid())
+      return;
+    
     let arr: DynamicGrid[] = [];
     let row: any = {};
     row.activityFor = this.selectedSession;
@@ -109,21 +113,30 @@ export class BulkAllocationComponent {
         const data = {activityFromDate: this.selectedFromDate, activityToDate: this.selectedToDate,
                       activityFor: this.selectedSession, activity: this.activity, fromHours: this.selectedActivityFrom,
                       toHours: this.selectedActivityTo, activityAllocateId: this.allocateId};
-        this.allocationService.saveBulkAllocation(this.markedResources, data).subscribe(() => {
-          Swal.fire(
-            'Saved!',
-            'Activity allocation details has been saved successfully.',
-            'success'
-          ).then(()=>{
-            // const queryParams = {activityFromDate:this.selectedFromDate, activityToDate:this.selectedToDate};
-          //   const navigatationExtras: NavigationExtras = {queryParams, skipLocationChange: true};
-          //   this.router.navigate(['/bulk-allocation'],navigatationExtras).then(()=>{
-          //     window.location.reload();
-          //   });
-            const queryParams = {queryParams: {activityFromDate:this.selectedFromDate, activityToDate:this.selectedToDate}};
-            this.router.navigate(['/bulk-allocation'],queryParams).then(()=>window.location.reload());
-          });
-          this.markedResources=[];
+        this.allocationService.saveBulkAllocation(this.markedResources, data).subscribe((res) => {
+          if(res.length == 0) {
+            Swal.fire(
+              'Saved!',
+              'Activity allocation details has been saved successfully.',
+              'success'
+            ).then(()=>{
+              // const queryParams = {activityFromDate:this.selectedFromDate, activityToDate:this.selectedToDate};
+            //   const navigatationExtras: NavigationExtras = {queryParams, skipLocationChange: true};
+            //   this.router.navigate(['/bulk-allocation'],navigatationExtras).then(()=>{
+            //     window.location.reload();
+            //   });
+              const queryParams = {queryParams: {activityFromDate:this.selectedFromDate, activityToDate:this.selectedToDate}};
+              this.router.navigate(['/bulk-allocation'],queryParams).then(()=>window.location.reload());
+            });
+            this.markedResources=[];
+          }
+          else {
+            Swal.fire(
+              'Duplicate data!',
+              'Some resources already exist in this time frame. Click on "View details" to see the list',
+              'warning'
+            ).then(()=>this.existingResources=res);
+          }
         }, () => {
           Swal.fire(
             'Error!',
@@ -139,8 +152,7 @@ export class BulkAllocationComponent {
     if((event.target as HTMLInputElement).checked)
       this.markedResources.push({"resourceId":resourceId, "platformId":platformId, "activityAllocateDetId":null});
     else
-    this.markedResources = this.markedResources.filter(r=>r.resourceId!=resourceId);
-    console.log(this.markedResources);
+      this.markedResources = this.markedResources.filter(r=>r.resourceId!=resourceId);
   }
 
   selectAllResources(event: any) {
@@ -158,14 +170,17 @@ export class BulkAllocationComponent {
         }
       }
     } else {
-      this.markedResources = [];
-      for (let resource of this.resources) {
-        resource.selected = false;
-      }
+      this.uncheckAll();
+    }
+  }
 
-      for (let platform of this.platforms) {
-        platform.selected = false;
-      }
+  uncheckAll(): void {
+    this.markedResources = [];
+    for (let resource of this.resources) {
+      resource.selected = false;
+    }
+    for (let platform of this.platforms) {
+      platform.selected = false;
     }
   }
 
@@ -195,24 +210,17 @@ export class BulkAllocationComponent {
   togglePlatform(event: any, platform: any) {
     const isChecked = event.target.checked;
     platform.selected = isChecked;
-  
-    
-    let resourceSelected = false;
-  
     
     for (let resource of this.resources) {
       if (resource.platform.trim() === platform.platform.trim()) {
         resource.selected = isChecked;
         if (isChecked) {
-          resourceSelected = true;
           this.markedResources.push({ "resourceId": resource.resourceId, "platformId": platform.platformId, "activityAllocateDetId":null});
         }
       }
     }
-  
-    if (!resourceSelected) {
-      this.markedResources = [];
-    }
+    if(!isChecked)
+      this.markedResources = this.markedResources.filter(e=>e.platform!=platform.platform);
   }
 
   setToDate(): void {
@@ -221,17 +229,9 @@ export class BulkAllocationComponent {
     this.fetchAllocationData();
   }
 
-  validate(): void {
-    if(this.selectedFromDate>this.selectedToDate) {
-      Swal.fire("'Activity from' time must be before 'Activity to' time");
-      this.selectedToDate = null;
-    }
-    else
-      this.fetchAllocationData();
-  }
-
   edit(row: DynamicGrid): void {
     this.editMode = true;
+    this.uncheckAll();
 
     this.activity = row.activity;
     this.selectedSession = row.activityFor;
@@ -259,5 +259,76 @@ export class BulkAllocationComponent {
       .subscribe(data=>{
         this.dynamicArray = data;
       });
+  }
+  
+  isValid(): boolean {
+    // Date validation
+    if(this.selectedFromDate>this.selectedToDate) {
+      Swal.fire(
+        'Error!',
+        'Activity to-date cannot be less than from-date.',
+        'error'
+      );
+      return false;
+    }
+
+    // Blank checks
+    if(this.selectedFromDate == null) {
+      Swal.fire(
+        'Error!',
+        'Please select activity from-date.',
+        'error'
+      );
+      return false;
+    }
+    if(this.selectedToDate == null) {
+      Swal.fire(
+        'Error!',
+        'Please select activity to-date.',
+        'error'
+      );
+      return false;
+    }
+    if(this.activity.activityId == 0) {
+      Swal.fire(
+        'Error!',
+        'Please select activity.',
+        'error'
+      );
+      return false;
+    }
+    if(this.selectedSession == 0) {
+      Swal.fire(
+        'Error!',
+        'Please select session.',
+        'error'
+      );
+      return false;
+    }
+    if(this.selectedActivityFrom == null) {
+      Swal.fire(
+        'Error!',
+        'Please select activity from time.',
+        'error'
+      );
+      return false;
+    }
+    if(this.selectedActivityTo == null) {
+      Swal.fire(
+        'Error!',
+        'Please select activity to time.',
+        'error'
+      );
+      return false;
+    }
+    if(this.markedResources.length == 0) {
+      Swal.fire(
+        'Error!',
+        'Please select resource.',
+        'error'
+      );
+      return false;
+    }
+    return true;
   }
 }
