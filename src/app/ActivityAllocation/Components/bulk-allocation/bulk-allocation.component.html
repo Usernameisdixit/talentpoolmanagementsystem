@@ -5,7 +5,7 @@
     <div class="form-group col-md-6">
       <label>Activity From Date <span class="required">*</span></label>
       <div class="input-group">
-        <input type="text" [(ngModel)]="selectedFromDate" class="form-control bold-black" bsDatepicker [bsConfig]="bsConfig" autocomplete="off" (ngModelChange)="setToDate()">
+        <input type="text" [(ngModel)]="selectedFromDate" class="form-control bold-black" bsDatepicker [bsConfig]="bsConfig" autocomplete="off" (ngModelChange)="setToDate()" required>
         <div class="input-group-append">
           <span class="input-group-text"><i class="material-icons">date_range</i></span>
         </div>
@@ -14,7 +14,7 @@
     <div class="form-group col-md-6">
       <label>Activity To Date <span class="required">*</span></label>
       <div class="input-group">
-        <input type="text" [(ngModel)]="selectedToDate" class="form-control bold-black" bsDatepicker [bsConfig]="bsConfig" autocomplete="off" (ngModelChange)="validate()">
+        <input type="text" [(ngModel)]="selectedToDate" class="form-control bold-black" bsDatepicker [bsConfig]="bsConfig" autocomplete="off" required>
         <div class="input-group-append">
           <span class="input-group-text"><i class="material-icons">date_range</i></span>
         </div>
@@ -47,11 +47,11 @@
   <div class="form-row row">
     <div class="form-group col-md-6">
       <label for="selectedActivityFrom">Activity from:</label>
-      <input type="time" class="form-control" [(ngModel)]="selectedActivityFrom">
+      <input type="time" class="form-control" [(ngModel)]="selectedActivityFrom" required>
     </div>
     <div class="form-group col-md-6">
       <label for="selectedActivityTo">Activity to:</label>
-      <input type="time" class="form-control" [(ngModel)]="selectedActivityTo">
+      <input type="time" class="form-control" [(ngModel)]="selectedActivityTo" required>
     </div>
   </div>
 
@@ -125,6 +125,48 @@
     </div>
   </mat-accordion>
 
-  <!-- Submit button -->
-  <button class="btn btn-success mt-3" (click)="submitForm()">{{editMode?'Update':'Submit'}}</button>
+  <div class="form-row row">
+    <div class="form-group col-md-1">
+      <!-- Submit button -->
+      <button class="btn btn-success mt-3" (click)="submitForm()">{{editMode?'Update':'Submit'}}</button>
+    </div>
+    <div class="form-group col-md-2" *ngIf="existingResources.length>0">
+      <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#resourceModal">View details</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="resourceModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content"> <!-- Add 'bg-transparent' class to make modal content background transparent -->
+      <div class="modal-body">
+        <div>
+          <h4 class="mb-3 pb-2 border-bottom">Existing Resources</h4>
+           <table>
+            <thead>
+              <tr>
+                <th>Sl. No.</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Platform</th>
+                <th>Allocated Activity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let resource of existingResources; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{resource.resourceCode}}</td>
+                <td>{{resource.resourceName}}</td>
+                <td>{{resource.platform}}</td>
+                <td>{{resource.activityName}}</td>
+              </tr>
+            </tbody>
+        </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
