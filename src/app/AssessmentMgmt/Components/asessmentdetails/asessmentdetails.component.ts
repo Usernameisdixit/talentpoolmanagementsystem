@@ -2,7 +2,7 @@ import { Component, OnInit ,ElementRef,ViewChild} from '@angular/core';
 import Swal from 'sweetalert2';
 import { AssessmentDto } from 'src/app/Model/AssessmentDto';
 import { AssessmentserviceService } from '../../Service/assessmentservice.service';
-import { DatePipe } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Router } from '@angular/router';
@@ -41,7 +41,7 @@ export class AsessmentdetailsComponent implements OnInit {
   hour: any;
   remarks: any;
   marks: number;
-  status:string;
+  status:string='s';
 
   
   dateRanges: string[] = [];
@@ -61,6 +61,7 @@ export class AsessmentdetailsComponent implements OnInit {
       containerClass: 'theme-dark-blue',
       dateInputFormat: 'DD-MMM-YYYY',
     };
+
   }
 
   ngOnInit(): void {
@@ -129,10 +130,6 @@ export class AsessmentdetailsComponent implements OnInit {
 }
 
  
-
-
-
-
 
   validateAndGetDetails() {
 
@@ -233,29 +230,35 @@ export class AsessmentdetailsComponent implements OnInit {
 
   submitAssessments(): void {
 
-    //let errorFlag = false;
+    let errorFlag = false;
+    const [fromDateString, toDateString] = this.selectedDateRange.split(' to ');
+    const fromDate:Date = new Date(fromDateString);
+    const toDate:Date= new Date(toDateString);
 
     if (!this.selectedActivity || !this.fromDate || !this.toDate) {
-       // errorFlag = true;
+        errorFlag = true;
         Swal.fire('Warning', 'Please select all required fields', 'warning');
         return;
     }
 
     if (!this.assessmentDate) {
-      //  errorFlag = true;
+       errorFlag = true;
         Swal.fire('Warning', 'Please select assessment date', 'warning');
         return;
     }
-   /*console.log(!this.totalmarks);
+    
+   if(this.assessmentDate <= fromDate){
+       errorFlag = true;
+       Swal.fire('Warning', 'Assessment date should not be less than the from date ', 'warning');
+       this.assessmentDate=null;
+       return ;
+    }
 
-    if (!this.totalmarks) {
+    if (!this.totalMarks) {
         errorFlag = true;
         Swal.fire('Warning', 'Total marks cannot be blank!', 'warning');
         return;
     }
-    
-    console.log(!this.totalmarks + "    " + !this.marks);
-    
 
     if (!this.marks) {
         errorFlag = true;
@@ -273,42 +276,62 @@ export class AsessmentdetailsComponent implements OnInit {
         errorFlag = true;
         Swal.fire('Warning', 'Remarks cannot be blank!', 'warning');
         return;
-    }*/
+    }
 
-    //if (!errorFlag) {
-    Swal.fire({
-      title: 'Do you want to save?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const assessmentDtos: AssessmentDto[] = this.mapAssessmentDtos(this.assessments);
-        this.apiService.submitAssessments(assessmentDtos).subscribe(
-          (response: any) => {
-            if (response && response.message) {
-              console.log('Assessments submitted successfully:', response.message);
-              Swal.fire('Success', response.message, 'success');
-              this.status='u';
-              this.showActivityTable = !this.showActivityTable;
-            //  this.showAssessmentTable=!this.showAssessmentTable;
-            //  this.validateAndGetDetails();
-              
-              location.reload();
-            } else {
-              console.error('Unexpected response:', response);
-              Swal.fire('Error', 'Failed to submit assessments', 'error');
-            }
-          },
-          error => {
-            console.error('Error submitting assessments:', error);
-            Swal.fire('Error', 'Failed to submit assessments', 'error');
+   if (!errorFlag) {
+      Swal.fire({
+        title: this.status==='s'?'Do you want to save?':'Do you want to update?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if(this.status==='u'){
+            const assessmentDtos: AssessmentDto[] = this.mapAssessmentDtos(this.assessmentsExist);
+            this.apiService.updateAssessment(assessmentDtos).subscribe(
+              (response: any) => {
+                if (response && response.message) {
+                  console.log('Assessments updated successfully:', response.message);
+                  Swal.fire('Success', response.message, 'success');
+                } else {
+                  console.error('Unexpected response:', response);
+                  Swal.fire('Error', 'Failed to update assessments', 'error');
+                }
+              },
+              error => {
+                console.error('Error updating assessments:', error);
+                Swal.fire('Error', 'Failed to update assessments. Please try again later.', 'error');
+                
+              });
           }
-        );
-      }
-    });
+          else{
+            const assessmentDtos: AssessmentDto[] = this.mapAssessmentDtos(this.assessments);
+            this.apiService.submitAssessments(assessmentDtos).subscribe(
+              (response: any) => {
+                if (response && response.message) {
+                  console.log('Assessments submitted successfully:', response.message);
+                  Swal.fire('Success', response.message, 'success');
+                  this.status='u';
+                  this.showActivityTable = !this.showActivityTable;
+                //  this.showAssessmentTable=!this.showAssessmentTable;
+               //  this.validateAndGetDetails();
+                   location.reload();
+                } else {
+                  console.error('Unexpected response:', response);
+                  Swal.fire('Error', 'Failed to submit assessments', 'error');
+                }
+              },
+              error => {
+                console.error('Error submitting assessments:', error);
+                Swal.fire('Error', 'Failed to submit assessments', 'error');
+            });
+          }
+         
+        }
+       });
+    }
 }
   
   updateAssessments() {
@@ -322,24 +345,7 @@ export class AsessmentdetailsComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         
-        const assessmentDtos: AssessmentDto[] = this.mapAssessmentDtos(this.assessmentsExist);
-       
-        this.apiService.updateAssessment(assessmentDtos).subscribe(
-          (response: any) => {
-            if (response && response.message) {
-              console.log('Assessments updated successfully:', response.message);
-              Swal.fire('Success', response.message, 'success');
-            } else {
-              console.error('Unexpected response:', response);
-              Swal.fire('Error', 'Failed to update assessments', 'error');
-            }
-          },
-          error => {
-            console.error('Error updating assessments:', error);
-            Swal.fire('Error', 'Failed to update assessments. Please try again later.', 'error');
-            
-          }
-        );
+        
       }
     });
   }
@@ -432,31 +438,58 @@ updateMarks(): void {
       title: 'Secured Marks Exceed Total Marks',
       text: 'Secured marks should not be greater than total marks.',
     });
+    this.assessments.forEach(assessment => { 
+      assessment.marks = '';
+   });
+    this.marks=parseInt('');
   }
+  else {
+    this.assessments.forEach(assessment => { 
+      assessment.marks = this.marks;
+   }); 
+  } 
 
-else {
-
-  this.assessments.forEach(assessment => {
-    assessment.marks = this.marks;
-});
-
-}
-
-  
 }
 
 
 
 updateHours() : void {
-  this.assessments.forEach(assessment => {
+  if(this.hour > 0 && this.hour < 5){
+    this.assessments.forEach(assessment => {
     assessment.hour=this.hour;
-  });
+   });
+  }
+  else{
+
+    Swal.fire({
+      icon: 'error',
+      title: 'Invalid assessment hour !',
+      text: 'Assessment hour should be limited within 1 to 4 hours',
+    });
+    this.hour='';
+    this.assessments.forEach(assessment => {
+      assessment.hour='';
+     });
+   
+  }
 }
 
 updateRemarks() : void {
+
+  if(this.remarks.length<=248){
   this.assessments.forEach(assessment => {
-    assessment.remarks=this.remarks;
+     assessment.remarks=this.remarks;
+   
   });
+ }
+ else{
+  Swal.fire({
+    icon: 'error',
+    title: 'Remarks should be within 248 characters !'
+  });
+  
+ }
+
 }
 
 
@@ -532,25 +565,6 @@ getMonthIndex(month: string): number {
 }
 
 
-
-// onActivityChange()
-// {
-
-//  debugger;
-//   if (this.selectedActivity && this.fromDate && this.toDate) {
-//       this.apiService.checkAssessments(this.selectedActivity, this.fromDate.toISOString(), this.toDate.toISOString())
-//           .subscribe((result: boolean) => {
-//               if (result) {
-//                   Swal.fire('Assessment Already Done', 'Assessment for this activity session has already been completed.', 'info');
-//               } else {
-//                   this.validateAndGetDetails();
-//               }
-//           });
-//   }
-
-
-// }
-
  // for pagination
  indexNumber : number = 0;
  page : number = 1;
@@ -578,5 +592,6 @@ getTableDataChange1(event : any , details : any[]){
  
  }
 
+   
 
 }
