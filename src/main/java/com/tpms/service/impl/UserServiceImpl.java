@@ -30,12 +30,15 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User saveUser(UserDto user) {
 		
+		
 	
 		User u1 = new User();
 		u1.setUserFullName(user.getUserFullName());
 		u1.setUserName(user.getUserName());
 		u1.setPhoneNo(user.getPhoneNo());
 		u1.setEmail(user.getEmail());
+//		u1.setCreatedBy(user.getUserId());
+		System.err.println(user.getUserId());
 		
 		//------- to update User -------
 		if(user.getUserId() != 0) {
