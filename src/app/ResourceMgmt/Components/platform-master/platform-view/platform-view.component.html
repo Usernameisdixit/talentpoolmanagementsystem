@@ -1,14 +1,12 @@
 <div class="card-body">
-  <div class="container mt-3">
-    <!-- <h1 class="mt-4">Platform Details</h1> -->
-    <!-- <hr> -->
+  <div class="container">
     <div class="row">
       <div class="col-md-12 text-right">
         <div class="export-buttons">
           <button class="btn btn-icon export-btn" title="Download PDF" (click)="exportToPDF()">
             <i class="fas fa-file-pdf fa-lg pdf-icon"></i>
           </button>
-          <button class="btn btn-icon export-btn" title="Download Excel" (click)="exportToExcel()"> 
+          <button class="btn btn-icon export-btn" title="Download Excel" (click)="exportToExcel()">
             <i class="fas fa-file-excel fa-lg excel-icon"></i>
           </button>
         </div>
@@ -36,17 +34,17 @@
             <td>{{platform.platformCode}}</td>
             <td id="toggleButton" *ngIf="platform.deletedFlag" class="status-inactive">InActive</td>
             <td id="toggleButton" *ngIf="!platform.deletedFlag" class="status-active">Active</td>
-           <td> 
-            <div class="btn-group">
-              <button *ngIf="!platform.deletedFlag" type="button" class="btn btn-primary btn-sm" (click)="editPlatform(platform.platformId);"><i class="fas fa-edit"></i></button>
-              <button *ngIf="platform.deletedFlag" type="button" class="btn btn-primary btn-sm" disabled><i class="fas fa-edit"></i></button>
-              &nbsp;
-          </div>
-          <div class="btn-group">
-            <button *ngIf="platform.deletedFlag" class="btn btn-danger btn-sm" (click)="deletePlatform(platform.platformId,!platform.deletedFlag);"><i class="fa-solid fa-check"></i></button>
-            <button *ngIf="!platform.deletedFlag" class="btn btn-danger btn-sm" (click)="deletePlatform(platform.platformId,!platform.deletedFlag);"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-      </td>
+            <td> 
+              <div class="btn-group">
+                <button *ngIf="!platform.deletedFlag" type="button" class="btn btn-primary btn-sm" (click)="editPlatform(platform.platformId);"><i class="fas fa-edit"></i></button>
+                <button *ngIf="platform.deletedFlag" type="button" class="btn btn-primary btn-sm" disabled><i class="fas fa-edit"></i></button>
+                &nbsp;
+              </div>
+              <div class="btn-group">
+                <button *ngIf="platform.deletedFlag" class="btn btn-danger btn-sm" (click)="deletePlatform(platform.platformId,!platform.deletedFlag);"><i class="fa-solid fa-check"></i></button>
+                <button *ngIf="!platform.deletedFlag" class="btn btn-danger btn-sm" (click)="deletePlatform(platform.platformId,!platform.deletedFlag);"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+            </td>
           </tr>
           <tr *ngIf="platformDetails.length === 0">
             <td colspan="5" class="text-center">

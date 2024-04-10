@@ -79,9 +79,8 @@ export class AssessmentserviceService {
 
  
 
-   updateAssessment(assessment: any): Observable<any> {
-    const url = `${this.updateUrl}/${assessment.id}`;
-    return this.http.put(url, assessment);
+   updateAssessment(assessment: any[]): Observable<any> {
+    return this.http.put(this.updateUrl, assessment);
   }
 
   getAssessmentById(assessmentId: string): Observable<any> {
