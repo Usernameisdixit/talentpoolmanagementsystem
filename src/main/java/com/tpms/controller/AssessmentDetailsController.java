@@ -147,11 +147,11 @@ public class AssessmentDetailsController {
         return assessmentRepository.findDetailsByAssessmentId(id);
     }
 
-    @PutMapping("/updateAssessment/{id}")
-    public ResponseEntity<?> updateAssessment(@PathVariable Integer id, @RequestBody AssessmentDto assessmentDto) {
-    	
-          assessmentService.updateAssessment(id, assessmentDto);
-          return ResponseEntity.ok().build();  
+    @PutMapping("/updateAssessment")
+    public ResponseEntity<?> updateAssessment(@RequestBody List<AssessmentDto> updatedData) {
+    	  System.err.println(updatedData);
+         // assessmentService.updateAssessment(updatedData);
+          return assessmentService.updateAssessment(updatedData);  
       
     }
     

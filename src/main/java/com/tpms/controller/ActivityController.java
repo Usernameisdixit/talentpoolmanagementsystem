@@ -105,7 +105,7 @@ public class ActivityController {
 
 	@GetMapping("activities")
 	List<Activity> getActivities(String platform) {
-		return activityService.findAll();
+		return activityService.findAllActive();
 	}
 
 	@PostMapping("saveAllocation")
@@ -157,7 +157,7 @@ public class ActivityController {
 	}
 
 	@PostMapping("saveBulkAllocation")
-	void saveBulkAllocation(@RequestBody String data) {
+	List<Map<String,String>> saveBulkAllocation(@RequestBody String data) {
 		JSONArray markedResources = null;
 		ActivityAllocation allocData = null;
 		try {
@@ -167,7 +167,7 @@ public class ActivityController {
 		} catch (JSONException | JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		activityService.saveBulkAllocation(markedResources, allocData);
+		return activityService.saveBulkAllocation(markedResources, allocData);
 	}
 
 	@GetMapping("/platformsIdByName")

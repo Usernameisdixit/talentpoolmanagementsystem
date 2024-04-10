@@ -18,6 +18,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -311,6 +314,7 @@ public class ResourceExcelController {
 	@GetMapping("/getAllAllocationDate")
 	public ResponseEntity<?> getAllAllocationDate() {
 		List<Date> allocateDate = excelUploadHistoryRepository.findLatestDate();
+		allocateDate=allocateDate.stream().sorted().collect(Collectors.toList());
 		return ResponseEntity.ok(allocateDate);
 	}
 

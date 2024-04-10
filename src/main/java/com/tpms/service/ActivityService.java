@@ -2,6 +2,7 @@ package com.tpms.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 
@@ -30,7 +31,7 @@ public interface ActivityService {
 
 	public List<ResourcePool> getFilteredResources(String activityDate, Integer platformId);
 	
-	public List<Activity> findAll();
+	public List<Activity> findAllActive();
 
 	public ActivityAllocation saveAllocation(ActivityAllocation data);
 
@@ -40,7 +41,7 @@ public interface ActivityService {
 
 	public List<ResourcePoolProjection> findAllWithoutRelatedEntity();
 
-	public void saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData);
+	public List<Map<String,String>> saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData);
 
 	public Integer platformIdByName(String platformName);
 

@@ -74,6 +74,8 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 	 		+ "WHERE aal.activitytoDate between :activityFromDate and :activityToDate\r\n"
 	 		+ "order by  aal.activityFromDate, aal.activitytoDate",nativeQuery = true)
 		Integer findAllActivityFromtodate(String activityFromDate, String activityToDate);
+
+	List<Activity> findByDeletedFlagFalse();
 	
 	
 	

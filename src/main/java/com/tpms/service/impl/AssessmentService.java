@@ -11,6 +11,7 @@ import com.tpms.entity.Assessment;
 import com.tpms.repository.AssessmentRepository;
 
 import java.time.LocalDate;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -38,6 +39,9 @@ public class AssessmentService {
     
     private Assessment convertToEntity(AssessmentDto assessmentDto) {
     	Assessment assessment = new Assessment();
+    	if(assessmentDto.getAsesmentId()!=0) {
+    		assessment.setAsesmentId(assessmentDto.getAsesmentId());
+    	}
         assessment.setActivityId(assessmentDto.getIntActivityId());
     	assessment.setResourceId(assessmentDto.getResourceId());
     	assessment.setAsesmentDate(assessmentDto.getAssessmentDate());
@@ -55,25 +59,20 @@ public class AssessmentService {
     }
 
 
-    public void updateAssessment(Integer id, AssessmentDto assessmentDto)  {
-        Assessment assessment = assessmentRepository.findByAsesmentId(id);
-
-        // Update specific fields of assessment entity with data from DTO
-        if (assessmentDto.getMarks() != null) {
-            assessment.setDoubleSecuredMark(assessmentDto.getMarks());
-        }
-        if (assessmentDto.getTotalMarks() != null) {
-            assessment.setDoubleActivityMark(assessmentDto.getTotalMarks());
-        }
-        if (assessmentDto.getRemarks() != null) {
-            assessment.setRemark(assessmentDto.getRemarks());
-        }
-        if (assessmentDto.getHour() != null) {
-            assessment.setAsesmentHours(assessmentDto.getHour());
-        }
-
-       
-        assessmentRepository.save(assessment);
+    public ResponseEntity<?> updateAssessment(List<AssessmentDto> updatedData)  {
+    	
+    	 try {
+             for(AssessmentDto assessmentDto:updatedData)
+             {
+             	Assessment assessmentDetails = convertToEntity(assessmentDto);
+             	 assessmentRepository.save(assessmentDetails);
+             	 
+             }
+             return ResponseEntity.ok().body("{\"message\": \"Assessments Updated successfully\"}");
+         } catch (Exception e) {
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                  .body("{\"message\": \"Error occurred while updating assessments\"}");
+         }
     }
 
 
