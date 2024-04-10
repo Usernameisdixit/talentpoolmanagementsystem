@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 //import { Tutorial } from '../../models/tutorial.model';
 import { ActivityService } from 'src/app/ActivityMgmt/Service/activity.service';
 import { Activity } from 'src/app/Model/activity.model';
-
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-activity-details',
@@ -22,7 +22,6 @@ export class ActivityDetailsComponent implements OnInit {
 
   @Input() currentActivity: Activity = {
     activityId: '',
-    activityRefNo: '',
     activityName: '',
     description: '',
     responsPerson1: '',
@@ -80,19 +79,40 @@ export class ActivityDetailsComponent implements OnInit {
   
 
   updateActivity(): void {
-    this.message = '';
 
-    this.activityService
-      .update(this.currentActivity.activityId, this.currentActivity)
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          this.message = res.message
-            ? res.message
-            : 'This activity was updated successfully!';
-        },
-        error: (e) => console.error(e)
+    Swal.fire({
+      title: 'Do you want to Update?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.activityService.update(this.currentActivity.activityId, this.currentActivity).subscribe((data) => {
+          Swal.fire('Activity Update', 'activity Update Successfully', 'success'); 
+        this.router.navigate(['/activities']);
+      },
+      (error) => {
+        console.log(error);
       });
+        
+      } 
+    });
+
+
+
+
+
+
+    // this.activityService
+    //   .update(this.currentActivity.activityId, this.currentActivity)
+    //   .subscribe({
+    //     next: (res) => {
+        
+    //     },
+    //     error: (e) => console.error(e)
+    //   });
   }
 
   deleteActivity(): void {

@@ -68,7 +68,6 @@ export class ActivityListComponent implements OnInit {
         // Map Activity data to Activity
         this.currentActivity = {
           activityId: data.activityId,
-          activityRefNo: data.activityRefNo,
           activityName: data.activityName,
           description:data.description,
           responsPerson1:data.responsPerson1,
@@ -155,7 +154,7 @@ private getTableDataa(): any[][] {
   return this.activities.map((c, index) => [
     
     serialNumber++,
-    c.activityRefNo,
+    // c.activityRefNo,
     c.activityName,
     c.description,
     c.responsPerson1,
