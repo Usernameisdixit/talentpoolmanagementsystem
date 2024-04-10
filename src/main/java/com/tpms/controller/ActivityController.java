@@ -53,9 +53,26 @@ public class ActivityController {
 
 	@PostMapping("/save/activity")
 	public Activity SaveActivity(@RequestBody Activity activity) {
-		activity.setDeletedFlag(false);
-		return activityServiceImpl.SaveActivity(activity);
+		Activity listByRespAct = activityService.findByResponsPerson1AndActivityName(activity.getResponsPerson1(),
+				activity.getActivityName());
+		Activity activeActivity = activityService.getDataByActivityName(activity.getActivityName());
+		if (listByRespAct != null) {
+			if (listByRespAct.getDeletedFlag() == true) {
+				listByRespAct.setDeletedFlag(false);
+				activityServiceImpl.SaveActivity(listByRespAct);
+				activeActivity.setDeletedFlag(true);
+				activityServiceImpl.SaveActivity(activeActivity);
+			}
+			return activityServiceImpl.SaveActivity(listByRespAct);
+		} else {
+			if (activeActivity != null) {
+				activeActivity.setDeletedFlag(true);
+				activityServiceImpl.SaveActivity(activeActivity);
+			}
+			activity.setDeletedFlag(false);
+			return activityServiceImpl.SaveActivity(activity);
 
+		}
 	}
 
 	@GetMapping("/get/activity/{activityId}")
@@ -105,7 +122,7 @@ public class ActivityController {
 
 	@GetMapping("activities")
 	List<Activity> getActivities(String platform) {
-		return activityService.findAll();
+		return activityService.findAllActive();
 	}
 
 	@PostMapping("saveAllocation")
@@ -157,7 +174,7 @@ public class ActivityController {
 	}
 
 	@PostMapping("saveBulkAllocation")
-	void saveBulkAllocation(@RequestBody String data) {
+	List<Map<String,String>> saveBulkAllocation(@RequestBody String data) {
 		JSONArray markedResources = null;
 		ActivityAllocation allocData = null;
 		try {
@@ -167,7 +184,7 @@ public class ActivityController {
 		} catch (JSONException | JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		activityService.saveBulkAllocation(markedResources, allocData);
+		return activityService.saveBulkAllocation(markedResources, allocData);
 	}
 
 	@GetMapping("/platformsIdByName")
@@ -204,13 +221,24 @@ public class ActivityController {
 		 return ResponseEntity.ok(activitydata);
 		}
 	
-
-	// Dashboard part [ActivtiesPlanned]
-	 @GetMapping("totalActivitiesPlanned")
-		public ResponseEntity<?> gettotalActivitiesPlanned(@RequestParam String activityFromDate, @RequestParam String activityToDate) {
+		// Dashboard part [ActivtiesPlanned]
+		@GetMapping("totalActivitiesPlanned")
+		public ResponseEntity<?> gettotalActivitiesPlanned(@RequestParam String activityFromDate,
+				@RequestParam String activityToDate) {
 			Integer resources = activityRepository.findAllActivityFromtodate(activityFromDate, activityToDate);
-	//		System.out.println(resources);
+			// System.out.println(resources);
 			return ResponseEntity.ok(resources);
 		}
-	
+
+		@GetMapping("getActivityForAuto")
+		public List<String> getAllActivityAuto(@RequestParam String value) {
+			List<String> resNames = activityService.getAllActivityAuto(value);
+			return resNames;
+
+		}
+
+		@GetMapping("dataActivityName")
+		public Activity getDataByActivityName(@RequestParam String activityName) {
+			return activityService.getDataByActivityName(activityName);
+		}
 }
