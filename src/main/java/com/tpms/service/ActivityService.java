@@ -31,7 +31,7 @@ public interface ActivityService {
 
 	public List<ResourcePool> getFilteredResources(String activityDate, Integer platformId);
 	
-	public List<Activity> findAll();
+	public List<Activity> findAllActive();
 
 	public ActivityAllocation saveAllocation(ActivityAllocation data);
 

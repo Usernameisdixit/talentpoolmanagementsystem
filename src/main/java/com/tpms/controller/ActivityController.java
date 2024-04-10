@@ -105,7 +105,7 @@ public class ActivityController {
 
 	@GetMapping("activities")
 	List<Activity> getActivities(String platform) {
-		return activityService.findAll();
+		return activityService.findAllActive();
 	}
 
 	@PostMapping("saveAllocation")

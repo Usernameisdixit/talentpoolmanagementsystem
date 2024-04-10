@@ -243,8 +243,8 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 
-	public List<Activity> findAll() {
-		return activityRepository.findAll();
+	public List<Activity> findAllActive() {
+		return activityRepository.findByDeletedFlagFalse();
 	}
 
 	
@@ -300,12 +300,13 @@ public class ActivityServiceImpl implements ActivityService {
 			e.printStackTrace();
 		}
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date fromDateTime = null;
 		Date toDateTime = null;
 		try {
-			fromDateTime = sdf.parse(sdf.format(allocData.getActivityFromDate())+" "+allocData.getFromHours());
-			toDateTime = sdf.parse(sdf.format(allocData.getActivityToDate())+" "+allocData.getToHours());
+			fromDateTime = sdf2.parse(sdf1.format(allocData.getActivityFromDate())+" "+allocData.getFromHours());
+			toDateTime = sdf2.parse(sdf1.format(allocData.getActivityToDate())+" "+allocData.getToHours());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
