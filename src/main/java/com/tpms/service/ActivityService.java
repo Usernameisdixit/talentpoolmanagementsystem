@@ -48,5 +48,11 @@ public interface ActivityService {
 	public List<String> getAllDistinctDateRange(String year, String month);
 
 	public List<ActivityAllocation> fetchDataByDateRange(String activityFromDate, String activityToDate);
+	
+	public List<String> getAllActivityAuto(String value);
+
+	public Activity getDataByActivityName(String activityName);
+
+	public Activity findByResponsPerson1AndActivityName(String responsPerson1, String activityName);
 
 }

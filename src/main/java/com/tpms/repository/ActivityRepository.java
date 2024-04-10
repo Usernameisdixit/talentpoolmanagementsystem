@@ -78,7 +78,9 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 	List<Activity> findByDeletedFlagFalse();
 	
 	
-	
+	Activity findByActivityNameAndDeletedFlagFalse(String activityName);
+
+	Activity findByResponsPerson1AndActivityName(String responsPerson1, String activityName);
 	
 	
 	

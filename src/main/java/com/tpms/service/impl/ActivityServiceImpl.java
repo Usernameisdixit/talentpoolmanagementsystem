@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -361,6 +362,28 @@ public class ActivityServiceImpl implements ActivityService {
 			e.printStackTrace();
 		}
 		return new ArrayList<>();
+	}
+	
+	@Override
+	public List<String> getAllActivityAuto(String value) {
+		String searchLowerCase = value.toLowerCase();
+		List<String> allUniName=activityRepository.findAll().stream()
+                .map(x -> x.getActivityName())
+                .filter(activityName -> activityName.toLowerCase().contains(searchLowerCase))
+                .distinct()
+                .collect(Collectors.toList());
+		return allUniName;
+	}
+
+
+	@Override
+	public Activity getDataByActivityName(String activityName) {
+		 return activityRepository.findByActivityNameAndDeletedFlagFalse(activityName);
+	}
+
+
+	public Activity findByResponsPerson1AndActivityName(String responsPerson1, String activityName) {
+		return activityRepository.findByResponsPerson1AndActivityName(responsPerson1,activityName);
 	}
 
 }
