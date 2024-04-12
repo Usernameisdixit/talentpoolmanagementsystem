@@ -301,19 +301,18 @@ public class ActivityServiceImpl implements ActivityService {
 			e.printStackTrace();
 		}
 		
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		Date fromDateTime = null;
-		Date toDateTime = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date fromDate = null;
+		Date toDate= null;
 		try {
-			fromDateTime = sdf2.parse(sdf1.format(allocData.getActivityFromDate())+" "+allocData.getFromHours());
-			toDateTime = sdf2.parse(sdf1.format(allocData.getActivityToDate())+" "+allocData.getToHours());
+			fromDate = sdf.parse(sdf.format(allocData.getActivityFromDate()));
+			toDate = sdf.parse(sdf.format(allocData.getActivityToDate()));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		List<Map<String,String>> existingResourceList = new ArrayList<>();
 		if(allocData.getActivityAllocateId() == null)
-			existingResourceList = activityAllocRepo.checkExistingResourcesByDateRange(resourceIdList,fromDateTime,toDateTime);
+			existingResourceList = activityAllocRepo.checkExistingResourcesByDateRange(resourceIdList,fromDate,toDate,allocData.getFromHours(),allocData.getToHours());
 
 		if(existingResourceList.isEmpty()) {
 			List<ActivityAllocationDetails> allDetails = activityAllocRepo.findByActivityAllocateId(allocData.getActivityAllocateId());
