@@ -53,31 +53,36 @@ public class UserController {
 	
 	@GetMapping("/getRoleDetails")
 	public ResponseEntity<List<RoleDto>> getRoleId(){
-		 List<RoleDto> roleDetails=roleService.getRoleList();
-		
+		List<RoleDto> roleDetails=null;
+		try {
+		  roleDetails=roleService.getRoleList();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		return ResponseEntity.ok().body(roleDetails);
 	}
 	
 	@GetMapping("/userList")
-	public ResponseEntity<List<User>> getStudent(){
+	public ResponseEntity<List<User>> getUserList(){
 		
 		List<User> userList = userService.getUserDetails();
 		return ResponseEntity.ok().body(userList);
 	}
 	
 	@GetMapping("/getUserById/{id}")
-	public ResponseEntity<UserDto> getStudentById(@PathVariable(name = "id") Integer userId){
+	public ResponseEntity<UserDto> getUserById(@PathVariable(name = "id") Integer userId){
 		UserDto user=userService.getUserById(userId);
 		return ResponseEntity.ok().body(user);
 	}
 	
 	@DeleteMapping("/deleteUser/{userId}/{deletedFlag}")
-	public ResponseEntity<Map<String,Object>> deleteStudent(@PathVariable Integer userId,@PathVariable Boolean deletedFlag){
+	public ResponseEntity<Map<String,Object>> deleteUser(@PathVariable Integer userId,@PathVariable Boolean deletedFlag){
 
 		userService.deleteUserById(userId,deletedFlag);
 		Map<String, Object> response = new HashMap<>();
 		response.put("Status" , 200);
-		response.put("Deleted", "This student data is deleted.");
+		response.put("Deleted", "This user data is deleted.");
 		return ResponseEntity.ok().body(response);
 	}
 	
