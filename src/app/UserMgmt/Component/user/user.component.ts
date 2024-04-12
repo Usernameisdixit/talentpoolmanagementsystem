@@ -44,7 +44,7 @@ export class UserComponent {
     const storedUserString = localStorage.getItem('user');
     if (storedUserString) {
       const storedUser = JSON.parse(storedUserString);
-      this.CREATOR_MODIFIER_USER_ID = storedUser.storedUser.userId;
+      this.CREATOR_MODIFIER_USER_ID = storedUser.userId;
       this.userId=storedUser.userId;
       this.username = storedUser.userName;
       this.email = storedUser.email;
