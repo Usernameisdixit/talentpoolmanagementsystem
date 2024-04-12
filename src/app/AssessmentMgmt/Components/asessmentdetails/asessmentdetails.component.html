@@ -66,7 +66,7 @@
                             <input type="number" class="form-control" [(ngModel)]="hour" (keyup)="updateHours()">
                         </th>
                         <th style="width: 300px;"> Remarks
-                            <textarea class="form-control" [(ngModel)]="remarks" (keyup)="updateRemarks()" maxlength="248"></textarea>
+                            <textarea class="form-control" [(ngModel)]="remarks" maxlength="248"></textarea>
                         </th>
                     </tr>
                 </thead>
@@ -90,7 +90,7 @@
                                 <td><input type="number" [(ngModel)]="assessment.marks" class="form-control" (keyup)="validateSecuredMarks(assessment)"></td>
                                 <td><input type="number" [(ngModel)]="assessment.hour" class="form-control" (keyup)="updateHours()"></td>
                                 <td>
-                                    <textarea [(ngModel)]="assessment.remarks" class="form-control" (keyup)="updateRemarks()" maxlength="248"></textarea>
+                                    <textarea [(ngModel)]="assessment.remarks" class="form-control" maxlength="248"></textarea>
                                 </td>
                                 
                             </tr>
@@ -148,7 +148,7 @@
                                 <td><input type="number" [(ngModel)]="assessment[9]" class="form-control" (keyup)="validateSecuredMarks(assessment)" ></td>
                                 <td><input type="number" [(ngModel)]="assessment[10]" class="form-control" disabled="disabled"></td>
                                 <td>
-                                    <textarea [(ngModel)]="assessment[12]" class="form-control" (keyup)="updateRemarks()" maxlength="248"></textarea>
+                                    <textarea [(ngModel)]="assessment[12]" class="form-control" maxlength="248"></textarea>
                                 </td>
                                 
                             </tr>

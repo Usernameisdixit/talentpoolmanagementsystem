@@ -13,6 +13,7 @@ import { map } from 'rxjs';
 })
 export class UserComponent {
 
+  CREATOR_MODIFIER_USER_ID:any;
 
   userForm:FormGroup;
   userId:any;
@@ -43,6 +44,7 @@ export class UserComponent {
     const storedUserString = localStorage.getItem('user');
     if (storedUserString) {
       const storedUser = JSON.parse(storedUserString);
+      this.CREATOR_MODIFIER_USER_ID = storedUser.storedUser.userId;
       this.userId=storedUser.userId;
       this.username = storedUser.userName;
       this.email = storedUser.email;
@@ -130,7 +132,9 @@ export class UserComponent {
             reverseButtons: true
           }).then((result) => {
             if (result.isConfirmed) {
-              this.userService.saveUser(userData).subscribe((data) => {
+              // added 12/04/2024 createdBy and updatedBy null value issuse fixed...
+              console.log("----->>>>>>>>>>>>>>"+this.CREATOR_MODIFIER_USER_ID+"<<<<<<<<<<<----------");
+              this.userService.saveUser(userData,this.CREATOR_MODIFIER_USER_ID).subscribe((data) => {
               if (this.userId != 0) {
                 Swal.fire('User Updated', 'User Updated Successfully', 'success');
               } else {

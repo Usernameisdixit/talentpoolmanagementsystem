@@ -7,7 +7,7 @@ import { Subject} from 'rxjs';
 })
 export class UserService {
 
-  addUserUrl:string="http://localhost:9999/tpms/addUser";
+  addUserUrl:string="http://localhost:9999/tpms/addUser/";
   viewUserUrl:string="http://localhost:9999/tpms/userList";
   editUserUrl:string="http://localhost:9999/tpms/getUserById/";
   getRoleUrl:string="http://localhost:9999/tpms/getRoleDetails";
@@ -19,8 +19,8 @@ export class UserService {
 
   constructor(private http:HttpClient) { }
 
-  saveUser(user:any){
-    return this.http.post(this.addUserUrl,user);
+  saveUser(user:any, userId:any){
+    return this.http.post(this.addUserUrl+`${userId}`,user);
   }
 
   getUserDetails(){

@@ -456,23 +456,6 @@ updateHours() : void {
    
 }
 
-updateRemarks() : void {
-
-  if(this.remarks.length<=248){
-  this.assessments.forEach(assessment => {
-     assessment.remarks=this.remarks;
-   
-  });
- }
- else{
-  Swal.fire({
-    icon: 'error',
-    title: 'Remarks should be within 248 characters !'
-  });
-  
- }
-
-}
 
 
 resetFields() {
