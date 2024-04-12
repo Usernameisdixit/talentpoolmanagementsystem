@@ -7,7 +7,7 @@ import com.tpms.entity.User;
 
 public interface UserService {
 
-	User saveUser(UserDto user);
+	User saveUser(UserDto user, Integer creatorUserId);
 
 	List<User> getUserDetails();
 

@@ -49,10 +49,10 @@ import com.tpms.service.UserService;
         savedUser.setEmail(userDto.getEmail());
         
 
-        when(userService.saveUser(any(UserDto.class))).thenReturn(savedUser);
+        when(userService.saveUser(any(UserDto.class),userDto.getCreatedBy())).thenReturn(savedUser);
 
         // Calling the controller method
-        ResponseEntity<User> responseEntity = userController.saveUser(userDto);
+        ResponseEntity<User> responseEntity = userController.saveUser(userDto,userDto.getUserId());
 
         // Assertions
         assert responseEntity.getStatusCode().equals(HttpStatus.OK);

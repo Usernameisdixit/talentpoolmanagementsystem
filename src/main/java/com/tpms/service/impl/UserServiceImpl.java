@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService{
 	private PasswordEncoder passwordEncoder;
 	
 	@Override
-	public User saveUser(UserDto user) {
+	public User saveUser(UserDto user, Integer creatorModifierUserId) {
 		
 		
 	
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService{
 		u1.setUserName(user.getUserName());
 		u1.setPhoneNo(user.getPhoneNo());
 		u1.setEmail(user.getEmail());
-//		u1.setCreatedBy(user.getUserId());
+		u1.setCreatedBy(creatorModifierUserId.intValue());
 		System.err.println(user.getUserId());
 		
 		//------- to update User -------
@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserService{
 				 u1.setPassword(existUser.getPassword());
                  u1.setIsFirstLogin(existUser.getIsFirstLogin());
 		         u1.setUserId(user.getUserId());
+		         u1.setUpdatedBy(creatorModifierUserId.intValue());
 		}
 		
 		else {
@@ -79,7 +80,6 @@ public class UserServiceImpl implements UserService{
 		user.setRoleId(user1.getRole().getRoleId());
 		user.setPhoneNo(user1.getPhoneNo());
 		user.setEmail(user1.getEmail());
-		
 		return user;
 	}
 

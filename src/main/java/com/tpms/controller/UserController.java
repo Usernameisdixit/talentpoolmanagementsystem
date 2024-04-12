@@ -37,12 +37,12 @@ public class UserController {
 	@Value("${user.default.password}")
 	private String password;
 	
-	@PostMapping("/addUser")
-	public ResponseEntity<User> saveUser(@RequestBody UserDto user){
+	@PostMapping("/addUser/{userId}")
+	public ResponseEntity<User> saveUser(@RequestBody UserDto user, @PathVariable(name = "userId") Integer creatorUserId){
 		User userDetail=null;
 		try {
 		  user.setPassword(password);
-		   userDetail=userService.saveUser(user);
+		   userDetail=userService.saveUser(user,creatorUserId);
 		  
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
