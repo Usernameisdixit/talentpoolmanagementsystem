@@ -333,24 +333,6 @@ export class AsessmentdetailsComponent implements OnInit {
        });
     }
 }
-  
-  updateAssessments() {
-    Swal.fire({
-      title: 'Do you want to update?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        
-        
-      }
-    });
-  }
-
-
 
   calculateRowspan(assessment: any): number {
     let count = 1;
@@ -454,24 +436,24 @@ updateMarks(): void {
 
 
 updateHours() : void {
-  if(this.hour > 0 && this.hour < 5){
-    this.assessments.forEach(assessment => {
-    assessment.hour=this.hour;
-   });
-  }
-  else{
-
-    Swal.fire({
-      icon: 'error',
-      title: 'Invalid assessment hour !',
-      text: 'Assessment hour should be limited within 1 to 4 hours',
+  if(this.status==='s'){
+    if(this.hour > 0 && this.hour < 5){
+      this.assessments.forEach(assessment => {
+      assessment.hour=this.hour;
     });
-    this.hour='';
-    this.assessments.forEach(assessment => {
+    }else{
+        Swal.fire({
+        icon: 'error',
+        title: 'Invalid assessment hour !',
+        text: 'Assessment hour should be limited within 1 to 4 hours',
+      });
+      this.hour='';
+      this.assessments.forEach(assessment => {
       assessment.hour='';
-     });
+      });
+    }
+   }
    
-  }
 }
 
 updateRemarks() : void {
