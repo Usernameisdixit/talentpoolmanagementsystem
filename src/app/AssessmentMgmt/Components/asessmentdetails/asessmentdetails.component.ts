@@ -4,7 +4,7 @@ import { AssessmentDto } from 'src/app/Model/AssessmentDto';
 import { AssessmentserviceService } from '../../Service/assessmentservice.service';
 import { DatePipe, formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig,BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { Router } from '@angular/router';
 import { DATE } from 'ngx-bootstrap/chronos/units/constants';
 import { DateRange } from 'src/app/Model/DateRange';
@@ -16,6 +16,7 @@ import { DateRange } from 'src/app/Model/DateRange';
 })
 export class AsessmentdetailsComponent implements OnInit {
 
+  @ViewChild('dp') datepicker: BsDatepickerDirective;
   bsConfig: Partial<BsDatepickerConfig>;
   isHidden: boolean = true;
   activityAllocations: any[];
@@ -47,19 +48,13 @@ export class AsessmentdetailsComponent implements OnInit {
   dateRanges: string[] = [];
   selectedDateRange: string = '';
   fieldValuesList: any[][]=[];
-
-
-  @ViewChild('totalmarks') totalmarks: ElementRef;
-  @ViewChild('securedMarks') securedMarks: ElementRef;
-  @ViewChild('hours') hours: ElementRef;
-  @ViewChild('remark') remark: ElementRef;
-  
- 
+   
 
   constructor(private http: HttpClient, private datePipe: DatePipe, private apiService: AssessmentserviceService,private route:Router) {
     this.bsConfig = {
       containerClass: 'theme-dark-blue',
       dateInputFormat: 'DD-MMM-YYYY',
+      showWeekNumbers : false
     };
 
   }
@@ -557,6 +552,10 @@ getTableDataChange1(event : any , details : any[]){
  
  }
 
+
+ openDatepicker(): void {
+  this.datepicker.show(); 
+} 
    
 
 }
