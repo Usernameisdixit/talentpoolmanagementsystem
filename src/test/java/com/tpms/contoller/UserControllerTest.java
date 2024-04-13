@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -48,11 +49,17 @@ import com.tpms.service.UserService;
         savedUser.setPhoneNo(userDto.getPhoneNo());
         savedUser.setEmail(userDto.getEmail());
         
+        
+        
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Authorization", httpHeaders.get("Authorization").get(0));
+        httpHeaders.add("Content-Type", "application/json");
+        
 
-        when(userService.saveUser(any(UserDto.class),userDto.getCreatedBy())).thenReturn(savedUser);
+        when(userService.saveUser(any(UserDto.class),any(HttpHeaders.class))).thenReturn(savedUser);
 
         // Calling the controller method
-        ResponseEntity<User> responseEntity = userController.saveUser(userDto,userDto.getUserId());
+        ResponseEntity<User> responseEntity = userController.saveUser(userDto,httpHeaders);
 
         // Assertions
         assert responseEntity.getStatusCode().equals(HttpStatus.OK);

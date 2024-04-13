@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tpms.dto.RoleDto;
@@ -37,12 +39,12 @@ public class UserController {
 	@Value("${user.default.password}")
 	private String password;
 	
-	@PostMapping("/addUser/{userId}")
-	public ResponseEntity<User> saveUser(@RequestBody UserDto user, @PathVariable(name = "userId") Integer creatorUserId){
+	@PostMapping("/addUser")
+	public ResponseEntity<User> saveUser(@RequestBody UserDto user, @RequestHeader HttpHeaders httpHeaders){
 		User userDetail=null;
 		try {
 		  user.setPassword(password);
-		   userDetail=userService.saveUser(user,creatorUserId);
+		   userDetail=userService.saveUser(user,httpHeaders);
 		  
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
