@@ -19,8 +19,8 @@ export class UserService {
 
   constructor(private http:HttpClient) { }
 
-  saveUser(user:any, userId:any){
-    return this.http.post(this.addUserUrl+`${userId}`,user);
+  saveUser(user:any){
+    return this.http.post(this.addUserUrl,user);
   }
 
   getUserDetails(){
