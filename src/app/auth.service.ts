@@ -4,20 +4,19 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
+  userLogIn: boolean;
     
 
   constructor() { }
-
   // Method to set authentication status in session storage
-  isLoggedIn(){
-    // debugger;
-    let token=localStorage.getItem("token");
-    if(token==undefined || token==='' || token==null){
-      return false;
-    }else{
-      return true;
-    }
+  isLoggedIn(token:any){
+    debugger;
+    if(token==undefined || token==='' || token==null)
+      this.userLogIn=false;
+    else
+      this.userLogIn=true;      
   }
+  
 
   getUsername(): string | null {
     return localStorage.getItem('userName');

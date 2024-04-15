@@ -81,6 +81,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { ReportAttendanceComponent } from './Reports/AttendanceNewReportComponent/report-attendance/report-attendance.component';
 import { PlatformViewComponent } from './ResourceMgmt/Components/platform-master/platform-view/platform-view.component';
 import { PlatformComponent } from './ResourceMgmt/Components/platform-master/platform/platform.component';
+import { HideIdInterceptor } from './HideIdInterceptor.service';
 
 
 defineLocale('en-gb', enGbLocale); //
@@ -163,7 +164,8 @@ defineLocale('en-gb', enGbLocale); //
     MatNativeDateModule
     
   ],
-  providers: [DatePipe,MatSnackBar,{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
+  providers: [DatePipe,MatSnackBar,{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: HideIdInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 

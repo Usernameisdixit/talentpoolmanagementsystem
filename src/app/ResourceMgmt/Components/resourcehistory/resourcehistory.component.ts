@@ -18,7 +18,7 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
   })
   export class ResourcehistoryComponent implements OnInit  {
 
-
+    accordionTableData: any[][] = [];
     delmsg:string="";
     c:Talent[];
     resources: ResourceHistory[] = [];
@@ -26,14 +26,21 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
     filteredResources: ResourceHistory[] = [];
     searchQuery: string = '';
     dashboardDate: string;
+    currentPage: number = 1;
+  itemsPerPage: number = 10;
+  resource:ResourceHistory[];
 
   constructor(private service:ContactService, private router:Router,private datePipe: DatePipe,
     private loginService:LoginService){}
 
 
     ngOnInit(): void {
+      debugger;
       this.getResourceHistoryWithFileName();
       this.filteredResources = this.resources;
+      this.resourceHisDateWise.forEach(() => {
+        this.accordionTableData.push([]); // Initialize an empty array for each accordion
+      });
     }
   
 
@@ -67,8 +74,9 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
     
 
     getResourceHistoryWithFileName(){
-
+      debugger;
         this.service.getResourceDetailsWithFileName().subscribe((data: ResourceHistory[]) => {
+          debugger;
           this.resources = data;
           console.log(this.resources);
           this.groupAssessmentsByDateRange();
@@ -151,7 +159,7 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
 
 
     groupAssessmentsByDateRange(): void {
-  debugger;
+      debugger;
       const groupedByDateRange = {};
 
       if(localStorage.getItem('activeLink')==='Dashboard'){
@@ -191,10 +199,41 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
       }
     
       this.resourceHisDateWise.forEach(dateRange => {
+        debugger;
         dateRange.filteredResources = [...dateRange.resources];
       });
     }
  
+
+    // for pagination
+ indexNumber : number = 0;
+ page : number = 1;
+ tableSize : number = 10;
+ count : number = 0;
+
+ updateTableData(record: any[], accordionIndex: number) {
+  this.accordionTableData[accordionIndex] = record; // Update table data for the specific accordion
+}
+
+//pagination functionality
+getTableDataChange(event : any,record:any[],accordionIndex: number){
+ debugger;
+ this.page = event;
+ this.indexNumber = (this.page - 1) * this.tableSize;
+ 
+}
+
+
+// getTableDataChange(event: any, record: any[], accordionIndex: number) {
+//   this.page[accordionIndex] = event;
+//   this.count[accordionIndex] = record.length;
+//   this.indexNumber = (this.page[accordionIndex] - 1) * this.tableSize;
+//   //this.resources[accordionIndex] = record.slice(this.indexNumber, this.indexNumber + this.tableSize);
+
+//   // Update table data for the specific accordion
+//   this.updateTableData(record, accordionIndex);
+// }
+    
 
 
   }
