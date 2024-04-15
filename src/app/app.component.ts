@@ -13,9 +13,10 @@ import { LoaderserviceService } from './loaderservice.service';
 export class AppComponent implements OnInit {
   title = 'tpms';
  
-  constructor(private idleService: IdleService,private router: Router, public loaderService: LoaderserviceService) {}
+  constructor(private idleService: IdleService,private router: Router, private authService:AuthService,public loaderService: LoaderserviceService) {}
   
     ngOnInit(): void {
+      this.authService.isLoggedIn(localStorage.getItem('token'));
       this.idleService.userInactive.subscribe(() => {
         // this.router.navigate(['login']);
         // localStorage.clear();
