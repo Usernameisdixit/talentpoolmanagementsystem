@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component,ViewChild } from '@angular/core';
 import { AttendanceNewService } from '../../Service/attendance-new.service';
 import Swal from 'sweetalert2';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsLocaleService,BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { enGbLocale } from 'ngx-bootstrap/locale';
 import { LoginService } from 'src/app/UserMgmt/Service/login.service';
@@ -13,11 +13,13 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
 })
 export class AttendanceNewComponent {
 
+  @ViewChild('dp') datepicker: BsDatepickerDirective;
   bsConfig: Partial<BsDatepickerConfig>;
   selectActivity: any;
+  dashboard: boolean;
   constructor(private attendanceNewService: AttendanceNewService, private localeService: BsLocaleService,
     private loginService:LoginService) {
-    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
+    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY',showWeekNumbers : false });
     this.localeService.use('en-gb');
   }
 
@@ -32,13 +34,15 @@ export class AttendanceNewComponent {
   uncheckCheckboxStatus: boolean[] = [];
 
   ngOnInit(): void {
+    debugger
     this.selectedDate = new Date();
     this.maxDate = new Date();
     this.uncheckCheckbox1 = false;
     this.uncheckCheckboxStatus = Array<boolean>(this.pageSizes.length).fill(false);
     this.getActivity();
     this.selectActivity = this.loginService.selectedActivityName;
-    if(localStorage.getItem('activeLink')==='Dashboard'){
+    this.dashboard=localStorage.getItem('activeLink')==='Dashboard';
+    if(this.dashboard){
   if (this.selectActivity && this.loginService.selectedDate) {
     this.selectedActivity=this.selectActivity;
     this.selectedDate=new Date(this.loginService.selectedDate);
@@ -94,6 +98,10 @@ export class AttendanceNewComponent {
 
 
   getActivity() {
+    debugger
+    if(this.loginService.selectedDate && (localStorage.getItem('activeLink')==='Dashboard')){
+      this.selectedDate=new Date(this.loginService.selectedDate);
+    }
     this.attendanceNewService.fetchActivities(this.selectedDate?.toLocaleString()).subscribe((data) => {
       this.activities = data.map(activity => ({ id: activity.activityId, name: activity.activityName }));
     }, error => {
@@ -102,6 +110,7 @@ export class AttendanceNewComponent {
   }
 
   getDataByDateActivity() {
+    debugger;
     if (this.selectedActivity != 0 && this.selectedDate != null) {
       this.attendanceNewService.getDetailsByActivity(this.selectedActivity, this.selectedDate?.toLocaleString()).subscribe(
         (data: any) => {
@@ -209,5 +218,9 @@ getTableDataChange(event : any , details : any[]){
 
   this.attendanceDetails=details;
 }
+
+openDatepicker(): void {
+  this.datepicker.show(); 
+} 
 
 }

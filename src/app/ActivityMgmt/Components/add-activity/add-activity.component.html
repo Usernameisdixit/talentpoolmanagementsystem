@@ -1,61 +1,49 @@
-<div>
+<div class="left-align">
+  <div class="submit-form" >
+    <form #activityForm="ngForm">
+    <div class="col-md-6">
 
-
-  <div class="submit-form" *ngIf="!submitted">
-    <div class="form-group">
-      <label for="title">ActivityRef Number:</label>
-      <input
-        type="text"
-        class="form-control"
-        id="title"
-        required
-        [(ngModel)]="activity.activityRefNo"
-        name="title"
-      />
+      <div class="form-group">
+        <label for="description">Activity Name:</label>
+        <div class="input-group">
+            <input id="description" class="form-control" type="text" matInput [formControl]="myControl"
+                [matAutocomplete]="auto"  (blur)="click($event)"  />
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                  {{option.name}}
+                </mat-option>
+            </mat-autocomplete>
+        </div>
     </div>
-
+<!-- 
     <div class="form-group">
       <label for="description">Activity Name:</label>
-      <input
-        class="form-control"
-        id="description"
-        required
-        [(ngModel)]="activity.activityName"
-        name="description"
-      />
-    </div>
+      <div class="input-group">
+      <input class="form-control" id="description" autocomplete="off" required [(ngModel)]="activity.activityName" name="description" />
+        <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+          <mat-option *ngFor="let option of filteredOptions  | async" [value]="option">
+            {{ option }}
+          </mat-option>
+        </mat-autocomplete>
+        </div>
+    </div> -->
 
-    <div class="form-group">
+    <div class="form-group" >
       <label for="description1">Activity Description:</label>
-      <input
-        class="form-control"
-        id="description1"
-        required
-        [(ngModel)]="activity.description"
-        name="description1"
-      />
+      <input class="form-control" id="description1" autocomplete="off" required [(ngModel)]="activity.description" name="description1" />
     </div>
 
     <div class="form-group">
       <label for="description2">Activity ResponsePerson1:</label>
-      <input
-        class="form-control"
-        id="description2"
-        required
-        [(ngModel)]="activity.responsPerson1"
-        name="description2"
-      />
+      <input class="form-control" id="description2" autocomplete="off" required [(ngModel)]="activity.responsPerson1"
+        name="description2" />
     </div>
 
     <div class="form-group">
       <label for="description3">Activity ResponsePerson2:</label>
-      <input
-        class="form-control"
-        id="description3"
-        required
-        [(ngModel)]="activity.responsPerson2"
-        name="description3"
-      />
+      <input class="form-control" id="description3"  autocomplete="off" required [(ngModel)]="activity.responsPerson2"
+        name="description3" />
     </div>
 
     <div class="form-group">
@@ -64,10 +52,10 @@
     </div>
 
     <button (click)="saveTutorial()" class="btn btn-success">Submit</button>
-  </div>
+    &nbsp;&nbsp;
 
-  <div *ngIf="submitted">
-    <h4>Activity was submitted successfully!</h4>
-    <button class="btn btn-success" (click)="newTutorial()">Add</button>
+    <button class="btn btn-danger" type='reset'> Reset </button>
+    </div>
+    </form>
   </div>
 </div>

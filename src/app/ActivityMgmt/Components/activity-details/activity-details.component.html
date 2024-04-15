@@ -1,17 +1,11 @@
 <div>
-
-
   <div class="container">
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-6">
         <h4>Edit Activity</h4>
         <div class="form-group">
-          <label for="activityRefNo">Activity Reference No:</label>
-          <input type="text" class="form-control" id="activityRefNo" [(ngModel)]="currentActivity.activityRefNo" name="activityRefNo">
-        </div>
-        <div class="form-group">
           <label for="activityName">Activity Name:</label>
-          <input type="text" class="form-control" id="activityName" [(ngModel)]="currentActivity.activityName" name="activityName">
+          <input type="text" class="form-control" autocomplete="off" id="activityName" [(ngModel)]="currentActivity.activityName" name="activityName">
         </div>
         <div class="form-group">
           <label for="ActivityDescription">Activity Description:</label>
@@ -19,14 +13,14 @@
         </div>
         <div class="form-group">
           <label for="ActivityResponsPerson1">ActivityResponsPerson1:</label>
-          <input type="text" class="form-control" id="ActivityResponsPerson1" [(ngModel)]="currentActivity.responsPerson1" name="ActivityResponsPerson1">
+          <input type="text" class="form-control" id="ActivityResponsPerson1" [(ngModel)]="currentActivity.responsPerson1" name="ActivityResponsPerson1" disabled>
         </div>
         <div class="form-group">
           <label for="ActivityResponsPerson2">ActivityResponsPerson2:</label>
           <input type="text" class="form-control" id="ActivityResponsPerson2" [(ngModel)]="currentActivity.responsPerson2" name="ActivityResponsPerson2">
         </div>
         <!-- Add more input fields for other activity properties -->
-        <button class="btn btn-success" (click)="updateActivity()">Save Changes</button>
+        <button class="btn btn-success" (click)="updateActivity()">Update</button>
         <div *ngIf="message" class="mt-3">{{ message }}</div>
       </div>
     </div>

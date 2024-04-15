@@ -9,15 +9,17 @@ export class Resource {
     allocationDate!: string;
     phoneNo!: string;
     email!: string;
+    designation!: string;
     createdBy!: number;
     createdOn!: string;
     updatedBy!: number;
     updatedOn!: string;
     status!: string;
     deletedFlag!: boolean;
+    
     isAllocatedActivity!: boolean;
     activityAlloc: any[];
     selected: any;
     platformId: any;
-    designation!: string;
+    activityName!: string;
 }

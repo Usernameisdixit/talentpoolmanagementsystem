@@ -7,7 +7,6 @@
 
 export class Activity {
   activityId?: any;
-  activityRefNo?:string;
   activityName?: string;
   description?: string;
   responsPerson1?:string;

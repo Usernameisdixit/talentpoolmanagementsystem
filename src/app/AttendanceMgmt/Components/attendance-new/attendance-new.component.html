@@ -12,8 +12,8 @@
                 <div class="input-group">
                     <input id="date" class="form-control" type="text"
                         (ngModelChange)="onDateChange($event);getActivity();" bsDatepicker [(ngModel)]="selectedDate"
-                        [maxDate]="maxDate" [bsConfig]="bsConfig" (change)="getDataByDateActivity()" />
-                    <span class="input-group-text"><i class="material-icons">date_range</i></span>
+                        [maxDate]="maxDate" [bsConfig]="bsConfig" (change)="getDataByDateActivity()" #dp="bsDatepicker"/>
+                        <span class="input-group-text" (click)="openDatepicker()"><i class="material-icons">date_range</i></span>
                 </div>
             </div>
         </div>
@@ -99,7 +99,7 @@
             <input type="hidden" value="{{isPresents}}">
             <div class="row justify-content-center mt-2" *ngIf="selectedActivity !== 0 && isPresents">
                 <div class="col-md-3 text-center">
-                    <button type="button" class="btn btn-success" (click)="submitForm()">
+                    <button type="button" class="btn btn-success" (click)="submitForm()" *ngIf="!dashboard">
                         {{ status === 's' ? 'Save Attendance' : 'Update Attendance' }}
                     </button>
                 </div>

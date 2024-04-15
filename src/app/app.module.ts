@@ -82,6 +82,8 @@ import { ReportAttendanceComponent } from './Reports/AttendanceNewReportComponen
 import { LoaderComponent } from './loader/loader.component';
 import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
 
+import { PlatformViewComponent } from './ResourceMgmt/Components/platform-master/platform-view/platform-view.component';
+import { PlatformComponent } from './ResourceMgmt/Components/platform-master/platform/platform.component';
 
 
 defineLocale('en-gb', enGbLocale); //
@@ -129,6 +131,8 @@ defineLocale('en-gb', enGbLocale); //
     ReportAttendanceComponent,
     LoaderComponent,
    
+    PlatformViewComponent,
+    PlatformComponent
 
   ],
   imports: [

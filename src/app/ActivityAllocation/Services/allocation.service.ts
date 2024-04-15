@@ -55,8 +55,8 @@ export class AllocationService {
     return this.http.get<any[]>(`${this.apiUrl}/resources/exclude-related`);
   }
 
-  saveBulkAllocation(markedResources: any[], allocData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/saveBulkAllocation`, {markedResources: markedResources, allocData: allocData});
+  saveBulkAllocation(markedResources: any[], allocData: any): Observable<any[]> {
+    return this.http.post<any[]>(`${this.apiUrl}/saveBulkAllocation`, {markedResources: markedResources, allocData: allocData});
   }
 
   getPlatformIdByName(platformName: string): Observable<number> {
