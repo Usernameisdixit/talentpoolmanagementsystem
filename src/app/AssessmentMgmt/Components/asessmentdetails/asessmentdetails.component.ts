@@ -538,7 +538,6 @@ getMonthIndex(month: string): number {
  count : number = 0;
 
 getTableDataChange(event : any , details : any[]){
-  alert(event);
  this.page = event;
  this.indexNumber = (this.page - 1) * this.tableSize;
  this.assessments=details;
