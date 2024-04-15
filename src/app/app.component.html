@@ -1,5 +1,8 @@
  <app-nav-bar></app-nav-bar>
-
+ <ngx-ui-loader></ngx-ui-loader>
 <!-- <app-file-upload></app-file-upload> -->
    <router-outlet></router-outlet> 
+   <div *ngIf="(loaderService.isLoading$ | async)" class="spinner-overlay">
+      <app-loader></app-loader>
+    </div>
    
