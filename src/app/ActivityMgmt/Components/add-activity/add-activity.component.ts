@@ -76,7 +76,7 @@ export class AddActivityComponent {
       }).then((result) => {
         if (result.isConfirmed) {
           this.activityService.create(data).subscribe((data) => {
-            Swal.fire('Activity Save', 'activity Saved Successfully', 'success'); 
+            Swal.fire('Activity Save', 'Activity Saved Successfully', 'success'); 
           this.router.navigate(['/activities']);
         },
         (error) => {

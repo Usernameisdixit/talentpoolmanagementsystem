@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 })
 export class ActivityDetailsComponent implements OnInit {
   @Input() viewMode = false;
+  activityField=true;
 
   // @Input() currentTutorial: Tutorial = {
   //   title: '',
@@ -42,13 +43,15 @@ export class ActivityDetailsComponent implements OnInit {
       this.message = '';
       this.getActivity(this.route.snapshot.params['id']);
     }
+    
   }
 
   getActivity(id: string): void {
     this.activityService.get(id).subscribe({
       next: (data) => {
         this.currentActivity = data;
-        console.log(data);
+        this.checkActivity();
+        // console.log(data);
       },
       error: (e) => console.error(e)
     });
@@ -79,7 +82,18 @@ export class ActivityDetailsComponent implements OnInit {
   
 
   updateActivity(): void {
-
+    if (this.currentActivity.activityName=='' || this.currentActivity.activityName==null) {
+      Swal.fire("Please Enter The Activity Name!");
+    }
+    else if (this.currentActivity.description=='') {
+      Swal.fire("Please Enter The Description!");
+    }
+    else if (this.currentActivity.responsPerson1=='') {
+      Swal.fire("Please Enter The Respons Person1!");
+    }
+    else if (this.currentActivity.responsPerson2=='') {
+      Swal.fire("Please Enter The Respons Person2!");
+    }else{ 
     Swal.fire({
       title: 'Do you want to Update?',
       icon: 'warning',
@@ -99,7 +113,7 @@ export class ActivityDetailsComponent implements OnInit {
         
       } 
     });
-
+  }
 
 
 
@@ -118,10 +132,22 @@ export class ActivityDetailsComponent implements OnInit {
   deleteActivity(): void {
     this.activityService.delete(this.currentActivity.activityId).subscribe({
       next: (res) => {
-        console.log(res);
+        // console.log(res);
         this.router.navigate(['/tutorials']);
       },
       error: (e) => console.error(e)
     });
   }
+
+  checkActivity(){
+    debugger;
+    this.activityService.activityExist(this.currentActivity.activityId).subscribe({
+      next: (data) => {
+        console.log(data);
+        
+         this.activityField = data;   
+      },
+      error: (e) => console.error(e)
+    });
+}
 }
