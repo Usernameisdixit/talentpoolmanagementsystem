@@ -36,17 +36,29 @@
         
         <div class="row">
           <div  class="col-md-5">
-          <label for="fromDate">From Date:<span class="required">*</span></label>
+          <mat-label style="font-size: 16px;" for="fromDate">From Date:</mat-label>
           <div class="input-group">
-              <input type="text" id="fromDate" [(ngModel)]="fromDate" name="fromDate" class="bold-black" bsDatepicker [bsConfig]="bsConfig" (ngModelChange)="sendActivityPlanneddata()">
-              <span class="input-group-text"><i class="material-icons">date_range</i></span>
+              <!-- <input type="text" id="fromDate" [(ngModel)]="fromDate" name="fromDate" class="bold-black" bsDatepicker [bsConfig]="bsConfig" (ngModelChange)="sendActivityPlanneddata()">
+              <span class="input-group-text"><i class="material-icons">date_range</i></span> -->
+
+              <mat-form-field>
+                <input matInput type="text"  bsDatepicker [(ngModel)]="fromDate"
+                            [maxDate]="maxDate" [bsConfig]="bsConfig"  (ngModelChange)="sendActivityPlanneddata()">
+                <mat-icon matSuffix>date_range</mat-icon>
+              </mat-form-field>
           </div>
           </div>
           <div  class="col-md-5">
-          <label for="toDate">To Date:<span class="required">*</span></label>
+          <mat-label style="font-size: 16px;" for="toDate">To Date:</mat-label>
           <div class="input-group">
-              <input type="text" id="toDate" [(ngModel)]="toDate" name="fromDate" class="bold-black" bsDatepicker [bsConfig]="bsConfig" (ngModelChange)="sendActivityPlanneddata()">
-              <span class="input-group-text"><i class="material-icons">date_range</i></span>
+              <!-- <input type="text" id="toDate" [(ngModel)]="toDate" name="fromDate" class="bold-black" bsDatepicker [bsConfig]="bsConfig" (ngModelChange)="sendActivityPlanneddata()">
+              <span class="input-group-text"><i class="material-icons">date_range</i></span> -->
+
+              <mat-form-field>
+                <input matInput type="text"  bsDatepicker [(ngModel)]="toDate"
+                            [maxDate]="maxDate" [bsConfig]="bsConfig"  (ngModelChange)="sendActivityPlanneddata()">
+                <mat-icon matSuffix>date_range</mat-icon>
+              </mat-form-field>
           </div>
         </div>
         <div  class="col-md-2">
@@ -128,11 +140,17 @@
         <mat-card-title>Assessment</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <p>Assessment Date :<select id="assessmentDate" class="form-control" [(ngModel)]="assessmentDate" >
-          <option *ngFor="let date of assessmentDateArr" [ngValue]="date">
-            {{ date | date:'dd-MMM-yyyy' }}
-          </option>
-        </select></p>
+        <!-- <mat-label>Assessment Date:</mat-label> -->
+        <label style="font-size: 16px;">Assessment Date:</label>
+        <br>
+        <mat-form-field appearance="fill">
+          <mat-select [(ngModel)]="assessmentDate" id="assessmentDate">
+            <mat-option *ngFor="let date of assessmentDateArr" [value]="date">
+              {{ date | date:'dd-MMM-yyyy' }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        
       </mat-card-content>
       <mat-card-actions>
         <button mat-button color="primary" (click)="redirectToViewAssessment(assessmentDate)">View Details</button>

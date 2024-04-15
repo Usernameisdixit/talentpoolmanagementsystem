@@ -7,12 +7,18 @@ import { AuthService } from '../auth.service';
 
 
 export const authGuard: CanActivateFn = (route, state) => {
+  debugger;
   const authService = inject(AuthService);
   const router = inject(Router);
-  if(authService.isLoggedIn())
-  {    
+
+  // Check if the user is logged in based on the token
+  if (authService.userLogIn) {
+    console.log("Inside if condition authService+++++",authService.userLogIn);
     return true;
-  }
-  router.navigate(['login']);
-  return false;
+  } 
+  console.log("outside if condition authService+++++",authService.userLogIn);
+    // Navigate to login page
+    router.navigate(['login']);
+    return false;
+  
 };

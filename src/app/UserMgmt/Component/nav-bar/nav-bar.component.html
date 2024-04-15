@@ -7,14 +7,14 @@
   </button>
   <div class="spacer"></div>
   
-  <div *ngIf="authService.isLoggedIn()" class="full-name">
+  <div *ngIf="authService.userLogIn" class="full-name">
     <div>Welcome, {{fullName}}</div>
   </div>
   <div style="font-size: 12px;">
        <div class="mt-5"> {{formattedDate}}</div>
        
       </div>
-  <div *ngIf="authService.isLoggedIn()">
+  <div *ngIf="authService.userLogIn">
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item>{{userName}}</button>
       <button mat-menu-item routerLink="login" (click)="logout()">Logout</button>

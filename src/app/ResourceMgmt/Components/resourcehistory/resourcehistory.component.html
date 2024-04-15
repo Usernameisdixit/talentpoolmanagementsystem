@@ -16,7 +16,7 @@
 
   <!-- Accordion -->
   <div class="accordion" id="accordionExample">
-    <div *ngFor="let dateRange of resourceHisDateWise" class="accordion-item">
+    <div *ngFor="let dateRange of resourceHisDateWise; let accordionIndex = index" class="accordion-item">
       <div class="accordion-header d-flex justify-content-between align-items-center" [id]="'heading' + dateRange.toDate">
         <button class="accordion-button" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse' + dateRange.toDate" aria-expanded="true" [attr.aria-controls]="'collapse' + dateRange.toDate">
           <h3><b>Resource  For {{ dateRange.toDate | date:'dd-MMM-yyyy' }}</b></h3>
@@ -47,8 +47,15 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let record of dateRange.filteredResources; let i = index" class="text-align-center">
-                  <td>{{ i + 1 }}</td>
+                
+
+                <tr *ngFor="let record of dateRange.filteredResources | paginate :{
+                  itemsPerPage : tableSize,
+                  currentPage : page ,
+                  totalItems: count
+                  }; let i = index">
+                  <!-- <td>{{ i + 1 }}</td> -->
+                  <td >{{ (page - 1) * tableSize + i + 1 }}</td> 
                   <td>{{ record[2] }}</td>
                   <td>{{ record[1] }}</td>
                   <td>{{ record[3] }}</td>
@@ -61,6 +68,9 @@
                 </tr>
               </tbody>
             </table>
+            <div class="d-flex justify-content-end mt-2"  [attr.id]="'pagination' + accordionIndex">
+              <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)= "getTableDataChange($event,dateRange.filteredResources,accordionIndex)"></pagination-controls>
+            </div>
           </div>
         </div>
       </div>
