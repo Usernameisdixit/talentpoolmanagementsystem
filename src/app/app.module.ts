@@ -79,8 +79,12 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ReportAttendanceComponent } from './Reports/AttendanceNewReportComponent/report-attendance/report-attendance.component';
+import { LoaderComponent } from './loader/loader.component';
+import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
+
 import { PlatformViewComponent } from './ResourceMgmt/Components/platform-master/platform-view/platform-view.component';
 import { PlatformComponent } from './ResourceMgmt/Components/platform-master/platform/platform.component';
+import { HideIdInterceptor } from './HideIdInterceptor.service';
 
 
 defineLocale('en-gb', enGbLocale); //
@@ -126,6 +130,8 @@ defineLocale('en-gb', enGbLocale); //
     TimePipe,
     HeaderComponent,
     ReportAttendanceComponent,
+    LoaderComponent,
+   
     PlatformViewComponent,
     PlatformComponent
 
@@ -160,10 +166,15 @@ defineLocale('en-gb', enGbLocale); //
     MatAutocompleteModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    NgxUiLoaderModule,
+    NgxUiLoaderHttpModule.forRoot({
+      showForeground: true,
+    }),
     
   ],
-  providers: [DatePipe,MatSnackBar,{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
+  providers: [DatePipe,MatSnackBar,{ provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: HideIdInterceptor, multi: true }],
   bootstrap: [AppComponent]
 })
 

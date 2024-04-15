@@ -50,7 +50,8 @@ export class DashboardComponent  implements OnInit{
       debugger;
       console.log("API Response:", response);
       this.allocationDate = response.map(date => this.datePipe.transform(date, 'dd-MMM-yyyy'));
-      this.alDate=this.allocationDate[0];
+      this.alDate=this.allocationDate[this.allocationDate.length-1];
+      //this.alDate.sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
       this.sendDate(this.alDate);
     });
 

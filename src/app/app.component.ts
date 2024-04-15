@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { IdleService } from './UserMgmt/Service/IdleService';
 import { Router } from '@angular/router';
+import { AuthService } from './auth.service';
+
+import { LoaderserviceService } from './loaderservice.service';
 
 @Component({
   selector: 'app-root',
@@ -9,12 +12,13 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   title = 'tpms';
-  constructor(private idleService: IdleService,private router: Router) {}
+ 
+  constructor(private idleService: IdleService,private router: Router, public loaderService: LoaderserviceService) {}
   
     ngOnInit(): void {
       this.idleService.userInactive.subscribe(() => {
-        this.router.navigate(['login']);
-        localStorage.clear();
+        // this.router.navigate(['login']);
+        // localStorage.clear();
       });
     }
 }

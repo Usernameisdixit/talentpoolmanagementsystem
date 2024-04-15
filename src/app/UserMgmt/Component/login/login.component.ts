@@ -50,14 +50,14 @@ export class LoginComponent implements OnInit {
     localStorage.setItem("userFullName",userFullName);          
     localStorage.setItem("user", JSON.stringify(user));
     const receivedToken=localStorage.getItem('token'); 
-        if(receivedToken){
+        if(typeof receivedToken !== 'undefined' && receivedToken){
               if(status==='firstlogin'){
                 this.router.navigate(['restpassword',email]);
               }
             else{
               if (status === 'success') {
                 this.router.navigate(['dashboard']);
-                this.authService.isLoggedIn();
+                this.authService.isLoggedIn(jwtToken);
                 this.loginService.getMessage("user logged in");
               } else {
                 this.errorMessage = 'Invalid credentials. Please try again.';
@@ -104,7 +104,6 @@ export class LoginComponent implements OnInit {
 togglePasswordVisibility() {
 this.hidePassword = !this.hidePassword;
 }
-
 
 
 }

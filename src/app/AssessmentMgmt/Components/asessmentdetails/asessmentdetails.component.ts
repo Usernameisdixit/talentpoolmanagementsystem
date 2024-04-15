@@ -242,9 +242,9 @@ export class AsessmentdetailsComponent implements OnInit {
         return;
     }
     
-   if(this.assessmentDate <= fromDate){
+   if(this.assessmentDate < toDate){
        errorFlag = true;
-       Swal.fire('Warning', 'Assessment date should not be less than the from date ', 'warning');
+       Swal.fire('Warning', "Assessment date should be on or after of the assessment session's 'to date' ", 'warning');
        this.assessmentDate=null;
        return ;
     }
@@ -451,6 +451,12 @@ updateHours() : void {
    
 }
 
+updateRemarks() : void {
+  this.assessments.forEach(assessment => {
+    assessment.remarks=this.remarks;
+  });
+}
+
 
 
 resetFields() {
@@ -532,11 +538,11 @@ getMonthIndex(month: string): number {
  count : number = 0;
 
 getTableDataChange(event : any , details : any[]){
-
+  alert(event);
  this.page = event;
  this.indexNumber = (this.page - 1) * this.tableSize;
  this.assessments=details;
-
+ 
 }
 
 indexNumber1 : number = 0;
@@ -544,12 +550,11 @@ indexNumber1 : number = 0;
  tableSize1 : number = 10;
  count1 : number = 0;
 getTableDataChange1(event : any , details : any[]){
-
   this.page1 = event;
   this.indexNumber1 = (this.page1 - 1) * this.tableSize1;
  
   this.assessmentsExist=details;
- 
+  
  }
 
 
