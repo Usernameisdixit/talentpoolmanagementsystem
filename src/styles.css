@@ -40,6 +40,15 @@ td {
   padding: 8px;
 }
 
+/* To override the bs date picker  */
+.bs-datepicker-body table th {
+  background-color: #06158a;
+  color: #ffffff;
+  font-weight: 400;
+  text-align: center;
+}
+
+
 /* Header row styles */
 th {
   background-color: #0a4bce;
