@@ -5,7 +5,7 @@
         <h4>Edit Activity</h4>
         <div class="form-group">
           <label for="activityName">Activity Name:</label>
-          <input type="text" class="form-control" autocomplete="off" id="activityName" [(ngModel)]="currentActivity.activityName" name="activityName">
+          <input type="text" class="form-control" autocomplete="off" id="activityName" [(ngModel)]="currentActivity.activityName" name="activityName" [disabled]="activityField">
         </div>
         <div class="form-group">
           <label for="ActivityDescription">Activity Description:</label>

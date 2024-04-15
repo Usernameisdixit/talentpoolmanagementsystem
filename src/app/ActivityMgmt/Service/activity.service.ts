@@ -12,6 +12,7 @@ const baseUrl3='http://localhost:9999/tpms/delete/activity';
 
 const baseUrl4='http://localhost:9999/tpms/update-deleted-flag';
 const dataActivityName='http://localhost:9999/tpms/dataActivityName';
+const activityCheck='http://localhost:9999/tpms/activityCheck';
 
 
 
@@ -63,6 +64,10 @@ export class ActivityService {
   getData(activityName: string) {
     return this.http.get<string[]>(`${dataActivityName}?activityName=${activityName}`);
     // return this.http.get('http://localhost:9999/tpms/dataByACtivityName/' + activityName);
+  }
+
+  activityExist(id :any){
+    return this.http.get<boolean>(`${activityCheck}?activityId=${id}`);
   }
 
 }
