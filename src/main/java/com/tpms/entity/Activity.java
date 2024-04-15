@@ -22,7 +22,6 @@ public class Activity {
     
     private String activityName;
     
-    private String activityRefNo; // manually generated activityRefNo
     
     private String description;
     

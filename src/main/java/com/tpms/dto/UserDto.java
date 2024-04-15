@@ -22,7 +22,7 @@ public class UserDto {
 	    private Boolean isFirstLogin;
 
 	    private Integer createdBy;
-
+	    
 	    private Integer updatedBy;
 
 	    private Boolean deletedFlag;

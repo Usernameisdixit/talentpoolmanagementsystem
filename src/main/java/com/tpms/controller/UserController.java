@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tpms.dto.RoleDto;
@@ -38,11 +40,11 @@ public class UserController {
 	private String password;
 	
 	@PostMapping("/addUser")
-	public ResponseEntity<User> saveUser(@RequestBody UserDto user){
+	public ResponseEntity<User> saveUser(@RequestBody UserDto user, @RequestHeader HttpHeaders httpHeaders){
 		User userDetail=null;
 		try {
 		  user.setPassword(password);
-		   userDetail=userService.saveUser(user);
+		   userDetail=userService.saveUser(user,httpHeaders);
 		  
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -53,31 +55,36 @@ public class UserController {
 	
 	@GetMapping("/getRoleDetails")
 	public ResponseEntity<List<RoleDto>> getRoleId(){
-		 List<RoleDto> roleDetails=roleService.getRoleList();
-		
+		List<RoleDto> roleDetails=null;
+		try {
+		  roleDetails=roleService.getRoleList();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 		return ResponseEntity.ok().body(roleDetails);
 	}
 	
 	@GetMapping("/userList")
-	public ResponseEntity<List<User>> getStudent(){
+	public ResponseEntity<List<User>> getUserList(){
 		
 		List<User> userList = userService.getUserDetails();
 		return ResponseEntity.ok().body(userList);
 	}
 	
 	@GetMapping("/getUserById/{id}")
-	public ResponseEntity<UserDto> getStudentById(@PathVariable(name = "id") Integer userId){
+	public ResponseEntity<UserDto> getUserById(@PathVariable(name = "id") Integer userId){
 		UserDto user=userService.getUserById(userId);
 		return ResponseEntity.ok().body(user);
 	}
 	
 	@DeleteMapping("/deleteUser/{userId}/{deletedFlag}")
-	public ResponseEntity<Map<String,Object>> deleteStudent(@PathVariable Integer userId,@PathVariable Boolean deletedFlag){
+	public ResponseEntity<Map<String,Object>> deleteUser(@PathVariable Integer userId,@PathVariable Boolean deletedFlag){
 
 		userService.deleteUserById(userId,deletedFlag);
 		Map<String, Object> response = new HashMap<>();
 		response.put("Status" , 200);
-		response.put("Deleted", "This student data is deleted.");
+		response.put("Deleted", "This user data is deleted.");
 		return ResponseEntity.ok().body(response);
 	}
 	

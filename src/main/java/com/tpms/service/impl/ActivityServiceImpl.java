@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -243,8 +244,8 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 
-	public List<Activity> findAll() {
-		return activityRepository.findAll();
+	public List<Activity> findAllActive() {
+		return activityRepository.findByDeletedFlagFalse();
 	}
 
 	
@@ -279,19 +280,10 @@ public class ActivityServiceImpl implements ActivityService {
 
 
 	@Override
-	public void saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData) {
+	public List<Map<String,String>> saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData) {
 		
-		List<ActivityAllocationDetails> allDetails = activityAllocRepo.findByActivityAllocateId(allocData.getActivityAllocateId());
+		List<Integer> resourceIdList = new ArrayList<>();
 		
-		ActivityAllocation activityAllocation = new ActivityAllocation();
-		activityAllocation.setActivityAllocateId(allocData.getActivityAllocateId());
-		activityAllocation.setActivityFromDate(allocData.getActivityFromDate());
-		activityAllocation.setActivityToDate(allocData.getActivityToDate());
-		activityAllocation.setActivityFor(allocData.getActivityFor());
-		activityAllocation.setFromHours(allocData.getFromHours());
-		activityAllocation.setToHours(allocData.getToHours());
-		activityAllocation.setActivity(allocData.getActivity());
-
 		List<ActivityAllocationDetails> updatedList = new ArrayList<>();
 		try {
 			for (int i = 0; i < markedResources.length(); i++) {
@@ -300,21 +292,41 @@ public class ActivityServiceImpl implements ActivityService {
 				newDetail.setActivityAllocateDetId(resource.optInt("activityAllocateDetId")==0 ? null:resource.getInt("activityAllocateDetId"));
 				newDetail.setResourceId(resource.getInt("resourceId"));
 				newDetail.setPlatformId(resource.getInt("platformId"));
-				newDetail.setActivityAllocation(activityAllocation);
+				newDetail.setActivityAllocation(allocData);
 				updatedList.add(newDetail);
+				resourceIdList.add(resource.getInt("resourceId"));
 			}
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date fromDate = null;
+		Date toDate= null;
+		try {
+			fromDate = sdf.parse(sdf.format(allocData.getActivityFromDate()));
+			toDate = sdf.parse(sdf.format(allocData.getActivityToDate()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		List<Map<String,String>> existingResourceList = new ArrayList<>();
+		if(allocData.getActivityAllocateId() == null)
+			existingResourceList = activityAllocRepo.checkExistingResourcesByDateRange(resourceIdList,fromDate,toDate,allocData.getFromHours(),allocData.getToHours());
 
-		List<Integer> allocateDetIdList = updatedList.stream().map(e->e.getActivityAllocateDetId()).toList();
-		List<ActivityAllocationDetails> removalList = allDetails.stream()
-				.filter(e->!allocateDetIdList.contains(e.getActivityAllocateDetId()))
-				.toList();
-		activityAllocation.setDetails(updatedList);
-		activityAllocRepo.save(activityAllocation);
-		detailsRepo.deleteAll(removalList);
+		if(existingResourceList.isEmpty()) {
+			List<ActivityAllocationDetails> allDetails = activityAllocRepo.findByActivityAllocateId(allocData.getActivityAllocateId());
+			List<Integer> allocateDetIdList = updatedList.stream().map(e->e.getActivityAllocateDetId()).toList();
+			List<ActivityAllocationDetails> removalList = allDetails.stream()
+					.filter(e->!allocateDetIdList.contains(e.getActivityAllocateDetId()))
+					.toList();
+			allocData.setDetails(updatedList);
+			activityAllocRepo.save(allocData);
+			detailsRepo.deleteAll(removalList);
+			return new ArrayList<>();
+		}
+		
+		return existingResourceList;
 	}
 
 
@@ -343,11 +355,40 @@ public class ActivityServiceImpl implements ActivityService {
 	public List<ActivityAllocation> fetchDataByDateRange(String activityFromDate, String activityToDate) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			return activityAllocRepo.fetchDataByDateRange(sdf.parse(activityFromDate),sdf.parse(activityToDate));
+			if(activityFromDate!=null && activityToDate!=null)
+				return activityAllocRepo.fetchDataByDateRange(sdf.parse(activityFromDate),sdf.parse(activityToDate));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return new ArrayList<>();
+	}
+	
+	@Override
+	public List<String> getAllActivityAuto(String value) {
+		String searchLowerCase = value.toLowerCase();
+		List<String> allUniName=activityRepository.findAll().stream()
+                .map(x -> x.getActivityName())
+                .filter(activityName -> activityName.toLowerCase().contains(searchLowerCase))
+                .distinct()
+                .collect(Collectors.toList());
+		return allUniName;
+	}
+
+
+	@Override
+	public Activity getDataByActivityName(String activityName) {
+		 return activityRepository.findByActivityNameAndDeletedFlagFalse(activityName);
+	}
+
+
+	public Activity findByResponsPerson1AndActivityName(String responsPerson1, String activityName) {
+		return activityRepository.findByResponsPerson1AndActivityName(responsPerson1,activityName);
+	}
+
+
+	@Override
+	public Integer activityExist(Integer activityId) {
+		return activityRepository.checkForExistActivity(activityId);
 	}
 
 }

@@ -62,5 +62,18 @@ List<Object[]> getActivityDetails(Integer activityId, Date fromDate, Date toDate
 	
 	@Query("SELECT a.details FROM ActivityAllocation a WHERE a.activityAllocateId=:activityAllocateId")
 	List<ActivityAllocationDetails> findByActivityAllocateId(Long activityAllocateId);
+	
+	@Query(value = """
+			SELECT resource.resourceName,resource.resourceCode,resource.platform,act.activityName FROM activity_allocation alloc
+			INNER JOIN activity_allocation_details det ON alloc.activityAllocateId=det.activityAllocateId
+			INNER JOIN resource_pool resource ON det.resourceId=resource.resourceId
+			LEFT JOIN activity act ON alloc.activityId=act.activityId
+			WHERE :toDate>=alloc.activityFromDate
+			AND :fromDate<=alloc.activityToDate
+			AND TIME_FORMAT(:toTime, '%H:%i')>TIME_FORMAT(alloc.fromHours, '%H:%i')
+			AND TIME_FORMAT(:fromTime, '%H:%i')<TIME_FORMAT(alloc.toHours, '%H:%i')
+			AND resource.resourceId IN :resourceIdList""",
+		nativeQuery = true)
+	List<Map<String,String>> checkExistingResourcesByDateRange(List<Integer> resourceIdList, Date fromDate, Date toDate, String fromTime, String toTime);
 
 }
