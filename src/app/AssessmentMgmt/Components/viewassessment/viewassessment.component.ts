@@ -15,7 +15,7 @@ import { saveAs } from 'file-saver';
 })
 export class ViewassessmentComponent implements OnInit {
   bsConfig: Partial<BsDatepickerConfig>;
-  assessmentDate: string;
+  assessmentDate: string='';
   assessmentDateArr: any[];
   assessments: AssessmentDto[];
   showAssessmentTable: boolean = false;

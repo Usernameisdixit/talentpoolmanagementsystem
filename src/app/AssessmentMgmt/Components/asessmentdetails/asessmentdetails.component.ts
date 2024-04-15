@@ -229,6 +229,7 @@ export class AsessmentdetailsComponent implements OnInit {
     const [fromDateString, toDateString] = this.selectedDateRange.split(' to ');
     const fromDate:Date = new Date(fromDateString);
     const toDate:Date= new Date(toDateString);
+     const currentDate: Date = new Date();
 
     if (!this.selectedActivity || !this.fromDate || !this.toDate) {
         errorFlag = true;
@@ -247,6 +248,13 @@ export class AsessmentdetailsComponent implements OnInit {
        Swal.fire('Warning', "Assessment date should be on or after of the assessment session's 'to date' ", 'warning');
        this.assessmentDate=null;
        return ;
+    }
+
+    if(this.assessmentDate > currentDate){
+      errorFlag = true;
+      Swal.fire('Warning', "Assessment date should not be future date ", 'warning');
+      this.assessmentDate=null;
+      return ;
     }
 
     if (!this.totalMarks) {
@@ -312,7 +320,8 @@ export class AsessmentdetailsComponent implements OnInit {
                   this.showActivityTable = !this.showActivityTable;
                 //  this.showAssessmentTable=!this.showAssessmentTable;
                //  this.validateAndGetDetails();
-                   location.reload();
+               // location.reload();
+               this.route.navigate(['viewasessment']);
                 } else {
                   console.error('Unexpected response:', response);
                   Swal.fire('Error', 'Failed to submit assessments', 'error');
@@ -560,6 +569,10 @@ getTableDataChange1(event : any , details : any[]){
  openDatepicker(): void {
   this.datepicker.show(); 
 } 
+
+cancel(){
+  window.location.reload();
+}
    
 
 }
