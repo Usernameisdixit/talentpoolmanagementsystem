@@ -385,4 +385,10 @@ public class ActivityServiceImpl implements ActivityService {
 		return activityRepository.findByResponsPerson1AndActivityName(responsPerson1,activityName);
 	}
 
+
+	@Override
+	public Integer activityExist(Integer activityId) {
+		return activityRepository.checkForExistActivity(activityId);
+	}
+
 }

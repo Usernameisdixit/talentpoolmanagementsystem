@@ -55,4 +55,6 @@ public interface ActivityService {
 
 	public Activity findByResponsPerson1AndActivityName(String responsPerson1, String activityName);
 
+	public Integer activityExist(Integer activityId);
+
 }

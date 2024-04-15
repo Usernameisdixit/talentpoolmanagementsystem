@@ -241,4 +241,10 @@ public class ActivityController {
 		public Activity getDataByActivityName(@RequestParam String activityName) {
 			return activityService.getDataByActivityName(activityName);
 		}
+		
+		@GetMapping("activityCheck")
+		public Integer activityExist(@RequestParam Integer activityId) {
+			Integer status= activityService.activityExist(activityId);
+			return status;
+		}
 }
