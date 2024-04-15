@@ -314,7 +314,7 @@ public class ResourceExcelController {
 	@GetMapping("/getAllAllocationDate")
 	public ResponseEntity<?> getAllAllocationDate() {
 		List<Date> allocateDate = excelUploadHistoryRepository.findLatestDate();
-		allocateDate=allocateDate.stream().sorted().collect(Collectors.toList());
+		//allocateDate=allocateDate.stream().sorted().collect(Collectors.toList());
 		return ResponseEntity.ok(allocateDate);
 	}
 
