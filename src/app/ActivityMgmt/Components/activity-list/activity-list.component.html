@@ -18,7 +18,7 @@
       <thead>
         <tr>
           <th>SLNo.</th>
-          <th>Activity RefNo</th>
+          <!-- <th>Activity RefNo</th> -->
           <th>Activity Name</th>
           <th>Activity Description</th>
           <th style="width: 200px;">Activity Response Person1</th>
@@ -34,7 +34,7 @@
           totalItems: count
           }; let i = index;" (click)="setActiveActivity(activity, i)">
           <td>{{ (pageno - 1) * tableSize + i + 1 }}</td>
-          <td>{{ activity.activityRefNo }}</td>
+          <!-- <td>{{ activity.activityRefNo }}</td> -->
           <td>{{ activity.activityName }}</td>
           <td>{{ activity.description }}</td>
           <td>{{ activity.responsPerson1 }}</td>
@@ -61,7 +61,7 @@
   </div>
 
 
-  <div class="d-flex justify-content-end mt-2" id="pagination">
+  <div class="d-flex justify-content-end mt-2"  *ngIf="!activities" id="pagination">
     <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)= "getTableDataChange($event)"></pagination-controls>
   </div>
 

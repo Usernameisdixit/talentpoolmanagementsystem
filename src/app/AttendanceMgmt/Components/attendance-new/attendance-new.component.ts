@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component,ViewChild } from '@angular/core';
 import { AttendanceNewService } from '../../Service/attendance-new.service';
 import Swal from 'sweetalert2';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsLocaleService,BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { enGbLocale } from 'ngx-bootstrap/locale';
 import { LoginService } from 'src/app/UserMgmt/Service/login.service';
@@ -13,12 +13,13 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
 })
 export class AttendanceNewComponent {
 
+  @ViewChild('dp') datepicker: BsDatepickerDirective;
   bsConfig: Partial<BsDatepickerConfig>;
   selectActivity: any;
   dashboard: boolean;
   constructor(private attendanceNewService: AttendanceNewService, private localeService: BsLocaleService,
     private loginService:LoginService) {
-    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
+    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY',showWeekNumbers : false });
     this.localeService.use('en-gb');
   }
 
@@ -217,5 +218,9 @@ getTableDataChange(event : any , details : any[]){
 
   this.attendanceDetails=details;
 }
+
+openDatepicker(): void {
+  this.datepicker.show(); 
+} 
 
 }

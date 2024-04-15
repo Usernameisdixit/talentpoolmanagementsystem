@@ -2,9 +2,9 @@ import { Component, OnInit ,ElementRef,ViewChild} from '@angular/core';
 import Swal from 'sweetalert2';
 import { AssessmentDto } from 'src/app/Model/AssessmentDto';
 import { AssessmentserviceService } from '../../Service/assessmentservice.service';
-import { DatePipe } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig,BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { Router } from '@angular/router';
 import { DATE } from 'ngx-bootstrap/chronos/units/constants';
 import { DateRange } from 'src/app/Model/DateRange';
@@ -16,6 +16,7 @@ import { DateRange } from 'src/app/Model/DateRange';
 })
 export class AsessmentdetailsComponent implements OnInit {
 
+  @ViewChild('dp') datepicker: BsDatepickerDirective;
   bsConfig: Partial<BsDatepickerConfig>;
   isHidden: boolean = true;
   activityAllocations: any[];
@@ -41,24 +42,21 @@ export class AsessmentdetailsComponent implements OnInit {
   hour: any;
   remarks: any;
   marks: number;
-  status:string;
+  status:string='s';
+
   
   dateRanges: string[] = [];
   selectedDateRange: string = '';
-
-
-  @ViewChild('totalmarks') totalmarks: ElementRef;
-  @ViewChild('securedMarks') securedMarks: ElementRef;
-  @ViewChild('hours') hours: ElementRef;
-  @ViewChild('remark') remark: ElementRef;
-  
- 
+  fieldValuesList: any[][]=[];
+   
 
   constructor(private http: HttpClient, private datePipe: DatePipe, private apiService: AssessmentserviceService,private route:Router) {
     this.bsConfig = {
       containerClass: 'theme-dark-blue',
       dateInputFormat: 'DD-MMM-YYYY',
+      showWeekNumbers : false
     };
+
   }
 
   ngOnInit(): void {
@@ -128,10 +126,6 @@ export class AsessmentdetailsComponent implements OnInit {
 
  
 
-
-
-
-
   validateAndGetDetails() {
 
     if (!this.selectedActivity) {
@@ -149,21 +143,16 @@ export class AsessmentdetailsComponent implements OnInit {
    this.marks = null;
   this.hour = null;
   this.remarks =null;
-  
-    debugger;
+
     this.apiService.checkAssessments(this.selectedActivity, this.fromDate.toISOString(), this.toDate.toISOString())
       .subscribe((result: boolean) => {
-        debugger;
         if (result) {
           this.showAssessmentTable = !this.showAssessmentTable;     
           this.apiService.getAssessmentDetails(this.selectedActivity, formattedFromDate, formattedToDate)
             .subscribe((data: any[]) => {
-              debugger;
               console.log(data);
               this.assessmentsExist = data;
               data.forEach(obj => {
-                 console.log(obj);
-                 
                this.assessmentDate = new Date(obj[11]);
                this.totalMarks = obj[8];
                this.marks = obj[9];
@@ -184,8 +173,6 @@ export class AsessmentdetailsComponent implements OnInit {
           
           this.apiService.getActivityDetails(this.selectedActivity, formattedFromDate, formattedToDate)
             .subscribe((data: any[]) => {
-              debugger;
-              console.log("inside getActivityDetails===="+data);
               this.assessments = data;
               this.detailsRetrieved = true;
               this.assessmentDtos = this.mapAssessmentDtos(data);
@@ -202,16 +189,17 @@ export class AsessmentdetailsComponent implements OnInit {
   
 
   mapAssessmentDtos(data: any[]): AssessmentDto[] {
-    console.log(data);
+    
     if(this.status==='u'){
+      console.log(data);
     return data.map(item => ({
       intActivityId: this.selectedActivity[0],
       resourceId: item[1],
       assessmentDate: this.assessmentDate,
-      marks: item.marks,
-      totalMarks: item.totalMarks,
-      hour: item.hour,
-      remarks: item.remarks,
+      marks: parseInt(item[9]),
+      totalMarks: parseInt(item[8]),
+      hour: item[10],
+      remarks: item[12],
       activityFromDate:new Date(this.fromDate),
       activityToDate:new Date(this.toDate),
       asesmentId:item[0]
@@ -237,96 +225,109 @@ export class AsessmentdetailsComponent implements OnInit {
 
   submitAssessments(): void {
 
+    let errorFlag = false;
+    const [fromDateString, toDateString] = this.selectedDateRange.split(' to ');
+    const fromDate:Date = new Date(fromDateString);
+    const toDate:Date= new Date(toDateString);
+
     if (!this.selectedActivity || !this.fromDate || !this.toDate) {
-      Swal.fire('Warning', 'Please Selectall required fields', 'warning');
-      return;
+        errorFlag = true;
+        Swal.fire('Warning', 'Please select all required fields', 'warning');
+        return;
     }
 
     if (!this.assessmentDate) {
-      Swal.fire('Warning', 'Please Select assessment date', 'warning');
-      return;
+       errorFlag = true;
+        Swal.fire('Warning', 'Please select assessment date', 'warning');
+        return;
     }
     
-  
-    Swal.fire({
-      title: 'Do you want to save?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const assessmentDtos: AssessmentDto[] = this.mapAssessmentDtos(this.assessments);
-        this.apiService.submitAssessments(assessmentDtos).subscribe(
-          (response: any) => {
-            if (response && response.message) {
-              console.log('Assessments submitted successfully:', response.message);
-              Swal.fire('Success', response.message, 'success');
-              this.status='u';
-              //this.route.navigateByUrl('/viewasessment');
-            } else {
-              console.error('Unexpected response:', response);
-              Swal.fire('Error', 'Failed to submit assessments', 'error');
-            }
-          },
-          error => {
-            console.error('Error submitting assessments:', error);
-            Swal.fire('Error', 'Failed to submit assessments', 'error');
-          }
-        );
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-     
-      }
-    });
-  }
-  
-  updateAssessments() {
-/*    Swal.fire({
-      title: 'Do you want to update?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-       
-        const updatedAssessmentsData = this.assessmentsExist.map(assessment => {
-          return {
-            id: assessment.id, 
-            totalMarks: assessment.totalMarks,
-            securedMarks: assessment.securedMarks,
-            hours: assessment.hours,
-            remarks: assessment.remarks
-          };
-        });
-  
-        // Send data to the server for updating records
-        this.apiService.updateAssessments(updatedAssessmentsData).subscribe(
-          (response: any) => {
-            if (response && response.message) {
-              console.log('Assessments updated successfully:', response.message);
-              Swal.fire('Success', response.message, 'success');
-              // Optionally, you can reload data or perform any additional actions after successful update
-            } else {
-              console.error('Unexpected response:', response);
-              Swal.fire('Error', 'Failed to update assessments', 'error');
-            }
-          },
-          error => {
-            console.error('Error updating assessments:', error);
-            Swal.fire('Error', 'Failed to update assessments. Please try again later.', 'error');
-            // Optionally, you can handle specific error cases and display appropriate messages
-          }
-        );
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // Handle cancel action if needed
-      }
-    });*/
-  }
+   if(this.assessmentDate < toDate){
+       errorFlag = true;
+       Swal.fire('Warning', "Assessment date should be on or after of the assessment session's 'to date' ", 'warning');
+       this.assessmentDate=null;
+       return ;
+    }
 
+    if (!this.totalMarks) {
+        errorFlag = true;
+        Swal.fire('Warning', 'Total marks cannot be blank!', 'warning');
+        return;
+    }
 
+    if (!this.marks) {
+        errorFlag = true;
+        Swal.fire('Warning', 'Secured marks cannot be blank!', 'warning');
+        return;
+    }
+
+    if (!this.hour) {
+        errorFlag = true;
+        Swal.fire('Warning', 'Assessment hour cannot be blank!', 'warning');
+        return;
+    }
+
+    if (!this.remarks) {
+        errorFlag = true;
+        Swal.fire('Warning', 'Remarks cannot be blank!', 'warning');
+        return;
+    }
+
+   if (!errorFlag) {
+      Swal.fire({
+        title: this.status==='s'?'Do you want to save?':'Do you want to update?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          if(this.status==='u'){
+            const assessmentDtos: AssessmentDto[] = this.mapAssessmentDtos(this.assessmentsExist);
+            this.apiService.updateAssessment(assessmentDtos).subscribe(
+              (response: any) => {
+                if (response && response.message) {
+                  console.log('Assessments updated successfully:', response.message);
+                  Swal.fire('Success', response.message, 'success');
+                } else {
+                  console.error('Unexpected response:', response);
+                  Swal.fire('Error', 'Failed to update assessments', 'error');
+                }
+              },
+              error => {
+                console.error('Error updating assessments:', error);
+                Swal.fire('Error', 'Failed to update assessments. Please try again later.', 'error');
+                
+              });
+          }
+          else{
+            const assessmentDtos: AssessmentDto[] = this.mapAssessmentDtos(this.assessments);
+            this.apiService.submitAssessments(assessmentDtos).subscribe(
+              (response: any) => {
+                if (response && response.message) {
+                  console.log('Assessments submitted successfully:', response.message);
+                  Swal.fire('Success', response.message, 'success');
+                  this.status='u';
+                  this.showActivityTable = !this.showActivityTable;
+                //  this.showAssessmentTable=!this.showAssessmentTable;
+               //  this.validateAndGetDetails();
+                   location.reload();
+                } else {
+                  console.error('Unexpected response:', response);
+                  Swal.fire('Error', 'Failed to submit assessments', 'error');
+                }
+              },
+              error => {
+                console.error('Error submitting assessments:', error);
+                Swal.fire('Error', 'Failed to submit assessments', 'error');
+            });
+          }
+         
+        }
+       });
+    }
+}
 
   calculateRowspan(assessment: any): number {
     let count = 1;
@@ -414,25 +415,40 @@ updateMarks(): void {
       title: 'Secured Marks Exceed Total Marks',
       text: 'Secured marks should not be greater than total marks.',
     });
+    this.assessments.forEach(assessment => { 
+      assessment.marks = '';
+   });
+    this.marks=parseInt('');
   }
+  else {
+    this.assessments.forEach(assessment => { 
+      assessment.marks = this.marks;
+   }); 
+  } 
 
-else {
-
-  this.assessments.forEach(assessment => {
-    assessment.marks = this.marks;
-});
-
-}
-
-  
 }
 
 
 
 updateHours() : void {
-  this.assessments.forEach(assessment => {
-    assessment.hour=this.hour;
-  });
+  if(this.status==='s'){
+    if(this.hour > 0 && this.hour < 5){
+      this.assessments.forEach(assessment => {
+      assessment.hour=this.hour;
+    });
+    }else{
+        Swal.fire({
+        icon: 'error',
+        title: 'Invalid assessment hour !',
+        text: 'Assessment hour should be limited within 1 to 4 hours',
+      });
+      this.hour='';
+      this.assessments.forEach(assessment => {
+      assessment.hour='';
+      });
+    }
+   }
+   
 }
 
 updateRemarks() : void {
@@ -440,6 +456,7 @@ updateRemarks() : void {
     assessment.remarks=this.remarks;
   });
 }
+
 
 
 resetFields() {
@@ -475,12 +492,25 @@ confirmReset() {
 
 validateSecuredMarks(assessment: any): void {
  
-  if (assessment.marks > assessment.totalMarks) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Secured Marks Exceed Total Marks',
-      text: 'Secured marks should not be greater than total marks.',
-    });
+  if(this.status==='s'){
+    if (assessment.marks > assessment.totalMarks) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Secured Marks Exceed Total Marks',
+        text: 'Secured marks should not be greater than total marks.',
+      });
+      assessment.marks='';
+    }
+  }
+  else{
+    if (assessment[9] > assessment[8]) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Secured Marks Exceed Total Marks',
+        text: 'Secured marks should not be greater than total marks.',
+      });
+      assessment[9] = '';
+    }
   }
 }
 
@@ -501,25 +531,6 @@ getMonthIndex(month: string): number {
 }
 
 
-
-// onActivityChange()
-// {
-
-//  debugger;
-//   if (this.selectedActivity && this.fromDate && this.toDate) {
-//       this.apiService.checkAssessments(this.selectedActivity, this.fromDate.toISOString(), this.toDate.toISOString())
-//           .subscribe((result: boolean) => {
-//               if (result) {
-//                   Swal.fire('Assessment Already Done', 'Assessment for this activity session has already been completed.', 'info');
-//               } else {
-//                   this.validateAndGetDetails();
-//               }
-//           });
-//   }
-
-
-// }
-
  // for pagination
  indexNumber : number = 0;
  page : number = 1;
@@ -527,11 +538,11 @@ getMonthIndex(month: string): number {
  count : number = 0;
 
 getTableDataChange(event : any , details : any[]){
-
+  alert(event);
  this.page = event;
  this.indexNumber = (this.page - 1) * this.tableSize;
  this.assessments=details;
-
+ 
 }
 
 indexNumber1 : number = 0;
@@ -539,13 +550,17 @@ indexNumber1 : number = 0;
  tableSize1 : number = 10;
  count1 : number = 0;
 getTableDataChange1(event : any , details : any[]){
-
   this.page1 = event;
   this.indexNumber1 = (this.page1 - 1) * this.tableSize1;
  
   this.assessmentsExist=details;
- 
+  
  }
 
+
+ openDatepicker(): void {
+  this.datepicker.show(); 
+} 
+   
 
 }

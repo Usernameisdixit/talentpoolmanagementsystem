@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component ,ViewChild} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsLocaleService,BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import Swal from 'sweetalert2';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 })
 export class FileUploadComponent {
 
+  @ViewChild('dp') datepicker: BsDatepickerDirective;
   bsConfig: Partial<BsDatepickerConfig>;
 
   selectedFile: File;
@@ -23,7 +24,7 @@ export class FileUploadComponent {
   fileError: string;
 
   constructor(private http: HttpClient, private localeService: BsLocaleService, private datePipe: DatePipe,private route : Router) {
-    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
+    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY', showWeekNumbers : false });
     this.localeService.use('en-gb');
   }
 
@@ -141,4 +142,9 @@ export class FileUploadComponent {
         window.URL.revokeObjectURL(url);
       });
   }
+
+
+  openDatepicker(): void {
+    this.datepicker.show(); 
+  } 
 }

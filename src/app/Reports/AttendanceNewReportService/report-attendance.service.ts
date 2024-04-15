@@ -285,7 +285,10 @@ export class ReportAttendanceService {
     
     //HEADING MERGED
     const colMergerd=activityHead.length+3;
-    const colMergerdResource=activityHeadResource.length;
+    let colMergerdResource;
+    if(reportType == 'resource'){
+      colMergerdResource=activityHeadResource.length;
+    }
     if (reportType == 'activity') {
       ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }]; // Merge cells
     } else if (reportType == 'resource') {

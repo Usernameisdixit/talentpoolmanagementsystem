@@ -13,7 +13,6 @@ import { map } from 'rxjs';
 })
 export class UserComponent {
 
-
   userForm:FormGroup;
   userId:any;
   roleDetails:any;
@@ -130,6 +129,7 @@ export class UserComponent {
             reverseButtons: true
           }).then((result) => {
             if (result.isConfirmed) {
+              // added 12/04/2024 createdBy and updatedBy null value issuse fixed...
               this.userService.saveUser(userData).subscribe((data) => {
               if (this.userId != 0) {
                 Swal.fire('User Updated', 'User Updated Successfully', 'success');

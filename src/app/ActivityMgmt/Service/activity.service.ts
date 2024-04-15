@@ -11,6 +11,7 @@ const baseUrl2='http://localhost:9999/tpms/update/activity';
 const baseUrl3='http://localhost:9999/tpms/delete/activity';
 
 const baseUrl4='http://localhost:9999/tpms/update-deleted-flag';
+const dataActivityName='http://localhost:9999/tpms/dataActivityName';
 
 
 
@@ -23,6 +24,11 @@ export class ActivityService {
 
   getAll(): Observable<Activity[]> {
     return this.http.get<Activity[]>(baseUrl);
+  }
+
+  getAllActivity(value: string): Observable<any[]> {
+    // alert("hi");
+    return this.http.get<any[]>(`http://localhost:9999/tpms/getActivityForAuto?value=${encodeURIComponent(value)}`);
   }
 
   get(id: any): Observable<Activity> {
@@ -52,6 +58,11 @@ export class ActivityService {
 
   updateDeletedFlag(id: any, deletedFlag: boolean): Observable<any> {
     return this.http.put(`${baseUrl4}/${id}`, { },{ params: { deletedFlag: deletedFlag.toString() } });
+  }
+
+  getData(activityName: string) {
+    return this.http.get<string[]>(`${dataActivityName}?activityName=${activityName}`);
+    // return this.http.get('http://localhost:9999/tpms/dataByACtivityName/' + activityName);
   }
 
 }

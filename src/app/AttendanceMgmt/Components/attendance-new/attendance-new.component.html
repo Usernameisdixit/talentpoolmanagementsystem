@@ -12,8 +12,8 @@
                 <div class="input-group">
                     <input id="date" class="form-control" type="text"
                         (ngModelChange)="onDateChange($event);getActivity();" bsDatepicker [(ngModel)]="selectedDate"
-                        [maxDate]="maxDate" [bsConfig]="bsConfig" (change)="getDataByDateActivity()" />
-                    <span class="input-group-text"><i class="material-icons">date_range</i></span>
+                        [maxDate]="maxDate" [bsConfig]="bsConfig" (change)="getDataByDateActivity()" #dp="bsDatepicker"/>
+                        <span class="input-group-text" (click)="openDatepicker()"><i class="material-icons">date_range</i></span>
                 </div>
             </div>
         </div>

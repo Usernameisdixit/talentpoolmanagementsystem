@@ -12,13 +12,11 @@ export class SideNavComponent {
   }
 
   getListItem(event:MouseEvent){
-    //alert("hii i am clicked");
     const target = event.target as HTMLElement;
     const listItemValue = target.textContent?.trim();
-    console.log(listItemValue);
     this._userService.changeTitle(listItemValue);
     localStorage.setItem("activeLink",listItemValue);
-
+    
   }
 
 
