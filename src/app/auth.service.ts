@@ -11,7 +11,7 @@ export class AuthService {
   // Method to set authentication status in session storage
   isLoggedIn(token:any){
     debugger;
-    if(token==undefined || token==='' || token==null)
+    if(token=="undefined" || token==='' || token==null)
       this.userLogIn=false;
     else
       this.userLogIn=true;      

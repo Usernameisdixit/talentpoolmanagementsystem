@@ -49,9 +49,7 @@ export class BulkAllocationComponent {
               private activatedRoute: ActivatedRoute, private dateService: DateService,
               private datePipe: DatePipe, private localeService: BsLocaleService) {
                 this.activatedRoute.paramMap.subscribe(params => {
-                  console.log(params);
                   this.resourceId = params.get('id');
-            
                 });
                 this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
                 this.localeService.use('en-gb');
@@ -114,7 +112,7 @@ export class BulkAllocationComponent {
                       activityFor: this.selectedSession, activity: this.activity, fromHours: this.selectedActivityFrom,
                       toHours: this.selectedActivityTo, activityAllocateId: this.allocateId};
         this.allocationService.saveBulkAllocation(this.markedResources, data).subscribe((res) => {
-          if(res.length == 0) {
+          if(res.category == null) {
             Swal.fire(
               'Saved!',
               'Activity allocation details has been saved successfully.',
@@ -130,12 +128,19 @@ export class BulkAllocationComponent {
             });
             this.markedResources=[];
           }
-          else {
+          else if(res.category == 'resource') {
             Swal.fire(
               'Duplicate data!',
-              'Some resources already exist in this time frame. Click on "View details" to see the list',
+              'Some resources already exist in this time frame. Click on "View details" to see the list.',
               'warning'
-            ).then(()=>this.existingResources=res);
+            ).then(()=>this.existingResources=res.data);
+          }
+          else if(res.category == 'activity') {
+            Swal.fire(
+              'Duplicate data!',
+              'This activity already exists in this time frame.',
+              'warning'
+            );
           }
         }, () => {
           Swal.fire(
@@ -220,7 +225,7 @@ export class BulkAllocationComponent {
       }
     }
     if(!isChecked)
-      this.markedResources = this.markedResources.filter(e=>e.platform!=platform.platform);
+      this.markedResources = this.markedResources.filter(e=>e.platformId!=platform.platformId);
   }
 
   setToDate(): void {
@@ -250,6 +255,27 @@ export class BulkAllocationComponent {
           });
         });
         return;
+      }
+    });
+  }
+
+  remove(row: DynamicGrid): void {
+    Swal.fire({
+      title: 'Are you sure?',
+      icon: 'warning',
+      confirmButtonText: 'Yes',
+      showDenyButton: true
+    }).then(res => {
+      if(res.isConfirmed) {
+        this.allocationService.deleteAllocation(row.activityAllocateId)
+        .subscribe((status) => {
+          if(status==1)
+            Swal.fire('Deleted','','success').then(()=>window.location.reload());
+          else if(status==0)
+            Swal.fire('Unable to delete','','error').then(()=>window.location.reload());
+          else
+            Swal.fire('Some error occurred','','error').then(()=>window.location.reload());
+        })
       }
     });
   }

@@ -55,8 +55,8 @@ export class AllocationService {
     return this.http.get<any[]>(`${this.apiUrl}/resources/exclude-related`);
   }
 
-  saveBulkAllocation(markedResources: any[], allocData: any): Observable<any[]> {
-    return this.http.post<any[]>(`${this.apiUrl}/saveBulkAllocation`, {markedResources: markedResources, allocData: allocData});
+  saveBulkAllocation(markedResources: any[], allocData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/saveBulkAllocation`, {markedResources: markedResources, allocData: allocData});
   }
 
   getPlatformIdByName(platformName: string): Observable<number> {
@@ -65,5 +65,9 @@ export class AllocationService {
 
   fetchDataByDateRange(activityFromDate: string, activityToDate: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/fetchDataByDateRange?activityFromDate=${activityFromDate}&activityToDate=${activityToDate}`);
+  }
+
+  deleteAllocation(activityAllocateId: number): Observable<number>{
+    return this.http.get<number>(`${this.apiUrl}/deleteAllocation?id=${activityAllocateId}`);
   }
 }

@@ -70,7 +70,10 @@
         <td>{{ dynamic.activity.activityName }}</td>
         <td>{{ dynamic.activityFor==1?'1st half':'2nd half' }}</td>
         <td>{{ dynamic.fromHours | convertTo12Hr }} &ndash; {{ dynamic.toHours | convertTo12Hr }}</td>
-        <td><button class="btn btn-secondary btn-sm" (click)="edit(dynamic)">Edit</button></td>
+        <td>
+          <button class="btn btn-secondary btn-sm" (click)="edit(dynamic)"><i class="fas fa-edit"></i></button> &nbsp;
+          <button class="btn btn-danger btn-sm" (click)="remove(dynamic)"><i class="fas fa-trash"></i></button>
+        </td>
       </tr>
     </tbody>
   </table>
