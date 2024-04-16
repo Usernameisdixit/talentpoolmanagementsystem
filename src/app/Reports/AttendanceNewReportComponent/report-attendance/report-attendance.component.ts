@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { Component,ViewChild } from '@angular/core';
+import { BsDatepickerConfig, BsLocaleService,BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { FormControl } from '@angular/forms';
 import { ReportAttendanceService } from '../../AttendanceNewReportService/report-attendance.service';
 import { startWith, map } from 'rxjs';
@@ -18,6 +18,8 @@ export interface User {
 })
 export class ReportAttendanceComponent {
 
+  @ViewChild('dp') datepicker: BsDatepickerDirective;
+  @ViewChild('dp1') datepicker1: BsDatepickerDirective;
   inputType: string = 'activity';
   selectedFromDate: Date = null;
   selectedToDate: Date = null;
@@ -32,8 +34,12 @@ export class ReportAttendanceComponent {
   resourceValue: any;
 
   constructor(private localeService: BsLocaleService, private reportAttendanceService: ReportAttendanceService) {
-    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
-    this.localeService.use('en-gb');
+    this.bsConfig = {
+      containerClass: 'theme-dark-blue',
+      dateInputFormat: 'DD-MMM-YYYY',
+      showWeekNumbers : false
+    };
+    
   }
 
   ngOnInit() {
@@ -276,5 +282,15 @@ export class ReportAttendanceComponent {
       console.log("activityAttenDetails is undefined or null");
     }
   }
+
+  openDatepicker(): void {
+    this.datepicker.show(); 
+    
+  }
+
+  openDatepicker1():void{
+    this.datepicker1.show();
+  }
+  
 
 }
