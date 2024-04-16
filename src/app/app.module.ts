@@ -161,6 +161,14 @@ defineLocale('en-gb', enGbLocale); //
     NgxUiLoaderModule,
     NgxUiLoaderHttpModule.forRoot({
       showForeground: true,
+      exclude: ["http://localhost:9999/tpms/getActivityForAuto",
+        "http://localhost:9999/tpms/dataActivityName", 
+        "http://localhost:9999/tpms/allResourceName",
+        "http://localhost:9999/tpms/getActivityOnFromTo",
+        "http://localhost:9999/tpms/getRoleDetails",
+        "http://localhost:9999/tpms/activityByDate",
+        "http://localhost:9999/tpms/getActivities"
+      ]
     }),
     
   ],
