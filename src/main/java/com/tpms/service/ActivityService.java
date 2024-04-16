@@ -41,7 +41,7 @@ public interface ActivityService {
 
 	public List<ResourcePoolProjection> findAllWithoutRelatedEntity();
 
-	public List<Map<String,String>> saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData);
+	public Map<String, Object> saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData);
 
 	public Integer platformIdByName(String platformName);
 
@@ -56,5 +56,10 @@ public interface ActivityService {
 	public Activity findByResponsPerson1AndActivityName(String responsPerson1, String activityName);
 
 	public Integer activityExist(Integer activityId);
+	
+	/**
+	 * @return 1 if records are deleted, 0 if no records are deleted, -1 if there's an error
+	 */
+	public int deleteAllocation(Long id);
 
 }

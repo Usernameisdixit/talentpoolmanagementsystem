@@ -174,7 +174,7 @@ public class ActivityController {
 	}
 
 	@PostMapping("saveBulkAllocation")
-	List<Map<String,String>> saveBulkAllocation(@RequestBody String data) {
+	Map<String, Object> saveBulkAllocation(@RequestBody String data) {
 		JSONArray markedResources = null;
 		ActivityAllocation allocData = null;
 		try {
@@ -246,5 +246,10 @@ public class ActivityController {
 		public Integer activityExist(@RequestParam Integer activityId) {
 			Integer status= activityService.activityExist(activityId);
 			return status;
+		}
+		
+		@GetMapping("deleteAllocation")
+		public int deleteAllocation(@RequestParam Long id) {
+			return activityService.deleteAllocation(id);
 		}
 }
