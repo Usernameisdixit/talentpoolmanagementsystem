@@ -76,4 +76,24 @@ List<Object[]> getActivityDetails(Integer activityId, Date fromDate, Date toDate
 		nativeQuery = true)
 	List<Map<String,String>> checkExistingResourcesByDateRange(List<Integer> resourceIdList, Date fromDate, Date toDate, String fromTime, String toTime);
 
+
+	@Query(value = """
+			SELECT COUNT(*) FROM activity_allocation alloc
+			WHERE :toDate>=alloc.activityFromDate
+			AND :fromDate<=alloc.activityToDate
+			AND TIME_FORMAT(:toTime, '%H:%i')>TIME_FORMAT(alloc.fromHours, '%H:%i')
+			AND TIME_FORMAT(:fromTime, '%H:%i')<TIME_FORMAT(alloc.toHours, '%H:%i')
+			AND alloc.activityId=:activityId""",
+		nativeQuery = true)
+	Integer countExistingActivitiesByDateRange(Integer activityId, Date fromDate, Date toDate,
+			String fromTime, String toTime);
+	
+	@Query(value = """
+			SELECT COUNT(*) FROM activity_allocation alloc
+			WHERE :toDate>=alloc.activityFromDate AND :fromDate<=alloc.activityToDate
+			AND alloc.activityId=:activityId AND alloc.activityFor=:activityFor""",
+		nativeQuery = true)
+	Integer countExistingActivitiesBySession(Integer activityId, Date fromDate, Date toDate,
+			Byte activityFor);
+
 }

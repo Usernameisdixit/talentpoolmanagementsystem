@@ -63,23 +63,6 @@ public class AttendanceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@PostMapping("pdfData")
-	public String getAttendanceReportData(@RequestBody Map<String, String> params) {
-	    String year = params.get("year");
-	    String month = params.get("month");
-	    String platform = params.get("platform");
-	    String selectedDate = params.get("selectedDate");
-	    String resourceValue = params.get("resourceValue");
-	    if(resourceValue.equals("")) {
-	        resourceValue="0";
-	    }
-	    if(resourceValue.equals("")||platform.equals("-1")) {
-	    	platform="0";
-	    }
-	    JSONArray attendanceReportData = attendanceService.getAttendanceReportData(platform, selectedDate,year,month,resourceValue);
-//	    System.err.println("Report Data " + attendanceReportData);
-	    return attendanceReportData.toString();
-	}
 	
 	@GetMapping("allResourceName")
 	public List<String> allResName(@RequestParam String value){

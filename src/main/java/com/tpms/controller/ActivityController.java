@@ -97,23 +97,6 @@ public class ActivityController {
 		activityServiceImpl.updateDeletedFlag(activityId, deletedFlag);
 	}
 
-	@PostMapping("activityReportData")
-	public String getActivityReportData(@RequestBody Map<String, String> params) {
-		String fromDate = params.get("fromDate");
-		String toDate = params.get("toDate");
-		String platform = params.get("platform");
-		String resourceValue = params.get("resourceValue");
-		if (resourceValue.equals("")) {
-			resourceValue = "0";
-		}
-		if (resourceValue.equals("") || platform.equals("-1")) {
-			platform = "0";
-		}
-		JSONArray attendanceReportData = activityServiceImpl.getActivityReportData(platform, fromDate, toDate,
-				resourceValue);
-//    System.err.println("Report Data " + attendanceReportData);
-		return attendanceReportData.toString();
-	}
 
 	@GetMapping("platforms")
 	List<Platform> getPlatforms() {
@@ -174,7 +157,7 @@ public class ActivityController {
 	}
 
 	@PostMapping("saveBulkAllocation")
-	List<Map<String,String>> saveBulkAllocation(@RequestBody String data) {
+	Map<String, Object> saveBulkAllocation(@RequestBody String data) {
 		JSONArray markedResources = null;
 		ActivityAllocation allocData = null;
 		try {
@@ -240,5 +223,16 @@ public class ActivityController {
 		@GetMapping("dataActivityName")
 		public Activity getDataByActivityName(@RequestParam String activityName) {
 			return activityService.getDataByActivityName(activityName);
+		}
+		
+		@GetMapping("activityCheck")
+		public Integer activityExist(@RequestParam Integer activityId) {
+			Integer status= activityService.activityExist(activityId);
+			return status;
+		}
+		
+		@GetMapping("deleteAllocation")
+		public int deleteAllocation(@RequestParam Long id) {
+			return activityService.deleteAllocation(id);
 		}
 }

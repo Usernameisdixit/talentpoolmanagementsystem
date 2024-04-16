@@ -13,7 +13,6 @@ public interface AttendanceService {
 
 	public List<Platform> getAllPlatform();
 
-	public JSONArray getAttendanceReportData(String platform, String selectedDate, String year, String month, String resourceValue);
 
 	public List<String> getAllNames(String value);
 
