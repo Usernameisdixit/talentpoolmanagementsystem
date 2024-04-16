@@ -5,8 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 
-import { AttendanceMgmtComponent } from './AttendanceMgmt/Components/attendance-mgmt/attendance-mgmt.component';
-
 import { UsermgmtComponent } from './UserMgmt/Component/usermgmt/usermgmt.component';
 
 
@@ -40,20 +38,17 @@ import { FileUploadComponent } from './ResourceMgmt/Components/file-upload/file-
 import { AppLayoutComponent } from './Layout/app-layout/app-layout.component';
 import { TalentlistComponent } from './ResourceMgmt/Components/talentlist/talentlist.component';
 import {  TalenteditComponent } from './ResourceMgmt/Components/talentedit/talentedit.component';
-import { AttendanceComponent } from './AttendanceMgmt/Components/attendance/attendance.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { enGbLocale } from 'ngx-bootstrap/locale';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { DashboardComponent } from './UserMgmt/Component/dashboard/dashboard.component';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { AttendanceReportComponent } from './AttendanceMgmt/Components/attendance-report/attendance-report.component';
 import { ViewRoleComponent } from './UserMgmt/Component/role/view-role/view-role.component';
 import { CreateRoleComponent } from './UserMgmt/Component/role/create-role/create-role.component';
 import { DatePipe } from '@angular/common';
 import { AsessmentdetailsComponent } from './AssessmentMgmt/Components/asessmentdetails/asessmentdetails.component';
 import { DisclaimerComponent } from './Disclaimer/disclaimer/disclaimer.component';
 import { ViewassessmentComponent } from './AssessmentMgmt/Components/viewassessment/viewassessment.component';
-import { ActivityReportComponent } from './Reports/ActivityReportComponent/activity-report/activity-report.component';
 import { AssessmentreportComponent } from './Reports/AssessmentReport/assessmentreport/assessmentreport.component';
 import { ReportTypeDialogComponent } from './Reports/report-type-dialog/report-type-dialog.component';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -91,7 +86,6 @@ defineLocale('en-gb', enGbLocale); //
 @NgModule({
   declarations: [
     AppComponent,
-    AttendanceMgmtComponent,
   
     UsermgmtComponent,
     UserViewComponent,
@@ -105,15 +99,12 @@ defineLocale('en-gb', enGbLocale); //
     AppLayoutComponent,
     TalentlistComponent,
     TalenteditComponent,
-    AttendanceComponent,
     DashboardComponent,
-    AttendanceReportComponent,
     AsessmentdetailsComponent,
     DisclaimerComponent,
     ViewassessmentComponent,
     ViewRoleComponent,
     CreateRoleComponent,
-    ActivityReportComponent,
     AssessmentreportComponent,
     ReportTypeDialogComponent,
     AllocationComponent,
@@ -170,6 +161,14 @@ defineLocale('en-gb', enGbLocale); //
     NgxUiLoaderModule,
     NgxUiLoaderHttpModule.forRoot({
       showForeground: true,
+      exclude: ["http://localhost:9999/tpms/getActivityForAuto",
+        "http://localhost:9999/tpms/dataActivityName", 
+        "http://localhost:9999/tpms/allResourceName",
+        "http://localhost:9999/tpms/getActivityOnFromTo",
+        "http://localhost:9999/tpms/getRoleDetails",
+        "http://localhost:9999/tpms/activityByDate",
+        "http://localhost:9999/tpms/getActivities"
+      ]
     }),
     
   ],
