@@ -33,7 +33,7 @@ import { ResourcehistoryComponent } from './ResourceMgmt/Components/resourcehist
 import { ReportAttendanceComponent } from './Reports/AttendanceNewReportComponent/report-attendance/report-attendance.component';
 import { PlatformComponent } from './ResourceMgmt/Components/platform-master/platform/platform.component';
 import { PlatformViewComponent } from './ResourceMgmt/Components/platform-master/platform-view/platform-view.component';
-
+import { ActivityNewReportComponentComponent } from './Reports/ActivityNewReportComponent/activity-new-report-component.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -80,6 +80,7 @@ const routes: Routes = [
        { path : 'addPlatform', component: PlatformComponent, canActivate: [authGuard]},
        { path : 'viewPlatform', component: PlatformViewComponent, canActivate: [authGuard]},
        { path : 'editPlatform/:platformId', component: PlatformComponent, canActivate: [authGuard] },
+       { path : 'activitynewReport', component: ActivityNewReportComponentComponent, canActivate: [authGuard] },
     ]
   }
 ];
