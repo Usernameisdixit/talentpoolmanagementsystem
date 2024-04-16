@@ -18,7 +18,7 @@ public class Activity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer activityId;
     
-    private Integer isAsesmentEnable;
+    private Boolean isAsesmentEnable;
     
     private String activityName;
     
