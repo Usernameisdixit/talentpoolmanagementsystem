@@ -26,6 +26,10 @@ public class ResourcePool {
 
 
 
+	public ResourcePool(ResourcePoolHistory employee, LocalDate allocationDate2) {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer resourceId;

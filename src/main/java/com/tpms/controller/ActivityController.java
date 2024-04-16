@@ -53,9 +53,26 @@ public class ActivityController {
 
 	@PostMapping("/save/activity")
 	public Activity SaveActivity(@RequestBody Activity activity) {
-		activity.setDeletedFlag(false);
-		return activityServiceImpl.SaveActivity(activity);
+		Activity listByRespAct = activityService.findByResponsPerson1AndActivityName(activity.getResponsPerson1(),
+				activity.getActivityName());
+		Activity activeActivity = activityService.getDataByActivityName(activity.getActivityName());
+		if (listByRespAct != null) {
+			if (listByRespAct.getDeletedFlag() == true) {
+				listByRespAct.setDeletedFlag(false);
+				activityServiceImpl.SaveActivity(listByRespAct);
+				activeActivity.setDeletedFlag(true);
+				activityServiceImpl.SaveActivity(activeActivity);
+			}
+			return activityServiceImpl.SaveActivity(listByRespAct);
+		} else {
+			if (activeActivity != null) {
+				activeActivity.setDeletedFlag(true);
+				activityServiceImpl.SaveActivity(activeActivity);
+			}
+			activity.setDeletedFlag(false);
+			return activityServiceImpl.SaveActivity(activity);
 
+		}
 	}
 
 	@GetMapping("/get/activity/{activityId}")
@@ -80,23 +97,6 @@ public class ActivityController {
 		activityServiceImpl.updateDeletedFlag(activityId, deletedFlag);
 	}
 
-	@PostMapping("activityReportData")
-	public String getActivityReportData(@RequestBody Map<String, String> params) {
-		String fromDate = params.get("fromDate");
-		String toDate = params.get("toDate");
-		String platform = params.get("platform");
-		String resourceValue = params.get("resourceValue");
-		if (resourceValue.equals("")) {
-			resourceValue = "0";
-		}
-		if (resourceValue.equals("") || platform.equals("-1")) {
-			platform = "0";
-		}
-		JSONArray attendanceReportData = activityServiceImpl.getActivityReportData(platform, fromDate, toDate,
-				resourceValue);
-//    System.err.println("Report Data " + attendanceReportData);
-		return attendanceReportData.toString();
-	}
 
 	@GetMapping("platforms")
 	List<Platform> getPlatforms() {
@@ -105,7 +105,7 @@ public class ActivityController {
 
 	@GetMapping("activities")
 	List<Activity> getActivities(String platform) {
-		return activityService.findAll();
+		return activityService.findAllActive();
 	}
 
 	@PostMapping("saveAllocation")
@@ -157,7 +157,7 @@ public class ActivityController {
 	}
 
 	@PostMapping("saveBulkAllocation")
-	void saveBulkAllocation(@RequestBody String data) {
+	Map<String, Object> saveBulkAllocation(@RequestBody String data) {
 		JSONArray markedResources = null;
 		ActivityAllocation allocData = null;
 		try {
@@ -167,7 +167,7 @@ public class ActivityController {
 		} catch (JSONException | JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		activityService.saveBulkAllocation(markedResources, allocData);
+		return activityService.saveBulkAllocation(markedResources, allocData);
 	}
 
 	@GetMapping("/platformsIdByName")
@@ -204,13 +204,35 @@ public class ActivityController {
 		 return ResponseEntity.ok(activitydata);
 		}
 	
-
-	// Dashboard part [ActivtiesPlanned]
-	 @GetMapping("totalActivitiesPlanned")
-		public ResponseEntity<?> gettotalActivitiesPlanned(@RequestParam String activityFromDate, @RequestParam String activityToDate) {
+		// Dashboard part [ActivtiesPlanned]
+		@GetMapping("totalActivitiesPlanned")
+		public ResponseEntity<?> gettotalActivitiesPlanned(@RequestParam String activityFromDate,
+				@RequestParam String activityToDate) {
 			Integer resources = activityRepository.findAllActivityFromtodate(activityFromDate, activityToDate);
-	//		System.out.println(resources);
+			// System.out.println(resources);
 			return ResponseEntity.ok(resources);
 		}
-	
+
+		@GetMapping("getActivityForAuto")
+		public List<String> getAllActivityAuto(@RequestParam String value) {
+			List<String> resNames = activityService.getAllActivityAuto(value);
+			return resNames;
+
+		}
+
+		@GetMapping("dataActivityName")
+		public Activity getDataByActivityName(@RequestParam String activityName) {
+			return activityService.getDataByActivityName(activityName);
+		}
+		
+		@GetMapping("activityCheck")
+		public Integer activityExist(@RequestParam Integer activityId) {
+			Integer status= activityService.activityExist(activityId);
+			return status;
+		}
+		
+		@GetMapping("deleteAllocation")
+		public int deleteAllocation(@RequestParam Long id) {
+			return activityService.deleteAllocation(id);
+		}
 }

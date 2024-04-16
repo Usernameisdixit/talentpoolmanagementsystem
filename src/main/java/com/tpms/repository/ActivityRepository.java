@@ -74,9 +74,19 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 	 		+ "WHERE aal.activitytoDate between :activityFromDate and :activityToDate\r\n"
 	 		+ "order by  aal.activityFromDate, aal.activitytoDate",nativeQuery = true)
 		Integer findAllActivityFromtodate(String activityFromDate, String activityToDate);
+
+	List<Activity> findByDeletedFlagFalse();
 	
 	
-	
+	Activity findByActivityNameAndDeletedFlagFalse(String activityName);
+
+	Activity findByResponsPerson1AndActivityName(String responsPerson1, String activityName);
+    
+	@Query(value = """
+			select exists(select * from activity_allocation alo
+			inner join activity act on act.activityId=alo.activityId
+			where alo.activityId=:activityId)""",nativeQuery = true )
+	Integer checkForExistActivity(Integer activityId);
 	
 	
 	

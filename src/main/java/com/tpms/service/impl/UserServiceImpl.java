@@ -3,6 +3,7 @@ package com.tpms.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import com.tpms.entity.User;
 import com.tpms.exception.ResourceNotFoundException;
 import com.tpms.repository.RoleRepository;
 import com.tpms.repository.UserRepository;
+import com.tpms.security.JwtHelper;
 import com.tpms.service.UserService;
 
 @Service
@@ -23,19 +25,31 @@ public class UserServiceImpl implements UserService{
 	@Autowired
     private RoleRepository roleRepository;
 	
+	@Autowired
+	private JwtHelper jwtHelper;
+	
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
 	@Override
-	public User saveUser(UserDto user) {
+	public User saveUser(UserDto user, HttpHeaders httpHeaders) {
 		
+		
+	
+//		String authTokenWithBearer = httpHeaders.get("Authorization").get(0);
+//		String authToken = authTokenWithBearer.replace("Bearer", "");
+		
+		String userName = jwtHelper.getUsernameFromToken(httpHeaders.get("Authorization").get(0).replace("Bearer", ""));
+		System.err.println("------->>>>>>"+userName+"<<<<<<<<-------");
+		Integer creatorModifierUserID = userRepository.findByUserName(userName).getUserId();
 	
 		User u1 = new User();
 		u1.setUserFullName(user.getUserFullName());
 		u1.setUserName(user.getUserName());
 		u1.setPhoneNo(user.getPhoneNo());
 		u1.setEmail(user.getEmail());
+		System.err.println(user.getUserId());
 		
 		//------- to update User -------
 		if(user.getUserId() != 0) {
@@ -43,9 +57,12 @@ public class UserServiceImpl implements UserService{
 				 u1.setPassword(existUser.getPassword());
                  u1.setIsFirstLogin(existUser.getIsFirstLogin());
 		         u1.setUserId(user.getUserId());
+		         u1.setUpdatedBy(creatorModifierUserID.intValue());
+		         u1.setCreatedBy(existUser.getCreatedBy());
 		}
 		
 		else {
+			u1.setCreatedBy(creatorModifierUserID.intValue());
 			u1.setIsFirstLogin(true);
 			u1.setPassword(passwordEncoder.encode(user.getPassword()));
 		}
@@ -76,7 +93,6 @@ public class UserServiceImpl implements UserService{
 		user.setRoleId(user1.getRole().getRoleId());
 		user.setPhoneNo(user1.getPhoneNo());
 		user.setEmail(user1.getEmail());
-		
 		return user;
 	}
 

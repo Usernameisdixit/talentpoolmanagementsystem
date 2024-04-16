@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
@@ -26,11 +27,13 @@ import com.tpms.dto.ResourcePoolProjection;
 import com.tpms.entity.Activity;
 import com.tpms.entity.ActivityAllocation;
 import com.tpms.entity.ActivityAllocationDetails;
+import com.tpms.entity.Attendance;
 import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
 import com.tpms.repository.ActivityAllocationDetailsRepository;
 import com.tpms.repository.ActivityAllocationRepository;
 import com.tpms.repository.ActivityRepository;
+import com.tpms.repository.AttendanceRepository;
 import com.tpms.repository.PlatformRepository;
 import com.tpms.repository.ResourcePoolRepository;
 import com.tpms.service.ActivityService;
@@ -52,6 +55,9 @@ public class ActivityServiceImpl implements ActivityService {
 	
 	@Autowired
 	ActivityAllocationDetailsRepository detailsRepo;
+	
+	@Autowired
+	AttendanceRepository attendanceRepo;
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -95,104 +101,6 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
 
-	public JSONArray getActivityReportData(String platform, String fromDate, String toDate, String resourceValue) {
-		JSONArray data = new JSONArray();
-		String sqls = "{call TPMS_ATTENDANCE(?,?,?,?,?,?,?)}";
-		List<Map<String, Object>> attendanceDetails = new ArrayList<>();
-		String fromParseDate=getDate(fromDate);
-		String toParseDate=getDate(toDate);
-		DataSource ds = jdbcTemplate.getDataSource();
-		if (ds != null) {
-			try (Connection con = ds.getConnection(); CallableStatement attendanceQuerey = con.prepareCall(sqls);) {
-				attendanceQuerey.setString(1, "ACTIVITY_REPORT");
-				attendanceQuerey.setString(2, platform);
-				attendanceQuerey.setString(3, fromParseDate);
-				attendanceQuerey.setString(4, toParseDate);
-				attendanceQuerey.setString(5, null);
-				attendanceQuerey.setString(6,resourceValue);
-				attendanceQuerey.setInt(7,0);
-
-				try (ResultSet rs = attendanceQuerey.executeQuery();) {
-					if (rs != null) {
-						Map<String, Object> attendance = null;
-						while (rs.next()) {
-							attendance = new HashMap<>();
-							attendance.put("activityFor", rs.getString("activityFor"));
-							attendance.put("resourceId", rs.getString("resourceId"));
-							attendance.put("resourceName", rs.getString("resourceName"));
-							attendance.put("activityDetails", rs.getString("activityDetails"));
-							attendance.put("fromHours", rs.getString("fromHours"));
-							attendance.put("toHours", rs.getString("toHours"));
-							attendance.put("activityName", rs.getString("activityName"));
-							attendance.put("activityAllocateDetId", rs.getString("activityAllocateDetId"));
-							attendance.put("platform", rs.getString("platform"));
-							attendance.put("activityAllocateId", rs.getString("activityAllocateId"));
-							attendance.put("activityAllocateDetId", rs.getString("activityAllocateDetId"));
-							attendance.put("activityDate", rs.getString("activityDate"));
-							attendance.put("resourceCode", rs.getString("resourceCode"));
-							attendanceDetails.add(attendance);
-						}
-					}
-
-				}
-				try {
-					Integer resourceId = 0;
-					String activityDate="";
-					JSONObject resource = new JSONObject();
-					JSONArray firstHalfArray = new JSONArray();
-					JSONArray secondHalfArray = new JSONArray();
-					for (Map<String, Object> mapObject : attendanceDetails) {
-						Integer mapResourceId = Integer.valueOf((String) mapObject.get("resourceId"));
-						Integer intActivityFor = Integer.valueOf((String) mapObject.get("activityFor"));
-						String checkDate =  (String) mapObject.get("activityDate");
-						if (resourceId == 0) {
-							resourceId = mapResourceId;
-							activityDate=checkDate;
-						} else if (resourceId != mapResourceId || !(checkDate.equalsIgnoreCase(activityDate))) {
-							resource.put("firstHalf", firstHalfArray);
-							resource.put("secondHalf", secondHalfArray);
-							data.put(resource);
-							resourceId = mapResourceId;
-							activityDate=checkDate;
-							resource = new JSONObject();
-							firstHalfArray = new JSONArray();
-							secondHalfArray = new JSONArray();
-						}
-						if (resource.length() == 0) {
-							resource.put("resourceName", mapObject.get("resourceName"));
-							resource.put("resourceId", mapResourceId);
-							resource.put("domain", mapObject.get("platform"));
-							resource.put("activityAllocateId", mapObject.get("activityAllocateId"));
-							resource.put("activityDate", mapObject.get("activityDate"));
-							resource.put("resourceCode", mapObject.get("resourceCode"));
-						}
-						JSONObject detailObject = new JSONObject();
-						detailObject.put("activityDetails", mapObject.get("activityDetails"));
-						detailObject.put("fromHours", mapObject.get("fromHours"));
-						detailObject.put("toHours", mapObject.get("toHours"));
-						detailObject.put("activityName", mapObject.get("activityName"));
-						detailObject.put("activityAllocateDetId", mapObject.get("activityAllocateDetId"));
-						detailObject.put("activityFor", mapObject.get("activityFor"));
-						if (intActivityFor == 1) {
-							firstHalfArray.put(detailObject);
-						} else if (intActivityFor == 2) {
-							secondHalfArray.put(detailObject);
-						}
-					}
-					resource.put("firstHalf", firstHalfArray);
-					resource.put("secondHalf", secondHalfArray);
-					data.put(resource);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		}
-
-		return data;
-	}
     
     
 	public List<Platform> fetchPlatforms() {
@@ -243,8 +151,8 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 
-	public List<Activity> findAll() {
-		return activityRepository.findAll();
+	public List<Activity> findAllActive() {
+		return activityRepository.findByDeletedFlagFalse();
 	}
 
 	
@@ -279,42 +187,66 @@ public class ActivityServiceImpl implements ActivityService {
 
 
 	@Override
-	public void saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData) {
-		
-		List<ActivityAllocationDetails> allDetails = activityAllocRepo.findByActivityAllocateId(allocData.getActivityAllocateId());
-		
-		ActivityAllocation activityAllocation = new ActivityAllocation();
-		activityAllocation.setActivityAllocateId(allocData.getActivityAllocateId());
-		activityAllocation.setActivityFromDate(allocData.getActivityFromDate());
-		activityAllocation.setActivityToDate(allocData.getActivityToDate());
-		activityAllocation.setActivityFor(allocData.getActivityFor());
-		activityAllocation.setFromHours(allocData.getFromHours());
-		activityAllocation.setToHours(allocData.getToHours());
-		activityAllocation.setActivity(allocData.getActivity());
+	public Map<String, Object> saveBulkAllocation(JSONArray markedResources, ActivityAllocation allocData) {
+		Map<String, Object> response = new HashMap<>();
+		List<Integer> resourceIdList = new ArrayList<>();
 
 		List<ActivityAllocationDetails> updatedList = new ArrayList<>();
 		try {
 			for (int i = 0; i < markedResources.length(); i++) {
 				JSONObject resource = markedResources.getJSONObject(i);
 				ActivityAllocationDetails newDetail = new ActivityAllocationDetails();
-				newDetail.setActivityAllocateDetId(resource.optInt("activityAllocateDetId")==0 ? null:resource.getInt("activityAllocateDetId"));
+				newDetail.setActivityAllocateDetId(resource.optInt("activityAllocateDetId") == 0 ? null
+						: resource.getInt("activityAllocateDetId"));
 				newDetail.setResourceId(resource.getInt("resourceId"));
 				newDetail.setPlatformId(resource.getInt("platformId"));
-				newDetail.setActivityAllocation(activityAllocation);
+				newDetail.setActivityAllocation(allocData);
 				updatedList.add(newDetail);
+				resourceIdList.add(resource.getInt("resourceId"));
 			}
-			
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
-		List<Integer> allocateDetIdList = updatedList.stream().map(e->e.getActivityAllocateDetId()).toList();
-		List<ActivityAllocationDetails> removalList = allDetails.stream()
-				.filter(e->!allocateDetIdList.contains(e.getActivityAllocateDetId()))
-				.toList();
-		activityAllocation.setDetails(updatedList);
-		activityAllocRepo.save(activityAllocation);
-		detailsRepo.deleteAll(removalList);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date fromDate = null;
+		Date toDate = null;
+		try {
+			fromDate = sdf.parse(sdf.format(allocData.getActivityFromDate()));
+			toDate = sdf.parse(sdf.format(allocData.getActivityToDate()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		List<Map<String, String>> existingResourceList = new ArrayList<>();
+		Integer existingActivityCount = 0;
+		if (allocData.getActivityAllocateId() == null) {
+			existingResourceList = activityAllocRepo.checkExistingResourcesByDateRange(resourceIdList, fromDate, toDate,
+					allocData.getFromHours(), allocData.getToHours());
+			response.put("category", "resource");
+			response.put("data", existingResourceList);
+		}
+		if (existingResourceList.isEmpty()) {
+			existingActivityCount = activityAllocRepo.checkExistingResourcesByDateRange(
+					allocData.getActivity().getActivityId(), fromDate, toDate, allocData.getFromHours(),
+					allocData.getToHours());
+			response.put("category", "activity");
+			response.put("data", existingActivityCount);
+		}
+
+		if (existingResourceList.isEmpty() && existingActivityCount == 0) {
+			List<ActivityAllocationDetails> allDetails = activityAllocRepo
+					.findByActivityAllocateId(allocData.getActivityAllocateId());
+			List<Integer> allocateDetIdList = updatedList.stream().map(e -> e.getActivityAllocateDetId()).toList();
+			List<ActivityAllocationDetails> removalList = allDetails.stream()
+					.filter(e -> !allocateDetIdList.contains(e.getActivityAllocateDetId())).toList();
+			allocData.setDetails(updatedList);
+			activityAllocRepo.save(allocData);
+			detailsRepo.deleteAll(removalList);
+			return new HashMap<>();
+		}
+
+		return response;
 	}
 
 
@@ -343,11 +275,57 @@ public class ActivityServiceImpl implements ActivityService {
 	public List<ActivityAllocation> fetchDataByDateRange(String activityFromDate, String activityToDate) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			return activityAllocRepo.fetchDataByDateRange(sdf.parse(activityFromDate),sdf.parse(activityToDate));
+			if(activityFromDate!=null && activityToDate!=null)
+				return activityAllocRepo.fetchDataByDateRange(sdf.parse(activityFromDate),sdf.parse(activityToDate));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return new ArrayList<>();
+	}
+	
+	@Override
+	public List<String> getAllActivityAuto(String value) {
+		String searchLowerCase = value.toLowerCase();
+		List<String> allUniName=activityRepository.findAll().stream()
+                .map(x -> x.getActivityName())
+                .filter(activityName -> activityName.toLowerCase().contains(searchLowerCase))
+                .distinct()
+                .collect(Collectors.toList());
+		return allUniName;
+	}
+
+
+	@Override
+	public Activity getDataByActivityName(String activityName) {
+		 return activityRepository.findByActivityNameAndDeletedFlagFalse(activityName);
+	}
+
+
+	public Activity findByResponsPerson1AndActivityName(String responsPerson1, String activityName) {
+		return activityRepository.findByResponsPerson1AndActivityName(responsPerson1,activityName);
+	}
+
+
+	@Override
+	public Integer activityExist(Integer activityId) {
+		return activityRepository.checkForExistActivity(activityId);
+	}
+	
+	@Override
+	public int deleteAllocation(Long id) {
+		int res = -1;
+		try {
+			Attendance attendance = attendanceRepo.findByActivityAllocateId(id);
+			if(attendance==null) {
+				activityAllocRepo.deleteById(id);
+				res = 1;
+			}
+			else
+				res = 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return res;
 	}
 
 }
