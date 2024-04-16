@@ -315,8 +315,8 @@ public class ActivityServiceImpl implements ActivityService {
 	public int deleteAllocation(Long id) {
 		int res = -1;
 		try {
-			Attendance attendance = attendanceRepo.findByActivityAllocateId(id);
-			if(attendance==null) {
+			Integer count = attendanceRepo.countByActivityAllocateId(id);
+			if(count==0) {
 				activityAllocRepo.deleteById(id);
 				res = 1;
 			}
