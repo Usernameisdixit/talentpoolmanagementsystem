@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tpms.entity.Activity;
 import com.tpms.repository.ActivityRepository;
 import com.tpms.service.ReportService;
@@ -31,6 +32,8 @@ public class ReportServiceImpl implements ReportService {
 	
 	@Autowired
 	private ActivityRepository activityRepository;
+	
+	
 
 	@Override
 	public List<Map<String, Object>> getAttendanceData(String reportType, String fromDate, String toDate, String activityId,
@@ -216,5 +219,104 @@ public class ReportServiceImpl implements ReportService {
 		}
 		return data;
 	}
+	
+	
+	@Override
+	public List<Map<String, Object>> getActivitynewDataReport(String reportType, String fromDate, String toDate, String activityId,
+			String resourceValue) {
+		SimpleDateFormat inputFormat = new SimpleDateFormat("M/d/yyyy, h:mm:ss a");
+		SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String formattedFromDate = null;
+		String formattedToDate = null;
+		List<Map<String, Object>> attendanceDetails = new ArrayList<>();
+		try {
+			if (fromDate != null && !fromDate.equals("undefined")) {
+				Date date = inputFormat.parse(fromDate);
+				formattedFromDate = outputFormat.format(date);
+			}
+			if (toDate != null && !toDate.equals("undefined")) {
+				Date date = inputFormat.parse(toDate);
+				formattedToDate = outputFormat.format(date);
+			}
+       
+		List<Object[]> activitydata = activityRepository.getactivitypdfdata(formattedFromDate,formattedToDate,activityId);		
+			Map<String, Object> attendance = null;
+			for(Object ob[]:activitydata)
+			{
+				attendance = new HashMap<>();
+				attendance.put("resourceCode", ob[10].toString());
+				attendance.put("resourceName", ob[1].toString());
+				attendance.put("fromHours", ob[4].toString());
+				attendance.put("toHours", ob[5].toString());
+				attendance.put("activityName", ob[6].toString());
+				attendance.put("platform", ob[8].toString());
+			    attendance.put("atendanceDate", ob[13].toString().concat(" To ").concat(ob[14].toString()));
+				attendance.put("activityFor", ob[3].toString());
+				attendance.put("designation", ob[9].toString());
+				attendance.put("resourceId",ob[0].toString());
+				attendanceDetails.add(attendance);
+			}	
+		
+		} catch (ParseException e1) {
 
+			e1.printStackTrace();
+		}
+		return attendanceDetails;
+		
+	}
+	
+	@Override
+	public List<Map<String, Object>> getActivitynewReport(String reportType, String fromDate, String toDate, String activityId,
+			String resourceValue) {
+		JSONArray data = new JSONArray();
+		SimpleDateFormat inputFormat = new SimpleDateFormat("M/d/yyyy, h:mm:ss a");
+		SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		List<Map<String, Object>> attendanceDetails = new ArrayList<>();
+		String formattedFromDate = null;
+		String formattedToDate = null;
+		try {
+			if (fromDate != null && !fromDate.equals("undefined")) {
+				Date date = inputFormat.parse(fromDate);
+				formattedFromDate = outputFormat.format(date);
+			}
+			if (toDate != null && !toDate.equals("undefined")) {
+				Date date = inputFormat.parse(toDate);
+				formattedToDate = outputFormat.format(date);
+			}
+			
+			List<Object[]> activitydata = activityRepository.getactivitydataaccordingtoresource(formattedFromDate,formattedToDate,resourceValue);
+			
+			System.out.println(activitydata);
+			
+			Map<String, Object> attendance = null;
+			for(Object ob[]:activitydata)
+			{
+			attendance = new HashMap<>();
+			attendance.put("resourceCode", ob[4].toString());
+			attendance.put("resourceName", ob[3].toString());
+			attendance.put("fromHours", ob[7].toString());
+			attendance.put("toHours", ob[9].toString());
+			attendance.put("activityName", ob[10].toString());
+			attendance.put("platform", ob[6].toString());
+		    attendance.put("atendanceDate", ob[0].toString().concat(" To ").concat(ob[1].toString()));
+			attendance.put("activityFor", ob[8].toString());
+			attendance.put("designation", ob[5].toString());
+			attendance.put("resourceId",ob[11].toString());
+			attendanceDetails.add(attendance);
+			}	
+			} catch (ParseException e1) {
+
+			e1.printStackTrace();
+		}
+		
+		return attendanceDetails;
+	    
+	}	
+	
+	
+	
+	
+	
 }

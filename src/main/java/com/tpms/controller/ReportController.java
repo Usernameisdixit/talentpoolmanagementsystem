@@ -48,4 +48,36 @@ public class ReportController {
 	    	return allDetails.toString();
 	    }
 	}
+	
+	
+	/*Methode of Activity New Data Report*/
+	@PostMapping("activitynewDataReport")
+	public String getActivitynewDataReport(@RequestBody Map<String, String> params) throws JsonProcessingException {
+	    String reportType = params.get("reportType");
+	    String fromDate = params.get("fromDate");
+	    String toDate = params.get("toDate");
+	    String activityId = params.get("activityId");
+	    String resourceValue = params.get("resourceValue");
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    if(reportType.equals("activity")) {
+	    List<Map<String, Object>> attendanceReportData = reportService.getActivitynewDataReport(reportType, fromDate,toDate,activityId,resourceValue);
+	    return objectMapper.writeValueAsString(attendanceReportData);
+	    }
+	    else {
+	    	List<Map<String, Object>> allDetails = reportService.getActivitynewReport(reportType, fromDate,toDate,activityId,resourceValue);
+	    	return objectMapper.writeValueAsString(allDetails);
+	    }
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
