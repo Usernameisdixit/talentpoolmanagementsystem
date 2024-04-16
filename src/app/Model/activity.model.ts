@@ -11,7 +11,7 @@ export class Activity {
   description?: string;
   responsPerson1?:string;
   responsPerson2?:string;
-  isAsesmentEnable?: boolean;
+  isAsesmentEnable?: any;
   deletedFlag?:boolean
   
 }

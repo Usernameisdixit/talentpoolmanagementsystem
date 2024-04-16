@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 })
 export class ActivityDetailsComponent implements OnInit {
   @Input() viewMode = false;
-  activityField=true;
+  activityField = true;
 
   // @Input() currentTutorial: Tutorial = {
   //   title: '',
@@ -20,14 +20,14 @@ export class ActivityDetailsComponent implements OnInit {
   //   published: false
   // };
 
-
   @Input() currentActivity: Activity = {
     activityId: '',
     activityName: '',
     description: '',
     responsPerson1: '',
     responsPerson2: '',
-    deletedFlag:false
+    isAsesmentEnable: 0,
+    deletedFlag: false,
   };
 
   message = '';
@@ -43,7 +43,6 @@ export class ActivityDetailsComponent implements OnInit {
       this.message = '';
       this.getActivity(this.route.snapshot.params['id']);
     }
-    
   }
 
   getActivity(id: string): void {
@@ -53,7 +52,7 @@ export class ActivityDetailsComponent implements OnInit {
         this.checkActivity();
         // console.log(data);
       },
-      error: (e) => console.error(e)
+      error: (e) => console.error(e),
     });
   }
 
@@ -78,52 +77,52 @@ export class ActivityDetailsComponent implements OnInit {
   //   });
   // }
 
-
-  
-
   updateActivity(): void {
-    if (this.currentActivity.activityName=='' || this.currentActivity.activityName==null) {
-      Swal.fire("Please Enter The Activity Name!");
-    }
-    else if (this.currentActivity.description=='') {
-      Swal.fire("Please Enter The Description!");
-    }
-    else if (this.currentActivity.responsPerson1=='') {
-      Swal.fire("Please Enter The Respons Person1!");
-    }
-    else if (this.currentActivity.responsPerson2=='') {
-      Swal.fire("Please Enter The Respons Person2!");
-    }else{ 
-    Swal.fire({
-      title: 'Do you want to Update?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.activityService.update(this.currentActivity.activityId, this.currentActivity).subscribe((data) => {
-          Swal.fire('Activity Update', 'activity Update Successfully', 'success'); 
-        this.router.navigate(['/activities']);
-      },
-      (error) => {
-        console.log(error);
+    if (
+      this.currentActivity.activityName == '' ||
+      this.currentActivity.activityName == null
+    ) {
+      Swal.fire('Please enter the activity name!');
+    } else if (this.currentActivity.description == '') {
+      Swal.fire('Please enter the description!');
+    } else if (this.currentActivity.responsPerson1 == '') {
+      Swal.fire('Please enter the respons person1!');
+    } else if (this.currentActivity.responsPerson2 == '') {
+      Swal.fire('Please enter the response person2!');
+    } else {
+      Swal.fire({
+        title: 'Do you want to update?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        reverseButtons: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.activityService
+            .update(this.currentActivity.activityId, this.currentActivity)
+            .subscribe(
+              (data) => {
+                Swal.fire(
+                  'Activity updated successfully',
+                  '',
+                  'success'
+                );
+                this.router.navigate(['/activities']);
+              },
+              (error) => {
+                console.log(error);
+              }
+            );
+        }
       });
-        
-      } 
-    });
-  }
-
-
-
-
+    }
 
     // this.activityService
     //   .update(this.currentActivity.activityId, this.currentActivity)
     //   .subscribe({
     //     next: (res) => {
-        
+
     //     },
     //     error: (e) => console.error(e)
     //   });
@@ -135,19 +134,36 @@ export class ActivityDetailsComponent implements OnInit {
         // console.log(res);
         this.router.navigate(['/tutorials']);
       },
-      error: (e) => console.error(e)
+      error: (e) => console.error(e),
     });
   }
 
-  checkActivity(){
+  checkActivity() {
     debugger;
-    this.activityService.activityExist(this.currentActivity.activityId).subscribe({
-      next: (data) => {
-        console.log(data);
-        
-         this.activityField = data;   
-      },
-      error: (e) => console.error(e)
+    this.activityService
+      .activityExist(this.currentActivity.activityId)
+      .subscribe({
+        next: (data) => {
+          console.log(data);
+
+          this.activityField = data;
+        },
+        error: (e) => console.error(e),
+      });
+  }
+
+  cancelUpdate(): void {
+    Swal.fire({
+      title: 'Do you want to cancel?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      reverseButtons: false,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.router.navigate(['/activities']);
+      }
     });
-}
+  }
 }
