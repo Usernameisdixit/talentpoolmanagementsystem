@@ -88,6 +88,15 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 			where alo.activityId=:activityId)""",nativeQuery = true )
 	Integer checkForExistActivity(Integer activityId);
 	
+	
+	@Query(value = "SELECT DISTINCT act.* FROM activity act \r\n"
+			+ "			INNER JOIN activity_allocation alo ON alo.activityId = act.activityId \r\n"
+			+ "			WHERE alo.activityFromDate >= :formattedFromDate\r\n"
+			+ "			AND alo.activityToDate <= :formattedToDate\r\n"
+			+ "			order by act.activityName", nativeQuery = true)
+	List<Activity> getActvitiesReportByDateRange(String formattedFromDate, String formattedToDate);
+	
+	
 
 	@Query(value="select res.resourceId,res.resourceName,allDetails.activityAllocateDetId,\r\n"
 			+ "allocation.activityFor  ,\r\n"
@@ -118,16 +127,16 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 			+ "    DATE_FORMAT(alo.activityToDate, '%d %b %Y') as activityToDate,\r\n"
 			+ "    alo.activityId,res.resourceName,res.resourceCode,res.designation,pla.platform,alo.fromHours,\r\n"
 			+ "    alo.activityFor,alo.toHours,act.activityName,res.resourceId\r\n"
-			+ "FROM attendance att\r\n"
-			+ "inner join activity_allocation alo on alo.activityAllocateId=att.activityAllocateId\r\n"
-			+ "inner join resource_pool res on res.resourceId=att.resourceId\r\n"
+			+ "FROM  activity_allocation alo \r\n"
+			+ "inner join activity_allocation_details dt  on alo.activityAllocateId=dt.activityAllocateId\r\n"
+			+ "inner join resource_pool res on res.resourceId=dt.resourceId\r\n"
 			+ "inner join platforms pla on pla.platform=res.platform\r\n"
 			+ "inner join activity act on act.activityId=alo.activityId\r\n"
-			+ "WHERE alo.activityFromDate >= :formattedFromDate\r\n"
-			+ "AND alo.activityToDate <= :formattedToDate\r\n"
+			+ "WHERE alo.activityFromDate >= :formattedFromDate \r\n"
+			+ "AND alo.activityToDate <= :formattedToDate    \r\n"
 			+ "     AND (\r\n"
 			+ "    ( CONCAT(res.resourceName, '(', res.resourceCode, ')') = :resourceValue))\r\n"
-			+ "    order by alo.activityFromDate,res.resourceName;", nativeQuery = true)
+			+ "    order by alo.activityFromDate,res.resourceName", nativeQuery = true)
 	List<Object[]> getactivitydataaccordingtoresource(String formattedFromDate, String formattedToDate, String resourceValue);
 	
 	
