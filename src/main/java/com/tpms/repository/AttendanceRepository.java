@@ -40,4 +40,6 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Integer>
 			+ "WHERE att.atendanceDate=:finalDate AND activity.activityId = :selectedActivity", nativeQuery = true)
 	List<Attendance> findByAttendanceDateAndActivity(Date finalDate, Integer selectedActivity);
 
+	Attendance findByActivityAllocateId(Long id);
+
 }
