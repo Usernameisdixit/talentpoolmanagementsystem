@@ -5,9 +5,7 @@ import { Component, Input, OnInit, Inject} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AttendanceGenerateServiceService } from 'src/app/AttendanceMgmt/Service/attendance-generate-service.service';
 import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
-import { ActivityReportServiceService } from '../../ActivityReportService/activity-report-service.service';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -39,7 +37,7 @@ export class AssessmentreportComponent {
   }
 
   bsConfig: Partial<BsDatepickerConfig>;
-  constructor(private localeService: BsLocaleService, private attendanceGeneratedService: AttendanceGenerateServiceService, private activityReportService: ActivityReportServiceService, private datePipe: DatePipe,private http :HttpClient ) {
+  constructor(private localeService: BsLocaleService, private datePipe: DatePipe,private http :HttpClient ) {
     this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
     this.localeService.use('en-gb'); // Use the defined locale
   }
@@ -109,11 +107,11 @@ export class AssessmentreportComponent {
   }
 
   loadPlatforms() {
-    this.attendanceGeneratedService.getPlatforms().subscribe(
-      (data: any[]) => {
-        this.platforms = data;
-      },
-    );
+    // this.attendanceGeneratedService.getPlatforms().subscribe(
+    //   (data: any[]) => {
+    //     this.platforms = data;
+    //   },
+    // );
   }
 
 
