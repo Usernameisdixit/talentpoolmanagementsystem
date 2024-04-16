@@ -146,6 +146,9 @@ export class AttendanceNewComponent {
         }
       );
 
+    }else{
+      this.attendanceDetails=[];
+      this.isPresents=false;
     }
   }
 
