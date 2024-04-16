@@ -270,11 +270,11 @@ export class BulkAllocationComponent {
         this.allocationService.deleteAllocation(row.activityAllocateId)
         .subscribe((status) => {
           if(status==1)
-            Swal.fire('Deleted','','success').then(()=>window.location.reload());
+            Swal.fire('Deleted','Activity allocation data has been deleted','success').then(()=>window.location.reload());
           else if(status==0)
-            Swal.fire('Unable to delete','','error').then(()=>window.location.reload());
+            Swal.fire('Unable to delete','This data is already associated with attendance records','error');
           else
-            Swal.fire('Some error occurred','','error').then(()=>window.location.reload());
+            Swal.fire('Some error occurred','','error');
         })
       }
     });
