@@ -23,7 +23,7 @@ export class AttendanceNewComponent {
     this.localeService.use('en-gb');
   }
 
-  activities: { id: number; name: string; }[] = [];
+  activities: { id: number; name: string; activityFor:number,activityAllocateId:number}[] = [];
   selectedActivity: number = 0;
   attendanceDetails: any = [];
   selectedDate: Date | undefined;
@@ -103,7 +103,9 @@ export class AttendanceNewComponent {
       this.selectedDate=new Date(this.loginService.selectedDate);
     }
     this.attendanceNewService.fetchActivities(this.selectedDate?.toLocaleString()).subscribe((data) => {
-      this.activities = data.map(activity => ({ id: activity.activityId, name: activity.activityName }));
+      console.log("hi");
+      console.log(data);
+      this.activities = data.map(activity => ({ id: activity.activityId, name: activity.activityName ,activityFor:activity.activityFor,activityAllocateId:activity.activityAllocateId}));
     }, error => {
       console.error('Error fetching activities:', error);
     });

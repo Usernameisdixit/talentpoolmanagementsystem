@@ -1,16 +1,22 @@
-
 <div class="card-body">
-  
   <div class="container d-flex justify-content-end mt-3">
-  <div class="export-buttons">
-    <button  (click)="exportToPDF()" class="btn btn-icon export-btn" title="Download PDF">
-      <i class="fas fa-file-pdf fa-lg pdf-icon"></i>
-    </button>
-    
-    <button (click)="exportToExcel()" class="btn btn-icon export-btn" title="Download Excel">
-      <i class="fas fa-file-excel fa-lg excel-icon"></i>
-    </button>
-  </div>
+    <div class="export-buttons">
+      <button
+        (click)="exportToPDF()"
+        class="btn btn-icon export-btn"
+        title="Download PDF"
+      >
+        <i class="fas fa-file-pdf fa-lg pdf-icon"></i>
+      </button>
+
+      <button
+        (click)="exportToExcel()"
+        class="btn btn-icon export-btn"
+        title="Download Excel"
+      >
+        <i class="fas fa-file-excel fa-lg excel-icon"></i>
+      </button>
+    </div>
   </div>
 
   <div class="mt-2">
@@ -21,18 +27,26 @@
           <!-- <th>Activity RefNo</th> -->
           <th>Activity Name</th>
           <th>Activity Description</th>
-          <th style="width: 200px;">Activity Response Person1</th>
-          <th style="width: 200px;">Activity Response Person2</th>
+          <th style="width: 200px">Activity Response Person1</th>
+          <th style="width: 200px">Activity Response Person2</th>
           <th>Status</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let activity of activities| paginate :{
-          itemsPerPage : tableSize,
-          currentPage : pageno ,
-          totalItems: count
-          }; let i = index;" (click)="setActiveActivity(activity, i)">
+        <tr
+          *ngFor="
+            let activity of activities
+              | paginate
+                : {
+                    itemsPerPage: tableSize,
+                    currentPage: pageno,
+                    totalItems: count
+                  };
+            let i = index
+          "
+          (click)="setActiveActivity(activity, i)"
+        >
           <td>{{ (pageno - 1) * tableSize + i + 1 }}</td>
           <!-- <td>{{ activity.activityRefNo }}</td> -->
           <td>{{ activity.activityName }}</td>
@@ -40,34 +54,54 @@
           <td>{{ activity.responsPerson1 }}</td>
           <td>{{ activity.responsPerson2 }}</td>
           <td>
-            <span *ngIf="!activity.deletedFlag" class="m-1 active"><b>Active</b></span>
-            <span *ngIf="activity.deletedFlag" class="m-1 inactive"><b>Inactive</b></span>
+            <span *ngIf="!activity.deletedFlag" class="m-1 active"
+              ><b>Active</b></span
+            >
+            <span *ngIf="activity.deletedFlag" class="m-1 inactive"
+              ><b>Inactive</b></span
+            >
           </td>
           <td>
             <div class="d-flex justify-content-between">
-              <button class="m-1 btn btn-sm btn-primary" (click)="editActivity(activity.activityId)"><i class="fas fa-edit"></i></button>
-              <button *ngIf="!activity.deletedFlag"  class="m-1 btn btn-sm btn-danger" (click)="toggleDeletedFlag(activity)"> <i class="fa-solid fa-check"></i></button>
-              <button *ngIf="activity.deletedFlag"  class="m-1 btn btn-sm btn-danger" (click)="toggleDeletedFlag(activity)"> <i class="fa-solid fa-xmark"></i></button>
+              <button
+                class="m-1 btn btn-sm btn-primary"
+                (click)="editActivity(activity.activityId)"
+              >
+                <i class="fas fa-edit"></i>
+              </button>
+              <button
+                *ngIf="!activity.deletedFlag"
+                class="m-1 btn btn-sm btn-danger"
+                (click)="toggleDeletedFlag(activity)"
+              >
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+              <button
+                *ngIf="activity.deletedFlag"
+                class="m-1 btn btn-sm btn-danger"
+                (click)="toggleDeletedFlag(activity)"
+              >
+                <i class="fa-solid fa-check"></i>
+              </button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-    
-
-    
-
-
+    <div
+      class="d-flex justify-content-end m-2"
+      id="pagination"
+      *ngIf="activities.length != 0"
+    >
+      <pagination-controls
+        previousLabel="Prev"
+        nextLabel="Next"
+        (pageChange)="getTableDataChange($event)"
+      ></pagination-controls>
+    </div>
   </div>
 
-
-  <div class="d-flex justify-content-end mt-2"  *ngIf="!activities" id="pagination">
+  <!-- <div class="d-flex justify-content-end mt-2"  *ngIf="!activities" id="pagination">
     <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)= "getTableDataChange($event)"></pagination-controls>
-  </div>
-
-
-
-
-
+  </div> -->
 </div>
-

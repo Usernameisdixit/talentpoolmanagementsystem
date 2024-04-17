@@ -3,13 +3,11 @@ import { Activity } from 'src/app/Model/activity.model';
 import { ActivityService } from 'src/app/ActivityMgmt/Service/activity.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MatPaginator,PageEvent} from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-
-
 
 @Component({
   selector: 'app-activity-list',
@@ -19,16 +17,17 @@ import { saveAs } from 'file-saver';
 export class ActivityListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   // tutorials?: Tutorial[];
-  activities?:Activity[];
+  activities?: Activity[];
   currentActivity: Activity = {};
   currentIndex = -1;
   title = '';
   message: any;
   pagedActivities: Activity[] = [];
-  
 
-
-  constructor(private activityService: ActivityService,private router: Router) {}
+  constructor(
+    private activityService: ActivityService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.retrieveActivities();
@@ -38,15 +37,14 @@ export class ActivityListComponent implements OnInit {
     this.activityService.getAll().subscribe({
       next: (data) => {
         this.activities = data;
-        console.log('Retrieved activities:', this.activities); 
-       // this.setPage(this.currentPage);
+        console.log('Retrieved activities:', this.activities);
+        // this.setPage(this.currentPage);
 
         console.log(data);
       },
-      error: (e) => console.error(e)
+      error: (e) => console.error(e),
     });
   }
-
 
   // setPage(pageIndex: number): void {
   //   const startIndex = (pageIndex - 1) * this.pageSize;
@@ -54,13 +52,11 @@ export class ActivityListComponent implements OnInit {
   //   this.pagedActivities = this.activities.slice(startIndex, endIndex);
   // }
 
-
   // onPageChange(event: PageEvent): void {
-    
+
   //   this.currentPage = event.pageIndex + 1;
-  //   this.setPage(this.currentPage); 
+  //   this.setPage(this.currentPage);
   // }
-  
 
   getActivity(id: string): void {
     this.activityService.get(id).subscribe({
@@ -69,19 +65,21 @@ export class ActivityListComponent implements OnInit {
         this.currentActivity = {
           activityId: data.activityId,
           activityName: data.activityName,
-          description:data.description,
-          responsPerson1:data.responsPerson1,
-          responsPerson2:data.responsPerson2
+          description: data.description,
+          responsPerson1: data.responsPerson1,
+          responsPerson2: data.responsPerson2,
           // Map other properties similarly
         };
-        console.log("Current activity after mapping:", this.currentActivity);
-            console.log("Activity ID after mapping:", this.currentActivity ? this.currentActivity.activityId : null);
+        console.log('Current activity after mapping:', this.currentActivity);
+        console.log(
+          'Activity ID after mapping:',
+          this.currentActivity ? this.currentActivity.activityId : null
+        );
         console.log(data);
       },
-      error: (e) => console.error(e)
+      error: (e) => console.error(e),
     });
   }
-  
 
   editActivity(intActivityId: string): void {
     this.getActivity(intActivityId);
@@ -99,81 +97,84 @@ export class ActivityListComponent implements OnInit {
     this.currentIndex = index;
   }
 
-
   deleteActivity(activity: Activity): void {
     if (confirm('Are you sure you want to delete this activity?')) {
       this.activityService.delete(activity.activityId).subscribe({
         next: () => {
           console.log('Activity deleted successfully');
           // Remove the deleted activity from the activities array
-        if (this.activities) {
-          this.activities = this.activities.filter(a => a.activityId !== activity.activityId);
-        }
+          if (this.activities) {
+            this.activities = this.activities.filter(
+              (a) => a.activityId !== activity.activityId
+            );
+          }
         },
-        error: (e) => console.error('Error deleting activity:', e)
+        error: (e) => console.error('Error deleting activity:', e),
       });
     }
   }
 
-
-
   toggleDeletedFlag(activity: Activity): void {
-  activity.deletedFlag = !activity.deletedFlag; // Toggle the deletedFlag
-  this.activityService.updateDeletedFlag(activity.activityId, activity.deletedFlag)
-    .subscribe({
-      next: () => console.log('Deleted flag updated successfully'),
-      error: (e) => console.error('Error updating deleted flag:', e)
+    activity.deletedFlag = !activity.deletedFlag; // Toggle the deletedFlag
+    this.activityService
+      .updateDeletedFlag(activity.activityId, activity.deletedFlag)
+      .subscribe({
+        next: () => console.log('Deleted flag updated successfully'),
+        error: (e) => console.error('Error updating deleted flag:', e),
+      });
+  }
+
+  exportToPDF() {
+    const doc = new jsPDF();
+
+    const data = this.getTableDataa();
+
+    // Add title centered
+    const pageTitle = 'Activity Details';
+    const textWidth = doc.getTextDimensions(pageTitle).w;
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const x = (pageWidth - textWidth) / 2;
+    doc.text(pageTitle, x, 15);
+
+    // Add the table
+    (doc as any).autoTable({
+      head: [
+        [
+          'SL#',
+          'ActivityRefNo',
+          'ActivityName',
+          'ActivityDescription	',
+          'ActivityResponsPerson1',
+          'ActivityResponsPerson2',
+          'Status',
+        ],
+      ],
+      body: data,
+      startY: 20,
+      margin: { top: 15 },
     });
-}
 
+    doc.save('Activity_Details.pdf');
+  }
+  private getTableDataa(): any[][] {
+    let serialNumber = 1;
+    return this.activities.map((c, index) => [
+      serialNumber++,
+      // c.activityRefNo,
+      c.activityName,
+      c.description,
+      c.responsPerson1,
+      c.responsPerson2,
+      c.deletedFlag ? 'Inactive' : 'Active',
+    ]);
+  }
 
-exportToPDF() {
-  const doc = new jsPDF();
+  // For Implimenting Excel Format Data Reporting
+  exportToExcel() {
+    const tableData = this.getTableDataa();
 
-  const data = this.getTableDataa();
-
-  // Add title centered
-  const pageTitle = 'Activity Details';
-  const textWidth = doc.getTextDimensions(pageTitle).w;
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const x = (pageWidth - textWidth) / 2;
-  doc.text(pageTitle, x, 15);
-
-  // Add the table
-  (doc as any).autoTable({
-    head: [['SL#', 'ActivityRefNo', 'ActivityName', 'ActivityDescription	', 'ActivityResponsPerson1', 'ActivityResponsPerson2', 'Status']],
-    body: data,
-    startY: 20, 
-    margin: { top: 15 } 
-  });
-
-  doc.save('Activity_Details.pdf');
-}
-private getTableDataa(): any[][] {
-  let serialNumber = 1;
-  return this.activities.map((c, index) => [
-    
-    serialNumber++,
-    // c.activityRefNo,
-    c.activityName,
-    c.description,
-    c.responsPerson1,
-    c.responsPerson2,
-    c.deletedFlag ? 'Inactive' : 'Active',
-    
-    
-  ]);
-}
-  
-
-// For Implimenting Excel Format Data Reporting
-exportToExcel()  {
-   
-  const tableData = this.getTableDataa();
-
- 
-  const headerStyle = { bold: true };
-  const header = [
+    const headerStyle = { bold: true };
+    const header = [
       { v: 'SL#', s: headerStyle },
       { v: 'ActivityRefNo', s: headerStyle },
       { v: 'ActivityName', s: headerStyle },
@@ -181,28 +182,33 @@ exportToExcel()  {
       { v: 'ActivityResponsPerson1', s: headerStyle },
       { v: 'ActivityResponsPerson2', s: headerStyle },
       { v: 'Status', s: headerStyle },
-      
-  ];
- 
-  tableData.unshift(header);
+    ];
 
-  const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
+    tableData.unshift(header);
 
-  // Add header row
-  //const header = ['ResourceId', 'Resource Name', 'Resource Code', 'Platform', 'Location', 'Experience', 'Mobile','Email'];
-  XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' });
+    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
 
-  const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-  const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  this.saveAsExcelFile(excelBuffer, 'Activity_Details');
-}
+    // Add header row
+    //const header = ['ResourceId', 'Resource Name', 'Resource Code', 'Platform', 'Location', 'Experience', 'Mobile','Email'];
+    XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' });
 
-private saveAsExcelFile(buffer: any, fileName: string): void {
-  const data: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
-}
+    const workbook: XLSX.WorkBook = {
+      Sheets: { data: worksheet },
+      SheetNames: ['data'],
+    };
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+    this.saveAsExcelFile(excelBuffer, 'Activity_Details');
+  }
 
-  
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
+  }
 
   // removeAllTutorials(): void {
   //   this.tutorialService.deleteAll().subscribe({
@@ -227,20 +233,21 @@ private saveAsExcelFile(buffer: any, fileName: string): void {
   //   });
   // }
 
-   // for pagination
-   indexNumber : number = 0;
-   pageno : number = 1;
-   tableSize : number = 10;
-   count : number = 0;
-   pageSizes = [10,20,30,40,50];
- 
- //pagination functionality
- getTableDataChange(event : any){
-   
-   this.pageno = event;
-   this.indexNumber = (this.pageno - 1) * this.tableSize;
-   console.log(this.indexNumber);
-   
-   this.retrieveActivities();
- }
+  // for pagination
+  indexNumber: number = 0;
+  pageno: number = 1;
+  tableSize: number = 10;
+  count: number = 0;
+  pageSizes = [10, 20, 30, 40, 50];
+
+  //pagination functionality
+  getTableDataChange(event: any) {
+    this.pageno = event;
+    this.indexNumber = (this.pageno - 1) * this.tableSize;
+    console.log(this.indexNumber);
+
+    this.retrieveActivities();
+  }
+
+  
 }
