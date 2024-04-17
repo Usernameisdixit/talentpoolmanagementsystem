@@ -55,28 +55,28 @@ export class AddActivityComponent {
 
     };
     if (data.activityName=='' || data.activityName==null) {
-      Swal.fire("Please Enter The Activity Name!");
+      Swal.fire("Please enter the activity name!");
     }
     else if (data.description=='') {
-      Swal.fire("Please Enter The Description!");
+      Swal.fire("Please enter the description!");
     }
     else if (data.responsPerson1=='') {
-      Swal.fire("Please Enter The Respons Person1!");
+      Swal.fire("Please enter the response person1!");
     }
     else if (data.responsPerson2=='') {
-      Swal.fire("Please Enter The Respons Person2!");
+      Swal.fire("Please enter the response person2!");
     }else{    
       Swal.fire({
         title: 'Do you want to submit?',
-        icon: 'warning',
+        // icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes',
         cancelButtonText: 'No',
-        reverseButtons: true
+        reverseButtons: false
       }).then((result) => {
         if (result.isConfirmed) {
           this.activityService.create(data).subscribe((data) => {
-            Swal.fire('Activity Save', 'Activity Saved Successfully', 'success'); 
+            Swal.fire('Activity saved successfully', '', 'success'); 
           this.router.navigate(['/activities']);
         },
         (error) => {
@@ -144,6 +144,10 @@ export class AddActivityComponent {
        }
     });
 
+  }
+
+  reset(){
+    window.location.reload();
   }
   
 }

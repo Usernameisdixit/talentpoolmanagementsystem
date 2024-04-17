@@ -80,6 +80,7 @@ import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
 import { PlatformViewComponent } from './ResourceMgmt/Components/platform-master/platform-view/platform-view.component';
 import { PlatformComponent } from './ResourceMgmt/Components/platform-master/platform/platform.component';
 import { HideIdInterceptor } from './HideIdInterceptor.service';
+import { ActivityNewReportComponentComponent } from './Reports/ActivityNewReportComponent/activity-new-report-component.component';
 
 
 defineLocale('en-gb', enGbLocale); //
@@ -124,7 +125,8 @@ defineLocale('en-gb', enGbLocale); //
     LoaderComponent,
    
     PlatformViewComponent,
-    PlatformComponent
+    PlatformComponent,
+    ActivityNewReportComponentComponent
 
   ],
   imports: [

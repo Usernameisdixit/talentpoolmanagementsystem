@@ -126,7 +126,7 @@ export class UserComponent {
             showCancelButton: true,
             confirmButtonText: 'Yes',
             cancelButtonText: 'No',
-            reverseButtons: true
+            reverseButtons: false
           }).then((result) => {
             if (result.isConfirmed) {
               // added 12/04/2024 createdBy and updatedBy null value issuse fixed...
