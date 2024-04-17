@@ -20,17 +20,17 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
     @Query("UPDATE Activity a SET a.deletedFlag = :deletedFlag WHERE a.activityId = :activityId")
     void updateDeletedFlag(@Param("activityId") Integer activityId, @Param("deletedFlag") boolean deletedFlag);
 	
-//	@Query(value="SELECT distinct a.* FROM activity a " +
-//	           "INNER JOIN activity_allocation_details aloDetails ON a.activityId = allocation.activityId " +
-//	           "INNER JOIN activity_allocation allocation ON allocation.activityAllocateId = aloDetails.activityAllocateId " +
-//	           "WHERE :selectedDate BETWEEN allocation.activityFromDate AND allocation.activityToDate",nativeQuery = true)
-//	List<Activity> getActvitiesByDate(String selectedDate);
+
 	
-	
-	@Query(value="SELECT distinct a.* FROM activity a " +
+	@Query(value="SELECT a.*,allocation.activityFor,allocation.activityAllocateId FROM activity a " +
 	           "INNER JOIN activity_allocation allocation ON a.activityId = allocation.activityId  " +
 	           "WHERE :selectedDate BETWEEN allocation.activityFromDate AND allocation.activityToDate",nativeQuery = true)
-	List<Activity> getActvitiesByDate(String selectedDate);
+	List<Map<String,Object>> getActvitiesByDate(String selectedDate);
+	
+//	@Query(value="SELECT distinct a.* FROM activity a " +
+//	           "INNER JOIN activity_allocation allocation ON a.activityId = allocation.activityId  " +
+//	           "WHERE :selectedDate BETWEEN allocation.activityFromDate AND allocation.activityToDate",nativeQuery = true)
+//	List<Activity> getActvitiesByDate(String selectedDate);
 	
 	
 	@Query(value="SELECT a.activityId, a.activityName, a.activityRefNo, " +
@@ -89,8 +89,55 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 	Integer checkForExistActivity(Integer activityId);
 	
 	
+	@Query(value = "SELECT DISTINCT act.* FROM activity act \r\n"
+			+ "			INNER JOIN activity_allocation alo ON alo.activityId = act.activityId \r\n"
+			+ "			WHERE alo.activityFromDate >= :formattedFromDate\r\n"
+			+ "			AND alo.activityToDate <= :formattedToDate\r\n"
+			+ "			order by act.activityName", nativeQuery = true)
+	List<Activity> getActvitiesReportByDateRange(String formattedFromDate, String formattedToDate);
 	
 	
+
+	@Query(value="select res.resourceId,res.resourceName,allDetails.activityAllocateDetId,\r\n"
+			+ "allocation.activityFor  ,\r\n"
+			+ "allocation.fromHours ,\r\n"
+			+ "allocation.toHours ,\r\n"
+			+ "        activity.activityName,\r\n"
+			+ "         activity.activityName,\r\n"
+			+ "         res.platform,\r\n"
+			+ "         res.designation,\r\n"
+			+ "         res.resourceCode,\r\n"
+			+ "         allocation.activityAllocateId,\r\n"
+			+ "         allDetails.activityAllocateDetId,\r\n"
+			+ "		DATE_FORMAT(allocation.activityFromDate, '%d %b %Y') as activityFromDate,\r\n"
+			+ "		DATE_FORMAT(allocation.activityToDate, '%d %b %Y') as activityToDate\r\n"
+			+ "from activity_allocation allocation\r\n"
+			+ "inner join activity_allocation_details  allDetails  on allocation.activityAllocateId=allDetails.activityAllocateId\r\n"
+			+ "inner join activity activity on activity.activityId=allocation.activityId\r\n"
+			+ "inner join  resource_pool res on res.resourceId=allDetails.resourceId\r\n"
+			+ "where  allocation.activityFromDate >= :formattedFromDate and allocation.activityToDate<= :formattedToDate and allocation.activityId= :activityId\r\n"
+			+ "order by allocation.activityFromDate, allocation.activityFor, res.resourceName", nativeQuery = true)
+
+	List<Object[]> getactivitypdfdata(String formattedFromDate, String formattedToDate, String activityId);
+	 
+	
+	
+	@Query(value="SELECT \r\n"
+			+ "    DATE_FORMAT(alo.activityFromDate, '%d %b %Y') as activityFromDate,\r\n"
+			+ "    DATE_FORMAT(alo.activityToDate, '%d %b %Y') as activityToDate,\r\n"
+			+ "    alo.activityId,res.resourceName,res.resourceCode,res.designation,pla.platform,alo.fromHours,\r\n"
+			+ "    alo.activityFor,alo.toHours,act.activityName,res.resourceId\r\n"
+			+ "FROM  activity_allocation alo \r\n"
+			+ "inner join activity_allocation_details dt  on alo.activityAllocateId=dt.activityAllocateId\r\n"
+			+ "inner join resource_pool res on res.resourceId=dt.resourceId\r\n"
+			+ "inner join platforms pla on pla.platform=res.platform\r\n"
+			+ "inner join activity act on act.activityId=alo.activityId\r\n"
+			+ "WHERE alo.activityFromDate >= :formattedFromDate \r\n"
+			+ "AND alo.activityToDate <= :formattedToDate    \r\n"
+			+ "     AND (\r\n"
+			+ "    ( CONCAT(res.resourceName, '(', res.resourceCode, ')') = :resourceValue))\r\n"
+			+ "    order by alo.activityFromDate,res.resourceName", nativeQuery = true)
+	List<Object[]> getactivitydataaccordingtoresource(String formattedFromDate, String formattedToDate, String resourceValue);
 	
 	
 }

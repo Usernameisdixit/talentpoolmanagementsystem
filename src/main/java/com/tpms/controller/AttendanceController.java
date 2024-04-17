@@ -72,8 +72,8 @@ public class AttendanceController {
 	}
 	
 	@GetMapping("activityByDate")
-	public List<Activity> activityById(@RequestParam String selectedDate) {
-		List<Activity> activities = attendanceService.getActvitiesByDate(selectedDate);
+	public List<Map<String,Object>> activityById(@RequestParam String selectedDate) {
+		List<Map<String,Object>> activities = attendanceService.getActvitiesByDate(selectedDate);
 		return activities;
 	}
 
