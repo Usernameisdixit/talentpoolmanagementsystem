@@ -43,7 +43,7 @@ export class TalentlistComponent implements OnInit {
 
   deletetalent(event: any, id: number) {
 
-    if (window.confirm('Are You Sure You Want to Delete the Resource From Resource Pool')) {
+    if (window.confirm('Do you want to delete the resource from resource pool')) {
       event.target.innerText = "Deleting....";
       this.service.deleteByResourceNumber(id).subscribe(response => {
         this.delmsg = response;

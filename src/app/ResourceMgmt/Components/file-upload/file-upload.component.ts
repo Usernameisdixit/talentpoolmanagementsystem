@@ -50,16 +50,12 @@ export class FileUploadComponent {
       allocationMsg = 'Please select an allocation date.\n';
     }
     if (!this.selectedFile) {
-      Swal.fire({
-        text: errorMessage
-      });
+      Swal.fire( errorMessage);
       return;
     }
 
     if (!this.allocationDate) {
-      Swal.fire({
-        text: allocationMsg
-      });
+      Swal.fire(allocationMsg);
       return;
     }
 
@@ -68,13 +64,11 @@ export class FileUploadComponent {
       fileFormat = 'Unsupported file type. Please select a .xlsx file.\n';
     }
     
-    //this.checkFileFormat(this.selectedFile);
+   // this.checkFileFormat(this.selectedFile);
    
 
     if (fileFormat) {
-      Swal.fire({
-        text: fileFormat
-      });
+      Swal.fire( fileFormat);
       return;
     }
 
@@ -144,20 +138,23 @@ export class FileUploadComponent {
     this.datepicker.show(); 
   } 
 
-  checkFileFormat(uploadFile:File):boolean {
+  /*checkFileFormat(uploadFile:File):boolean {
     console.log(uploadFile.name);
 
     const fileReader = new FileReader();
-    fileReader.onload = (event: any) => {
-     const arrayBuffer = event.target.result;
+    fileReader.onload = (uploadFile) => {
+     const arrayBuffer = uploadFile;
      const workbook = XLSX.read(arrayBuffer, { type: 'array' });
      console.log(workbook);
-     const firstSheetName = workbook.SheetNames[0]; // Use index 0 for the first sheet
+     const firstSheetName = workbook.SheetNames[0];
+     console.log(firstSheetName);
      const worksheet = workbook.Sheets[firstSheetName];
-     const headers: string[] = [];
+     console.log(worksheet);
+     
+    // const headers: string[] = [];
     }
-
+    fileReader.readAsArrayBuffer(uploadFile);
     return true;
-  }
+  }*/
 
 }

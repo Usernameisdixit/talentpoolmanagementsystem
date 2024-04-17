@@ -5,18 +5,18 @@
     <div class="form-group col-md-6">
       <label>Activity From Date <span class="required">*</span></label>
       <div class="input-group">
-        <input type="text" [(ngModel)]="selectedFromDate" class="form-control bold-black" bsDatepicker [bsConfig]="bsConfig" autocomplete="off" (ngModelChange)="setToDate()" required>
+        <input type="text" [(ngModel)]="selectedFromDate" class="form-control bold-black" bsDatepicker [bsConfig]="bsConfig" autocomplete="off" (ngModelChange)="setToDate()" #dp="bsDatepicker" required>
         <div class="input-group-append">
-          <span class="input-group-text"><i class="material-icons">date_range</i></span>
+          <span class="input-group-text" (click)="openDatepicker()"><i class="material-icons">date_range</i></span>
         </div>
       </div>
     </div>
     <div class="form-group col-md-6">
       <label>Activity To Date <span class="required">*</span></label>
       <div class="input-group">
-        <input type="text" [(ngModel)]="selectedToDate" class="form-control bold-black" bsDatepicker [bsConfig]="bsConfig" autocomplete="off" (ngModelChange)="fetchAllocationData()" required>
+        <input type="text" [(ngModel)]="selectedToDate" class="form-control bold-black" bsDatepicker [bsConfig]="bsConfig" autocomplete="off" (ngModelChange)="fetchAllocationData()" #dp1="bsDatepicker" required>
         <div class="input-group-append">
-          <span class="input-group-text"><i class="material-icons">date_range</i></span>
+          <span class="input-group-text" (click)="openDatepicker1()"><i class="material-icons">date_range</i></span>
         </div>
       </div>
     </div>
