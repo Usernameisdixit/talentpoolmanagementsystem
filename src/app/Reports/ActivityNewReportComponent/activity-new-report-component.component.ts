@@ -48,7 +48,7 @@ export class ActivityNewReportComponentComponent {
   }
   fetchActivities(): void {
     if (this.selectedFromDate && this.selectedToDate) {
-      this.reportAttendanceService.getActivities(this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString())
+      this.reportActivityService.getActivities(this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString())
         .subscribe(data => {
          this.activities = data;
         });

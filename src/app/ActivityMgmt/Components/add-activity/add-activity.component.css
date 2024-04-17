@@ -9,3 +9,11 @@
   margin-bottom: 20px;
 }
 
+.required {
+  color: red;
+  margin-left: 5px; /* Adjust margin as needed */
+}
+
+
+
+

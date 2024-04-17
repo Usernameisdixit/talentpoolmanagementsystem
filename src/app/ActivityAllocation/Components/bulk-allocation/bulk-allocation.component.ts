@@ -29,7 +29,6 @@ export class BulkAllocationComponent {
   selectedFromDate!: Date;
   selectedToDate!: Date;
   allocateId: any;
-  editMode: boolean = false;
   existingResources: Resource[] = [];
 
   platforms: Platform[];
@@ -135,10 +134,17 @@ export class BulkAllocationComponent {
               'warning'
             ).then(()=>this.existingResources=res.data);
           }
-          else if(res.category == 'activity') {
+          else if(res.category == 'activityByDate') {
             Swal.fire(
               'Duplicate data!',
-              'This activity already exists in this time frame.',
+              'Activity already exists in this time frame.',
+              'warning'
+            );
+          }
+          else if(res.category == 'activityBySession') {
+            Swal.fire(
+              'Duplicate data!',
+              'Activity already exists in this session.',
               'warning'
             );
           }
@@ -235,28 +241,37 @@ export class BulkAllocationComponent {
   }
 
   edit(row: DynamicGrid): void {
-    this.editMode = true;
     this.uncheckAll();
 
-    this.activity = row.activity;
-    this.selectedSession = row.activityFor;
-    this.selectedActivityFrom = row.fromHours;
-    this.selectedActivityTo = row.toHours;
-    this.allocateId = row.activityAllocateId;
-    this.markedResources = [];
-    this.dynamicArray.forEach(alloc=>{
-      if(alloc.activityAllocateId == row.activityAllocateId) {
-        alloc.details.forEach(detail=>{
-          this.resources.forEach(resource=>{
-            if(resource.resourceId == detail.resourceId) {
-              resource.selected = true;
-              this.markedResources.push({"resourceId":detail.resourceId, "platformId":detail.platformId, "activityAllocateDetId":detail.activityAllocateDetId});
-            }
+    if(this.allocateId!=null && this.allocateId==row.activityAllocateId) {
+      this.activity = {activityName: null, activityId: 0};
+      this.selectedSession = 0;
+      this.selectedActivityFrom = null;
+      this.selectedActivityTo = null;
+      this.allocateId = null;
+    }
+
+    else {
+      this.activity = row.activity;
+      this.selectedSession = row.activityFor;
+      this.selectedActivityFrom = row.fromHours;
+      this.selectedActivityTo = row.toHours;
+      this.allocateId = row.activityAllocateId;
+      this.markedResources = [];
+      this.dynamicArray.forEach(alloc=>{
+        if(alloc.activityAllocateId == row.activityAllocateId) {
+          alloc.details.forEach(detail=>{
+            this.resources.forEach(resource=>{
+              if(resource.resourceId == detail.resourceId) {
+                resource.selected = true;
+                this.markedResources.push({"resourceId":detail.resourceId, "platformId":detail.platformId, "activityAllocateDetId":detail.activityAllocateDetId});
+              }
+            });
           });
-        });
-        return;
-      }
-    });
+          return;
+        }
+      });
+    }
   }
 
   remove(row: DynamicGrid): void {

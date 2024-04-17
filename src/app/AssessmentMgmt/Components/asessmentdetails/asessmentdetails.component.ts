@@ -127,7 +127,8 @@ export class AsessmentdetailsComponent implements OnInit {
  
 
   validateAndGetDetails() {
-
+    this.page=1;
+    this.page1=1;
     if (!this.selectedActivity) {
       Swal.fire('Warning', 'All fields are required', 'warning');
       return;
@@ -288,7 +289,7 @@ export class AsessmentdetailsComponent implements OnInit {
         showCancelButton: true,
         confirmButtonText: 'Yes',
         cancelButtonText: 'No',
-        reverseButtons: true
+        reverseButtons: false
       }).then((result) => {
         if (result.isConfirmed) {
           if(this.status==='u'){

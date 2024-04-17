@@ -27,3 +27,8 @@
   background-color: #0056b3;
   border-color: #0056b3;
 }
+
+.required {
+  color: red;
+  margin-left: 5px; /* Adjust margin as needed */
+}

@@ -14,6 +14,12 @@ export class ActivitynewreportserviceService {
 
   constructor(private httpClient: HttpClient) { }
 
+
+  getActivities(fromDate: string, toDate: string): Observable<any[]> {
+    const urlF = `${this.url}/getActivityReportOnFromTo`;
+    return this.httpClient.get<string[]>(`${urlF}?fromDate=${fromDate}&toDate=${toDate}`);
+  }
+
   attendanceData(reportType: string, fromDate: string, toDate: string, activityId: string, resourceValue: string) {
     const url = `${this.url}/activitynewDataReport`;
     const params = {
