@@ -58,17 +58,17 @@ export class UserViewComponent {
    
     if(deletedFlag){
       Swal.fire({
-      title: 'Do you want to InActive ?',
+      title: 'Do you want to inActive ?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes',
       cancelButtonText: 'No',
-      reverseButtons: true
+      reverseButtons: false
       }).then((result) => {
          if (result.isConfirmed) {
             this.userService.deleteUser(userId,deletedFlag).subscribe((data: any) => {
           
-            Swal.fire('InActivated', 'User InActivated', 'success');
+            Swal.fire('User InActivated','', 'success');
             this.getUserDetails();
          }, (error: any) => {
          console.log(error);
@@ -78,16 +78,16 @@ export class UserViewComponent {
     }
     else{
         Swal.fire({
-          title: 'Do you want to Active ?',
+          title: 'Do you want to active ?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Yes',
           cancelButtonText: 'No',
-          reverseButtons: true
+          reverseButtons: false
         }).then((result) => {
            if (result.isConfirmed) {
                this.userService.deleteUser(userId,deletedFlag).subscribe((data: any) => {
-                Swal.fire('Activated', 'User Activated', 'success');
+                Swal.fire('User Activated','', 'success');
                 this.getUserDetails();
              }, (error: any) => {
                 console.log(error);

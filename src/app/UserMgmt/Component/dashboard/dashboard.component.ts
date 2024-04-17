@@ -49,6 +49,10 @@ export class DashboardComponent  implements OnInit{
     this.loginService.getAllocationDates().subscribe((response: any[]) => {
       debugger;
       console.log("API Response:", response);
+      //response=null;
+      if(response==null){
+        this.resources=null;
+      }
       this.allocationDate = response.map(date => this.datePipe.transform(date, 'dd-MMM-yyyy'));
       this.alDate=this.allocationDate[this.allocationDate.length-1];
       //this.alDate.sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
@@ -60,6 +64,10 @@ export class DashboardComponent  implements OnInit{
     this.selectedDate=this.datePipe.transform(this.atnDate, 'dd-MMM-yyyy');
     this.loginService.getAttendance(this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd')).subscribe((response:any)=>{
       debugger;
+      //response=null
+      if(response==null){
+        this.attendanceData=null;
+      }
       this.attendanceData=response;
       console.log(this.attendanceData);
       
@@ -87,6 +95,11 @@ export class DashboardComponent  implements OnInit{
 
     this.loginService.gettotalActivitiesPlanned(this.datePipe.transform(firstday, 'yyyy-MM-dd'),this.datePipe.transform(lastday, 'yyyy-MM-dd')).subscribe((response: any) => {
       // debugger;
+      //response=null;
+      if(response==null)
+      {
+        this.ActivtiesPlanned=null;
+      }
        this.ActivtiesPlanned = response;
       // console.log(this.ActivityData); 
       // alert(this.ActivtiesPlanned);
@@ -111,6 +124,12 @@ export class DashboardComponent  implements OnInit{
   fetchAssessmentDates() {
     this.apiService.getAssessmentDates().subscribe(
       (dates: string[]) => {
+        debugger;
+        //dates=null;
+        if(dates==null)
+        {
+          this.assessmentDateArr=null;
+        }
    
         this.assessmentDateArr = dates.map(date => this.transformDate(date));
         // Sort the dates in descending order (latest to oldest)

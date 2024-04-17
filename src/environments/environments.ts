@@ -1,7 +1,8 @@
 export const environment = {
 
     production : false ,
-    apiUrl : 'http://localhost:9999/tpms/attendance',
+    apiUrl : 'http://localhost:9999/tpms',
+    attendenceUrl:  'http://localhost:9999/tpms/attendance',
 
     //Role URL
     saveRole : 'http://localhost:9999/tpms/saveRoles',
