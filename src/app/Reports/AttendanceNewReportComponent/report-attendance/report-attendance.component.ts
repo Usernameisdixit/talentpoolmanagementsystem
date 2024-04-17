@@ -149,6 +149,7 @@ export class ReportAttendanceComponent {
             debugger;
             //RESOURCE LOGIC PDF
             if(this.inputType=='resource'){
+              
               const uniqueActivityNames = new Set();
               data.forEach(entry => {
                 entry.activityAttenDetails.forEach(detail => {
@@ -156,13 +157,13 @@ export class ReportAttendanceComponent {
                 });
               });
               this.activitiesByUser=Array.from(uniqueActivityNames).sort();
-              console.log(data);
+         
               data.forEach(entry => {
                 if (entry.activityAttenDetails) {
-                  this.activities.forEach(activity => {
-                    if (!entry.activityAttenDetails.some(detail => detail.activityName === activity.activityName)) {
+                  this.activitiesByUser.forEach(activity => {
+                    if (!entry.activityAttenDetails.some(detail => detail.activityName === activity)) {
                       entry.activityAttenDetails.push({
-                        activityName: activity.activityName,
+                        activityName: activity,
                         attendanceStatus: 'Attendance Not taken ',
                         activityFor:'-1'
                       });
@@ -232,6 +233,7 @@ export class ReportAttendanceComponent {
 
             //START NA LOGIC
             if (this.inputType == 'summary') {
+              
               data.forEach(entry => {
                 if (entry.activityAttenDetails) {
                   this.activities.forEach(activity => {
@@ -262,10 +264,10 @@ export class ReportAttendanceComponent {
               this.activitiesByUser=Array.from(uniqueActivityNames).sort();
               data.forEach(entry => {
                 if (entry.activityAttenDetails) {
-                  this.activities.forEach(activity => {
-                    if (!entry.activityAttenDetails.some(detail => detail.activityName === activity.activityName)) {
+                  this.activitiesByUser.forEach(activity => {
+                    if (!entry.activityAttenDetails.some(detail => detail.activityName === activity)) {
                       entry.activityAttenDetails.push({
-                        activityName: activity.activityName,
+                        activityName: activity,
                         attendanceStatus: 'Attendance Not taken ',
                         activityFor:'-1'
                       });
