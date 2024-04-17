@@ -90,8 +90,19 @@ export class ReportAttendanceService {
       const atendanceDate = detail.atendanceDate;
       const dataRowColor = [255, 255, 255];
       const rowData = [];
-
+      let activityData='';
+      if(reportType=='resource'){
+       activityData = this.getActivityData(detail);
+      }
       if (reportType == 'activity') {
+        let statusData='';
+        const isActivityForConsistent = this.checkActivityForConsistency(attendanceData);
+        if(isActivityForConsistent==false){
+           statusData = `${detail.activityFor == '1' ? 'first half' : 'second half'}: ${detail.attendanceStatus}`;
+          // statusData= detail.activityFor +':'+ detail.attendanceStatus;
+        }else{
+          statusData=  detail.attendanceStatus;
+        }
         const currentDate = detail.atendanceDate;
         if (currentDate !== lastDate) {
           data.push([{ content: currentDate, colSpan: 6, styles: { fillColor: ['CEEEF5'] } }]);
@@ -102,9 +113,10 @@ export class ReportAttendanceService {
           { content: detail.resourceName, styles: { fillColor: dataRowColor } },
           { content: detail.designation, styles: { fillColor: dataRowColor } },
           { content: detail.platform, styles: { fillColor: dataRowColor } },
-          { content: detail.attendanceStatus, styles: { fillColor: dataRowColor } },
+          { content: statusData, styles: { fillColor: dataRowColor } },
         );
       } else {
+        console.log(detail);
         rowData.push(
           { content: detail.atendanceDate, styles: { fillColor: dataRowColor } },
           // { content: detail.activityName, styles: { fillColor: dataRowColor } },
@@ -114,7 +126,7 @@ export class ReportAttendanceService {
           detail.activityAttenDetails.forEach(activityDetail => {
             
             rowData.push(
-                { content: activityDetail.attendanceStatus, styles: { fillColor: dataRowColor } },
+                { content: activityData, styles: { fillColor: dataRowColor } },
             );
         });
       }
@@ -146,6 +158,18 @@ export class ReportAttendanceService {
       margin: { left: 10 },
     });
     pdf.save('attendance_report.pdf');
+  }
+
+  private getActivityData(detail: any): string {
+    console.log(detail.activityAttenDetails.length);
+    let activityData = '';
+    detail.activityAttenDetails.forEach((firstHalfObj, index, array) => {
+      activityData += `${firstHalfObj.activityFor === '1' ? 'first half' : 'second half'} : ${firstHalfObj.attendanceStatus}`;
+      if (index < array.length - 1) {
+        activityData += '\n';
+      }
+    });
+    return activityData;
   }
 
   generateAteendanceExcel(reportType: string, attendanceData: any[], fromDate: Date, toDate: Date,activityHead:any[],activityHeadResource:any[]) {
@@ -337,14 +361,26 @@ export class ReportAttendanceService {
         }
       }
       const rowData = [];
+      let activityData='';
+      if(reportType=='resource' || reportType=='summary'){
+        activityData = this.getActivityData(detail);
+       }
       if (reportType == 'activity') {
+        let statusData='';
+        const isActivityForConsistent = this.checkActivityForConsistency(attendanceData);
+        if(isActivityForConsistent==false){
+           statusData = `${detail.activityFor == '1' ? 'first half' : 'second half'}: ${detail.attendanceStatus}`;
+          // statusData= detail.activityFor +':'+ detail.attendanceStatus;
+        }else{
+          statusData=  detail.attendanceStatus;
+        }
         
         rowData.push(
           { v: detail.resourceCode, s: { alignment: { wrapText: true } } },
           { v: detail.resourceName, s: { alignment: { wrapText: true } } },
           { v: detail.designation, s: { alignment: { wrapText: true } } },
           { v: detail.platform, s: { alignment: { wrapText: true } } },
-          { v: detail.attendanceStatus, s: { alignment: { wrapText: true } } },
+          { v: statusData, s: { alignment: { wrapText: true } } },
         );
       } else if (reportType == 'resource') {
         rowData.push(
@@ -355,7 +391,7 @@ export class ReportAttendanceService {
         if (detail.activityAttenDetails) {
           detail.activityAttenDetails.forEach(activityDetail => {
             rowData.push(
-                { v: activityDetail.attendanceStatus, s: { alignment: { wrapText: true } } }
+                { v: activityData, s: { alignment: { wrapText: true } } }
             );
         });
       }
@@ -371,7 +407,7 @@ export class ReportAttendanceService {
         if (detail.activityAttenDetails) {
         detail.activityAttenDetails.forEach(activityDetail => {
           rowData.push(
-              { v: activityDetail.attendanceStatus, s: { alignment: { wrapText: true } } }
+              { v: activityData, s: { alignment: { wrapText: true } } }
           );
       });
     }
@@ -397,5 +433,18 @@ export class ReportAttendanceService {
 
     // Save the workbook as an Excel file
     XLSX.writeFile(wb, 'attendance_report.xlsx');
+  }
+
+  checkActivityForConsistency(attendanceData) {
+    if (attendanceData.length === 0) {
+      return false;
+    }
+    const firstActivityFor = attendanceData[0].activityFor;
+    for (let i = 1; i < attendanceData.length; i++) {
+      if (attendanceData[i].activityFor !== firstActivityFor) {
+        return false;
+      }
+    }
+    return true;
   }
 }
