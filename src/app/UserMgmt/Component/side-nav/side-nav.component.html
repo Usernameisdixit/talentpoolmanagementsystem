@@ -37,15 +37,15 @@
                 </a>
                 <ul class="collapse" id="submenu2" data-bs-parent="#menu">
                     <li (click)="getListItem($event);">
-                        <a routerLink="/uploadExcel" class="nav-link"><i class="fas fa-file-upload"></i> Upload Resource File</a>
+                        <a routerLink="/uploadExcel" class="nav-link"><i class="fas fa-file-upload"></i> Resource Allocation </a>
                     </li>
                     <li (click)="getListItem($event);">
-                        <a routerLink="/talents" class="nav-link"><i class="fas fa-user-check"></i> View Resource List</a>
+                        <a routerLink="/talents" class="nav-link"><i class="fas fa-user-check"></i> View Resources </a>
                     </li>
 
                     <li (click)="getListItem($event);">
                         <a routerLink="/resourceHistory" class="nav-link">
-                            <i class="fas fa-user-check"></i> View Resource History
+                            <i class="fas fa-user-check"></i> View Resource Log
                         </a>
                         
                     </li>
@@ -80,7 +80,7 @@
                         <a routerLink="/activities" class="nav-link"><i class="fas fa-user-tie"></i> View Activity</a>
                     </li>
                     <li (click)="getListItem($event);">
-                        <a routerLink="/bulk-allocation" class="nav-link"><i class="fas fa-users"></i> Activity Bulk Allocation</a>
+                        <a routerLink="/bulk-allocation" class="nav-link"><i class="fas fa-users"></i> Activity Allocation</a>
                     </li>
                 </ul>
             </li>
@@ -111,9 +111,9 @@
             </li>
 
             <!-- Email Activity -->
-            <li (click)="getListItem($event);">
+            <!-- <li (click)="getListItem($event);">
                 <a routerLink="/settings" class="nav-link"><i class="fas fa-envelope"></i> Communication</a>
-            </li>
+            </li> -->
 
             <!-- Reports -->
            
@@ -126,8 +126,8 @@
                     <li (click)="getListItem($event);">
                         <a routerLink="/attendanceReportGen" class="nav-link"><i class="fas fa-eye"></i>Attendance Report</a>
                     </li>
-                    <li (click)="getListItem($event);">
-                        <a routerLink="/activityReport" class="nav-link"><i class="fas fa-eye"></i> Activity Report</a>
+                     <li (click)="getListItem($event);">
+                        <a routerLink="/activitynewReport" class="nav-link"><i class="fas fa-eye"></i> Activity Report</a>
                     </li>
 
                     <li (click)="getListItem($event);">

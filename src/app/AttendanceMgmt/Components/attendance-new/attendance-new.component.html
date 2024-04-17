@@ -12,8 +12,10 @@
                 <div class="input-group">
                     <input id="date" class="form-control" type="text"
                         (ngModelChange)="onDateChange($event);getActivity();" bsDatepicker [(ngModel)]="selectedDate"
-                        [maxDate]="maxDate" [bsConfig]="bsConfig" (change)="getDataByDateActivity()" #dp="bsDatepicker"/>
-                        <span class="input-group-text" (click)="openDatepicker()"><i class="material-icons">date_range</i></span>
+                        [maxDate]="maxDate" [bsConfig]="bsConfig" (change)="getDataByDateActivity()"
+                        #dp="bsDatepicker" />
+                    <span class="input-group-text" (click)="openDatepicker()"><i
+                            class="material-icons">date_range</i></span>
                 </div>
             </div>
         </div>
@@ -23,7 +25,13 @@
                 <select id="activity" class="form-control" [(ngModel)]="selectedActivity"
                     (change)="getDataByDateActivity()" (ngModelChange)="onSelectedActivityChange()">
                     <option value=0 selected>--select--</option>
-                    <option *ngFor="let activity of activities" [value]="activity.id">{{ activity.name }}</option>
+                    <option *ngFor="let activity of activities" [value]="activity.activityAllocateId">{{ activity.name
+                        }}
+                        <ng-container *ngIf="activity.activityFor === 1"> (First Half)</ng-container>
+                        <ng-container *ngIf="activity.activityFor === 2"> (Second Half)</ng-container>
+                        <ng-container *ngIf="activity.activityFor !== 1 && activity.activityFor !== 2">
+                            (Both)</ng-container>
+                    </option>
                 </select>
             </div>
         </div>
@@ -33,23 +41,30 @@
                 <div class="col-md-12">
                     <div class="container" *ngIf="isPresents">
                         <!-- <h4>{{attendanceDetails | json}}</h4> -->
-                        <div *ngIf="attendanceDetails.length > 0 && attendanceDetails[0]?.firstHalf.length > 0" class="activity-details">
+                        <div *ngIf="attendanceDetails.length > 0 && attendanceDetails[0]?.firstHalf.length > 0"
+                            class="activity-details">
                             <span *ngIf="attendanceDetails[0]?.firstHalf[0]?.activityFor === '1'">
-                                <b>Activity For: </b> First Half &nbsp;&nbsp; <b>Time: </b> {{ attendanceDetails[0]?.firstHalf[0]?.fromHours }} to {{ attendanceDetails[0]?.firstHalf[0]?.toHours }}
+                                <b>Activity For: </b> First Half &nbsp;&nbsp; <b>Time: </b> {{
+                                attendanceDetails[0]?.firstHalf[0]?.fromHours }} to {{
+                                attendanceDetails[0]?.firstHalf[0]?.toHours }}
                             </span>
                             <span *ngIf="attendanceDetails[0]?.firstHalf[0]?.activityFor === '2'">
-                                <b>Activity: </b> Second Half &nbsp;&nbsp; <b>Time: </b> {{ attendanceDetails[0]?.firstHalf[0]?.fromHours }} to {{ attendanceDetails[0]?.firstHalf[0]?.toHours }}
+                                <b>Activity: </b> Second Half &nbsp;&nbsp; <b>Time: </b> {{
+                                attendanceDetails[0]?.firstHalf[0]?.fromHours }} to {{
+                                attendanceDetails[0]?.firstHalf[0]?.toHours }}
                             </span>
                         </div>
-                        
-                        <table >
+
+                        <table>
                             <thead>
                                 <tr>
                                     <th>
                                         <input type="hidden" value={{uncheckCheckbox1}}>
-                                        <input type="checkbox" class="form-check-input"  [checked]="!uncheckCheckboxStatus[page - 1]"
+                                        <input type="checkbox" class="form-check-input"
+                                            [checked]="!uncheckCheckboxStatus[page - 1]"
                                             (change)="checkAllFirst($event)" />
-                                        Sl No.</th>
+                                        Sl No.
+                                    </th>
                                     <th>Resource Code</th>
                                     <th> Resource Name </th>
                                     <th>Platform</th>
@@ -58,7 +73,7 @@
                             </thead>
                             <tbody>
                                 <!-- <tr *ngFor="let detail of attendanceDetails; let i = index"> -->
-                                    <tr *ngFor="let detail of attendanceDetails | paginate :{
+                                <tr *ngFor="let detail of attendanceDetails | paginate :{
                                         itemsPerPage : tableSize,
                                         currentPage : page ,
                                         totalItems: count
@@ -86,8 +101,9 @@
                         </table>
                     </div>
                     <div class="d-flex justify-content-end" id="pagination" *ngIf="attendanceDetails.length!=0">
-                        <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)= "getTableDataChange($event ,attendanceDetails)"></pagination-controls>
-                      </div>
+                        <pagination-controls previousLabel="Prev" nextLabel="Next"
+                            (pageChange)="getTableDataChange($event ,attendanceDetails)"></pagination-controls>
+                    </div>
                     <!-- <div class="row justify-content-center mt-4" *ngIf="!isPresents">
                         <div class="col-md-6 text-center">
                             <p>Please Select Activity !</p>

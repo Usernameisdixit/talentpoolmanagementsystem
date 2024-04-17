@@ -29,7 +29,6 @@ export class BulkAllocationComponent {
   selectedFromDate!: Date;
   selectedToDate!: Date;
   allocateId: any;
-  editMode: boolean = false;
   existingResources: Resource[] = [];
 
   platforms: Platform[];
@@ -49,9 +48,7 @@ export class BulkAllocationComponent {
               private activatedRoute: ActivatedRoute, private dateService: DateService,
               private datePipe: DatePipe, private localeService: BsLocaleService) {
                 this.activatedRoute.paramMap.subscribe(params => {
-                  console.log(params);
                   this.resourceId = params.get('id');
-            
                 });
                 this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
                 this.localeService.use('en-gb');
@@ -114,7 +111,7 @@ export class BulkAllocationComponent {
                       activityFor: this.selectedSession, activity: this.activity, fromHours: this.selectedActivityFrom,
                       toHours: this.selectedActivityTo, activityAllocateId: this.allocateId};
         this.allocationService.saveBulkAllocation(this.markedResources, data).subscribe((res) => {
-          if(res.length == 0) {
+          if(res.category == null) {
             Swal.fire(
               'Saved!',
               'Activity allocation details has been saved successfully.',
@@ -130,12 +127,26 @@ export class BulkAllocationComponent {
             });
             this.markedResources=[];
           }
-          else {
+          else if(res.category == 'resource') {
             Swal.fire(
               'Duplicate data!',
-              'Some resources already exist in this time frame. Click on "View details" to see the list',
+              'Some resources already exist in this time frame. Click on "View details" to see the list.',
               'warning'
-            ).then(()=>this.existingResources=res);
+            ).then(()=>this.existingResources=res.data);
+          }
+          else if(res.category == 'activityByDate') {
+            Swal.fire(
+              'Duplicate data!',
+              'Activity already exists in this time frame.',
+              'warning'
+            );
+          }
+          else if(res.category == 'activityBySession') {
+            Swal.fire(
+              'Duplicate data!',
+              'Activity already exists in this session.',
+              'warning'
+            );
           }
         }, () => {
           Swal.fire(
@@ -220,7 +231,7 @@ export class BulkAllocationComponent {
       }
     }
     if(!isChecked)
-      this.markedResources = this.markedResources.filter(e=>e.platform!=platform.platform);
+      this.markedResources = this.markedResources.filter(e=>e.platformId!=platform.platformId);
   }
 
   setToDate(): void {
@@ -230,26 +241,56 @@ export class BulkAllocationComponent {
   }
 
   edit(row: DynamicGrid): void {
-    this.editMode = true;
     this.uncheckAll();
 
-    this.activity = row.activity;
-    this.selectedSession = row.activityFor;
-    this.selectedActivityFrom = row.fromHours;
-    this.selectedActivityTo = row.toHours;
-    this.allocateId = row.activityAllocateId;
-    this.markedResources = [];
-    this.dynamicArray.forEach(alloc=>{
-      if(alloc.activityAllocateId == row.activityAllocateId) {
-        alloc.details.forEach(detail=>{
-          this.resources.forEach(resource=>{
-            if(resource.resourceId == detail.resourceId) {
-              resource.selected = true;
-              this.markedResources.push({"resourceId":detail.resourceId, "platformId":detail.platformId, "activityAllocateDetId":detail.activityAllocateDetId});
-            }
+    if(this.allocateId!=null && this.allocateId==row.activityAllocateId) {
+      this.activity = {activityName: null, activityId: 0};
+      this.selectedSession = 0;
+      this.selectedActivityFrom = null;
+      this.selectedActivityTo = null;
+      this.allocateId = null;
+    }
+
+    else {
+      this.activity = row.activity;
+      this.selectedSession = row.activityFor;
+      this.selectedActivityFrom = row.fromHours;
+      this.selectedActivityTo = row.toHours;
+      this.allocateId = row.activityAllocateId;
+      this.markedResources = [];
+      this.dynamicArray.forEach(alloc=>{
+        if(alloc.activityAllocateId == row.activityAllocateId) {
+          alloc.details.forEach(detail=>{
+            this.resources.forEach(resource=>{
+              if(resource.resourceId == detail.resourceId) {
+                resource.selected = true;
+                this.markedResources.push({"resourceId":detail.resourceId, "platformId":detail.platformId, "activityAllocateDetId":detail.activityAllocateDetId});
+              }
+            });
           });
-        });
-        return;
+          return;
+        }
+      });
+    }
+  }
+
+  remove(row: DynamicGrid): void {
+    Swal.fire({
+      title: 'Are you sure?',
+      icon: 'warning',
+      confirmButtonText: 'Yes',
+      showDenyButton: true
+    }).then(res => {
+      if(res.isConfirmed) {
+        this.allocationService.deleteAllocation(row.activityAllocateId)
+        .subscribe((status) => {
+          if(status==1)
+            Swal.fire('Deleted','Activity allocation data has been deleted','success').then(()=>window.location.reload());
+          else if(status==0)
+            Swal.fire('Unable to delete','This data is already associated with attendance records','error');
+          else
+            Swal.fire('Some error occurred','','error');
+        })
       }
     });
   }

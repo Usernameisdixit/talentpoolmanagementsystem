@@ -10,18 +10,15 @@ import { NavBarComponent } from './UserMgmt/Component/nav-bar/nav-bar.component'
 import { FileUploadComponent } from './ResourceMgmt/Components/file-upload/file-upload.component';
 import { TalentlistComponent } from './ResourceMgmt/Components/talentlist/talentlist.component';
 import { TalenteditComponent } from './ResourceMgmt/Components/talentedit/talentedit.component';
-import { AttendanceComponent } from './AttendanceMgmt/Components/attendance/attendance.component';
 import { DashboardComponent } from './UserMgmt/Component/dashboard/dashboard.component';
 
 
 import { authGuard } from './Guard/auth.guard';
-import { AttendanceReportComponent } from './AttendanceMgmt/Components/attendance-report/attendance-report.component';
 import { AsessmentdetailsComponent } from './AssessmentMgmt/Components/asessmentdetails/asessmentdetails.component';
 import { DisclaimerComponent } from './Disclaimer/disclaimer/disclaimer.component';
 import { ViewassessmentComponent } from './AssessmentMgmt/Components/viewassessment/viewassessment.component';
 import { CreateRoleComponent } from './UserMgmt/Component/role/create-role/create-role.component';
 import { ViewRoleComponent } from './UserMgmt/Component/role/view-role/view-role.component';
-import { ActivityReportComponent } from './Reports/ActivityReportComponent/activity-report/activity-report.component';
 import { AssessmentreportComponent } from './Reports/AssessmentReport/assessmentreport/assessmentreport.component';
 import { AllocationComponent } from './ActivityAllocation/Components/allocation/allocation.component';
 import { AllocationDetailsComponent } from './ActivityAllocation/Components/allocation-details/allocation-details.component';
@@ -30,14 +27,13 @@ import { ActivityListComponent } from './ActivityMgmt/Components/activity-list/a
 import { ActivityDetailsComponent } from './ActivityMgmt/Components/activity-details/activity-details.component';
 import { AddActivityComponent } from './ActivityMgmt/Components/add-activity/add-activity.component';
 import { EditAssessmentComponent } from './AssessmentMgmt/Components/edit-assessment/edit-assessment.component';
-import { AttendanceMgmtComponent } from './AttendanceMgmt/Components/attendance-mgmt/attendance-mgmt.component';
 import { AttendanceNewComponent } from './AttendanceMgmt/Components/attendance-new/attendance-new.component';
 import { BulkAllocationComponent } from './ActivityAllocation/Components/bulk-allocation/bulk-allocation.component';
 import { ResourcehistoryComponent } from './ResourceMgmt/Components/resourcehistory/resourcehistory.component';
 import { ReportAttendanceComponent } from './Reports/AttendanceNewReportComponent/report-attendance/report-attendance.component';
 import { PlatformComponent } from './ResourceMgmt/Components/platform-master/platform/platform.component';
 import { PlatformViewComponent } from './ResourceMgmt/Components/platform-master/platform-view/platform-view.component';
-
+import { ActivityNewReportComponentComponent } from './Reports/ActivityNewReportComponent/activity-new-report-component.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -61,14 +57,11 @@ const routes: Routes = [
       { path: 'editUser/:userId', component: UserComponent, canActivate: [authGuard] },
       { path: 'deleteUser/:userId', component: UserViewComponent, canActivate: [authGuard] },
       { path: 'uploadExcel', component: FileUploadComponent,canActivate: [authGuard]  },
-      {path: "attendance", component:AttendanceComponent,canActivate: [authGuard]},
       {path:'talents',component:TalentlistComponent,canActivate: [authGuard]},
       {path:'editalent/:id',   component:TalenteditComponent,canActivate: [authGuard]},
-      {path: "attendanceReport", component:AttendanceReportComponent,canActivate: [authGuard]},
       { path: 'addassessment', component: AsessmentdetailsComponent, canActivate: [authGuard]  },
       { path: 'disclaimer', component: DisclaimerComponent, canActivate: [authGuard]  },
       { path: 'viewasessment', component: ViewassessmentComponent, canActivate: [authGuard]  },
-       {path: "activityReport", component:ActivityReportComponent,canActivate: [authGuard]},
        { path: 'assessmentreport', component: AssessmentreportComponent, canActivate: [authGuard]  },
        {path: "activity", component:AllocationComponent,canActivate: [authGuard]},
        { path: 'editallocdetails/:id', component: AllocationDetailsComponent, canActivate: [authGuard]},
@@ -81,13 +74,13 @@ const routes: Routes = [
        { path: 'activity/:id', component: ActivityDetailsComponent ,canActivate: [authGuard]},
        { path: 'add', component: AddActivityComponent , canActivate: [authGuard]},
        { path: 'editassesment/:id', component: EditAssessmentComponent , canActivate: [authGuard]},
-       { path: 'atten', component: AttendanceMgmtComponent, canActivate: [authGuard]  },
        { path: 'takeAtten', component: AttendanceNewComponent, canActivate: [authGuard]  },
        { path: 'resourceHistory', component: ResourcehistoryComponent, canActivate: [authGuard]  },
        { path: 'attendanceReportGen', component: ReportAttendanceComponent, canActivate: [authGuard]  },
        { path : 'addPlatform', component: PlatformComponent, canActivate: [authGuard]},
        { path : 'viewPlatform', component: PlatformViewComponent, canActivate: [authGuard]},
        { path : 'editPlatform/:platformId', component: PlatformComponent, canActivate: [authGuard] },
+       { path : 'activitynewReport', component: ActivityNewReportComponentComponent, canActivate: [authGuard] },
     ]
   }
 ];

@@ -1,4 +1,4 @@
-<div class="">
+<div class="container">
     <div class="row justify-content-start maxscrn">
         <div class="col-md-12">
             <div class="form-check form-check-inline">
@@ -17,13 +17,14 @@
                 <label class="form-check-label" for="inputSummary">Summary</label>
             </div>
         </div>
+ <hr>       
         <div class="col-md-3">
             <div class="form-group">
                 <label for="date">From Date: <span class="required">*</span></label>
                 <div class="input-group">
                     <input id="date" class="form-control" type="text" autocomplete="off" [(ngModel)]="selectedFromDate" (ngModelChange)="onDateChange()"  bsDatepicker
-                        [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }" placeholder="Select date" />
-                    <span class="input-group-text"><i class="material-icons">date_range</i></span>
+                        [bsConfig]="bsConfig" placeholder="Select date"  #dp="bsDatepicker"/>
+                    <span class="input-group-text" (click)="openDatepicker()"><i class="material-icons">date_range</i></span>
                 </div>
             </div>
         </div>
@@ -32,8 +33,8 @@
                 <label for="date">To Date: <span class="required">*</span></label>
                 <div class="input-group">
                     <input id="date" class="form-control" type="text" autocomplete="off" [(ngModel)]="selectedToDate" (ngModelChange)="onDateChange()" bsDatepicker
-                        [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }" placeholder="Select date" />
-                    <span class="input-group-text"><i class="material-icons">date_range</i></span>
+                        [bsConfig]="bsConfig" placeholder="Select date"  #dp1="bsDatepicker"/>
+                    <span class="input-group-text" (click)="openDatepicker1()"><i class="material-icons">date_range</i></span>
                 </div>
             </div>
         </div>
@@ -66,7 +67,7 @@
 
 
         <div class="row justify-content-center mt-4">
-            <div class="col-md-6 text-center">
+            <div class="col-md-6">
                 <button *ngIf="inputType !== 'summary'" type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button>
                 <!-- <button type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button> -->
                 <div class="button-space"></div>

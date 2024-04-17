@@ -35,7 +35,6 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
 
 
     ngOnInit(): void {
-      debugger;
       this.getResourceHistoryWithFileName();
       this.filteredResources = this.resources;
       this.resourceHisDateWise.forEach(() => {
@@ -74,9 +73,7 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
     
 
     getResourceHistoryWithFileName(){
-      debugger;
         this.service.getResourceDetailsWithFileName().subscribe((data: ResourceHistory[]) => {
-          debugger;
           this.resources = data;
           console.log(this.resources);
           this.groupAssessmentsByDateRange();

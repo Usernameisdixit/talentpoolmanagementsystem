@@ -43,8 +43,8 @@
                 <label for="date">Date:</label>
                 <div class="input-group">
                     <input id="date" class="form-control" type="text" [(ngModel)]="selectedDate" bsDatepicker
-                        [bsConfig]="{ dateInputFormat: 'DD-MMM-YYYY' }" placeholder="Select date" />
-                    <span class="input-group-text"><i class="material-icons">date_range</i></span>
+                        [bsConfig]="bsConfig" placeholder="Select date" #dp="bsDatepicker" autocomplete="off"/>
+                    <span class="input-group-text" (click)="openDatepicker()"><i class="material-icons">date_range</i></span>
                 </div>
             </div>
         </div>

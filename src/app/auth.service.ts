@@ -10,8 +10,8 @@ export class AuthService {
   constructor() { }
   isLoggedIn(token: any) {
     debugger;
-    if (token == undefined || token === '' || token == null)
-      this.userLogIn = false;
+    if(token=="undefined" || token==='' || token==null)
+      this.userLogIn=false;
     else
       this.userLogIn = true;
   }

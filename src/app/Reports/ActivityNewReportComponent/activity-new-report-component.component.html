@@ -1,0 +1,76 @@
+<div class="container">
+    <div class="row justify-content-start maxscrn">
+        <div class="col-md-12">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input"  type="radio" name="inputType" id="inActivity" [(ngModel)]="inputType"
+                (change)="clearResourceInput()" value="activity">
+                <label class="form-check-label" for="inActivity">Activity Wise</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inputType" id="inResource" [(ngModel)]="inputType"
+                (change)="clearActivityInput()" value="resource">
+                <label class="form-check-label" for="inResource">Resource Wise</label>
+            </div>
+        
+</div>
+
+<div class="col-md-3">
+    <div class="form-group">
+        <label for="datefrom">From Date: <span class="required">*</span></label>
+        <div class="input-group">
+            <input id="datefrom" class="form-control" type="text" autocomplete="off" [(ngModel)]="selectedFromDate"  (ngModelChange)="onDateChange()" bsDatepicker
+                [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }" placeholder="Select date" />
+            <span class="input-group-text"><i class="material-icons">date_range</i></span>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-3">
+    <div class="form-group">
+        <label for="dateto">To Date: <span class="required">*</span></label>
+        <div class="input-group">
+            <input id="dateto" class="form-control" type="text" autocomplete="off" [(ngModel)]="selectedToDate" (ngModelChange)="onDateChange()" bsDatepicker
+                [bsConfig]="{ dateInputFormat: 'DD MMM YYYY' }" placeholder="Select date" />
+            <span class="input-group-text"><i class="material-icons">date_range</i></span>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-3" *ngIf="inputType === 'activity'">
+    <div class="form-group">
+        <label for="activity">Activity: <span class="required">*</span></label>
+        <select id="activity" [(ngModel)]="activity" class="form-control">
+            <option value='0' selected>--Select--</option>
+            <option *ngFor="let activity of activities" [value]="activity.activityId">{{ activity.activityName }}</option>
+            <!-- <option *ngFor="let platform of platforms" [value]="platform.platform">{{ platform.platform }}  </option>-->
+        </select>
+    </div>
+</div>
+
+<div class="col-md-3" *ngIf="inputType === 'resource'">
+    <div class="form-group">
+        <label for="date">Resource: <span class="required">*</span></label>
+        <div class="input-group">
+            <input id="date" class="form-control" type="text" matInput [formControl]="myControl" (click)="getResourNamesforReportActivityOnClick()"
+                [matAutocomplete]="auto" />
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                    {{option.name}}
+                </mat-option>
+            </mat-autocomplete> 
+        </div>
+    </div>
+</div>
+</div>
+<div class="row">
+    <div class="col-md-12 d-flex align-items-center justify-content-center mt-4">
+        <button type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button>
+        <!-- <button type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button> -->
+        <div class="button-space"></div>
+        <button type="button" class="btn btn-success button-space"  (click)="generateExcel()">Generate Excel</button>
+    </div>
+</div>
+
+
+    </div>
+
