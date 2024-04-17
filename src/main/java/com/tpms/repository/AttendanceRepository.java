@@ -37,7 +37,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Integer>
 			+ "INNER JOIN activity_allocation alocation ON alocation.activityAllocateId = att.activityAllocateId "
 			+ "INNER JOIN activity_allocation_details dtls ON dtls.activityAllocateDetId = att.activityAllocateDetId "
 			+ "INNER JOIN activity activity ON activity.activityId = alocation.activityId "
-			+ "WHERE att.atendanceDate=:finalDate AND activity.activityId = :selectedActivity", nativeQuery = true)
+			+ "WHERE att.atendanceDate=:finalDate AND att.activityAllocateId = :selectedActivity", nativeQuery = true)
 	List<Attendance> findByAttendanceDateAndActivity(Date finalDate, Integer selectedActivity);
 
 	Integer countByActivityAllocateId(Long id);

@@ -1,6 +1,7 @@
 package com.tpms.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,7 +17,7 @@ public interface AttendanceService {
 
 	public List<String> getAllNames(String value);
 
-	public List<Activity> getActvitiesByDate(String selectedDate);
+	public List<Map<String,Object>> getActvitiesByDate(String selectedDate);
 
 	public JSONArray attendDetailsByActivity(Integer selectedActivity, String selectedDate);
 

@@ -71,7 +71,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 	}
 
 	@Override
-	public List<Activity> getActvitiesByDate(String selectedDate) {
+	public List<Map<String,Object>> getActvitiesByDate(String selectedDate) {
 		SimpleDateFormat inputFormat = new SimpleDateFormat("M/d/yyyy, h:mm:ss a");
 		SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
 		String formattedDate = null;
