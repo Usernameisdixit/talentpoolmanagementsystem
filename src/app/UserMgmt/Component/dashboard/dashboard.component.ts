@@ -49,6 +49,10 @@ export class DashboardComponent  implements OnInit{
     this.loginService.getAllocationDates().subscribe((response: any[]) => {
       debugger;
       console.log("API Response:", response);
+      //response=null;
+      if(response==null){
+        this.resources=null;
+      }
       this.allocationDate = response.map(date => this.datePipe.transform(date, 'dd-MMM-yyyy'));
       this.alDate=this.allocationDate[this.allocationDate.length-1];
       //this.alDate.sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
@@ -60,6 +64,10 @@ export class DashboardComponent  implements OnInit{
     this.selectedDate=this.datePipe.transform(this.atnDate, 'dd-MMM-yyyy');
     this.loginService.getAttendance(this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd')).subscribe((response:any)=>{
       debugger;
+      //response=null
+      if(response==null){
+        this.attendanceData=null;
+      }
       this.attendanceData=response;
       console.log(this.attendanceData);
       
@@ -69,6 +77,10 @@ export class DashboardComponent  implements OnInit{
     //throw new Error('Method not implemented.');
     this.contactService.getResources().subscribe((response:any)=>{
       this.resources=response.resources;
+      //response=null;
+      if(response==null){
+        this.allocationDate=null;
+      }
       const inputDate = new Date(response.allocationDate);
       this.allocationDate = this.datePipe.transform(inputDate, 'd MMMM yyyy');
     })
@@ -87,6 +99,11 @@ export class DashboardComponent  implements OnInit{
 
     this.loginService.gettotalActivitiesPlanned(this.datePipe.transform(firstday, 'yyyy-MM-dd'),this.datePipe.transform(lastday, 'yyyy-MM-dd')).subscribe((response: any) => {
       // debugger;
+      //response=null;
+      if(response==null)
+      {
+        this.ActivtiesPlanned=null;
+      }
        this.ActivtiesPlanned = response;
       // console.log(this.ActivityData); 
       // alert(this.ActivtiesPlanned);
