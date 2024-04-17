@@ -77,10 +77,6 @@ export class DashboardComponent  implements OnInit{
     //throw new Error('Method not implemented.');
     this.contactService.getResources().subscribe((response:any)=>{
       this.resources=response.resources;
-      //response=null;
-      if(response==null){
-        this.allocationDate=null;
-      }
       const inputDate = new Date(response.allocationDate);
       this.allocationDate = this.datePipe.transform(inputDate, 'd MMMM yyyy');
     })
@@ -128,6 +124,12 @@ export class DashboardComponent  implements OnInit{
   fetchAssessmentDates() {
     this.apiService.getAssessmentDates().subscribe(
       (dates: string[]) => {
+        debugger;
+        //dates=null;
+        if(dates==null)
+        {
+          this.assessmentDateArr=null;
+        }
    
         this.assessmentDateArr = dates.map(date => this.transformDate(date));
         // Sort the dates in descending order (latest to oldest)

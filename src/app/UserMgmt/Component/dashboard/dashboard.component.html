@@ -7,7 +7,7 @@
         <div mat-card-avatar class="card-avatar"></div>
         <mat-card-title>Resources</mat-card-title>
       </mat-card-header>
-      <div *ngIf="resources==null">
+      <div *ngIf="resources==null" class="no-message">
         <p style="font-weight: bold; text-align: center;font-size: 18px;">Resources has not been allocated.</p>
         </div>
         <div *ngIf="resources!=null">
@@ -38,7 +38,7 @@
         <div mat-card-avatar class="card-avatar"></div>
         <mat-card-title>Activities</mat-card-title>
       </mat-card-header>
-      <div *ngIf="ActivtiesPlanned==null">
+      <div *ngIf="ActivtiesPlanned==null" class="no-message">
         <p style="font-weight: bold; text-align: center;font-size: 18px;">Activities has not been allocated for the resources.</p>
 
       </div>
@@ -94,7 +94,7 @@
         <div mat-card-avatar class="card-avatar"></div>
         <mat-card-title>Attendance</mat-card-title>
       </mat-card-header>
-      <div *ngIf="attendanceData==null">
+      <div *ngIf="attendanceData==null" class="no-message">
         <p style="font-weight: bold; text-align: center;font-size: 18px;">Attendance not yet taken.</p>
 
       </div>
@@ -122,10 +122,10 @@
     <div mat-card-avatar class="card-avatar"></div>
     <mat-card-title>Assessments</mat-card-title>
   </mat-card-header>
-  <div *ngIf="allocationDate==null" class="no-assessment-message">
+  <div *ngIf="assessmentDateArr==null" class="no-message">
     <p style="font-weight: bold; text-align: center;font-size: 18px;">Assessment has not been done for the resources.</p>
   </div>   
-  <div *ngIf="allocationDate!=null"> 
+  <div *ngIf="assessmentDateArr!=null"> 
     <mat-card-content class="card-content">
       <label style="font-size: 16px;">Assessment Date:</label>
       <br>
