@@ -8,7 +8,8 @@
     <div class="">
      <label for="validationDefault01" class="form-label">User Full Name :</label><span class="text-danger font-weight-bold">*</span>
     </div>
-     <input type="text" class="form-control" id="userFullName" formControlName="userFullName" />
+     <input type="text" class="form-control" id="userFullName" formControlName="userFullName" 
+     (keypress)="preventSpace($event); preventNumbers($event); preventSpecialChars($event)"/>
      <!-- <div *ngIf="userForm.get('userFullName')?.invalid && userForm.get('userFullName')?.touched">
        <p class="text-danger">Please enter the user full name.</p>
      </div> -->
@@ -59,7 +60,7 @@
 
 <div>
   <div class="gap-2 col-3 mx-auto mt-3" *ngIf="userId === 0">
-    <button class="btn btn-success" type="submit">Create</button> &nbsp;&nbsp;
+    <button class="btn btn-success" type="submit">Save</button> &nbsp;&nbsp;
 
     <button class="btn btn-danger" type="reset"> Reset </button>
   </div>

@@ -4,6 +4,7 @@ import { BsDatepickerConfig, BsLocaleService,BsDatepickerDirective } from 'ngx-b
 import Swal from 'sweetalert2';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
+import * as XLSX from 'xlsx';
 
 
 @Component({
@@ -31,7 +32,6 @@ export class FileUploadComponent {
   onFileSelected(event): void {
     this.selectedFile = event.target.files[0];
   }
-
  
 
   onUpload(): void {
@@ -41,16 +41,16 @@ export class FileUploadComponent {
     let allocationMsg = '';
     let fileFormat = '';
 
+   
+
     if (!this.selectedFile) {
-      errorMessage = 'Please select a file.\n';
+      errorMessage = 'Please select the required file.\n';
     }
     if (!this.allocationDate) {
       allocationMsg = 'Please select an allocation date.\n';
     }
     if (!this.selectedFile) {
       Swal.fire({
-        icon: 'error',
-        title: 'Validation Error!',
         text: errorMessage
       });
       return;
@@ -58,8 +58,6 @@ export class FileUploadComponent {
 
     if (!this.allocationDate) {
       Swal.fire({
-        icon: 'error',
-        title: 'Validation Error!',
         text: allocationMsg
       });
       return;
@@ -69,23 +67,23 @@ export class FileUploadComponent {
     if (!this.selectedFile.name.endsWith('.xlsx')) {
       fileFormat = 'Unsupported file type. Please select a .xlsx file.\n';
     }
+    
+    //this.checkFileFormat(this.selectedFile);
+   
 
     if (fileFormat) {
       Swal.fire({
-        icon: 'error',
-        title: 'Validation Error!',
         text: fileFormat
       });
       return;
     }
 
     Swal.fire({
-      title: 'Confirm Upload',
-      text: 'Are you sure you want to upload this file ?',
+      title: 'Do you want to upload the file?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, upload it!',
-      cancelButtonText: 'No, cancel'
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No'
     }).then((result) => {
       if (result.isConfirmed) {
         const formattedDate = this.datePipe.transform(this.allocationDate, 'yyyy-MM-dd');
@@ -99,8 +97,7 @@ export class FileUploadComponent {
         // Display success message using SweetAlert
         Swal.fire({
           icon: 'success',
-          title: 'Success!',
-          text: 'Resource and Platform data saved successfully'
+          title: 'Resource allocated successfully'
         });
         this.route.navigateByUrl('/talents');
         this.selectedFile = null;
@@ -112,7 +109,6 @@ export class FileUploadComponent {
        
         Swal.fire({
           icon: 'error',
-          title: 'Error!',
           text: 'Failed to upload file. Please try again later.'
         });
 
@@ -147,4 +143,21 @@ export class FileUploadComponent {
   openDatepicker(): void {
     this.datepicker.show(); 
   } 
+
+  checkFileFormat(uploadFile:File):boolean {
+    console.log(uploadFile.name);
+
+    const fileReader = new FileReader();
+    fileReader.onload = (event: any) => {
+     const arrayBuffer = event.target.result;
+     const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+     console.log(workbook);
+     const firstSheetName = workbook.SheetNames[0]; // Use index 0 for the first sheet
+     const worksheet = workbook.Sheets[firstSheetName];
+     const headers: string[] = [];
+    }
+
+    return true;
+  }
+
 }
