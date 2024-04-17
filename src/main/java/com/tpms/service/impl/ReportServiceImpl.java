@@ -266,6 +266,29 @@ public class ReportServiceImpl implements ReportService {
 		
 	}
 	
+	
+	@Override
+	public List<Activity> getActivityDataOnDateRang(String fromDate, String toDate) {
+		SimpleDateFormat inputFormat = new SimpleDateFormat("M/d/yyyy, h:mm:ss a");
+		SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String formattedFromDate = null;
+		String formattedToDate = null;
+		try {
+			if (fromDate != null && !fromDate.equals("undefined")) {
+				Date date = inputFormat.parse(fromDate);
+				formattedFromDate = outputFormat.format(date);
+			}
+			if (toDate != null && !toDate.equals("undefined")) {
+				Date date = inputFormat.parse(toDate);
+				formattedToDate = outputFormat.format(date);
+			}
+		} catch (ParseException e1) {
+
+			e1.printStackTrace();
+		}
+		return  activityRepository.getActvitiesReportByDateRange(formattedFromDate,formattedToDate);
+	}
+	
 	@Override
 	public List<Map<String, Object>> getActivitynewReport(String reportType, String fromDate, String toDate, String activityId,
 			String resourceValue) {

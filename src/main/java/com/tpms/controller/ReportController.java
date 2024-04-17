@@ -51,6 +51,13 @@ public class ReportController {
 	
 	
 	/*Methode of Activity New Data Report*/
+	
+	@GetMapping("getActivityReportOnFromTo")
+	public List<Activity> getActivityInDateRangeforActivityReort(@RequestParam String fromDate,@RequestParam String toDate) {
+	    List<Activity> activityListOnDateRange = reportService.getActivityDataOnDateRang(fromDate,toDate);
+	    return activityListOnDateRange;
+	}
+	
 	@PostMapping("activitynewDataReport")
 	public String getActivitynewDataReport(@RequestBody Map<String, String> params) throws JsonProcessingException {
 	    String reportType = params.get("reportType");

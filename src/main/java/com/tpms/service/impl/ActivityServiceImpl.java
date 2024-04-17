@@ -208,33 +208,31 @@ public class ActivityServiceImpl implements ActivityService {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date fromDate = null;
-		Date toDate = null;
-		try {
-			fromDate = sdf.parse(sdf.format(allocData.getActivityFromDate()));
-			toDate = sdf.parse(sdf.format(allocData.getActivityToDate()));
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+		
 		List<Map<String, String>> existingResourceList = new ArrayList<>();
-		Integer existingActivityCount = 0;
+		Integer activityCountByDate = 0;
+		Integer activityCountBySession = 0;
 		if (allocData.getActivityAllocateId() == null) {
-			existingResourceList = activityAllocRepo.checkExistingResourcesByDateRange(resourceIdList, fromDate, toDate,
+			existingResourceList = activityAllocRepo.checkExistingResourcesByDateRange(resourceIdList, allocData.getActivityFromDate(), allocData.getActivityToDate(),
 					allocData.getFromHours(), allocData.getToHours());
 			response.put("category", "resource");
 			response.put("data", existingResourceList);
 		}
 		if (existingResourceList.isEmpty()) {
-			existingActivityCount = activityAllocRepo.checkExistingResourcesByDateRange(
-					allocData.getActivity().getActivityId(), fromDate, toDate, allocData.getFromHours(),
+			activityCountByDate = activityAllocRepo.countExistingActivitiesByDateRange(
+					allocData.getActivity().getActivityId(), allocData.getActivityFromDate(), allocData.getActivityToDate(), allocData.getFromHours(),
 					allocData.getToHours());
-			response.put("category", "activity");
-			response.put("data", existingActivityCount);
+			response.put("category", "activityByDate");
+			response.put("data", activityCountByDate);
+		}
+		if(activityCountByDate == 0) {
+			activityCountBySession = activityAllocRepo.countExistingActivitiesBySession(allocData.getActivity().getActivityId(),
+					allocData.getActivityFromDate(), allocData.getActivityToDate(), allocData.getActivityFor());
+			response.put("category", "activityBySession");
+			response.put("data", activityCountBySession);
 		}
 
-		if (existingResourceList.isEmpty() && existingActivityCount == 0) {
+		if (existingResourceList.isEmpty() && activityCountByDate == 0 && activityCountBySession == 0) {
 			List<ActivityAllocationDetails> allDetails = activityAllocRepo
 					.findByActivityAllocateId(allocData.getActivityAllocateId());
 			List<Integer> allocateDetIdList = updatedList.stream().map(e -> e.getActivityAllocateDetId()).toList();
@@ -275,7 +273,7 @@ public class ActivityServiceImpl implements ActivityService {
 	public List<ActivityAllocation> fetchDataByDateRange(String activityFromDate, String activityToDate) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
-			if(activityFromDate!=null && activityToDate!=null)
+			if(!"null".equals(activityFromDate) && !"null".equals(activityToDate))
 				return activityAllocRepo.fetchDataByDateRange(sdf.parse(activityFromDate),sdf.parse(activityToDate));
 		} catch (ParseException e) {
 			e.printStackTrace();

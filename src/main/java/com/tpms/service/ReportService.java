@@ -19,6 +19,8 @@ public interface ReportService {
 	
 	List<Map<String, Object>> getActivitynewDataReport(String reportType, String fromDate, String toDate, String activityId,
 			String resourceValue);
+	
+	List<Activity> getActivityDataOnDateRang(String fromDate, String toDate);
 
 	List<Map<String, Object>> getActivitynewReport(String reportType, String fromDate, String toDate, String activityId,
 			String resourceValue);
