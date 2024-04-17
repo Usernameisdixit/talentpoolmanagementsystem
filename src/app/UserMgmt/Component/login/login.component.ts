@@ -37,6 +37,7 @@ export class LoginComponent implements OnInit {
     //throw new Error('Method not implemented.');
     if (this.authService.isLoggedIn) {
       this.router.navigate(['/dashboard'])
+      this.authService.logout();
     }
   }
 
