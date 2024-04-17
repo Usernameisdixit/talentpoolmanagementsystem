@@ -211,8 +211,10 @@ public class ReportServiceImpl implements ReportService {
 					activityAttenDetailsArray.put(detailObject);
 					
 				}
+				if(resource.length()!=0) {
 				resource.put("activityAttenDetails", activityAttenDetailsArray);
 				data.put(resource);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
