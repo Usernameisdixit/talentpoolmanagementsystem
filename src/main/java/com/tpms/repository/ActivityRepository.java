@@ -20,17 +20,17 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
     @Query("UPDATE Activity a SET a.deletedFlag = :deletedFlag WHERE a.activityId = :activityId")
     void updateDeletedFlag(@Param("activityId") Integer activityId, @Param("deletedFlag") boolean deletedFlag);
 	
-//	@Query(value="SELECT distinct a.* FROM activity a " +
-//	           "INNER JOIN activity_allocation_details aloDetails ON a.activityId = allocation.activityId " +
-//	           "INNER JOIN activity_allocation allocation ON allocation.activityAllocateId = aloDetails.activityAllocateId " +
-//	           "WHERE :selectedDate BETWEEN allocation.activityFromDate AND allocation.activityToDate",nativeQuery = true)
-//	List<Activity> getActvitiesByDate(String selectedDate);
+
 	
-	
-	@Query(value="SELECT distinct a.* FROM activity a " +
+	@Query(value="SELECT a.*,allocation.activityFor,allocation.activityAllocateId FROM activity a " +
 	           "INNER JOIN activity_allocation allocation ON a.activityId = allocation.activityId  " +
 	           "WHERE :selectedDate BETWEEN allocation.activityFromDate AND allocation.activityToDate",nativeQuery = true)
-	List<Activity> getActvitiesByDate(String selectedDate);
+	List<Map<String,Object>> getActvitiesByDate(String selectedDate);
+	
+//	@Query(value="SELECT distinct a.* FROM activity a " +
+//	           "INNER JOIN activity_allocation allocation ON a.activityId = allocation.activityId  " +
+//	           "WHERE :selectedDate BETWEEN allocation.activityFromDate AND allocation.activityToDate",nativeQuery = true)
+//	List<Activity> getActvitiesByDate(String selectedDate);
 	
 	
 	@Query(value="SELECT a.activityId, a.activityName, a.activityRefNo, " +

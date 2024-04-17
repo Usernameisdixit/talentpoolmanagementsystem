@@ -207,6 +207,7 @@ public class ReportServiceImpl implements ReportService {
 					detailObject.put("activityName", mapObject.get("activityName"));
 					detailObject.put("isPresent", mapObject.get("isPresent"));
 					detailObject.put("attendanceStatus", mapObject.get("attendanceStatus"));
+					detailObject.put("activityFor", mapObject.get("activityFor"));
 					activityAttenDetailsArray.put(detailObject);
 					
 				}
