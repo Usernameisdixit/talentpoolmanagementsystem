@@ -29,6 +29,8 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
     currentPage: number = 1;
   itemsPerPage: number = 10;
   resource:ResourceHistory[];
+  accordionPaginationStates: any[] = []; // Initialize accordion pagination states array
+    selectedAccordionIndex: number;
 
   constructor(private service:ContactService, private router:Router,private datePipe: DatePipe,
     private loginService:LoginService){}
@@ -157,7 +159,7 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
 
     groupAssessmentsByDateRange(): void {
       debugger;
-      const groupedByDateRange = {};
+      const groupedByDateRange = {};      
 
       if(localStorage.getItem('activeLink')==='Dashboard'){
    
@@ -186,11 +188,14 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
       for (const key in groupedByDateRange) {
         if (groupedByDateRange.hasOwnProperty(key)) {
           const dateRange = key.split(' to ');
+          debugger;
           this.resourceHisDateWise.push({
             toDate: dateRange[0],
             fileName: dateRange[1],
             resources: groupedByDateRange[key],
             filteredResources: [],
+            currentPage: 1, 
+          itemsPerPage: 10,       
           });
         }
       }
@@ -199,38 +204,31 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
         debugger;
         dateRange.filteredResources = [...dateRange.resources];
       });
+      
     }
  
 
     // for pagination
- indexNumber : number = 0;
- page : number = 1;
- tableSize : number = 10;
- count : number = 0;
+//  indexNumber : number = 0;
+//  page : number = 1;
+//  tableSize : number = 10;
+//  count : number = 0;
 
- updateTableData(record: any[], accordionIndex: number) {
-  this.accordionTableData[accordionIndex] = record; // Update table data for the specific accordion
-}
 
-//pagination functionality
-getTableDataChange(event : any,record:any[],accordionIndex: number){
- debugger;
- this.page = event;
- this.indexNumber = (this.page - 1) * this.tableSize;
+
+// //pagination functionality
+// getTableDataChange(event : any,record:any[],accordionIndex: number){
+//  debugger;
+//  this.page = event;
+//  this.indexNumber = (this.page - 1) * this.tableSize;
  
-}
-
-
-// getTableDataChange(event: any, record: any[], accordionIndex: number) {
-//   this.page[accordionIndex] = event;
-//   this.count[accordionIndex] = record.length;
-//   this.indexNumber = (this.page[accordionIndex] - 1) * this.tableSize;
-//   //this.resources[accordionIndex] = record.slice(this.indexNumber, this.indexNumber + this.tableSize);
-
-//   // Update table data for the specific accordion
-//   this.updateTableData(record, accordionIndex);
 // }
-    
+onPageChange(event: number, accordionIndex: number): void {
+  debugger;
+  // Update the currentPage property of the pagination state for the corresponding accordion
+  this.resourceHisDateWise[accordionIndex].currentPage = event;
+
+}
 
 
   }
