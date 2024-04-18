@@ -21,7 +21,9 @@
         </div>
         <div class="form-group">
           <label class="form-check-label" for="isAsesmentEnable">Applicable For Assessment : </label>
-          <input type="checkbox" class="form-check-input m-1" id="isAsesmentEnable" [(ngModel)]="currentActivity.isAsesmentEnable" name="isAsesmentEnable" [checked]="currentActivity.isAsesmentEnable == 1">
+          <input type="checkbox" class="form-check-input m-1" id="isAsesmentEnable" [(ngModel)]="currentActivity.isAsesmentEnable" name="isAsesmentEnable" [checked]="currentActivity.isAsesmentEnable == 1"> &nbsp; &nbsp;
+          <label class="form-check-label" for="isProjectEnable">Mark As Project : </label>
+          <input type="checkbox" class="form-check-input m-1" id="isProjectEnable" [(ngModel)]="currentActivity.isProject" name="isProjectEnable" [checked]="currentActivity.isProject == 1">
         </div>
         <!-- Add more input fields for other activity properties -->
         <button class="btn btn-success" (click)="updateActivity()">Update</button>
