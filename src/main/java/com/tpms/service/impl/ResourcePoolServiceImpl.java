@@ -55,19 +55,16 @@ public class ResourcePoolServiceImpl {
 				tblResourcePoolNotEmpty(ExcelEmp, tbl_resource_pool, tbl_resource_poolMatch, tbl_resource_poolNotMatch,
 						allocationDate);
 
-
 				/***************************************
 				 * Updated Data that is not Present in Excel (Tagged Resources)
 				 ***************************************/
 
 				updatedDataNotPresentInExcel(tbl_resource_poolMatch);
 
-
 				/*******************************
 				 * Excel Data Uploaded that is not Matched Current Data(New Resources)
 				 *************************************/
 				additionOfNewResources(tbl_resource_poolNotMatch, tbl_resource_poolNotMatch1, allocationDate);
-			
 
 			} else {
 				/*************
@@ -178,8 +175,6 @@ public class ResourcePoolServiceImpl {
 
 		}
 	}
-	
-	
 
 	// else --------------- 1st time upload
 	public void firstTimeDataUpload_tbl_resource_pool(List<ResourcePoolHistory> ExcelEmp,
@@ -209,7 +204,6 @@ public class ResourcePoolServiceImpl {
 
 	}
 
-	
 	public List<ResourcePool> getAllEmploye() {
 
 		List<ResourcePool> tbl_resource_pool = new ArrayList<>();
