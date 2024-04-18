@@ -12,10 +12,6 @@ export class IdleService {
   }
 
   private setupUserActivityTracking(): void {
-    document.addEventListener('mousemove', () => this.resetTimer());
-    document.addEventListener('keydown', () => this.resetTimer());
-    document.addEventListener('click', () => this.resetTimer());
-    document.addEventListener('scroll', () => this.resetTimer());
     this.resetTimer();
   }
 

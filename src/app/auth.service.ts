@@ -10,7 +10,7 @@ export class AuthService {
   constructor() { }
   isLoggedIn(token: any) {
     debugger;
-    if(token=="undefined" || token==='' || token==null)
+    if(token==null || token=="undefined" || token==='' || this.isTokenExpired(token))
       this.userLogIn=false;
     else
       this.userLogIn = true;
@@ -29,13 +29,12 @@ export class AuthService {
   logout() {
     // Clear authentication status and remove user-related data from localStorage
     this.userLogIn = false;
-    localStorage.removeItem('token');
-    localStorage.removeItem('tokenTime');
-    localStorage.removeItem('email');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userFullName');
-    localStorage.removeItem('user');
+    localStorage.clear();
+  }
+
+  private isTokenExpired(token: string) {
+    const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
+    return (Math.floor((new Date).getTime() / 1000)) >= expiry;
   }
 
 
