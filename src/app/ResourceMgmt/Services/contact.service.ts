@@ -23,22 +23,22 @@ export class ContactService {
   }
 
   getTalent() {
-     return this.httpClient.get<Talent[]>(`${this.baseUrl}/uploadedData`);
-    //let fullUrl = getResourceList;
-    //return this.httpClient.get(fullUrl);
+    // return this.httpClient.get<Talent[]>(`${this.baseUrl}/uploadedData`);
+    let fullUrl = getResourceList;
+    return this.httpClient.get(fullUrl);
 
   }
 
- getResourceDetailsWithFileName(): Observable<ResourceHistory[]> {
+//  getResourceDetailsWithFileName(): Observable<ResourceHistory[]> {
 
-    return this.httpClient.get<ResourceHistory[]>(`${this.baseUrl}/getResourceDetailsWithFileName`);
+//     return this.httpClient.get<ResourceHistory[]>(`${this.baseUrl}/getResourceDetailsWithFileName`);
 
-  }
- /* getResourceDetailsWithFileName() {
+//   }
+  getResourceDetailsWithFileName() {
     let fullUrl = getResourceDetailsWithFileName;
     return this.httpClient.get(fullUrl);
 
-  }*/
+  }
 
   downloadExcelFile(fileName: string): Observable<Blob> {
     const headers = new HttpHeaders({
