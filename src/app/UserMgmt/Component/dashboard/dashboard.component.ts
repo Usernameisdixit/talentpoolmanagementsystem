@@ -50,7 +50,7 @@ export class DashboardComponent  implements OnInit{
       debugger;
       console.log("API Response:", response);
       //response=null;
-      if(response==null){
+      if(response.length==0){
         this.resources=null;
       }
       this.allocationDate = response.map(date => this.datePipe.transform(date, 'dd-MMM-yyyy'));
@@ -94,9 +94,9 @@ export class DashboardComponent  implements OnInit{
     this.toDate=this.datePipe.transform(lastday, 'dd-MMM-yyyy');
 
     this.loginService.gettotalActivitiesPlanned(this.datePipe.transform(firstday, 'yyyy-MM-dd'),this.datePipe.transform(lastday, 'yyyy-MM-dd')).subscribe((response: any) => {
-      // debugger;
+      debugger;
       //response=null;
-      if(response==null)
+      if(response==0)
       {
         this.ActivtiesPlanned=null;
       }
@@ -126,7 +126,7 @@ export class DashboardComponent  implements OnInit{
       (dates: string[]) => {
         debugger;
         //dates=null;
-        if(dates==null)
+        if(dates.length===0)
         {
           this.assessmentDateArr=null;
         }
