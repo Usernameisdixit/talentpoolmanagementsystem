@@ -38,15 +38,19 @@ public class ReportController {
 	    String toDate = params.get("toDate");
 	    String activityId = params.get("activityId");
 	    String resourceValue = params.get("resourceValue");
-	    ObjectMapper objectMapper = new ObjectMapper();
-	    if(reportType.equals("activity")) {
-	    List<Map<String, Object>> attendanceReportData = reportService.getAttendanceData(reportType, fromDate,toDate,activityId,resourceValue);
-	    return objectMapper.writeValueAsString(attendanceReportData);
-	    }
-	    else {
-	    	JSONArray allDetails = reportService.getAttendanceDataSummary(reportType, fromDate,toDate,activityId,resourceValue);
-	    	return allDetails.toString();
-	    }
+	    
+	    JSONArray allDetails = reportService.getAttendanceDataSummary(reportType, fromDate,toDate,activityId,resourceValue);
+    	return allDetails.toString();
+    	
+//	    ObjectMapper objectMapper = new ObjectMapper();
+//	    if(reportType.equals("44356")) {
+//	    List<Map<String, Object>> attendanceReportData = reportService.getAttendanceData(reportType, fromDate,toDate,activityId,resourceValue);
+//	    return objectMapper.writeValueAsString(attendanceReportData);
+//	    }
+//	    else {
+//	    	JSONArray allDetails = reportService.getAttendanceDataSummary(reportType, fromDate,toDate,activityId,resourceValue);
+//	    	return allDetails.toString();
+//	    }
 	}
 	
 	
