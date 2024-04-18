@@ -29,6 +29,8 @@ public class Activity {
     
     private String responsPerson2;
     
+    private Boolean isProject;
+    
     @ManyToOne
     @JoinColumn(name = "createdby")
     private User createdBy;
