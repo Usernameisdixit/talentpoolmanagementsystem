@@ -146,8 +146,10 @@ export class ReportAttendanceComponent {
       this.reportAttendanceService.attendanceData(this.inputType, this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString(), this.activity, this.resourceValue)
         .subscribe(data => {
           if (data.length != 0) {
+            debugger;
             //RESOURCE LOGIC PDF
             if(this.inputType=='resource'){
+              
               const uniqueActivityNames = new Set();
               data.forEach(entry => {
                 entry.activityAttenDetails.forEach(detail => {
@@ -155,7 +157,20 @@ export class ReportAttendanceComponent {
                 });
               });
               this.activitiesByUser=Array.from(uniqueActivityNames).sort();
-
+         
+              data.forEach(entry => {
+                if (entry.activityAttenDetails) {
+                  this.activitiesByUser.forEach(activity => {
+                    if (!entry.activityAttenDetails.some(detail => detail.activityName === activity)) {
+                      entry.activityAttenDetails.push({
+                        activityName: activity,
+                        attendanceStatus: 'Attendance Not taken ',
+                        activityFor:'-1'
+                      });
+                    }
+                  });
+                }
+              });
               data.forEach(entry => {
                 this.sortActivityAttenDetails(entry.activityAttenDetails);
               });
@@ -218,6 +233,7 @@ export class ReportAttendanceComponent {
 
             //START NA LOGIC
             if (this.inputType == 'summary') {
+              
               data.forEach(entry => {
                 if (entry.activityAttenDetails) {
                   this.activities.forEach(activity => {
@@ -234,8 +250,7 @@ export class ReportAttendanceComponent {
               data.forEach(entry => {
                 this.sortActivityAttenDetails(entry.activityAttenDetails);
               });
-              console.log("ts data")
-              console.log(data);
+            
             }
             //END
 
@@ -247,6 +262,19 @@ export class ReportAttendanceComponent {
                 });
               });
               this.activitiesByUser=Array.from(uniqueActivityNames).sort();
+              data.forEach(entry => {
+                if (entry.activityAttenDetails) {
+                  this.activitiesByUser.forEach(activity => {
+                    if (!entry.activityAttenDetails.some(detail => detail.activityName === activity)) {
+                      entry.activityAttenDetails.push({
+                        activityName: activity,
+                        attendanceStatus: 'Attendance Not taken ',
+                        activityFor:'-1'
+                      });
+                    }
+                  });
+                }
+              });
 
               data.forEach(entry => {
                 this.sortActivityAttenDetails(entry.activityAttenDetails);
