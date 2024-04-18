@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DynamicGrid } from 'src/app/Model/dynamic-grid.model';
 import { Resource } from 'src/app/Model/resource.model';
@@ -7,7 +7,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { DateService } from '../../Services/date.service';
 import { DatePipe } from '@angular/common';
 import { Platform } from 'src/app/Model/Platform';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsLocaleService,BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -17,6 +17,8 @@ import Swal from 'sweetalert2';
 })
 export class BulkAllocationComponent {
 
+  @ViewChild('dp') datepicker: BsDatepickerDirective;
+  @ViewChild('dp1') datepicker1: BsDatepickerDirective;
   activities: any[] = [];
   dynamicArray: Array<DynamicGrid> = [];
   newDynamic: any = {};
@@ -50,7 +52,7 @@ export class BulkAllocationComponent {
                 this.activatedRoute.paramMap.subscribe(params => {
                   this.resourceId = params.get('id');
                 });
-                this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
+                this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY',showWeekNumbers : false });
                 this.localeService.use('en-gb');
               }
 
@@ -98,13 +100,11 @@ export class BulkAllocationComponent {
     arr.push(row);
 
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to save the activity allocation details?',
-      icon: 'warning',
+      title: 'Do you want to save?',
+      icon: 'question',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, save it!'
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
     }).then((result) => {
       if (result.isConfirmed) {
         const data = {activityFromDate: this.selectedFromDate, activityToDate: this.selectedToDate,
@@ -113,8 +113,7 @@ export class BulkAllocationComponent {
         this.allocationService.saveBulkAllocation(this.markedResources, data).subscribe((res) => {
           if(res.category == null) {
             Swal.fire(
-              'Saved!',
-              'Activity allocation details has been saved successfully.',
+              'Activity allocation details has been saved successfully.','',
               'success'
             ).then(()=>{
               // const queryParams = {activityFromDate:this.selectedFromDate, activityToDate:this.selectedToDate};
@@ -129,29 +128,22 @@ export class BulkAllocationComponent {
           }
           else if(res.category == 'resource') {
             Swal.fire(
-              'Duplicate data!',
-              'Some resources already exist in this time frame. Click on "View details" to see the list.',
-              'warning'
+              'Duplicate resources found in this time frame',
             ).then(()=>this.existingResources=res.data);
           }
           else if(res.category == 'activityByDate') {
             Swal.fire(
-              'Duplicate data!',
               'Activity already exists in this time frame.',
-              'warning'
             );
           }
           else if(res.category == 'activityBySession') {
             Swal.fire(
-              'Duplicate data!',
               'Activity already exists in this session.',
-              'warning'
             );
           }
         }, () => {
           Swal.fire(
-            'Error!',
-            'An error occurred while saving your data.',
+            'An error occurred while saving your data.','',
             'error'
           );
         });
@@ -276,7 +268,7 @@ export class BulkAllocationComponent {
 
   remove(row: DynamicGrid): void {
     Swal.fire({
-      title: 'Are you sure?',
+      title: 'Do you want to delete?',
       icon: 'warning',
       confirmButtonText: 'Yes',
       showDenyButton: true
@@ -285,7 +277,7 @@ export class BulkAllocationComponent {
         this.allocationService.deleteAllocation(row.activityAllocateId)
         .subscribe((status) => {
           if(status==1)
-            Swal.fire('Deleted','Activity allocation data has been deleted','success').then(()=>window.location.reload());
+            Swal.fire('Activity allocation data has been deleted','','success').then(()=>window.location.reload());
           else if(status==0)
             Swal.fire('Unable to delete','This data is already associated with attendance records','error');
           else
@@ -305,71 +297,47 @@ export class BulkAllocationComponent {
   isValid(): boolean {
     // Date validation
     if(this.selectedFromDate>this.selectedToDate) {
-      Swal.fire(
-        'Error!',
-        'Activity to-date cannot be less than from-date.',
-        'error'
-      );
+      Swal.fire('Activity to-date cannot be less than from-date');
       return false;
     }
 
     // Blank checks
     if(this.selectedFromDate == null) {
-      Swal.fire(
-        'Error!',
-        'Please select activity from-date.',
-        'error'
-      );
+      Swal.fire('Please select activity from-date');
       return false;
     }
     if(this.selectedToDate == null) {
-      Swal.fire(
-        'Error!',
-        'Please select activity to-date.',
-        'error'
-      );
+      Swal.fire('Please select activity to-date.');
       return false;
     }
     if(this.activity.activityId == 0) {
-      Swal.fire(
-        'Error!',
-        'Please select activity.',
-        'error'
-      );
+      Swal.fire('Please select activity.');
       return false;
     }
     if(this.selectedSession == 0) {
-      Swal.fire(
-        'Error!',
-        'Please select session.',
-        'error'
-      );
+      Swal.fire('Please select session.');
       return false;
     }
     if(this.selectedActivityFrom == null) {
-      Swal.fire(
-        'Error!',
-        'Please select activity from time.',
-        'error'
-      );
+      Swal.fire('Please select activity from time.');
       return false;
     }
     if(this.selectedActivityTo == null) {
-      Swal.fire(
-        'Error!',
-        'Please select activity to time.',
-        'error'
-      );
+      Swal.fire('Please select activity to time.');
       return false;
     }
     if(this.markedResources.length == 0) {
-      Swal.fire(
-        'Error!',
-        'Please select resource.',
-        'error'
-      );
+      Swal.fire('Please select resource.');
       return false;
     }
     return true;
+  }
+
+  openDatepicker(): void {
+    this.datepicker.show(); 
+  }
+
+  openDatepicker1():void{
+     this.datepicker1.show();
   }
 }

@@ -64,7 +64,7 @@ export class ReportAttendanceService {
     }
     if (reportType == 'activity') {
       pdf.setFontSize(10);
-      pdf.text('Activity Name: ' + attendanceData[0]?.activityName, 10, 28);
+      pdf.text('Activity Name: ' + attendanceData[0]?.activityAttenDetails[0]?.activityName, 10, 28);
       startYpos = 35;
     }
     if (reportType == 'resource') {
@@ -91,15 +91,12 @@ export class ReportAttendanceService {
       const dataRowColor = [255, 255, 255];
       const rowData = [];
       let activityData='';
-      if(reportType=='resource'){
-       activityData = this.getActivityData(detail);
-      }
       if (reportType == 'activity') {
+        activityData= this.getActivityData(detail);
         let statusData='';
         const isActivityForConsistent = this.checkActivityForConsistency(attendanceData);
         if(isActivityForConsistent==false){
-           statusData = `${detail.activityFor == '1' ? 'first half' : 'second half'}: ${detail.attendanceStatus}`;
-          // statusData= detail.activityFor +':'+ detail.attendanceStatus;
+           statusData = `${detail.activityFor == '1' ? '1st half' : '2nd half'}: ${detail.attendanceStatus}`;
         }else{
           statusData=  detail.attendanceStatus;
         }
@@ -113,10 +110,9 @@ export class ReportAttendanceService {
           { content: detail.resourceName, styles: { fillColor: dataRowColor } },
           { content: detail.designation, styles: { fillColor: dataRowColor } },
           { content: detail.platform, styles: { fillColor: dataRowColor } },
-          { content: statusData, styles: { fillColor: dataRowColor } },
+          { content: activityData, styles: { fillColor: dataRowColor } },
         );
       } else {
-        console.log(detail);
         rowData.push(
           { content: detail.atendanceDate, styles: { fillColor: dataRowColor } },
           // { content: detail.activityName, styles: { fillColor: dataRowColor } },
@@ -124,10 +120,24 @@ export class ReportAttendanceService {
         );
         if (detail.activityAttenDetails) {
           detail.activityAttenDetails.forEach(activityDetail => {
-            
-            rowData.push(
-                { content: activityData, styles: { fillColor: dataRowColor } },
+
+          let size = rowData.length;
+          if(activityDetail.activityName==rowData.at(-1).activity) {
+              rowData[size-1].content = rowData[size-1].content +(activityDetail.activityFor=='1'?'1st Half':'2nd Half')+' : ' +activityDetail.attendanceStatus;
+            }
+            else {
+              if(activityDetail.activityName==activityHeadResource[size-1])
+                rowData.push(
+                    { content: (activityDetail.activityFor === '1' ? '1st half :' :
+                    activityDetail.activityFor === '2' ? '2nd half :' :
+                    activityDetail.activityFor === '-1' ? ' ' : 
+                    'Unknown' )+activityDetail.attendanceStatus+'\n', activity:activityDetail.activityName, styles: { fillColor: dataRowColor } },
+                );
+              else
+                rowData.push(
+                  { content:'', activity:activityDetail.activityName, styles: { fillColor: dataRowColor } },
             );
+            }
         });
       }
       }
@@ -161,10 +171,9 @@ export class ReportAttendanceService {
   }
 
   private getActivityData(detail: any): string {
-    console.log(detail.activityAttenDetails.length);
     let activityData = '';
     detail.activityAttenDetails.forEach((firstHalfObj, index, array) => {
-      activityData += `${firstHalfObj.activityFor === '1' ? 'first half' : 'second half'} : ${firstHalfObj.attendanceStatus}`;
+      activityData += `${firstHalfObj.attendanceStatus} : ${firstHalfObj.activityFor === '1' ? '1st half' : '2nd half'}`;
       if (index < array.length - 1) {
         activityData += '\n';
       }
@@ -282,7 +291,7 @@ export class ReportAttendanceService {
 
     if (reportType == 'activity') {
       ws['A4'] = {
-        v: `Activity Name:  ${attendanceData[0]?.activityName}`,
+        v: `Activity Name:  ${attendanceData[0]?.activityAttenDetails[0]?.activityName}`,
         t: 's',
       };
     }
@@ -324,7 +333,7 @@ export class ReportAttendanceService {
     const data: any[] = [];
     const processedDates = new Set<string>();
     attendanceData.forEach(detail => {
-     console.log(attendanceData.length);
+  
       if (reportType == 'activity' || reportType=='summary') {
         const atendanceDate = detail.atendanceDate;
         if (!processedDates.has(atendanceDate)) {
@@ -362,10 +371,8 @@ export class ReportAttendanceService {
       }
       const rowData = [];
       let activityData='';
-      if(reportType=='resource' || reportType=='summary'){
-        activityData = this.getActivityData(detail);
-       }
       if (reportType == 'activity') {
+        activityData = this.getActivityData(detail);
         let statusData='';
         const isActivityForConsistent = this.checkActivityForConsistency(attendanceData);
         if(isActivityForConsistent==false){
@@ -380,7 +387,7 @@ export class ReportAttendanceService {
           { v: detail.resourceName, s: { alignment: { wrapText: true } } },
           { v: detail.designation, s: { alignment: { wrapText: true } } },
           { v: detail.platform, s: { alignment: { wrapText: true } } },
-          { v: statusData, s: { alignment: { wrapText: true } } },
+          { v: activityData, s: { alignment: { wrapText: true } } },
         );
       } else if (reportType == 'resource') {
         rowData.push(
@@ -390,9 +397,25 @@ export class ReportAttendanceService {
         );
         if (detail.activityAttenDetails) {
           detail.activityAttenDetails.forEach(activityDetail => {
-            rowData.push(
-                { v: activityData, s: { alignment: { wrapText: true } } }
-            );
+            let size = rowData.length;
+            if(activityDetail.activityName==rowData.at(-1).activity) {
+              rowData[size-1].v = rowData[size-1].v +(activityDetail.activityFor=='1'?'1st Half':'2nd Half')+' : ' +activityDetail.attendanceStatus;
+            }
+            else {
+              if(activityDetail.activityName==activityHeadResource[size-1])
+              rowData.push(
+                  { v: (activityDetail.activityFor === '1' ? '1st half :' :
+                  activityDetail.activityFor === '2' ? '2nd half :' :
+                  activityDetail.activityFor === '-1' ? ' ' : 
+                  'Unknown')+activityDetail.attendanceStatus+'\n', activity:activityDetail.activityName, s: { alignment: { wrapText: true } } }
+              );
+              else
+              rowData.push({v:'',s: { alignment: { wrapText: true } } }
+              );
+            }
+            // rowData.push(
+            //     { v: activityDetail.attendanceStatus, s: { alignment: { wrapText: true } } }
+            // );
         });
       }
       }else if(reportType=='summary'){
@@ -406,8 +429,17 @@ export class ReportAttendanceService {
         );
         if (detail.activityAttenDetails) {
         detail.activityAttenDetails.forEach(activityDetail => {
+        //   if(activityDetail.activityName==rowData.at(-1).activity) {
+        //     let size = rowData.length;
+        //     rowData[size-1].v = rowData[size-1].v +(activityDetail.activityFor=='1'?'1st Half':'2nd Half')+' : ' +activityDetail.attendanceStatus;
+        //   }
+        //   else {
+        //     rowData.push(
+        //         { v: (activityDetail.activityFor=='1'?'1st half':'2nd half')+' : '+activityDetail.attendanceStatus+'\n', activity:activityDetail.activityName, s: { alignment: { wrapText: true } } }
+        //     );
+        //   }
           rowData.push(
-              { v: activityData, s: { alignment: { wrapText: true } } }
+              { v: activityDetail.attendanceStatus, s: { alignment: { wrapText: true } } }
           );
       });
     }

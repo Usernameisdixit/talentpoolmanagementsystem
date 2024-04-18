@@ -29,11 +29,11 @@ export class ContactService {
 
   }
 
-  // getResourceDetailsWithFileName(): Observable<ResourceHistory[]> {
+//  getResourceDetailsWithFileName(): Observable<ResourceHistory[]> {
 
-  //   return this.httpClient.get<ResourceHistory[]>(`${this.baseUrl}/getResourceDetailsWithFileName`);
+//     return this.httpClient.get<ResourceHistory[]>(`${this.baseUrl}/getResourceDetailsWithFileName`);
 
-  // }
+//   }
   getResourceDetailsWithFileName() {
     let fullUrl = getResourceDetailsWithFileName;
     return this.httpClient.get(fullUrl);

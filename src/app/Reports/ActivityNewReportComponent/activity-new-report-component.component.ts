@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { Component,ViewChild } from '@angular/core';
+import { BsDatepickerConfig, BsLocaleService,BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { FormControl,FormBuilder } from '@angular/forms';
 import { startWith, map } from 'rxjs';
 import { Observable } from 'rxjs';
@@ -19,6 +19,8 @@ export interface User {
 })
 export class ActivityNewReportComponentComponent {
 
+  @ViewChild('dp') datepicker: BsDatepickerDirective;
+  @ViewChild('dp1') datepicker1: BsDatepickerDirective;
   inputType: string = 'activity';
   selectedFromDate: Date = null;
   selectedToDate: Date = null;
@@ -34,7 +36,7 @@ export class ActivityNewReportComponentComponent {
   hr:string="";
 
   constructor(private localeService: BsLocaleService, private reportAttendanceService: ReportAttendanceService, private reportActivityService: ActivitynewreportserviceService) {
-    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
+    this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' ,showWeekNumbers : false});
     this.localeService.use('en-gb');
   }
 
@@ -125,31 +127,15 @@ export class ActivityNewReportComponentComponent {
   generatePDF() {
     this.resourceValue = this.myControl.value;
     if (this.selectedFromDate == null) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please choose from date before generating the Pdf!',
-      });
+      Swal.fire('Please choose from date before generating the Pdf');
 
     } else if (this.selectedToDate == null) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please choose to date before generating the Pdf!',
-      });
+      Swal.fire('Please choose to date before generating the Pdf');
     } else if (this.inputType == 'activity' && this.activity == '0') {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please Select activity before generating the Pdf!',
-      });
+      Swal.fire('Please Select activity before generating the Pdf');
     } else if (this.inputType == 'resource' && this.resourceValue == "0") {
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please Enter resource before generating the Pdf!',
-      });
+      Swal.fire('Please Enter resource before generating the Pdf');
     }else  {
       this.resourceValue = this.myControl.value;
       if (!this.resourceValue) {
@@ -179,8 +165,7 @@ export class ActivityNewReportComponentComponent {
       } else {
         Swal.fire({
           icon: 'info',
-          title: 'No Data Found',
-          text: 'No attendance data found in this date range!',
+          title: 'No attendance data found in this date range!',
         });
 
       }
@@ -191,31 +176,15 @@ export class ActivityNewReportComponentComponent {
   generateExcel() {
     this.resourceValue = this.myControl.value;
     if (this.selectedFromDate == null) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please choose from date before generating the Excel!',
-      });
+      Swal.fire('Please choose from date before generating the excel');
 
     } else if (this.selectedToDate == null) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please choose to date before generating the Excel!',
-      });
+      Swal.fire('Please choose to date before generating the excel');
     } else if (this.inputType == 'activity' && this.activity == '0') {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please Select activity before generating the Excel!',
-      });
+      Swal.fire('Please Select activity before generating the excel');
     } else if (this.inputType == 'resource' && this.resourceValue == "0") {
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please Enter resource before generating the Excel!',
-      });
+      Swal.fire('Please enter resource before generating the excel');
     }else {
       this.resourceValue = this.myControl.value;
       if (!this.resourceValue) {
@@ -250,8 +219,7 @@ export class ActivityNewReportComponentComponent {
       } else {
         Swal.fire({
           icon: 'info',
-          title: 'No Data Found',
-          text: 'No attendance data found in this date range!',
+          title: 'No attendance data found in this date range!',
         });
 
       }
@@ -276,5 +244,12 @@ export class ActivityNewReportComponentComponent {
     }
   }
 
+  openDatepicker(): void {
+    this.datepicker.show(); 
+  }
+
+  openDatepicker1():void{
+     this.datepicker1.show();
+  }
 
 }

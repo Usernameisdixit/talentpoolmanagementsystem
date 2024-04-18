@@ -130,7 +130,7 @@ export class AsessmentdetailsComponent implements OnInit {
     this.page=1;
     this.page1=1;
     if (!this.selectedActivity) {
-      Swal.fire('Warning', 'All fields are required', 'warning');
+      Swal.fire('All fields are required','', 'warning');
       return;
     }
   
@@ -234,51 +234,51 @@ export class AsessmentdetailsComponent implements OnInit {
 
     if (!this.selectedActivity || !this.fromDate || !this.toDate) {
         errorFlag = true;
-        Swal.fire('Warning', 'Please select all required fields', 'warning');
+        Swal.fire('Please select all required fields');
         return;
     }
 
     if (!this.assessmentDate) {
        errorFlag = true;
-        Swal.fire('Warning', 'Please select assessment date', 'warning');
+        Swal.fire('Please select assessment date');
         return;
     }
     
    if(this.assessmentDate < toDate){
        errorFlag = true;
-       Swal.fire('Warning', "Assessment date should be on or after of the assessment session's 'to date' ", 'warning');
+       Swal.fire("Assessment date should be on or after of the assessment session's 'to date' ");
        this.assessmentDate=null;
        return ;
     }
 
     if(this.assessmentDate > currentDate){
       errorFlag = true;
-      Swal.fire('Warning', "Assessment date should not be future date ", 'warning');
+      Swal.fire("Assessment date should not be future date ");
       this.assessmentDate=null;
       return ;
     }
 
     if (!this.totalMarks) {
         errorFlag = true;
-        Swal.fire('Warning', 'Total marks cannot be blank!', 'warning');
+        Swal.fire('Total marks cannot be blank');
         return;
     }
 
     if (!this.marks) {
         errorFlag = true;
-        Swal.fire('Warning', 'Secured marks cannot be blank!', 'warning');
+        Swal.fire('Secured marks cannot be blank');
         return;
     }
 
     if (!this.hour) {
         errorFlag = true;
-        Swal.fire('Warning', 'Assessment hour cannot be blank!', 'warning');
+        Swal.fire('Assessment hour cannot be blank');
         return;
     }
 
     if (!this.remarks) {
         errorFlag = true;
-        Swal.fire('Warning', 'Remarks cannot be blank!', 'warning');
+        Swal.fire('Remarks cannot be blank');
         return;
     }
 
@@ -298,15 +298,15 @@ export class AsessmentdetailsComponent implements OnInit {
               (response: any) => {
                 if (response && response.message) {
                   console.log('Assessments updated successfully:', response.message);
-                  Swal.fire('Success', response.message, 'success');
+                  Swal.fire(response.message,'', 'success');
                 } else {
                   console.error('Unexpected response:', response);
-                  Swal.fire('Error', 'Failed to update assessments', 'error');
+                  Swal.fire('Failed to update assessments','', 'error');
                 }
               },
               error => {
                 console.error('Error updating assessments:', error);
-                Swal.fire('Error', 'Failed to update assessments. Please try again later.', 'error');
+                Swal.fire( 'Failed to update assessments. Please try again later.','', 'error');
                 
               });
           }
@@ -316,7 +316,7 @@ export class AsessmentdetailsComponent implements OnInit {
               (response: any) => {
                 if (response && response.message) {
                   console.log('Assessments submitted successfully:', response.message);
-                  Swal.fire('Success', response.message, 'success');
+                  Swal.fire( response.message,'', 'success');
                   this.status='u';
                   this.showActivityTable = !this.showActivityTable;
                 //  this.showAssessmentTable=!this.showAssessmentTable;
@@ -325,12 +325,12 @@ export class AsessmentdetailsComponent implements OnInit {
                this.route.navigate(['viewasessment']);
                 } else {
                   console.error('Unexpected response:', response);
-                  Swal.fire('Error', 'Failed to submit assessments', 'error');
+                  Swal.fire('Failed to submit assessments','', 'error');
                 }
               },
               error => {
                 console.error('Error submitting assessments:', error);
-                Swal.fire('Error', 'Failed to submit assessments', 'error');
+                Swal.fire('Failed to submit assessments','', 'error');
             });
           }
          
@@ -409,8 +409,7 @@ getPageNumbers(): number[] {
       assessment.totalMarks = this.totalMarks;
       if(this.totalMarks>100){
         Swal.fire({
-          icon: 'error',
-          title: 'Total marks must be 100!!',
+          title: 'Total marks must be 100 ',
          });
          this.totalMarks=0;
          assessment.totalMarks=0;
@@ -421,9 +420,7 @@ getPageNumbers(): number[] {
 updateMarks(): void {
   if (this.marks > this.totalMarks) {
     Swal.fire({
-      icon: 'error',
-      title: 'Secured Marks Exceed Total Marks',
-      text: 'Secured marks should not be greater than total marks.',
+      title: 'Secured marks should not be greater than total marks',
     });
     this.assessments.forEach(assessment => { 
       assessment.marks = '';
@@ -448,9 +445,7 @@ updateHours() : void {
     });
     }else{
         Swal.fire({
-        icon: 'error',
-        title: 'Invalid assessment hour !',
-        text: 'Assessment hour should be limited within 1 to 4 hours',
+          title: 'Assessment hour should be within 1 to 4 hours',
       });
       this.hour='';
       this.assessments.forEach(assessment => {
@@ -481,19 +476,19 @@ resetFields() {
 
 confirmReset() {
   Swal.fire({
-    title: 'Are you sure?',
+    title: 'Do ypu want to reset',
     text: 'This action will reset all fields. Are you sure you want to proceed?',
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonText: 'Yes, reset it!',
-    cancelButtonText: 'No, cancel!',
-    reverseButtons: true
+    confirmButtonText: 'Yes',
+    cancelButtonText: 'No',
+    reverseButtons: false
   }).then((result) => {
     if (result.isConfirmed) {
       this.resetFields();
       Swal.fire(
-        'Reset!',
         'All fields have been reset.',
+        '',
         'success'
       );
     }
@@ -505,9 +500,7 @@ validateSecuredMarks(assessment: any): void {
   if(this.status==='s'){
     if (assessment.marks > assessment.totalMarks) {
       Swal.fire({
-        icon: 'error',
-        title: 'Secured Marks Exceed Total Marks',
-        text: 'Secured marks should not be greater than total marks.',
+        title: 'Secured marks should not be greater than total marks',
       });
       assessment.marks='';
     }
@@ -515,9 +508,7 @@ validateSecuredMarks(assessment: any): void {
   else{
     if (assessment[9] > assessment[8]) {
       Swal.fire({
-        icon: 'error',
-        title: 'Secured Marks Exceed Total Marks',
-        text: 'Secured marks should not be greater than total marks.',
+        title: 'Secured marks should not be greater than total marks.',
       });
       assessment[9] = '';
     }
