@@ -185,6 +185,8 @@ export class UserComponent {
   // ------------------------------- for duplicate check -------------------
   checkDuplicateValue(event:any){
     const value=event.target.value;
+    console.log(value);
+    
     const colName=event.target.name;
     let userId=this.userId===0?0:this.userId;
     if (userId === 0) {
