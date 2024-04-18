@@ -60,7 +60,7 @@ public class RoleController {
 		return updatedRole != null ? ResponseEntity.ok().body(updatedRole) : ResponseEntity.notFound().build();
 	}
 
-	@PostMapping("delete/{id}")
+	@PostMapping("deleteRole/{id}")
 	public ResponseEntity<Map<String, Object>> deleteRole(@PathVariable(name = "id") Long id) {
 
 		Boolean result = roleService.getDeletedFlagByRoleId(id);
