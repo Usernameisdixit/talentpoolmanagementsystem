@@ -21,7 +21,7 @@
                     <i class="fas fa-users"></i> User Management
                 </a>
                 <ul class="collapse" id="submenu1" data-bs-parent="#menu">
-                    <li (click)="getListItem($event);">
+                    <li (click)="getListItem($event);" (click)="getReload()">
                         <a routerLink="/addUser" class="nav-link"><i class="fas fa-user-plus"></i> Add User</a>
                     </li>
                     <li (click)="getListItem($event);">
@@ -73,8 +73,8 @@
                     <i class="fas fa-tasks"></i> Activity Management 
                 </a>
                 <ul class="collapse" id="submenu6" data-bs-parent="#menu">
-                    <li (click)="getListItem($event);">
-                        <a routerLink="/add" class="nav-link"><i class="fas fa-user-tie"></i> Add Activity</a>
+                    <li (click)="getListItem($event);"  >
+                        <a routerLink="/add" class="nav-link" ><i class="fas fa-user-tie"></i> Add Activity</a>
                     </li>
                     <li (click)="getListItem($event);">
                         <a routerLink="/activities" class="nav-link"><i class="fas fa-user-tie"></i> View Activity</a>
