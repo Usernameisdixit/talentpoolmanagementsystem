@@ -30,6 +30,13 @@ public class ReportController {
 	    return activityListOnDateRange;
 	}
 	
+	@GetMapping("getActivityForAssesment")
+	public List<Activity> getActivityInDateRangeForAssement(@RequestParam String fromDate,@RequestParam String toDate) {
+	    List<Activity> activityListOnDateRange = reportService.getActivityOnDateRangForAssement(fromDate,toDate);
+	    System.err.println(activityListOnDateRange);
+	    return activityListOnDateRange;
+	}
+	
 	
 	@PostMapping("attedanceDataReport")
 	public String getAttendanceDataReprt(@RequestBody Map<String, String> params) throws JsonProcessingException {

@@ -339,6 +339,28 @@ public class ReportServiceImpl implements ReportService {
 		
 		return attendanceDetails;
 	    
+	}
+
+	@Override
+	public List<Activity> getActivityOnDateRangForAssement(String fromDate, String toDate) {
+		SimpleDateFormat inputFormat = new SimpleDateFormat("M/d/yyyy, h:mm:ss a");
+		SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String formattedFromDate = null;
+		String formattedToDate = null;
+		try {
+			if (fromDate != null && !fromDate.equals("undefined")) {
+				Date date = inputFormat.parse(fromDate);
+				formattedFromDate = outputFormat.format(date);
+			}
+			if (toDate != null && !toDate.equals("undefined")) {
+				Date date = inputFormat.parse(toDate);
+				formattedToDate = outputFormat.format(date);
+			}
+		} catch (ParseException e1) {
+
+			e1.printStackTrace();
+		}
+		return  activityRepository.getActvitiesByDateRangeForAssement(formattedFromDate,formattedToDate);
 	}	
 	
 	
