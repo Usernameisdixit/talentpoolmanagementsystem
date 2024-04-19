@@ -56,6 +56,7 @@ public class ActivityController {
 		Activity listByRespAct = activityService.findByResponsPerson1AndActivityName(activity.getResponsPerson1(),
 				activity.getActivityName());
 		Activity activeActivity = activityService.getDataByActivityName(activity.getActivityName());
+		
 		if (listByRespAct != null) {
 			if (listByRespAct.getDeletedFlag() == true) {
 				listByRespAct.setDeletedFlag(false);
@@ -73,6 +74,7 @@ public class ActivityController {
 			return activityServiceImpl.SaveActivity(activity);
 
 		}
+		
 	}
 
 	@GetMapping("/get/activity/{activityId}")
