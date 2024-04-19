@@ -129,7 +129,6 @@ export class UserComponent {
             reverseButtons: false
           }).then((result) => {
             if (result.isConfirmed) {
-              // added 12/04/2024 createdBy and updatedBy null value issuse fixed...
               this.userService.saveUser(userData).subscribe((data) => {
               if (this.userId != 0) {
                 Swal.fire('User Updated Successfully','', 'success');
@@ -140,12 +139,11 @@ export class UserComponent {
             },
             (error) => {
               console.log(error);
-              Swal.fire('Error', 'Error occured while saving', 'error');
+              Swal.fire( 'Error occured while saving','', 'error');
             });
               
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-              // User clicked cancel, do nothing
-              Swal.fire('Cancelled', 'Your data is not submitted', 'error');
+              Swal.fire('Your data is not submitted','', 'error');
               
             }
           }); 
@@ -187,6 +185,8 @@ export class UserComponent {
   // ------------------------------- for duplicate check -------------------
   checkDuplicateValue(event:any){
     const value=event.target.value;
+    console.log(value);
+    
     const colName=event.target.name;
     let userId=this.userId===0?0:this.userId;
     if (userId === 0) {
@@ -228,7 +228,7 @@ export class UserComponent {
         return str;
       })
     ).subscribe((str: string) => {
-      if(userId!==0 && !(str===value)){ 
+      if(!(str===value)){ 
        this.userService.duplicateCheck(value,colName)
        .subscribe({
         next:(data:any)=>{
@@ -274,26 +274,17 @@ export class UserComponent {
     }
 
     'trimValidator'(control: any) {
-
-      // This function validates for leading/trailing spaces
-  
       if (control.value && control.value.trim() === '') {
-  
         return { onlySpaces: true };
   
       }
-  
       return null;
-  
     }
-  
-  
   
     preventSpace(event: KeyboardEvent) {
       if (event.key === ' ' && (event.target as HTMLInputElement).value === '') {
         event.preventDefault();
       }
-  
     }
   
     preventNumbers(event: KeyboardEvent) {

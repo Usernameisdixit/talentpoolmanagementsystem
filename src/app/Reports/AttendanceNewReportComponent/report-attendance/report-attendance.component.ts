@@ -109,31 +109,21 @@ export class ReportAttendanceComponent {
     this.resourceValue = this.myControl.value;
 
     if (this.selectedFromDate == null) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please choose from date before generating the Pdf!',
-      });
+
+      Swal.fire('Please choose from date before generating the Pdf');
 
     } else if (this.selectedToDate == null) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please choose to date before generating the Pdf!',
-      });
+
+      Swal.fire('Please choose to date before generating the Pdf');
+
     } else if (this.inputType == 'activity' && this.activity == '0') {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please Select activity before generating the Pdf!',
-      });
+
+      Swal.fire('Please Select activity before generating the Pdf');
+
     } else if (this.inputType == 'resource' && this.resourceValue == "0") {
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please Enter resource before generating the Pdf!',
-      });
+       Swal.fire('Please Enter resource before generating the Pdf');
+
     } else {
       this.resourceValue = this.myControl.value;
       if (!this.resourceValue) {
@@ -178,11 +168,7 @@ export class ReportAttendanceComponent {
             //END
             this.reportAttendanceService.generateAteendancePdf(this.inputType, data, this.selectedFromDate, this.selectedToDate,this.activitiesByUser);
           } else {
-            Swal.fire({
-              icon: 'info',
-              title: 'No Data Found',
-              text: 'No attendance data found in this date range!',
-            });
+            Swal.fire('No attendance data found in this date range');
 
           }
         });
@@ -193,31 +179,21 @@ export class ReportAttendanceComponent {
     this.resourceValue = this.myControl.value;
 
     if (this.selectedFromDate == null) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please choose from date before generating the Excel!',
-      });
+
+      Swal.fire('Please choose from date before generating the Excel');
 
     } else if (this.selectedToDate == null) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please choose to date before generating the Excel!',
-      });
+
+      Swal.fire('Please choose to date before generating the Excel');
+      
     } else if (this.inputType == 'activity' && this.activity == '0') {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please Select activity before generating the Excel!',
-      });
+
+      Swal.fire('Please Select activity before generating the Excel');
+      
     } else if (this.inputType == 'resource' && this.resourceValue == "0") {
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please Enter resource before generating the Excel!',
-      });
+      Swal.fire('Please Enter resource before generating the Excel');
+
     } else {
       this.resourceValue = this.myControl.value;
       if (!this.resourceValue) {
@@ -282,11 +258,7 @@ export class ReportAttendanceComponent {
             }
             this.reportAttendanceService.generateAteendanceExcel(this.inputType, data, this.selectedFromDate, this.selectedToDate, this.activities,this.activitiesByUser);
           } else {
-            Swal.fire({
-              icon: 'info',
-              title: 'No Data Found',
-              text: 'No attendance data found in this date range!',
-            });
+            Swal.fire('No attendance data found in this date range');
 
           }
         });
