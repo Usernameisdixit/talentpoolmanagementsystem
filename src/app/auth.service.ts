@@ -5,24 +5,36 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
   userLogIn: boolean;
-    
+
 
   constructor() { }
-  // Method to set authentication status in session storage
-  isLoggedIn(token:any){
+  isLoggedIn(token: any) {
     debugger;
-    if(token=="undefined" || token==='' || token==null)
+    if(token==null || token=="undefined" || token==='' || this.isTokenExpired(token))
       this.userLogIn=false;
     else
-      this.userLogIn=true;      
+      this.userLogIn = true;
   }
-  
+
+
+
 
   getUsername(): string | null {
     return localStorage.getItem('userName');
   }
   getUserFullname(): string | null {
     return localStorage.getItem('userFullName');
+  }
+
+  logout() {
+    // Clear authentication status and remove user-related data from localStorage
+    this.userLogIn = false;
+    localStorage.clear();
+  }
+
+  private isTokenExpired(token: string) {
+    const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
+    return (Math.floor((new Date).getTime() / 1000)) >= expiry;
   }
 
 

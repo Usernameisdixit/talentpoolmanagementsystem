@@ -18,8 +18,9 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
       this.authService.isLoggedIn(localStorage.getItem('token'));
       this.idleService.userInactive.subscribe(() => {
-        // this.router.navigate(['login']);
-        // localStorage.clear();
+        localStorage.clear();
+        window.location.reload();
+        this.router.navigate(['login']);
       });
     }
 }

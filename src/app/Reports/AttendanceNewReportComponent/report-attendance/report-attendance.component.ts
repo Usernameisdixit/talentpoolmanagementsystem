@@ -11,6 +11,11 @@ export interface User {
 
 }
 
+interface Activity {
+  activityId: number;
+  activityName: string;
+}
+
 @Component({
   selector: 'app-report-attendance',
   templateUrl: './report-attendance.component.html',
@@ -97,10 +102,21 @@ export class ReportAttendanceComponent {
   }
 
   fetchActivities(): void {
+    debugger;
     if (this.selectedFromDate && this.selectedToDate) {
       this.reportAttendanceService.getActivities(this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString())
         .subscribe(data => {
-          this.activities = data;
+          //NEW LOGIC//
+          const uniqueActivities = {};
+          data.forEach(activity => {
+            const { activityId, activityName } = activity;
+            if (!uniqueActivities[activityName]) {
+                uniqueActivities[activityName] = [];
+            }
+            uniqueActivities[activityName].push(activityId);
+        });
+        const result = Object.entries(uniqueActivities).map(([activityName, activityId]) => ({ activityName, activityId })); 
+        this.activities = result;
         });
     }
   }
@@ -109,31 +125,21 @@ export class ReportAttendanceComponent {
     this.resourceValue = this.myControl.value;
 
     if (this.selectedFromDate == null) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please choose from date before generating the Pdf!',
-      });
+
+      Swal.fire('Please choose from date before generating the Pdf');
 
     } else if (this.selectedToDate == null) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please choose to date before generating the Pdf!',
-      });
+
+      Swal.fire('Please choose to date before generating the Pdf');
+
     } else if (this.inputType == 'activity' && this.activity == '0') {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please Select activity before generating the Pdf!',
-      });
+
+      Swal.fire('Please Select activity before generating the Pdf');
+
     } else if (this.inputType == 'resource' && this.resourceValue == "0") {
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please Enter resource before generating the Pdf!',
-      });
+       Swal.fire('Please Enter resource before generating the Pdf');
+
     } else {
       this.resourceValue = this.myControl.value;
       if (!this.resourceValue) {
@@ -146,8 +152,10 @@ export class ReportAttendanceComponent {
       this.reportAttendanceService.attendanceData(this.inputType, this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString(), this.activity, this.resourceValue)
         .subscribe(data => {
           if (data.length != 0) {
+            debugger;
             //RESOURCE LOGIC PDF
             if(this.inputType=='resource'){
+              
               const uniqueActivityNames = new Set();
               data.forEach(entry => {
                 entry.activityAttenDetails.forEach(detail => {
@@ -155,7 +163,20 @@ export class ReportAttendanceComponent {
                 });
               });
               this.activitiesByUser=Array.from(uniqueActivityNames).sort();
-
+         
+              data.forEach(entry => {
+                if (entry.activityAttenDetails) {
+                  this.activitiesByUser.forEach(activity => {
+                    if (!entry.activityAttenDetails.some(detail => detail.activityName === activity)) {
+                      entry.activityAttenDetails.push({
+                        activityName: activity,
+                        attendanceStatus: 'Attendance Not taken ',
+                        activityFor:'-1'
+                      });
+                    }
+                  });
+                }
+              });
               data.forEach(entry => {
                 this.sortActivityAttenDetails(entry.activityAttenDetails);
               });
@@ -163,11 +184,7 @@ export class ReportAttendanceComponent {
             //END
             this.reportAttendanceService.generateAteendancePdf(this.inputType, data, this.selectedFromDate, this.selectedToDate,this.activitiesByUser);
           } else {
-            Swal.fire({
-              icon: 'info',
-              title: 'No Data Found',
-              text: 'No attendance data found in this date range!',
-            });
+            Swal.fire('No attendance data found in this date range');
 
           }
         });
@@ -178,31 +195,21 @@ export class ReportAttendanceComponent {
     this.resourceValue = this.myControl.value;
 
     if (this.selectedFromDate == null) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please choose from date before generating the Excel!',
-      });
+
+      Swal.fire('Please choose from date before generating the Excel');
 
     } else if (this.selectedToDate == null) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please choose to date before generating the Excel!',
-      });
+
+      Swal.fire('Please choose to date before generating the Excel');
+      
     } else if (this.inputType == 'activity' && this.activity == '0') {
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please Select activity before generating the Excel!',
-      });
+
+      Swal.fire('Please Select activity before generating the Excel');
+      
     } else if (this.inputType == 'resource' && this.resourceValue == "0") {
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Please Enter resource before generating the Excel!',
-      });
+      Swal.fire('Please Enter resource before generating the Excel');
+
     } else {
       this.resourceValue = this.myControl.value;
       if (!this.resourceValue) {
@@ -218,6 +225,7 @@ export class ReportAttendanceComponent {
 
             //START NA LOGIC
             if (this.inputType == 'summary') {
+              
               data.forEach(entry => {
                 if (entry.activityAttenDetails) {
                   this.activities.forEach(activity => {
@@ -234,8 +242,7 @@ export class ReportAttendanceComponent {
               data.forEach(entry => {
                 this.sortActivityAttenDetails(entry.activityAttenDetails);
               });
-              console.log("ts data")
-              console.log(data);
+            
             }
             //END
 
@@ -247,6 +254,19 @@ export class ReportAttendanceComponent {
                 });
               });
               this.activitiesByUser=Array.from(uniqueActivityNames).sort();
+              data.forEach(entry => {
+                if (entry.activityAttenDetails) {
+                  this.activitiesByUser.forEach(activity => {
+                    if (!entry.activityAttenDetails.some(detail => detail.activityName === activity)) {
+                      entry.activityAttenDetails.push({
+                        activityName: activity,
+                        attendanceStatus: 'Attendance Not taken ',
+                        activityFor:'-1'
+                      });
+                    }
+                  });
+                }
+              });
 
               data.forEach(entry => {
                 this.sortActivityAttenDetails(entry.activityAttenDetails);
@@ -254,11 +274,7 @@ export class ReportAttendanceComponent {
             }
             this.reportAttendanceService.generateAteendanceExcel(this.inputType, data, this.selectedFromDate, this.selectedToDate, this.activities,this.activitiesByUser);
           } else {
-            Swal.fire({
-              icon: 'info',
-              title: 'No Data Found',
-              text: 'No attendance data found in this date range!',
-            });
+            Swal.fire('No attendance data found in this date range');
 
           }
         });

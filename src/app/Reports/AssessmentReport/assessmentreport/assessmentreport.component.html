@@ -1,68 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Assessment Report</title>
-
-
-</head>
-<body>
-  <div class="container">
-    <h2 class="text-center mb-4">Assessment Report</h2>
-    <div class="row justify-content-start">
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="year">Year:</label>
-                <input type="text" id="year" [(ngModel)]="year" class="form-control">
-            
+<div class="container">
+    <div class="row justify-content-start maxscrn">
+        <div class="col-md-12">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input"  type="radio" name="inputType" id="inputActivity" [(ngModel)]="inputType"
+                (change)="clearResourceInput()" value="activity">
+                <label class="form-check-label" for="inputActivity">Activity Wise</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inputType" id="inputResource" [(ngModel)]="inputType"
+                (change)="clearActivityInput()"  value="resource">
+                <label class="form-check-label" for="inputResource">Resource Wise</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inputType" id="inputSummary" [(ngModel)]="inputType"
+                    (change)="clearResourceInput();clearActivityInput()" value="summary">
+                <label class="form-check-label" for="inputSummary">Summary</label>
             </div>
         </div>
+ <hr>       
         <div class="col-md-3">
             <div class="form-group">
-                <label for="month">Month:</label>
-                <select id="month" [(ngModel)]="month" class="form-control">
-                    <option value='0' selected>--Select--</option>
-                    <option *ngFor="let option of months" [value]="option.value">{{ option.name }}</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="platform">Platform:</label>
-                <select id="platform" [(ngModel)]="platform" class="form-control">
-                    <option value='0' selected>--Select--</option>
-                    <option *ngFor="let platform of platforms" [value]="platform.platform">{{ platform.platform }}
-                    </option>
-                </select>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="date">Date:</label>
+                <label for="date">From Date: <span class="required">*</span></label>
                 <div class="input-group">
-                    <input id="date" class="form-control" type="text" [(ngModel)]="selectedDate" bsDatepicker
-                        [bsConfig]="bsConfig" placeholder="Select date" #dp="bsDatepicker" autocomplete="off"/>
+                    <input id="date" class="form-control" type="text" autocomplete="off" [(ngModel)]="selectedFromDate" (ngModelChange)="onDateChange()"  bsDatepicker
+                        [bsConfig]="bsConfig" placeholder="Select date"  #dp="bsDatepicker"/>
                     <span class="input-group-text" (click)="openDatepicker()"><i class="material-icons">date_range</i></span>
                 </div>
             </div>
         </div>
-
-    
-       
-
-        <div class="row justify-content-center button-container"> <!-- Added button-container class here -->
-            <div class="col-md-12 text-center">
-                <button type="button" class="btn btn-success button-space" (click)="downloadReport('pdf')">Generate PDF</button>&nbsp;
-                <button type="button" class="btn btn-success button-space" (click)="downloadReport('excel')">Generate Excel</button> &nbsp;
-                <button type="button" class="btn btn-danger button-space" (click)="resetForm()">Reset</button> 
+        <div class="col-md-3">
+            <div class="form-group">
+                <label for="date">To Date: <span class="required">*</span></label>
+                <div class="input-group">
+                    <input id="date" class="form-control" type="text" autocomplete="off" [(ngModel)]="selectedToDate" (ngModelChange)="onDateChange()" bsDatepicker
+                        [bsConfig]="bsConfig" placeholder="Select date"  #dp1="bsDatepicker"/>
+                    <span class="input-group-text" (click)="openDatepicker1()"><i class="material-icons">date_range</i></span>
+                </div>
             </div>
         </div>
-    </div>
-  </div>
+        <!-- <According To Radio Fields -->
+        <div class="col-md-3" *ngIf="inputType === 'activity'">
+            <div class="form-group">
+                <label for="activity">Activity: <span class="required">*</span></label>
+                <select id="activity" [(ngModel)]="activity" class="form-control">
+                    <option value='0' selected>--Select--</option>
+                    <option *ngFor="let activity of activities" [value]="activity.activityId">{{ activity.activityName }}</option>
+                    <!-- <option *ngFor="let platform of platforms" [value]="platform.platform">{{ platform.platform }}  </option>-->
+                </select>
+            </div>
+        </div>
 
- 
- 
-</body>
-</html>
+        <div class="col-md-3" *ngIf="inputType === 'resource'">
+            <div class="form-group">
+                <label for="date">Resorce: <span class="required">*</span></label>
+                <div class="input-group">
+                    <input id="date" class="form-control" type="text" matInput [formControl]="myControl"
+                        [matAutocomplete]="auto" />
+                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                            {{option.name}}
+                        </mat-option>
+                    </mat-autocomplete> 
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-6">
+                <button *ngIf="inputType !== 'summary'" type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button>
+                <!-- <button type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button> -->
+                <div class="button-space"></div>
+                <button type="button" class="btn btn-success" (click)="generateExcel()">Generate Excel</button>
+            </div>
+        </div>
+
+    </div>
+</div>

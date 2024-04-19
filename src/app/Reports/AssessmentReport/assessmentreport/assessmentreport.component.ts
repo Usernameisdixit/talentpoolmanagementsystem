@@ -1,134 +1,147 @@
-import { Component, ViewChild} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { BsDatepickerConfig, BsDatepickerDirective, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { startWith, map } from 'rxjs';
+import { Observable } from 'rxjs';
+import { ReportAttendanceService } from '../../AttendanceNewReportService/report-attendance.service';
+import Swal from 'sweetalert2';
+import { AssesmentService } from '../../AssesmentReportService/assesment.service';
+export interface User {
+  name: string;
 
-
-
-import { MatDialog } from '@angular/material/dialog';
-import { HttpClient } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { BsDatepickerConfig, BsLocaleService ,BsDatepickerDirective} from 'ngx-bootstrap/datepicker';
-import { DatePipe } from '@angular/common';
-
+}
 @Component({
   selector: 'app-assessmentreport',
   templateUrl: './assessmentreport.component.html',
   styleUrls: ['./assessmentreport.component.css']
 })
 export class AssessmentreportComponent {
-
   @ViewChild('dp') datepicker: BsDatepickerDirective;
-  selectedDate: Date = null;
-
-  year: string = '';
-  monthName: string = '';
-  month: string = '0';
-  platform: string = '0';
-  attendanceDetails: any[] = [];
-  months: { value: string; name: string; }[] = [];
-  platforms: any[] = [];
-  isPresent: boolean = false;
-
-
-  ngOnInit() {
-    this.loadPlatforms();
-    this.platform = '0';
-    this.year = this.getCurrentYear().toString();
-    this.month = '0'; 
-    // Populate months array
-    this.months = Array.from({ length: 12 }, (_, i) => ({ value: (i + 1).toString(), name: this.getMonthName(i) }));
-  }
-
+  @ViewChild('dp1') datepicker1: BsDatepickerDirective;
+  inputType: string = 'activity';
+  selectedFromDate: Date = null;
+  selectedToDate: Date = null;
+  activity: string = '0';
   bsConfig: Partial<BsDatepickerConfig>;
-  constructor(private localeService: BsLocaleService, private datePipe: DatePipe,private http :HttpClient ) {
+  myControl = new FormControl<string | User>('');
+  auto: any;
+  activities: any[];
+  activitiesByUser: any[];
+  options1: User[] = [];
+  filteredOptions: Observable<User[]>;
+  resourceValue: any;
+
+  constructor(private localeService: BsLocaleService, private assesmentService: AssesmentService,private reportAttendanceService:ReportAttendanceService) {
     this.bsConfig = {
       containerClass: 'theme-dark-blue',
       dateInputFormat: 'DD-MMM-YYYY',
       showWeekNumbers : false
     };
+    
   }
 
+  ngOnInit() {
+    this.getUniResourNames();
+  }
 
-  // generateReport(): void {
-  //   const dialogRef = this.dialog.open(ReportTypeDialogComponent);
+  onDateChange(): void {
+    this.fetchActivities();
+  }
 
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result) {
-    
-  //     this.downloadReport(result);
-   
-  //     }
-  //   });
-  // }
-  downloadReport(type: string): void {
-    const data = {
-      year: this.year,
-      month: this.month,
-      platform: this.platform,
-      selectedDate: this.selectedDate.toISOString().split('T')[0],
-      reportType: type
-    };
-  
-    // Construct query parameters from data object
-    const queryParams = new URLSearchParams(data).toString();
-    const url = `http://localhost:9999/tpms/download?${queryParams}`;
-  
-    this.http.get(url, {
-      responseType: 'blob' as 'json',
-      observe: 'response'
-    }).subscribe(response => {
-      const contentDispositionHeader = response.headers.get('Content-Disposition');
-      const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-      const matches = filenameRegex.exec(contentDispositionHeader);
-      let filename = 'report'; // Default filename for Excel file
-      if (matches && matches[1]) {
-        filename = matches[1].replace(/['"]/g, '');
+  fetchActivities(): void {
+    if (this.selectedFromDate && this.selectedToDate) {
+      this.assesmentService.getActivitiesForAssesment(this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString())
+        .subscribe(data => {
+          console.log(data);
+          this.activities = data;
+        });
+    }
+  }
+
+  clearResourceInput() {
+    if (this.inputType !== 'resource') {
+      this.myControl.reset();
+      this.resourceValue = 0;
+      this.options1 = [];
+    }
+  }
+
+  clearActivityInput() {
+    if (this.inputType !== 'activity') {
+      this.activity = '0';
+    }
+
+  }
+
+  getUniResourNames() {
+    debugger;
+    this.myControl.valueChanges.subscribe(value => {
+      if (typeof value === 'string') {
+        if ((value as string).length > 0) {
+          this.reportAttendanceService.getResource(value as string).subscribe(data => {
+            this.options1 = data.map(name => ({ name }));
+            this.filteredOptions = this.myControl.valueChanges.pipe(
+              startWith(''),
+              map(value => {
+                const name = typeof value === 'string' ? value : (value as User)?.name;
+                return name ? this._filter(name as string) : this.options1.slice();
+              }),
+            );
+          });
+        } else {
+          this.options1 = [];
+        }
       }
-  
-      const blob = new Blob([response.body as any], { type: response.headers.get('Content-Type') });
-      const blobUrl = window.URL.createObjectURL(blob);
-  
-      const a = document.createElement('a');
-      a.href = blobUrl;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-  
-      window.URL.revokeObjectURL(blobUrl);
-      document.body.removeChild(a);
-    }, error => {
-      console.error('Error generating report:', error);
     });
   }
+
+  private _filter(name: string): User[] {
+    const filterValue = name.toLowerCase();
+    return this.options1.filter(option => option.name.toLowerCase().includes(filterValue));
+  }
+
+  displayFn(user: User): string {
+    return user && user.name ? user.name : '';
+  }
+
   
 
-  getCurrentYear(): number {
-    return new Date().getFullYear();
+  generatePDF() {
+    
   }
 
-  getMonthName(index: number): string {
-    const date = new Date(2000, index, 1); 
-    this.monthName = date.toLocaleString('en-us', { month: 'long' });
-    return this.monthName;
+  generateExcel() {
+   
+
   }
 
-  loadPlatforms() {
-    // this.attendanceGeneratedService.getPlatforms().subscribe(
-    //   (data: any[]) => {
-    //     this.platforms = data;
-    //   },
-    // );
-  }
+  sortActivityAttenDetails(activityAttenDetails) {
+    debugger;
+    if (activityAttenDetails) {
+      // Sort the array  on activityName
+      activityAttenDetails.sort((a, b) => {
+        const activityNameA = a.activityName.trim().toUpperCase();
+        const activityNameB = b.activityName.trim().toUpperCase();
 
-
-  
-  resetForm() {
-    this.month = '0';
-    this.platform = '0';
-    this.selectedDate = null;
+        if (activityNameA < activityNameB) return -1; 
+        if (activityNameA > activityNameB) return 1;  
+        return 0; 
+      });
+    } else {
+      console.log("activityAttenDetails is undefined or null");
+    }
   }
 
   openDatepicker(): void {
     this.datepicker.show(); 
+    
   }
+
+  openDatepicker1():void{
+    this.datepicker1.show();
+  }
+
+  
 
   }
 

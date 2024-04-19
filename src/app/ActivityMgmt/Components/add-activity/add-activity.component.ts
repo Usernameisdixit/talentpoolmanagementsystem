@@ -23,7 +23,8 @@ export class AddActivityComponent {
       description:'',
       responsPerson1:'',
       responsPerson2:'',
-      isAsesmentEnable:false
+      isAsesmentEnable:false,
+      isProject:false
   };
   submitted = false;
   myControl = new FormControl();
@@ -51,8 +52,8 @@ export class AddActivityComponent {
       description:this.activity.description,
       responsPerson1:this.activity.responsPerson1,
       responsPerson2:this.activity.responsPerson2,
-      isAsesmentEnable: this.activity.isAsesmentEnable ? 1 : 0 // Convert boolean to 1 or 0
-
+      isAsesmentEnable: this.activity.isAsesmentEnable ? 1 : 0 ,// Convert boolean to 1 or 0
+      isProject:this.activity.isProject? 1 : 0
     };
     if (data.activityName=='' || data.activityName==null) {
       Swal.fire("Please enter the activity name!");

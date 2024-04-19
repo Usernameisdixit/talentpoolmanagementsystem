@@ -91,37 +91,37 @@ export class UserComponent {
     if (userFullName?.invalid && errorFlag === 0) {
       errorFlag = 1;
       userFullName.markAsTouched();
-      Swal.fire("Please Enter The Full Name!");
+      Swal.fire("Please enter the full name");
     }
     if (userName?.invalid && errorFlag === 0) {
       errorFlag = 1;
       userName.markAsTouched();
-      Swal.fire("Please Enter The User Name!");
+      Swal.fire("Please enter the user name");
     }
 
     if (roleId?.invalid && errorFlag === 0) {
       errorFlag = 1;
       roleId.markAsTouched();
-      Swal.fire("Please Select Role!");
+      Swal.fire("Please select role");
     }
 
     if (phoneNo?.invalid && errorFlag === 0) {
       errorFlag = 1;
       phoneNo.markAsTouched();
-      Swal.fire("Please Enter A Valid Mobile Number!");
+      Swal.fire("Please enter a valid mobile number");
     }
 
     if (email?.invalid && errorFlag === 0) {
       errorFlag = 1;
       email.markAsTouched();
-      Swal.fire("Please Enter A Valid Email!");
+      Swal.fire("Please enter a valid email");
     }
 
     if(errorFlag===0){
         const userData=this.userForm.value;
         userData.userId=this.userId;
           Swal.fire({
-            title: this.userId===0?'Do you want to submit?':'Do you want to update?',
+            title: this.userId===0?'Do you want to save?':'Do you want to update?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes',
@@ -129,22 +129,21 @@ export class UserComponent {
             reverseButtons: false
           }).then((result) => {
             if (result.isConfirmed) {
-              // added 12/04/2024 createdBy and updatedBy null value issuse fixed...
               this.userService.saveUser(userData).subscribe((data) => {
               if (this.userId != 0) {
-                Swal.fire('User Updated', 'User Updated Successfully', 'success');
+                Swal.fire('User Updated Successfully','', 'success');
               } else {
-                Swal.fire('User Created', 'User Created Successfully', 'success');
+                Swal.fire('User Saved Successfully','', 'success');
               }
               this.route.navigate(['viewUser']);
             },
             (error) => {
               console.log(error);
+              Swal.fire( 'Error occured while saving','', 'error');
             });
               
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-              // User clicked cancel, do nothing
-              Swal.fire('Cancelled', 'Your data is not submitted :)', 'error');
+              Swal.fire('Your data is not submitted','', 'error');
               
             }
           }); 
@@ -186,6 +185,8 @@ export class UserComponent {
   // ------------------------------- for duplicate check -------------------
   checkDuplicateValue(event:any){
     const value=event.target.value;
+    console.log(value);
+    
     const colName=event.target.name;
     let userId=this.userId===0?0:this.userId;
     if (userId === 0) {
@@ -194,8 +195,7 @@ export class UserComponent {
           next: (data: any) => {
             if (data.status == 'Exist') {
               Swal.fire({
-                title: 'Error',
-                text: 'Data already exists',
+                title: 'Data already exists',
                 icon: 'error',
                 showConfirmButton: true
               }).then((result) => {
@@ -228,14 +228,13 @@ export class UserComponent {
         return str;
       })
     ).subscribe((str: string) => {
-      if(userId!==0 && !(str===value)){ 
+      if(!(str===value)){ 
        this.userService.duplicateCheck(value,colName)
        .subscribe({
         next:(data:any)=>{
           if(data.status=='Exist'){
             Swal.fire({
-            title: 'Error',
-            text: 'Data already exists',
+            title: 'Data already exists',
             icon: 'error',
             showConfirmButton: true
           }).then((result) => {
@@ -270,6 +269,35 @@ export class UserComponent {
         return;
       }
       if (phoneNumber.length >= 10) {
+        event.preventDefault();
+      }
+    }
+
+    'trimValidator'(control: any) {
+      if (control.value && control.value.trim() === '') {
+        return { onlySpaces: true };
+  
+      }
+      return null;
+    }
+  
+    preventSpace(event: KeyboardEvent) {
+      if (event.key === ' ' && (event.target as HTMLInputElement).value === '') {
+        event.preventDefault();
+      }
+    }
+  
+    preventNumbers(event: KeyboardEvent) {
+      const key = event.key;
+      if (key.match(/^\d+$/)) {
+        event.preventDefault();
+      }
+  
+    }
+  
+    preventSpecialChars(event: KeyboardEvent) {
+      const key = event.key;
+      if (!key.match(/^[a-zA-Z ]+$/) && key !== 'Backspace') {
         event.preventDefault();
       }
     }
