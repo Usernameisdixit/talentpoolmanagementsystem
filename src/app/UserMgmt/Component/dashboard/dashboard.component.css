@@ -57,23 +57,25 @@
   font-weight: bold; /* Make the text slightly bold */
 }
 
-.no-message-res {
-  height: 200px; /* Set the desired height for the div */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f44336;
-  /* Add any other styles as needed */
+/* Icons for dashboard  */
+.image-resource {
+  background-image: url('https://www.shareicon.net/data/64x64/2015/10/30/664036_group_512x512.png');
+  background-size: cover;
 }
 
-.account-icon {
-  margin-right: 8px; /* Add some margin between the icon and the text */
-  font-size: 44px; /* Adjust the size of the icon */
+.image-attendance {
+  background-image: url('https://media.istockphoto.com/id/1195833115/vector/able-adept.jpg?s=612x612&w=0&k=20&c=IwVoGRPOvaL9PorPB9WuPgf1ORM7Cigh7zy_SMybyMs=');
+  background-size: cover;
 }
 
-.colored-card {
-  background-color: #f0f0f0; /* Set the desired background color */
-  /* Add any other styles as needed */
+.image-assessment {
+  background-image: url('https://cdn.iconscout.com/icon/premium/png-512-thumb/keyactivities-list-2110640-1777192.png?f=webp&w=256');
+  background-size: cover;
+}
+
+.image-activities {
+  background-image: url('https://cdn.iconscout.com/icon/premium/png-512-thumb/assessment-2742411-2274309.png?f=webp&w=256');
+  background-size: cover;
 }
 
 

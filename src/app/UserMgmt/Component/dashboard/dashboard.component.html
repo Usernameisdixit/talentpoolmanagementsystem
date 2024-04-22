@@ -2,47 +2,43 @@
 <div class="dashboard">
   <div class="card-container">
     <!-- Card 1 -->
-    <mat-card class="card">
-      <mat-card-header>
-        <div mat-card-avatar class="card-avatar"></div>
-        <mat-card-title>Resources</mat-card-title>
-      </mat-card-header>
-      <div *ngIf="resources==null" >   <!--class="no-message-res"-->
-        <p style="font-weight: bold; text-align: center;font-size: 18px;">Resources has not been allocated.</p>
-        </div>
-        <div *ngIf="resources!=null">
-      <mat-card-content>
-        <!-- <p>Last Allocation Date: {{allocationDate}}</p> -->
-
-        <mat-form-field>
-          <mat-select placeholder="Select Allocation Date" [(ngModel)]="alDate" (ngModelChange)="sendDate($event)" style="margin-top: 5px; margin-right: 8px;">
-            <mat-option *ngFor="let date of allocationDate" [value]="date">{{ date }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        
-        
-        
-        
-        <h4>Allocated Resources : {{resources}}</h4>
-      </mat-card-content>
+    <mat-card class="card" style="background-color: #FF7F50;">
+  <mat-icon>resources</mat-icon>
+  <mat-card-header>
+    <div mat-card-avatar class="image-resource"></div>  
+    <mat-card-title>Resources</mat-card-title>
+  </mat-card-header>
+  <div *ngIf="resources==null" >
+    <p style="font-weight: bold; text-align: center; font-size: 18px;">Resources has not been allocated.</p>
+  </div>
+  <div *ngIf="resources!=null" >
+    <mat-card-content>
+      <!-- <p>Last Allocation Date: {{allocationDate}}</p> -->
+      <mat-form-field>
+        <mat-select placeholder="Select Allocation Date" [(ngModel)]="alDate" (ngModelChange)="sendDate($event)" style="margin-top: 5px; margin-right: 8px;">
+          <mat-option *ngFor="let date of allocationDate" [value]="date">{{ date }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <h4>Allocated Resources : {{resources}}</h4>
       <mat-card-actions>
         <button mat-button color="primary" routerLink="/resourceHistory">View Details</button>
       </mat-card-actions>
-    </div>
-      
-    </mat-card>
+    </mat-card-content>
+  </div>
+</mat-card>
 
+    
     <!-- Card 2 -->
-    <mat-card class="card">
+    <mat-card class="card" style="background-color: #90EE90;">
       <mat-card-header>
-        <div mat-card-avatar class="card-avatar"></div>
-        <mat-card-title>Activities</mat-card-title>
+        <div mat-card-avatar class="image-activities"></div> 
+                <mat-card-title>Activities</mat-card-title>
       </mat-card-header>
-      <div *ngIf="ActivtiesPlanned==null" class="no-message">
+      <div *ngIf="ActivtiesPlanned==null" >
         <p style="font-weight: bold; text-align: center;font-size: 18px;">Activities has not been allocated for the resources.</p>
 
       </div>
-      <div *ngIf="ActivtiesPlanned!=null">
+      <div *ngIf="ActivtiesPlanned!=null" >
       <mat-card-content>
         
         <div class="row">
@@ -72,33 +68,28 @@
               </mat-form-field>
           </div>
         </div>
-        <div  class="col-md-2">
-          <br>
-         <!-- <button class="btn btn-primary"  data-bs-toggle="modal" href="#detailsModal" (click)="onviewActivity();">VIEW</button> -->
-        </div>
-      </div>
-      <br>
+            </div>
       <p style="font-weight: bold;">Total Activities Planned: {{ActivtiesPlanned}}</p>
-     </mat-card-content>
-     <mat-card-actions>
-       
-       <button mat-button color="primary" data-bs-toggle="modal" href="#detailsModal" (click)="onviewActivity();">View Details</button>
+      <mat-card-actions>
+        
+        <button mat-button color="primary" data-bs-toggle="modal" href="#detailsModal" (click)="onviewActivity();">View Details</button>
       </mat-card-actions>
+    </mat-card-content>
     </div>
     </mat-card>
 
     <!-- Additional Cards -->
     <!-- Card 3 -->
-    <mat-card class="card">
+    <mat-card class="card" style="background-color: #AFEEEE;">
       <mat-card-header>
-        <div mat-card-avatar class="card-avatar"></div>
-        <mat-card-title>Attendance</mat-card-title>
+        <div mat-card-avatar class="image-attendance"></div> 
+                <mat-card-title>Attendance</mat-card-title>
       </mat-card-header>
-      <div *ngIf="attendanceData==null" class="no-message">
+      <div *ngIf="attendanceData==null || dashboardDate==null">
         <p style="font-weight: bold; text-align: center;font-size: 18px;">Attendance not yet taken.</p>
 
       </div>
-      <div *ngIf="attendanceData!=null">
+      <div *ngIf="attendanceData!=null && dashboardDate!=null" >
       <mat-card-content>
 
         <!-- working -->
@@ -117,15 +108,15 @@
     </mat-card>
 
     <!-- Card 4 -->
-    <mat-card class="card">
+    <mat-card class="card" style="background-color: #F0E68C;">
   <mat-card-header>
-    <div mat-card-avatar class="card-avatar"></div>
-    <mat-card-title>Assessments</mat-card-title>
+    <div mat-card-avatar class="image-assessment"></div> 
+        <mat-card-title>Assessments</mat-card-title>
   </mat-card-header>
-  <div *ngIf="assessmentDateArr==null" class="no-message">
-    <p style="font-weight: bold; text-align: center;font-size: 18px;">Assessment has not been done for the resources.</p>
+  <div *ngIf="assessmentDateArr==null" >
+    <p style="font-weight: bold;text-align: center;font-size: 18px;">Assessment has not been done for the resources.</p>
   </div>   
-  <div *ngIf="assessmentDateArr!=null"> 
+  <div *ngIf="assessmentDateArr!=null" > 
     <mat-card-content class="card-content">
       <label style="font-size: 16px;">Assessment Date:</label>
       <br>
@@ -136,11 +127,11 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <mat-card-actions>
+        <button mat-button  color="primary" (click)="redirectToViewAssessment(assessmentDate)">View Details</button>
+      </mat-card-actions>
     </mat-card-content>
-    <mat-card-actions>
-      <button mat-button color="primary" (click)="redirectToViewAssessment(assessmentDate)">View Details</button>
-    </mat-card-actions>
-  </div>
+    </div>
 </mat-card>
 
   </div>

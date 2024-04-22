@@ -34,6 +34,7 @@ export class DashboardComponent  implements OnInit{
   ActivtiesPlanned : any;
   atnDate: string;
   alDate: any;
+  dashboardDate: string=null;
 
   constructor(private  contactService:ContactService,private datePipe:DatePipe,
     private apiService: AssessmentserviceService,private loginService:LoginService,
@@ -48,8 +49,7 @@ export class DashboardComponent  implements OnInit{
     this.maxDate=new Date();
     this.loginService.getAllocationDates().subscribe((response: any[]) => {
       debugger;
-      console.log("API Response:", response);
-      //response=null;
+      //response=[];
       if(response.length==0){
         this.resources=null;
       }
@@ -59,17 +59,22 @@ export class DashboardComponent  implements OnInit{
       this.sendDate(this.alDate);
     });
 
+    if(this.dashboardDate==null){
+      debugger;
     this.atnDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');
 
     this.selectedDate=this.datePipe.transform(this.atnDate, 'dd-MMM-yyyy');
+    }
     this.loginService.getAttendance(this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd')).subscribe((response:any)=>{
       debugger;
-      //response=null
-      if(response==null){
+      //response=[];
+      if(response.length==0){
         this.attendanceData=null;
-      }
+      }else{
       this.attendanceData=response;
-      console.log(this.attendanceData);
+      this.dashboardDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');;
+      }
+      console.log(this.attendanceData); 
       
     });
 
@@ -94,13 +99,13 @@ export class DashboardComponent  implements OnInit{
     this.toDate=this.datePipe.transform(lastday, 'dd-MMM-yyyy');
 
     this.loginService.gettotalActivitiesPlanned(this.datePipe.transform(firstday, 'yyyy-MM-dd'),this.datePipe.transform(lastday, 'yyyy-MM-dd')).subscribe((response: any) => {
-      debugger;
-      //response=null;
+    //response=0;
       if(response==0)
       {
         this.ActivtiesPlanned=null;
-      }
+      }else{
        this.ActivtiesPlanned = response;
+      }
       // console.log(this.ActivityData); 
       // alert(this.ActivtiesPlanned);
      });
@@ -124,17 +129,17 @@ export class DashboardComponent  implements OnInit{
   fetchAssessmentDates() {
     this.apiService.getAssessmentDates().subscribe(
       (dates: string[]) => {
-        debugger;
-        //dates=null;
+        debugger;        
+        //dates=[];
         if(dates.length===0)
         {
           this.assessmentDateArr=null;
         }
-   
+   else{
         this.assessmentDateArr = dates.map(date => this.transformDate(date));
         // Sort the dates in descending order (latest to oldest)
         this.assessmentDateArr.sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-
+   }
        // Set the assessmentDate to the latest date by default
       if (this.assessmentDateArr.length > 0) {
         this.assessmentDate = this.assessmentDateArr[0];
