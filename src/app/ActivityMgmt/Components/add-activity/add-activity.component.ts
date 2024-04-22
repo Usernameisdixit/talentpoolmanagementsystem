@@ -127,7 +127,7 @@ export class AddActivityComponent {
   click(event){
     const selectedValue=event.target.value;
     // alert(event.target.value);
-    // debugger;
+     debugger;
       this.activityService.getData(selectedValue).subscribe((data: any) => {
         console.log(data);
        if(data!=null){
@@ -136,11 +136,13 @@ export class AddActivityComponent {
       this.activity.responsPerson1 = data.responsPerson1;
       this.activity.responsPerson2 = data.responsPerson2;
       this.activity.isAsesmentEnable = data.isAsesmentEnable;
+      this.activity.isProject=data.isProject;
        }else{
         this.activity.description = '';
         this.activity.responsPerson1 = '';
         this.activity.responsPerson2 = '';
         this.activity.isAsesmentEnable = false;
+        this.activity.isProject=false;
 
        }
     });
