@@ -1,18 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject} from 'rxjs';
+import { addUser, userList ,getRoleDetails, getUserById, deleteUser, duplicateCheck} from 'src/app/apiconfig';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-
-  addUserUrl:string="http://localhost:9999/tpms/addUser";
-  viewUserUrl:string="http://localhost:9999/tpms/userList";
-  editUserUrl:string="http://localhost:9999/tpms/getUserById/";
-  getRoleUrl:string="http://localhost:9999/tpms/getRoleDetails";
-  deleteUserUrl:string="http://localhost:9999/tpms/deleteUser/";
-  duplicateCheckUrl:string="http://localhost:9999/tpms/duplicateCheck/";
   
   private dataSubject = new Subject<any>();
   title$ =this.dataSubject.asObservable();
@@ -20,27 +15,33 @@ export class UserService {
   constructor(private http:HttpClient) { }
 
   saveUser(user:any){
-    return this.http.post(this.addUserUrl,user);
+    let addUserUrl=addUser;
+    return this.http.post(addUserUrl,user);
   }
 
   getUserDetails(){
-    return this.http.get(this.viewUserUrl);
+    let viewUserUrl=userList;
+    return this.http.get(viewUserUrl);
   }
 
   getRoleDetails(){
-    return this.http.get(this.getRoleUrl);
+    let getRoleUrl=getRoleDetails;
+    return this.http.get(getRoleUrl);
   }
 
   editUser(userId:any){
-    return this.http.get(this.editUserUrl+userId);
+    let editUserUrl=getUserById;
+    return this.http.get(editUserUrl+userId);
   }
 
   deleteUser(userId:any,deletedFlag:any){
-    return this.http.delete(this.deleteUserUrl+`${userId}/${deletedFlag}`);
+    let deleteUserUrl=deleteUser;
+    return this.http.delete(deleteUserUrl+`${userId}/${deletedFlag}`);
   }
 
   duplicateCheck(value:any,colName:any){
-    return this.http.get(this.duplicateCheckUrl+`${value}/${colName}`);
+    let duplicateCheckUrl=duplicateCheck;
+    return this.http.get(duplicateCheckUrl+`${value}/${colName}`);
   }
   changeTitle(title:any){
      this.dataSubject.next(title);

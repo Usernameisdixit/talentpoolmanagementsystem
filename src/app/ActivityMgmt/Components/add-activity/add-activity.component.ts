@@ -23,7 +23,8 @@ export class AddActivityComponent {
       description:'',
       responsPerson1:'',
       responsPerson2:'',
-      isAsesmentEnable:false
+      isAsesmentEnable:false,
+      isProject:false
   };
   submitted = false;
   myControl = new FormControl();
@@ -51,8 +52,8 @@ export class AddActivityComponent {
       description:this.activity.description,
       responsPerson1:this.activity.responsPerson1,
       responsPerson2:this.activity.responsPerson2,
-      isAsesmentEnable: this.activity.isAsesmentEnable ? 1 : 0 // Convert boolean to 1 or 0
-
+      isAsesmentEnable: this.activity.isAsesmentEnable ? 1 : 0 ,// Convert boolean to 1 or 0
+      isProject:this.activity.isProject? 1 : 0
     };
     if (data.activityName=='' || data.activityName==null) {
       Swal.fire("Please enter the activity name!");
@@ -126,7 +127,7 @@ export class AddActivityComponent {
   click(event){
     const selectedValue=event.target.value;
     // alert(event.target.value);
-    // debugger;
+     debugger;
       this.activityService.getData(selectedValue).subscribe((data: any) => {
         console.log(data);
        if(data!=null){
@@ -135,11 +136,13 @@ export class AddActivityComponent {
       this.activity.responsPerson1 = data.responsPerson1;
       this.activity.responsPerson2 = data.responsPerson2;
       this.activity.isAsesmentEnable = data.isAsesmentEnable;
+      this.activity.isProject=data.isProject;
        }else{
         this.activity.description = '';
         this.activity.responsPerson1 = '';
         this.activity.responsPerson2 = '';
         this.activity.isAsesmentEnable = false;
+        this.activity.isProject=false;
 
        }
     });

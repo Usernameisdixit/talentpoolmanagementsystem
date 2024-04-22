@@ -1,26 +1,14 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+.button-space {
+  margin-left: 10px; /* Adjust the value as needed for the desired space */
+  display: inline-block;
+}
+
+.required {
+  color: red;
 }
 
 .container {
-  max-width: 800px;
-  height: 400px;
-  margin: 50px auto;
+
+  margin-left: 20px;
   padding: 20px;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.button-container {
-  margin-top: 100px; /* Adjust the margin top to create space between the form and buttons */
 }

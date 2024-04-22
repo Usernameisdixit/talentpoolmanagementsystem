@@ -11,6 +11,11 @@ export interface User {
 
 }
 
+interface Activity {
+  activityId: number;
+  activityName: string;
+}
+
 @Component({
   selector: 'app-report-attendance',
   templateUrl: './report-attendance.component.html',
@@ -97,10 +102,21 @@ export class ReportAttendanceComponent {
   }
 
   fetchActivities(): void {
+    debugger;
     if (this.selectedFromDate && this.selectedToDate) {
       this.reportAttendanceService.getActivities(this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString())
         .subscribe(data => {
-          this.activities = data;
+          //NEW LOGIC//
+          const uniqueActivities = {};
+          data.forEach(activity => {
+            const { activityId, activityName } = activity;
+            if (!uniqueActivities[activityName]) {
+                uniqueActivities[activityName] = [];
+            }
+            uniqueActivities[activityName].push(activityId);
+        });
+        const result = Object.entries(uniqueActivities).map(([activityName, activityId]) => ({ activityName, activityId })); 
+        this.activities = result;
         });
     }
   }

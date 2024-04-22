@@ -48,7 +48,10 @@
 
     <div class="form-group">
       <label for="indicator">Applicable For Assessment : </label>
-      <input class="form-check-input m-1" type="checkbox" id="indicator" [(ngModel)]="activity.isAsesmentEnable" name="indicator">
+      <input class="form-check-input m-1" type="checkbox" id="indicator" [(ngModel)]="activity.isAsesmentEnable" name="indicator">&nbsp;&nbsp;
+    
+      <label for="indicator1">Mark as Project : </label>
+      <input class="form-check-input m-1" type="checkbox" id="indicator1" [(ngModel)]="activity.isProject" name="indicator1">
     </div>
 
     <button (click)="saveTutorial()" class="btn btn-success">Submit</button>

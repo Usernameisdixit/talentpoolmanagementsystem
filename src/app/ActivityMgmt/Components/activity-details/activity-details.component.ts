@@ -27,6 +27,7 @@ export class ActivityDetailsComponent implements OnInit {
     responsPerson1: '',
     responsPerson2: '',
     isAsesmentEnable: 0,
+    isProject:0,
     deletedFlag: false,
   };
 
