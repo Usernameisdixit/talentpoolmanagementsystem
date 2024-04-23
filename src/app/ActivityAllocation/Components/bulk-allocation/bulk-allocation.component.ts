@@ -22,8 +22,8 @@ export class BulkAllocationComponent {
   activities: any[] = [];
   dynamicArray: Array<DynamicGrid> = [];
   newDynamic: any = {};
-  activity: any = {activityName: null, activityId: 0};
-  selectedSession: any = 0;
+  activity: any = {activityName: null, activityId: 0, isProject: false};
+  selectedSession: number = 0;
   selectedActivityFrom: any;
   selectedActivityTo: any;
   resourceId: any;
@@ -62,9 +62,11 @@ export class BulkAllocationComponent {
     this.allocationService.getPlatforms().subscribe(data=>{
       this.platforms = data;
     });
+
     this.allocationService.getResourcesWithoutRelatedEntity().subscribe(data=>{
       this.resources = data;
     });
+    
     this.activatedRoute.queryParams.subscribe(params=>{
       if(params['activityFromDate']!=null)
         this.selectedFromDate = new Date(params['activityFromDate']);
@@ -82,8 +84,7 @@ export class BulkAllocationComponent {
 
   onActivitySelect(event: any): void {
     const selectedIndex = event.target.selectedIndex;
-    this.activity = {activityId: event.target[selectedIndex].value,
-                    activityName: event.target[selectedIndex].innerText};
+    this.activity.isProject = this.activities.filter(e=>e.activityId==event.target[selectedIndex].value)[0].isProject;
   }
 
   submitForm(): void {
@@ -339,5 +340,16 @@ export class BulkAllocationComponent {
 
   openDatepicker1():void{
      this.datepicker1.show();
+  }
+
+  setTime(): void {
+    if(this.selectedSession==0) {
+      this.selectedActivityFrom = '';
+      this.selectedActivityTo = '';
+    }
+    else {
+      this.selectedActivityFrom = this.selectedSession==2?'14:00':'09:00';
+      this.selectedActivityTo = this.selectedSession==1?'13:00':'18:00';
+    }
   }
 }
