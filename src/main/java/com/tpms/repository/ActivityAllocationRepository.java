@@ -79,21 +79,23 @@ List<Object[]> getActivityDetails(Integer activityId, Date fromDate, Date toDate
 
 	@Query(value = """
 			SELECT COUNT(*) FROM activity_allocation alloc
+			LEFT JOIN activity act ON alloc.activityId=act.activityId
 			WHERE :toDate>=alloc.activityFromDate
 			AND :fromDate<=alloc.activityToDate
 			AND TIME_FORMAT(:toTime, '%H:%i')>TIME_FORMAT(alloc.fromHours, '%H:%i')
 			AND TIME_FORMAT(:fromTime, '%H:%i')<TIME_FORMAT(alloc.toHours, '%H:%i')
-			AND alloc.activityId=:activityId""",
+			AND alloc.activityId=:activityId AND act.isProject=0""",
 		nativeQuery = true)
-	Integer countExistingActivitiesByDateRange(Integer activityId, Date fromDate, Date toDate,
+	Integer countExistingActivityByDateRange(Integer activityId, Date fromDate, Date toDate,
 			String fromTime, String toTime);
 	
 	@Query(value = """
 			SELECT COUNT(*) FROM activity_allocation alloc
+			LEFT JOIN activity act ON alloc.activityId=act.activityId
 			WHERE :toDate>=alloc.activityFromDate AND :fromDate<=alloc.activityToDate
 			AND alloc.activityId=:activityId AND alloc.activityFor=:activityFor""",
 		nativeQuery = true)
-	Integer countExistingActivitiesBySession(Integer activityId, Date fromDate, Date toDate,
+	Integer countExistingActivityBySession(Integer activityId, Date fromDate, Date toDate,
 			Byte activityFor);
 
 }
