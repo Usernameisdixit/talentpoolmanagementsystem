@@ -60,9 +60,11 @@ export class ActivityNewReportComponentComponent {
 
   clearResourceInput() {
     if (this.inputType !== 'resource') {
-      this.myControl.reset();
       this.resourceValue = 0;
       this.options1 = [];
+      this.selectedFromDate=null;
+      this.selectedToDate=null;
+
     }
   }
 
@@ -70,6 +72,7 @@ export class ActivityNewReportComponentComponent {
     if (this.inputType !== 'activity') {
       this.activity = '0';
       this.selectedFromDate=null;
+      this.selectedToDate=null;
     }
   }
 
@@ -127,15 +130,15 @@ export class ActivityNewReportComponentComponent {
   generatePDF() {
     this.resourceValue = this.myControl.value;
     if (this.selectedFromDate == null) {
-      Swal.fire('Please choose from date before generating the Pdf');
-
+      Swal.fire('Please choose from date');
+      
     } else if (this.selectedToDate == null) {
-      Swal.fire('Please choose to date before generating the Pdf');
+      Swal.fire('Please choose to date');
     } else if (this.inputType == 'activity' && this.activity == '0') {
-      Swal.fire('Please Select activity before generating the Pdf');
+      Swal.fire('Please Select activity');
     } else if (this.inputType == 'resource' && this.resourceValue == "0") {
 
-      Swal.fire('Please Enter resource before generating the Pdf');
+      Swal.fire('Please Enter resource');
     }else  {
       this.resourceValue = this.myControl.value;
       if (!this.resourceValue) {
@@ -176,15 +179,25 @@ export class ActivityNewReportComponentComponent {
   generateExcel() {
     this.resourceValue = this.myControl.value;
     if (this.selectedFromDate == null) {
-      Swal.fire('Please choose from date before generating the excel');
+      Swal.fire({
+        title: 'Please choose from date',
+        showConfirmButton: true,
+        confirmButtonText: 'OK',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const fromDate = document.getElementById('datefrom');
+          console.log(fromDate);
+            fromDate.focus();
+          }
+      });
 
     } else if (this.selectedToDate == null) {
-      Swal.fire('Please choose to date before generating the excel');
+      Swal.fire('Please choose to date');
     } else if (this.inputType == 'activity' && this.activity == '0') {
-      Swal.fire('Please Select activity before generating the excel');
+      Swal.fire('Please Select activity');
     } else if (this.inputType == 'resource' && this.resourceValue == "0") {
 
-      Swal.fire('Please enter resource before generating the excel');
+      Swal.fire('Please enter resource');
     }else {
       this.resourceValue = this.myControl.value;
       if (!this.resourceValue) {

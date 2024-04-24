@@ -121,19 +121,19 @@ export class AssessmentreportComponent {
 
     if (this.selectedFromDate == null) {
 
-      Swal.fire('Please choose from date before generating the Pdf');
+      Swal.fire('Please choose from date');
 
     } else if (this.selectedToDate == null) {
 
-      Swal.fire('Please choose to date before generating the Pdf');
+      Swal.fire('Please choose to date');
 
     } else if (this.inputType == 'activity' && this.activity == '0') {
 
-      Swal.fire('Please Select activity before generating the Pdf');
+      Swal.fire('Please Select activity');
 
     } else if (this.inputType == 'resource' && this.resourceValue == "0") {
 
-      Swal.fire('Please Enter resource before generating the Pdf');
+      Swal.fire('Please Enter resource');
 
     } else {
       this.resourceValue = this.myControl.value;
