@@ -66,12 +66,12 @@ export class UserViewComponent {
       reverseButtons: false
       }).then((result) => {
          if (result.isConfirmed) {
-            this.userService.deleteUser(userId,deletedFlag).subscribe((data: any) => {
+            this.userService.deleteUser(userId,deletedFlag).subscribe(() => {
           
             Swal.fire('User InActivated','', 'success');
             this.getUserDetails();
          }, (error: any) => {
-         console.log(error);
+             console.log(error);
          });
         } 
        });
@@ -86,7 +86,7 @@ export class UserViewComponent {
           reverseButtons: false
         }).then((result) => {
            if (result.isConfirmed) {
-               this.userService.deleteUser(userId,deletedFlag).subscribe((data: any) => {
+               this.userService.deleteUser(userId,deletedFlag).subscribe(() => {
                 Swal.fire('User Activated','', 'success');
                 this.getUserDetails();
              }, (error: any) => {

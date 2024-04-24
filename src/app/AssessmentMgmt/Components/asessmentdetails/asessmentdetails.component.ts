@@ -18,9 +18,6 @@ import { NgModel } from '@angular/forms';
 export class AsessmentdetailsComponent implements OnInit {
 
   @ViewChild('dp') datepicker: BsDatepickerDirective;
-  // @ViewChild('securedMarksInput') securedMarksInput: ElementRef;
-  @ViewChildren('securedMarksInput') securedMarksInputs: QueryList<ElementRef>;
-  @ViewChild('remark') remark: ElementRef;
   bsConfig: Partial<BsDatepickerConfig>;
   isHidden: boolean = true;
   activityAllocations: any[];
@@ -440,13 +437,15 @@ resetFields() {
   this.totalMarks=null;
   this.marks=null;
   this.remarks=null;
+  this.hour=null;
+  this.assessmentDate=null;
 }
 
 
 confirmReset() {
   Swal.fire({
-    title: 'Do ypu want to reset',
-    text: 'This action will reset all fields. Are you sure you want to proceed?',
+    title: 'Do you want to reset',
+    text: 'It will reset all fields. Are you sure you want to proceed?',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: 'Yes',
@@ -454,7 +453,8 @@ confirmReset() {
     reverseButtons: false
   }).then((result) => {
     if (result.isConfirmed) {
-      this.resetFields();
+     // window.location.reload();
+     this.resetFields();
       Swal.fire(
         'All fields have been reset.',
         '',

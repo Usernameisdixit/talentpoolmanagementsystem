@@ -69,7 +69,7 @@ export class AddActivityComponent {
     }else{    
       Swal.fire({
         title: 'Do you want to submit?',
-        // icon: 'warning',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes',
         cancelButtonText: 'No',
