@@ -48,27 +48,27 @@ export class DashboardComponent  implements OnInit{
     this.maxDate=new Date();
     this.loginService.getAllocationDates().subscribe((response: any[]) => {
       debugger;
-      console.log("API Response:", response);
-      //response=null;
+      //response=[];
       if(response.length==0){
         this.resources=null;
       }
       this.allocationDate = response.map(date => this.datePipe.transform(date, 'dd-MMM-yyyy'));
       this.alDate=this.allocationDate[this.allocationDate.length-1];
       //this.alDate.sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-      this.sendDate(this.alDate);
+      this.sendDateFromResource(this.alDate);
     });
-
+    debugger;
     this.atnDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');
 
     this.selectedDate=this.datePipe.transform(this.atnDate, 'dd-MMM-yyyy');
     this.loginService.getAttendance(this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd')).subscribe((response:any)=>{
       debugger;
-      //response=null
-      if(response==null){
+      //response=[];
+      if(response.length==0){
         this.attendanceData=null;
-      }
+      }else{
       this.attendanceData=response;
+      }
       console.log(this.attendanceData);
       
     });
@@ -94,13 +94,13 @@ export class DashboardComponent  implements OnInit{
     this.toDate=this.datePipe.transform(lastday, 'dd-MMM-yyyy');
 
     this.loginService.gettotalActivitiesPlanned(this.datePipe.transform(firstday, 'yyyy-MM-dd'),this.datePipe.transform(lastday, 'yyyy-MM-dd')).subscribe((response: any) => {
-      debugger;
-      //response=null;
+    //response=0;
       if(response==0)
       {
         this.ActivtiesPlanned=null;
-      }
+      }else{
        this.ActivtiesPlanned = response;
+      }
       // console.log(this.ActivityData); 
       // alert(this.ActivtiesPlanned);
      });
@@ -124,17 +124,17 @@ export class DashboardComponent  implements OnInit{
   fetchAssessmentDates() {
     this.apiService.getAssessmentDates().subscribe(
       (dates: string[]) => {
-        debugger;
-        //dates=null;
+        debugger;        
+        //dates=[];
         if(dates.length===0)
         {
           this.assessmentDateArr=null;
         }
-   
+        else{
         this.assessmentDateArr = dates.map(date => this.transformDate(date));
         // Sort the dates in descending order (latest to oldest)
         this.assessmentDateArr.sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-
+   }
        // Set the assessmentDate to the latest date by default
       if (this.assessmentDateArr.length > 0) {
         this.assessmentDate = this.assessmentDateArr[0];
@@ -158,7 +158,7 @@ export class DashboardComponent  implements OnInit{
 
 
 //Dashboard->For Resource
-  sendDate(alDate:string) {
+  sendDateFromResource(alDate:string) {
     debugger;
     // Transform the parsed date into 'yyyy-MM-dd' format using datePipe
     const formattedDate = this.datePipe.transform(this.alDate, 'yyyy-MM-dd');
@@ -178,7 +178,7 @@ export class DashboardComponent  implements OnInit{
     this.router.navigate(['takeAtten']);
     
     }
-
+    // attendance data for dashboard modal
     getDateFromAttendanceDashboard(atnDate:string){
       debugger;
       this.loginService.getAttendance(this.datePipe.transform(atnDate, 'yyyy-MM-dd')).subscribe((response:any)=>{

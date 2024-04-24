@@ -7,15 +7,20 @@ import { UserService } from '../../Service/user.service';
   styleUrls: ['./side-nav.component.css']
 })
 export class SideNavComponent {
+  getActivity:boolean=false;
   constructor (private _userService:UserService){
 
   }
-
+ngOnInit(){
+}
   getListItem(event:MouseEvent){
     const target = event.target as HTMLElement;
     const listItemValue = target.textContent?.trim();
     this._userService.changeTitle(listItemValue);
     localStorage.setItem("activeLink",listItemValue);
+    // window.location.reload();
+  }
+  getReload(){
     window.location.reload();
   }
 
