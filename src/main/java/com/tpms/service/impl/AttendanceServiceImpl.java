@@ -179,11 +179,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 					detailObject.put("activityAllocateDetId", mapObject.get("activityAllocateDetId"));
 					detailObject.put("isPresent", mapObject.get("isPresent"));
 					detailObject.put("activityFor", mapObject.get("activityFor"));
-					if (intActivityFor == 1) {
+					if (intActivityFor == 1 || intActivityFor == 2 || intActivityFor == 3) 
 						firstHalfArray.put(detailObject);
-					} else if (intActivityFor == 2) {
-						firstHalfArray.put(detailObject);
-					}
 				}
 				if(resource.length()!=0) {
 				resource.put("firstHalf", firstHalfArray);
