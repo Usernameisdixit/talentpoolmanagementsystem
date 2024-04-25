@@ -93,6 +93,8 @@
       <mat-card-content>
 
         <!-- working -->
+        <label style="font-size: 16px;">Attendance Date:</label>
+        <br>
         <mat-form-field class="smaller-select">
           <input matInput type="text"  bsDatepicker [(ngModel)]="atnDate"
                       [maxDate]="maxDate" [bsConfig]="bsConfig"  (ngModelChange)="getDateFromAttendanceDashboard($event)">
