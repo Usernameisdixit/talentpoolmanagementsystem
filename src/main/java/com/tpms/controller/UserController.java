@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tpms.dto.PageResponse;
 import com.tpms.dto.RoleDto;
 import com.tpms.dto.UserDto;
 import com.tpms.entity.User;
@@ -66,9 +68,9 @@ public class UserController {
 	}
 	
 	@GetMapping("/userList")
-	public ResponseEntity<List<User>> getUserList(){
-		
-		List<User> userList = userService.getUserDetails();
+	public ResponseEntity<PageResponse<User>> getUserList(
+			@RequestParam(defaultValue = "1") Integer pageNumber){		
+	    PageResponse<User> userList = userService.getUserDetails(pageNumber, 10);
 		return ResponseEntity.ok().body(userList);
 	}
 	
