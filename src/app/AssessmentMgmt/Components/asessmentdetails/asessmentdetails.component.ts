@@ -65,11 +65,6 @@ export class AsessmentdetailsComponent implements OnInit {
     this.fetchFromToDate();
   
   }
-
-   ngAfterViewInit() {
-    // Now `securedMarksInputs` is populated after the view has been initialized
-    this.submitAssessments(); 
-   }
   
 
   fetchFromToDate(): void {

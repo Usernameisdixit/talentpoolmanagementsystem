@@ -164,7 +164,7 @@
                                 <td >{{assessment[5]}}</td>
                                 <td >{{assessment[6]}}</td>
                                 <td>{{ assessment[7]}}</td>
-                                <td><input type="number" [(ngModel)]="assessment[9]===null ? 0 : assessment[9]" class="form-control" (keyup)="validateSecuredMarks(assessment)">
+                                <td><input type="number" [(ngModel)]="assessment[9]" class="form-control" (keyup)="validateSecuredMarks(assessment)">
                                 </td>
                                 <td>
                                     <textarea [(ngModel)]="assessment[12]" class="form-control" maxlength="248"></textarea>
