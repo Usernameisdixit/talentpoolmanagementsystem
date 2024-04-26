@@ -89,11 +89,11 @@ public class UserServiceImpl implements UserService{
 	    List<User> userList=page.getContent();
 	    PageResponse<User> pageResponse=new PageResponse<User>();
 	    pageResponse.setContent(userList);
-	    pageResponse.setPageNumber(page.getNumber()+1);
-	    pageResponse.setPageSize(page.getSize());
 	    pageResponse.setTotalElements(page.getTotalElements());
 	    pageResponse.setTotalPages(page.getTotalPages());
-	    pageResponse.setLast(page.isLast());
+//	    pageResponse.setPageNumber(page.getNumber()+1);
+//	    pageResponse.setPageSize(page.getSize());
+//		pageResponse.setLast(page.isLast());
 	    
 	    return pageResponse;
 	}
