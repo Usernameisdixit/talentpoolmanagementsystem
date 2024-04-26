@@ -19,7 +19,9 @@ export class UserViewComponent {
   userDetails:any;
   userList:boolean;
   
-
+  currentPage: number = 1;
+  pageSize: number = 10;
+  totalPages: number[] = [];  totalElements: number = 0;
   
   constructor(private userService:UserService,private route:Router){}
 
@@ -30,9 +32,11 @@ export class UserViewComponent {
 
   //view Userlist
   getUserDetails(){
-    this.userService.getUserDetails().subscribe((data)=>{
-
-        this.userDetails=data;
+    this.userService.getUserDetails(this.currentPage).subscribe((response:any)=>{
+        debugger;
+        this.userDetails=response.content;
+        this.totalPages = Array.from({ length: response.totalPages }, (_, i) => i + 1); // Create array of page numbers
+        this.totalElements = response.totalElements;
       
         if (Object.keys(this.userDetails).length === 0) {
            this.userList = false;
@@ -47,6 +51,25 @@ export class UserViewComponent {
     });
   }
 
+  onPageChange(page: number): void {
+    debugger;
+    this.currentPage = page;
+    this.getUserDetails();
+  }
+
+  // onPrevPage(): void {
+  //   if (this.currentPage > 1) {
+  //     this.currentPage--;
+  //     this.getUserDetails();
+  //   }
+  // }
+
+  // onNextPage(): void {
+  //   if (this.currentPage < this.totalPages.length) {
+  //     this.currentPage++;
+  //     this.getUserDetails();
+  //   }
+  // }
 
   //edit user
   editUser(userId:any){
@@ -98,17 +121,17 @@ export class UserViewComponent {
 }
 
   // for pagination
-  indexNumber : number = 0;
-  page : number = 1;
-  tableSize : number = 10;
-  count : number = 0;
+//   indexNumber : number = 0;
+//   page : number = 1;
+//   tableSize : number = 10;
+//   count : number = 0;
 
-//pagination functionality
-getTableDataChange(event : any){
-  this.page = event;
-  this.indexNumber = (this.page - 1) * this.tableSize;
-  this.getUserDetails();
-}
+// //pagination functionality
+// getTableDataChange(event : any){
+//   this.page = event;
+//   this.indexNumber = (this.page - 1) * this.tableSize;
+//   this.getUserDetails();
+// }
 
 
 // export to pdf
@@ -116,7 +139,7 @@ exportToPDF() {
   const doc = new jsPDF();
   const pageTitle = 'User Details';
 
-  this.userService.getUserDetails().
+  this.userService.getUserDetails(this.currentPage).
     pipe(
        map((data: any[]) => {
              return data.map(user => [
@@ -142,7 +165,7 @@ exportToPDF() {
 // excel export work
   
 exportToExcel() {
-  this.userService.getUserDetails().
+  this.userService.getUserDetails(this.currentPage).
     pipe(
         map((data: any[]) => {
              return data.map(user => [
