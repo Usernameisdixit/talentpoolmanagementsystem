@@ -19,8 +19,8 @@ export class UserService {
     return this.http.post(addUserUrl,user);
   }
 
-  getUserDetails(){
-    let viewUserUrl=userList;
+  getUserDetails(pageNumber:number){
+    let viewUserUrl=`${userList}?pageNumber=${pageNumber}`;
     return this.http.get(viewUserUrl);
   }
 
