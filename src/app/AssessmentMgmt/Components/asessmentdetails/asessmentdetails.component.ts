@@ -65,11 +65,6 @@ export class AsessmentdetailsComponent implements OnInit {
     this.fetchFromToDate();
   
   }
-
-   ngAfterViewInit() {
-    // Now `securedMarksInputs` is populated after the view has been initialized
-    this.submitAssessments(); 
-   }
   
 
   fetchFromToDate(): void {
@@ -473,6 +468,13 @@ validateSecuredMarks(assessment: any): void {
       });
       assessment.marks='';
     }
+
+    if(assessment.marks < 0){
+      Swal.fire({
+        title: 'Secured marks should not be less than 0',
+      });
+      assessment.marks='';
+    }
   }
   else{
     if (assessment[9] > assessment[8]) {
@@ -480,6 +482,12 @@ validateSecuredMarks(assessment: any): void {
         title: 'Secured marks should not be greater than total marks.',
       });
       assessment[9] = '';
+    }
+    if(assessment[9] < 0){
+      Swal.fire({
+        title: 'Secured marks should not be less than 0',
+      });
+      assessment[9]='';
     }
   }
 }

@@ -44,7 +44,7 @@ export class FileUploadComponent {
    
 
     if (!this.selectedFile) {
-      errorMessage = 'Please select the required file.\n';
+      errorMessage = 'Please select the resource file.\n';
     }
     if (!this.allocationDate) {
       allocationMsg = 'Please select an allocation date.\n';

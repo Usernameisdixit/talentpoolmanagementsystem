@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd, NavigationExtras } from '@angular/router';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { Component, OnInit,ViewChild } from '@angular/core';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { BsDatepickerConfig,BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { filter } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { AssessmentserviceService } from 'src/app/AssessmentMgmt/Service/assessmentservice.service';
@@ -15,6 +15,8 @@ import { LoginService } from '../../Service/login.service';
 })
 export class DashboardComponent  implements OnInit{
 
+  @ViewChild('dp') datepicker: BsDatepickerDirective;
+  @ViewChild('dp1') datepicker1: BsDatepickerDirective;
   resources:any;
   allocationDate: any;
   // allocationDate: any;
@@ -269,6 +271,16 @@ export class DashboardComponent  implements OnInit{
         // alert(this.ActivtiesPlanned);
        });
 
+    }
+
+    openDatepicker(): void {
+      this.datepicker.show();
+  
+    }
+
+    openDatepicker1():void{
+
+      this.datepicker1.show();
     }
 
     

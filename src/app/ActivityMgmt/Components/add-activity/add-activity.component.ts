@@ -56,16 +56,16 @@ export class AddActivityComponent {
       isProject:this.activity.isProject? 1 : 0
     };
     if (data.activityName=='' || data.activityName==null) {
-      Swal.fire("Please enter the activity name!");
+      Swal.fire("Please enter the activity name");
     }
     else if (data.description=='') {
-      Swal.fire("Please enter the description!");
+      Swal.fire("Please enter the description");
     }
     else if (data.responsPerson1=='') {
-      Swal.fire("Please enter the response person1!");
+      Swal.fire("Please enter the response person1");
     }
     else if (data.responsPerson2=='') {
-      Swal.fire("Please enter the response person2!");
+      Swal.fire("Please enter the response person2");
     }else{    
       Swal.fire({
         title: 'Do you want to submit?',
