@@ -161,6 +161,46 @@ export class AssessmentreportComponent {
 
   generateExcel() {
 
+    this.resourceValue = this.myControl.value;
+
+    if (this.selectedFromDate == null) {
+
+      Swal.fire('Please choose from date');
+
+    } else if (this.selectedToDate == null) {
+
+      Swal.fire('Please choose to date');
+
+    } else if (this.inputType == 'activity' && this.activity == '0') {
+
+      Swal.fire('Please Select activity');
+
+    } else if (this.inputType == 'resource' && this.resourceValue == "0") {
+
+      Swal.fire('Please Enter resource');
+
+    } else {
+      this.resourceValue = this.myControl.value;
+      if (!this.resourceValue) {
+        this.resourceValue = "0";
+      }
+      if (typeof (this.resourceValue) == 'object') {
+        this.resourceValue = this.resourceValue.name;
+      }
+
+      this.assesmentService.assementData(this.inputType, this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString(), this.activity, this.resourceValue)
+        .subscribe(data => {
+          if (data.length != 0) {
+
+            //END
+            this.assesmentService.generateAssesmentExcel(this.inputType, data, this.selectedFromDate, this.selectedToDate);
+          } else {
+            Swal.fire('No assesment data found in this date range');
+
+          }
+        });
+    }
+
 
   }
 

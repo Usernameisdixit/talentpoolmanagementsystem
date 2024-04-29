@@ -152,4 +152,225 @@ export class AssesmentService {
     });
     pdf.save('assesment_report.pdf');
   }
+
+
+
+  generateAssesmentExcel(reportType: string, assesmentData: any[], fromDate: Date, toDate: Date){
+  debugger;
+    const formatFromDate = new Date(fromDate);
+    const formatFromday = formatFromDate.getDate();
+    const formatFrommonth = formatFromDate.toLocaleString('default', { month: 'short' });
+    const formatFromyear = formatFromDate.getFullYear();
+    const formatteFromdDate = `${formatFromday} ${formatFrommonth} ${formatFromyear}`;
+
+    const formatTodate = new Date(toDate);
+    const formatToday = formatTodate.getDate();
+    const formatTomonth = formatTodate.toLocaleString('default', { month: 'short' });
+    const formatToyear = formatTodate.getFullYear();
+    const formattedToDate = `${formatToday} ${formatTomonth} ${formatToyear}`;
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([], { skipHeader: true });
+    
+    let headerRow = [];
+    if (reportType == 'activity') {
+      ws['!cols'] = [
+        { wch: 20 }, // Resource code
+        { wch: 20 }, // Resource Name
+        { wch: 15 }, // Platform
+        { wch: 15 }, // Total Mark
+        { wch: 15 }, // Secured Mark
+        { wch: 20 }, // Remark
+      ];
+      headerRow = ['Resource Code', 'Resource Name','Designation', 'Platform', 'Total Mark', 'Secured Mark','Remark'];
+    } else if (reportType == 'resource') {
+      const colWidths= [
+        { wch: 15 }, // Total Mark
+        { wch: 15 }, // Secured Mark
+        { wch: 20 }, // Remark
+      ];
+      headerRow = ['Assesment Date','Total Mark', 'Secured Mark','Remark'];
+    }
+
+    //Heading Start From
+    if (reportType == 'activity') {
+      XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A6' });
+    } else if (reportType == 'resource') {
+      XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A7' });
+    }else if(reportType=='summary'){
+      XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A6' });
+    }
+
+    for (let col = 0; col < headerRow.length; col++) {
+      let rowNumber;
+      if (reportType == 'activity') {
+        rowNumber = 5;
+      } else if (reportType == 'resource') {
+        rowNumber = 6;
+      }else if(reportType=='summary'){
+        rowNumber = 5
+      }
+      const cellAddress = XLSX.utils.encode_cell({ r: rowNumber, c: col });
+      ws[cellAddress].s = {
+        font: { bold: true },
+        fill: {
+          patternType: 'solid',
+          fgColor: { rgb: '52D8F9' },
+        },
+        alignment: {
+          wrapText: true
+        },
+      };
+    }
+
+    ws['A1'] = {
+      v: 'Assesment Report',
+      t: 's',
+      s: {
+        font: {
+          bold: true,
+          size: 14,
+          color: { rgb: '1D05EE' },
+        },
+        alignment: {
+          horizontal: 'center',
+          vertical: 'center',
+          wrapText: true,
+        },
+      },
+    };
+
+    if(formatteFromdDate===formattedToDate){
+      ws['A3'] = {
+        v: `Date : ${formatteFromdDate}`,
+        t: 's',
+      };
+    }else{
+      ws['A3'] = {
+        v: `Date Range: ${formatteFromdDate} to ${formattedToDate}`,
+        t: 's',
+      };
+    }
+
+   
+
+    if (reportType == 'activity') {
+      ws['A4'] = {
+        v: `Activity Name:  ${assesmentData[0]?.activityName}`,
+        t: 's',
+      };
+    }
+
+    if (reportType == 'resource') {
+      ws['A4'] = {
+        v: `Resource Name:  ${assesmentData[0]?.resourceName}`,
+        t: 's',
+      };
+      ws['C4'] = {
+        v: `Resource Code:  ${assesmentData[0]?.resourceCode}`,
+        t: 's',
+      };
+
+      ws['A5'] = {
+        v: `Platform:  ${assesmentData[0]?.platform}`,
+        t: 's',
+      };
+      ws['C5'] = {
+        v: `Designation:  ${assesmentData[0]?.designation}`,
+        t: 's',
+      };
+    }
+    
+    //HEADING MERGED
+    //const colMergerd=assesmentData.length+3;
+    //let colMergerdResource;
+    if(reportType == 'resource'){
+      // colMergerdResource=activityHeadResource.length;
+    }
+    if (reportType == 'activity') {
+      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 6 } }]; // Merge cells
+    } else if (reportType == 'resource') {
+      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }];
+    }
+
+    const data: any[] = [];
+    const processedDates = new Set<string>();
+    assesmentData.forEach(detail => {
+  
+      if (reportType == 'activity') {
+        const assesmentDate = detail.asesmentDate;
+        const formattedFromDate = this.datePipe.transform(detail.activityFromDate, 'd MMM yyyy');
+        const formattedToDate = this.datePipe.transform(detail.activityToDate, 'd MMM yyyy');
+        const formattedCurrentDate = this.datePipe.transform(assesmentDate, 'd MMM yyyy');
+        if (!processedDates.has(assesmentDate)) {
+          const dateRowColor = processedDates.has(assesmentDate) ? 'white' : 'red';
+          data.push(['Period ('+formattedFromDate+' to '+formattedToDate+')       '+ 'Assesment Date: '+formattedCurrentDate]);
+          const currentRowIndex = data.length + 5;
+          let dateMerged;
+          if(reportType=='activity'){
+              dateMerged=6;
+          }
+          ws['!merges'].push({ s: { r: currentRowIndex, c: 0 }, e: { r: currentRowIndex, c: dateMerged } });
+          // Apply the fill color to each cell in the merged range
+          for (let col = 0; col < 5; col++) {
+            const cellAddress = XLSX.utils.encode_cell({ r: currentRowIndex, c: col });
+            ws[cellAddress] = {
+              v: null,
+              s: {
+                font: {
+                  bold: true,
+                },
+                fill: {
+                  patternType: 'solid',
+                  fgColor: { rgb: 'CEEEF5' },
+                },
+                alignment: {
+                  wrapText: true,
+                },
+              },
+            };
+          }
+          processedDates.add(assesmentDate);
+        }
+      }
+      const rowData = [];
+     
+      if (reportType == 'activity') {  
+        rowData.push(
+          { v: detail.resourceCode, s: { alignment: { wrapText: true } } },
+          { v: detail.resourceName, s: { alignment: { wrapText: true } } },
+          { v: detail.designation, s: { alignment: { wrapText: true } } },
+          { v: detail.platform, s: { alignment: { wrapText: true } } },
+          { v: detail.doubleActivityMark, s: { alignment: { wrapText: true } } },
+          { v: detail.doubleSecuredMark, s: { alignment: { wrapText: true } } },
+          { v: detail.remark, s: { alignment: { wrapText: true } } },
+        );
+      }else if(reportType == 'resource'){
+        const formattedAsesmentDate = this.datePipe.transform(detail.asesmentDate, 'd MMM yyyy');
+        rowData.push(
+          { v:formattedAsesmentDate, s: { alignment: { wrapText: true } } },
+          { v: detail.doubleActivityMark, s: { alignment: { wrapText: true } } },
+          { v: detail.doubleSecuredMark, s: { alignment: { wrapText: true } } },
+          { v: detail.remark, s: { alignment: { wrapText: true } } },
+        );
+
+      } 
+      data.push(rowData);
+    });
+
+    // Add data to worksheet
+    if (reportType == 'activity') {
+      XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A7' });
+    } else if (reportType == 'resource') {
+      XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A8' });
+    }
+
+
+    // Create a workbook
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Assesmentt Report');
+
+    // Save the workbook as an Excel file
+    XLSX.writeFile(wb, 'assesment.xlsx');
+
+  }
 }
