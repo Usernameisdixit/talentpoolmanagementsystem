@@ -156,7 +156,7 @@ export class AssesmentService {
 
 
   generateAssesmentExcel(reportType: string, assesmentData: any[], fromDate: Date, toDate: Date){
-
+  debugger;
     const formatFromDate = new Date(fromDate);
     const formatFromday = formatFromDate.getDate();
     const formatFrommonth = formatFromDate.toLocaleString('default', { month: 'short' });
@@ -181,14 +181,14 @@ export class AssesmentService {
         { wch: 15 }, // Secured Mark
         { wch: 20 }, // Remark
       ];
-      headerRow = ['Resource Code', 'Resource Name', 'Platform', 'Total Mark', 'Secured Mark','Remark'];
+      headerRow = ['Resource Code', 'Resource Name','Designation', 'Platform', 'Total Mark', 'Secured Mark','Remark'];
     } else if (reportType == 'resource') {
       const colWidths= [
         { wch: 15 }, // Total Mark
         { wch: 15 }, // Secured Mark
         { wch: 20 }, // Remark
       ];
-      headerRow = ['Total Mark', 'Secured Mark','Remark'];
+      headerRow = ['Assesment Date','Total Mark', 'Secured Mark','Remark'];
     }
 
     //Heading Start From
@@ -255,7 +255,7 @@ export class AssesmentService {
 
     if (reportType == 'activity') {
       ws['A4'] = {
-        v: `Activity Name:  ${assesmentData[0]?.activityAttenDetails[0]?.activityName}`,
+        v: `Activity Name:  ${assesmentData[0]?.activityName}`,
         t: 's',
       };
     }
@@ -275,38 +275,39 @@ export class AssesmentService {
         t: 's',
       };
       ws['C5'] = {
-        v: `Designamtion:  ${assesmentData[0]?.designation}`,
+        v: `Designation:  ${assesmentData[0]?.designation}`,
         t: 's',
       };
     }
     
     //HEADING MERGED
-    const colMergerd=assesmentData.length+3;
-    let colMergerdResource;
+    //const colMergerd=assesmentData.length+3;
+    //let colMergerdResource;
     if(reportType == 'resource'){
       // colMergerdResource=activityHeadResource.length;
     }
     if (reportType == 'activity') {
-      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }]; // Merge cells
+      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 6 } }]; // Merge cells
     } else if (reportType == 'resource') {
-      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: colMergerdResource } }];
-    }else if(reportType=='summary'){
-      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: colMergerd  } }];
+      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 3 } }];
     }
 
     const data: any[] = [];
     const processedDates = new Set<string>();
     assesmentData.forEach(detail => {
   
-      if (reportType == 'activity' || reportType=='summary') {
-        const atendanceDate = detail.atendanceDate;
-        if (!processedDates.has(atendanceDate)) {
-          const dateRowColor = processedDates.has(atendanceDate) ? 'white' : 'red';
-          data.push([atendanceDate]);
+      if (reportType == 'activity') {
+        const assesmentDate = detail.asesmentDate;
+        const formattedFromDate = this.datePipe.transform(detail.activityFromDate, 'd MMM yyyy');
+        const formattedToDate = this.datePipe.transform(detail.activityToDate, 'd MMM yyyy');
+        const formattedCurrentDate = this.datePipe.transform(assesmentDate, 'd MMM yyyy');
+        if (!processedDates.has(assesmentDate)) {
+          const dateRowColor = processedDates.has(assesmentDate) ? 'white' : 'red';
+          data.push(['Period ('+formattedFromDate+' to '+formattedToDate+')       '+ 'Assesment Date: '+formattedCurrentDate]);
           const currentRowIndex = data.length + 5;
           let dateMerged;
           if(reportType=='activity'){
-              dateMerged=4;
+              dateMerged=6;
           }
           ws['!merges'].push({ s: { r: currentRowIndex, c: 0 }, e: { r: currentRowIndex, c: dateMerged } });
           // Apply the fill color to each cell in the merged range
@@ -328,21 +329,30 @@ export class AssesmentService {
               },
             };
           }
-          processedDates.add(atendanceDate);
+          processedDates.add(assesmentDate);
         }
       }
       const rowData = [];
-      let activityData='';
-      if (reportType == 'activity') {
-      
-        
+     
+      if (reportType == 'activity') {  
         rowData.push(
           { v: detail.resourceCode, s: { alignment: { wrapText: true } } },
           { v: detail.resourceName, s: { alignment: { wrapText: true } } },
           { v: detail.designation, s: { alignment: { wrapText: true } } },
           { v: detail.platform, s: { alignment: { wrapText: true } } },
-          { v: activityData, s: { alignment: { wrapText: true } } },
+          { v: detail.doubleActivityMark, s: { alignment: { wrapText: true } } },
+          { v: detail.doubleSecuredMark, s: { alignment: { wrapText: true } } },
+          { v: detail.remark, s: { alignment: { wrapText: true } } },
         );
+      }else if(reportType == 'resource'){
+        const formattedAsesmentDate = this.datePipe.transform(detail.asesmentDate, 'd MMM yyyy');
+        rowData.push(
+          { v:formattedAsesmentDate, s: { alignment: { wrapText: true } } },
+          { v: detail.doubleActivityMark, s: { alignment: { wrapText: true } } },
+          { v: detail.doubleSecuredMark, s: { alignment: { wrapText: true } } },
+          { v: detail.remark, s: { alignment: { wrapText: true } } },
+        );
+
       } 
       data.push(rowData);
     });
@@ -352,8 +362,6 @@ export class AssesmentService {
       XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A7' });
     } else if (reportType == 'resource') {
       XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A8' });
-    }else if(reportType=='summary'){
-      XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A7' });
     }
 
 
@@ -362,7 +370,7 @@ export class AssesmentService {
     XLSX.utils.book_append_sheet(wb, ws, 'Assesmentt Report');
 
     // Save the workbook as an Excel file
-    XLSX.writeFile(wb, 'attendance_report.xlsx');
+    XLSX.writeFile(wb, 'assesment.xlsx');
 
   }
 }
