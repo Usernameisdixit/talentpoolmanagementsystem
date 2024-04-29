@@ -31,13 +31,13 @@ export class AssessmentreportComponent {
   filteredOptions: Observable<User[]>;
   resourceValue: any;
 
-  constructor(private localeService: BsLocaleService, private assesmentService: AssesmentService,private reportAttendanceService:ReportAttendanceService) {
+  constructor(private localeService: BsLocaleService, private assesmentService: AssesmentService, private reportAttendanceService: ReportAttendanceService) {
     this.bsConfig = {
       containerClass: 'theme-dark-blue',
       dateInputFormat: 'DD-MMM-YYYY',
-      showWeekNumbers : false
+      showWeekNumbers: false
     };
-    
+
   }
 
   ngOnInit() {
@@ -52,8 +52,17 @@ export class AssessmentreportComponent {
     if (this.selectedFromDate && this.selectedToDate) {
       this.assesmentService.getActivitiesForAssesment(this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString())
         .subscribe(data => {
-          console.log(data);
-          this.activities = data;
+          //NEW LOGIC//
+          const uniqueActivities = {};
+          data.forEach(activity => {
+            const { activityId, activityName } = activity;
+            if (!uniqueActivities[activityName]) {
+              uniqueActivities[activityName] = [];
+            }
+            uniqueActivities[activityName].push(activityId);
+          });
+          const result = Object.entries(uniqueActivities).map(([activityName, activityId]) => ({ activityName, activityId }));
+          this.activities = result;
         });
     }
   }
@@ -104,14 +113,94 @@ export class AssessmentreportComponent {
     return user && user.name ? user.name : '';
   }
 
-  
+
 
   generatePDF() {
-    
+
+    this.resourceValue = this.myControl.value;
+
+    if (this.selectedFromDate == null) {
+
+      Swal.fire('Please choose from date');
+
+    } else if (this.selectedToDate == null) {
+
+      Swal.fire('Please choose to date');
+
+    } else if (this.inputType == 'activity' && this.activity == '0') {
+
+      Swal.fire('Please Select activity');
+
+    } else if (this.inputType == 'resource' && this.resourceValue == "0") {
+
+      Swal.fire('Please Enter resource');
+
+    } else {
+      this.resourceValue = this.myControl.value;
+      if (!this.resourceValue) {
+        this.resourceValue = "0";
+      }
+      if (typeof (this.resourceValue) == 'object') {
+        this.resourceValue = this.resourceValue.name;
+      }
+
+      this.assesmentService.assementData(this.inputType, this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString(), this.activity, this.resourceValue)
+        .subscribe(data => {
+          if (data.length != 0) {
+
+            //END
+            this.assesmentService.generateAssesmentPdf(this.inputType, data, this.selectedFromDate, this.selectedToDate);
+          } else {
+            Swal.fire('No assesment data found in this date range');
+
+          }
+        });
+    }
+
   }
 
   generateExcel() {
-   
+
+    this.resourceValue = this.myControl.value;
+
+    if (this.selectedFromDate == null) {
+
+      Swal.fire('Please choose from date');
+
+    } else if (this.selectedToDate == null) {
+
+      Swal.fire('Please choose to date');
+
+    } else if (this.inputType == 'activity' && this.activity == '0') {
+
+      Swal.fire('Please Select activity');
+
+    } else if (this.inputType == 'resource' && this.resourceValue == "0") {
+
+      Swal.fire('Please Enter resource');
+
+    } else {
+      this.resourceValue = this.myControl.value;
+      if (!this.resourceValue) {
+        this.resourceValue = "0";
+      }
+      if (typeof (this.resourceValue) == 'object') {
+        this.resourceValue = this.resourceValue.name;
+      }
+
+      this.assesmentService.assementData(this.inputType, this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString(), this.activity, this.resourceValue)
+        .subscribe(data => {
+          if (data.length != 0) {
+
+            //END
+            this.assesmentService.generateAssesmentExcel(this.inputType, data, this.selectedFromDate, this.selectedToDate);
+          } else {
+            Swal.fire('No assesment data found in this date range');
+
+          }
+        });
+    }
+
 
   }
 
@@ -123,9 +212,9 @@ export class AssessmentreportComponent {
         const activityNameA = a.activityName.trim().toUpperCase();
         const activityNameB = b.activityName.trim().toUpperCase();
 
-        if (activityNameA < activityNameB) return -1; 
-        if (activityNameA > activityNameB) return 1;  
-        return 0; 
+        if (activityNameA < activityNameB) return -1;
+        if (activityNameA > activityNameB) return 1;
+        return 0;
       });
     } else {
       console.log("activityAttenDetails is undefined or null");
@@ -133,17 +222,15 @@ export class AssessmentreportComponent {
   }
 
   openDatepicker(): void {
-    this.datepicker.show(); 
-    
+    this.datepicker.show();
+
   }
 
-  openDatepicker1():void{
+  openDatepicker1(): void {
     this.datepicker1.show();
   }
 
-  
-
-  }
+}
 
 
 

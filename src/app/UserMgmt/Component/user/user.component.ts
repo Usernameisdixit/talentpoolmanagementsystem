@@ -142,9 +142,6 @@ export class UserComponent {
               Swal.fire( 'Error occured while saving','', 'error');
             });
               
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-              Swal.fire('Your data is not submitted','', 'error');
-              
             }
           }); 
      }

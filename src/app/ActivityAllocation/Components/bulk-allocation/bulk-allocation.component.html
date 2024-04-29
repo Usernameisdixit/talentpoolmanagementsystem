@@ -35,10 +35,11 @@
     <!-- Session selection -->
     <div class="form-group col-md-6">
       <label for="session">Activity for:</label>
-      <select id="session" class="form-control" [(ngModel)]="selectedSession">
-        <option value="0">--select--</option>
-        <option value="1">1st half</option>
-        <option value="2">2nd half</option>
+      <select id="session" class="form-control" [(ngModel)]="selectedSession" (change)="setTime()">
+        <option value=0>--select--</option>
+        <option *ngIf="!activity.isProject" value=1>1st half</option>
+        <option *ngIf="!activity.isProject" value=2>2nd half</option>
+        <option *ngIf="activity.isProject" value=3>Full day</option>
       </select>
     </div>
   </div>
@@ -68,7 +69,7 @@
     <tbody>
       <tr *ngFor="let dynamic of dynamicArray; let i = index;">
         <td>{{ dynamic.activity.activityName }}</td>
-        <td>{{ dynamic.activityFor==1?'1st half':'2nd half' }}</td>
+        <td>{{ dynamic.activityFor==1?'1st half':(dynamic.activityFor==2?'2nd half':'Full day') }}</td>
         <td>{{ dynamic.fromHours | convertTo12Hr }} &ndash; {{ dynamic.toHours | convertTo12Hr }}</td>
         <td>
           <button *ngIf="dynamic.activityAllocateId==allocateId" class="btn btn-primary btn-sm" (click)="edit(dynamic)"><i class="fas fa-undo"></i></button>

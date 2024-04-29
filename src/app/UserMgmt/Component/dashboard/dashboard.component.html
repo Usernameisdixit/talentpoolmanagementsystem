@@ -3,7 +3,6 @@
   <div class="card-container">
     <!-- Card 1 -->
     <mat-card class="card" style="background-color: #FF7F50;">
-  <mat-icon>resources</mat-icon>
   <mat-card-header>
     <div mat-card-avatar class="image-resource"></div>  
     <mat-card-title>Resources</mat-card-title>
@@ -13,9 +12,10 @@
   </div>
   <div *ngIf="resources!=null" >
     <mat-card-content>
-      <!-- <p>Last Allocation Date: {{allocationDate}}</p> -->
-      <mat-form-field>
-        <mat-select placeholder="Select Allocation Date" [(ngModel)]="alDate" (ngModelChange)="sendDate($event)" style="margin-top: 5px; margin-right: 8px;">
+      <label style="font-size: 16px;">Allocation Dates:</label>
+      <br>
+      <mat-form-field class="smaller-select">
+        <mat-select placeholder="Select Allocation Date" [(ngModel)]="alDate" (ngModelChange)="sendDateFromResource($event)" style="margin-top: 5px; margin-right: 8px;">
           <mat-option *ngFor="let date of allocationDate" [value]="date">{{ date }}</mat-option>
         </mat-select>
       </mat-form-field>
@@ -48,10 +48,10 @@
               <!-- <input type="text" id="fromDate" [(ngModel)]="fromDate" name="fromDate" class="bold-black" bsDatepicker [bsConfig]="bsConfig" (ngModelChange)="sendActivityPlanneddata()">
               <span class="input-group-text"><i class="material-icons">date_range</i></span> -->
 
-              <mat-form-field>
+              <mat-form-field class="smaller-select">
                 <input matInput type="text"  bsDatepicker [(ngModel)]="fromDate"
-                            [maxDate]="maxDate" [bsConfig]="bsConfig"  (ngModelChange)="sendActivityPlanneddata()">
-                <mat-icon matSuffix>date_range</mat-icon>
+                            [maxDate]="maxDate" [bsConfig]="bsConfig"  (ngModelChange)="sendActivityPlanneddata()" #dp="bsDatepicker">
+                <mat-icon (click)="openDatepicker()" matSuffix>date_range</mat-icon>
               </mat-form-field>
           </div>
           </div>
@@ -61,10 +61,10 @@
               <!-- <input type="text" id="toDate" [(ngModel)]="toDate" name="fromDate" class="bold-black" bsDatepicker [bsConfig]="bsConfig" (ngModelChange)="sendActivityPlanneddata()">
               <span class="input-group-text"><i class="material-icons">date_range</i></span> -->
 
-              <mat-form-field>
+              <mat-form-field class="smaller-select">
                 <input matInput type="text"  bsDatepicker [(ngModel)]="toDate"
-                            [maxDate]="maxDate" [bsConfig]="bsConfig"  (ngModelChange)="sendActivityPlanneddata()">
-                <mat-icon matSuffix>date_range</mat-icon>
+                            [maxDate]="maxDate" [bsConfig]="bsConfig"  (ngModelChange)="sendActivityPlanneddata()" #dp1="bsDatepicker">
+                <mat-icon (click)="openDatepicker1()" matSuffix>date_range</mat-icon>
               </mat-form-field>
           </div>
         </div>
@@ -85,15 +85,17 @@
         <div mat-card-avatar class="image-attendance"></div> 
                 <mat-card-title>Attendance</mat-card-title>
       </mat-card-header>
-      <div *ngIf="attendanceData==null || dashboardDate==null">
+      <div *ngIf="attendanceData==null">
         <p style="font-weight: bold; text-align: center;font-size: 18px;">Attendance not yet taken.</p>
 
       </div>
-      <div *ngIf="attendanceData!=null && dashboardDate!=null" >
+      <div *ngIf="attendanceData!=null" >
       <mat-card-content>
 
         <!-- working -->
-        <mat-form-field>
+        <label style="font-size: 16px;">Attendance Date:</label>
+        <br>
+        <mat-form-field class="smaller-select">
           <input matInput type="text"  bsDatepicker [(ngModel)]="atnDate"
                       [maxDate]="maxDate" [bsConfig]="bsConfig"  (ngModelChange)="getDateFromAttendanceDashboard($event)">
           <mat-icon matSuffix>date_range</mat-icon>
@@ -120,7 +122,7 @@
     <mat-card-content class="card-content">
       <label style="font-size: 16px;">Assessment Date:</label>
       <br>
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="fill" class="smaller-select">
         <mat-select [(ngModel)]="assessmentDate" id="assessmentDate">
           <mat-option *ngFor="let date of assessmentDateArr" [value]="date">
             {{ date | date:'dd-MMM-yyyy' }}
@@ -219,7 +221,7 @@
           </table>
         </div>
         <tr *ngIf="!(attendanceData && attendanceData.length > 0)" class="text-align-center">
-          <td colspan="12" style="font-weight: bold; border: none;">Attendance Not Yet Taken!</td>
+          <td colspan="12" style="font-weight: bold;text-align: center; border: none;">Attendance Not Yet Taken!</td>
         </tr>
         
             </div>

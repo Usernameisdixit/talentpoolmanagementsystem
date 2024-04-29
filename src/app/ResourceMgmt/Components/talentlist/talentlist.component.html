@@ -70,6 +70,11 @@
       <button *ngIf="c.deletedFlag" class="btn btn-danger btn-sm" title="Active" (click)="deletetalent($event, c.resourceId);"><i class="fa-solid fa-check"></i></button> -->
      </div>
   </td>
+    <tr *ngIf="talent.length===0">
+      <td colspan="12" class="text-center">
+         <span id="lblMessage" class="no-content">No record(s) found </span>
+      </td> 
+    </tr>
   
      <tbody>
   </table>

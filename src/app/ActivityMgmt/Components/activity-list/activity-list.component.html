@@ -54,38 +54,30 @@
           <td>{{ activity.responsPerson1 }}</td>
           <td>{{ activity.responsPerson2 }}</td>
           <td>
-            <span *ngIf="!activity.deletedFlag" class="m-1 active"
-              ><b>Active</b></span
-            >
-            <span *ngIf="activity.deletedFlag" class="m-1 inactive"
-              ><b>Inactive</b></span
-            >
+            <span *ngIf="!activity.deletedFlag">Active</span>
+            <span *ngIf="activity.deletedFlag">Inactive</span>
           </td>
           <td>
-            <div class="d-flex justify-content-between">
-              <button
-                class="m-1 btn btn-sm btn-primary"
-                (click)="editActivity(activity.activityId)"
-              >
+            <div class="btn-group">
+              <button class="m-1 btn btn-sm btn-primary" (click)="editActivity(activity.activityId)">
                 <i class="fas fa-edit"></i>
               </button>
-              <button
-                *ngIf="!activity.deletedFlag"
-                class="m-1 btn btn-sm btn-danger"
-                (click)="toggleDeletedFlag(activity)"
-              >
+              </div>
+              <div class="btn-group">
+              <button *ngIf="!activity.deletedFlag" class="m-1 btn btn-sm btn-danger" (click)="toggleDeletedFlag(activity)">
                 <i class="fa-solid fa-xmark"></i>
               </button>
-              <button
-                *ngIf="activity.deletedFlag"
-                class="m-1 btn btn-sm btn-danger"
-                (click)="toggleDeletedFlag(activity)"
-              >
+              <button *ngIf="activity.deletedFlag" class="m-1 btn btn-sm btn-danger" (click)="toggleDeletedFlag(activity)">
                 <i class="fa-solid fa-check"></i>
               </button>
             </div>
           </td>
         </tr>
+        <tr *ngIf="activities.length === 0">
+          <td colspan="7" class="text-center">
+              <span id="lblMessage" class="no-content">No record(s) found</span>
+          </td> 
+      </tr>
       </tbody>
     </table>
     <div

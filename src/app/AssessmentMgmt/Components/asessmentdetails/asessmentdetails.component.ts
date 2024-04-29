@@ -1,4 +1,4 @@
-import { Component, OnInit ,ElementRef,ViewChild} from '@angular/core';
+import { Component, OnInit ,ElementRef,ViewChild,ViewChildren,QueryList} from '@angular/core';
 import Swal from 'sweetalert2';
 import { AssessmentDto } from 'src/app/Model/AssessmentDto';
 import { AssessmentserviceService } from '../../Service/assessmentservice.service';
@@ -8,6 +8,7 @@ import { BsDatepickerConfig,BsDatepickerDirective } from 'ngx-bootstrap/datepick
 import { Router } from '@angular/router';
 import { DATE } from 'ngx-bootstrap/chronos/units/constants';
 import { DateRange } from 'src/app/Model/DateRange';
+import { NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-asessmentdetails',
@@ -64,6 +65,7 @@ export class AsessmentdetailsComponent implements OnInit {
     this.fetchFromToDate();
   
   }
+  
 
   fetchFromToDate(): void {
     this.apiService.getFromToDate().subscribe(
@@ -174,7 +176,10 @@ export class AsessmentdetailsComponent implements OnInit {
           
           this.apiService.getActivityDetails(this.selectedActivity, formattedFromDate, formattedToDate)
             .subscribe((data: any[]) => {
+              console.log(data);
+              
               this.assessments = data;
+
               this.detailsRetrieved = true;
               this.assessmentDtos = this.mapAssessmentDtos(data);
               this.status='s';
@@ -212,8 +217,8 @@ export class AsessmentdetailsComponent implements OnInit {
       resourceId: item[1],
       assessmentDate: this.assessmentDate,
       marks: item.marks,
-      totalMarks: item.totalMarks,
-      hour: item.hour,
+      totalMarks: this.totalMarks,
+      hour: this.hour,
       remarks: item.remarks,
       activityFromDate:new Date(this.fromDate),
       activityToDate:new Date(this.toDate),
@@ -234,7 +239,7 @@ export class AsessmentdetailsComponent implements OnInit {
 
     if (!this.selectedActivity || !this.fromDate || !this.toDate) {
         errorFlag = true;
-        Swal.fire('Please select all required fields');
+        Swal.fire('Please select activity');
         return;
     }
 
@@ -264,23 +269,12 @@ export class AsessmentdetailsComponent implements OnInit {
         return;
     }
 
-    if (!this.marks) {
-        errorFlag = true;
-        Swal.fire('Secured marks cannot be blank');
-        return;
-    }
-
     if (!this.hour) {
-        errorFlag = true;
-        Swal.fire('Assessment hour cannot be blank');
-        return;
-    }
+      errorFlag = true;
+      Swal.fire('Assessment hour cannot be blank');
+      return;
+  }
 
-    if (!this.remarks) {
-        errorFlag = true;
-        Swal.fire('Remarks cannot be blank');
-        return;
-    }
 
    if (!errorFlag) {
       Swal.fire({
@@ -311,7 +305,10 @@ export class AsessmentdetailsComponent implements OnInit {
               });
           }
           else{
+            
             const assessmentDtos: AssessmentDto[] = this.mapAssessmentDtos(this.assessments);
+            console.log(assessmentDtos);
+            
             this.apiService.submitAssessments(assessmentDtos).subscribe(
               (response: any) => {
                 if (response && response.message) {
@@ -404,64 +401,28 @@ getPageNumbers(): number[] {
   
 
 
- updateAllTotalMarks(): void {
-  this.assessments.forEach(assessment => {
-      assessment.totalMarks = this.totalMarks;
-      if(this.totalMarks>100){
+ validTotalMark(): void {
+     if(this.totalMarks>100 || this.totalMarks<0){
         Swal.fire({
-          title: 'Total marks must be 100 ',
+          title: 'Total marks should not be greater than 100 ',
          });
-         this.totalMarks=0;
-         assessment.totalMarks=0;
+         this.totalMarks=null;
+        
       }
-  });
-}
-
-updateMarks(): void {
-  if (this.marks > this.totalMarks) {
-    Swal.fire({
-      title: 'Secured marks should not be greater than total marks',
-    });
-    this.assessments.forEach(assessment => { 
-      assessment.marks = '';
-   });
-    this.marks=parseInt('');
-  }
-  else {
-    this.assessments.forEach(assessment => { 
-      assessment.marks = this.marks;
-   }); 
-  } 
-
 }
 
 
-
-updateHours() : void {
+validHours() : void {
   if(this.status==='s'){
-    if(this.hour > 0 && this.hour < 5){
-      this.assessments.forEach(assessment => {
-      assessment.hour=this.hour;
+    if(!(this.hour > 0 && this.hour < 5)){
+      Swal.fire({
+        title: 'Assessment hour should be within 1 to 4 hours',
     });
-    }else{
-        Swal.fire({
-          title: 'Assessment hour should be within 1 to 4 hours',
-      });
-      this.hour='';
-      this.assessments.forEach(assessment => {
-      assessment.hour='';
-      });
+    this.hour='';
     }
-   }
+  }
    
 }
-
-updateRemarks() : void {
-  this.assessments.forEach(assessment => {
-    assessment.remarks=this.remarks;
-  });
-}
-
 
 
 resetFields() {
@@ -471,13 +432,15 @@ resetFields() {
   this.totalMarks=null;
   this.marks=null;
   this.remarks=null;
+  this.hour=null;
+  this.assessmentDate=null;
 }
 
 
 confirmReset() {
   Swal.fire({
-    title: 'Do ypu want to reset',
-    text: 'This action will reset all fields. Are you sure you want to proceed?',
+    title: 'Do you want to reset',
+    text: 'It will reset all fields. Are you sure you want to proceed?',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: 'Yes',
@@ -485,7 +448,8 @@ confirmReset() {
     reverseButtons: false
   }).then((result) => {
     if (result.isConfirmed) {
-      this.resetFields();
+     // window.location.reload();
+     this.resetFields();
       Swal.fire(
         'All fields have been reset.',
         '',
@@ -498,9 +462,16 @@ confirmReset() {
 validateSecuredMarks(assessment: any): void {
  
   if(this.status==='s'){
-    if (assessment.marks > assessment.totalMarks) {
+    if (assessment.marks > this.totalMarks) {
       Swal.fire({
         title: 'Secured marks should not be greater than total marks',
+      });
+      assessment.marks='';
+    }
+
+    if(assessment.marks < 0){
+      Swal.fire({
+        title: 'Secured marks should not be less than 0',
       });
       assessment.marks='';
     }
@@ -511,6 +482,12 @@ validateSecuredMarks(assessment: any): void {
         title: 'Secured marks should not be greater than total marks.',
       });
       assessment[9] = '';
+    }
+    if(assessment[9] < 0){
+      Swal.fire({
+        title: 'Secured marks should not be less than 0',
+      });
+      assessment[9]='';
     }
   }
 }

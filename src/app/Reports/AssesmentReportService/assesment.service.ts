@@ -1,16 +1,368 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+import * as XLSX from 'xlsx-js-style';
+import { DatePipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AssesmentService {
   private url = 'http://localhost:9999/tpms';
-  constructor(private httpClient:HttpClient) {  }
+  constructor(private httpClient: HttpClient,private datePipe: DatePipe) { }
 
   getActivitiesForAssesment(fromDate: string, toDate: string): Observable<any[]> {
     const urlF = `${this.url}/getActivityForAssesment`;
     return this.httpClient.get<string[]>(`${urlF}?fromDate=${fromDate}&toDate=${toDate}`);
+  }
+
+  assementData(reportType: string, fromDate: string, toDate: string, activityId: string, resourceValue: string) {
+    const url = `${this.url}/assesmentReportData`;
+    const params = {
+      reportType: reportType,
+      fromDate: fromDate,
+      toDate: toDate,
+      activityId: activityId,
+      resourceValue: resourceValue,
+    };
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post<any>(url, params, { headers });
+  }
+
+  generateAssesmentPdf(reportType: string, assesmentData: any[], fromDate: Date, toDate: Date) {
+    debugger;
+    const pdf = new jsPDF();
+    let startYpos = 0;
+    const formatFromDate = new Date(fromDate);
+    const formatFromday = formatFromDate.getDate();
+    const formatFrommonth = formatFromDate.toLocaleString('default', { month: 'short' });
+    const formatFromyear = formatFromDate.getFullYear();
+    const formatteFromdDate = `${formatFromday} ${formatFrommonth} ${formatFromyear}`;
+
+    const formatTodate = new Date(toDate);
+    const formatToday = formatTodate.getDate();
+    const formatTomonth = formatTodate.toLocaleString('default', { month: 'short' });
+    const formatToyear = formatTodate.getFullYear();
+    const formattedToDate = `${formatToday} ${formatTomonth} ${formatToyear}`;
+
+    pdf.text('Assesment Report', 75, 10);
+    debugger;
+    if (formatteFromdDate === formattedToDate) {
+      pdf.setFontSize(10);
+      pdf.text('Date : ' + formatteFromdDate, 10, 20);
+    } else {
+      pdf.setFontSize(10);
+      pdf.text('Date Range: ' + formatteFromdDate + ' to ' + formattedToDate, 10, 20);
+    }
+    if (reportType == 'activity'|| reportType=='summary') {
+      pdf.setFontSize(10);
+      pdf.text('Activity Name: ' + assesmentData[0]?.activityName, 10, 28);
+      startYpos = 35;
+    }
+    if (reportType == 'resource') {
+      pdf.setFontSize(10);
+      pdf.text('Resorce Name: ' + assesmentData[0]?.resourceName, 10, 26);
+      pdf.text('Resorce Code: ' + assesmentData[0]?.resourceCode, 100, 26);
+      pdf.text('Platform Name: ' + assesmentData[0]?.platform, 10, 32);
+      pdf.text('Designation    : ' + assesmentData[0]?.designation, 100, 32);
+      startYpos = 40;
+    }
+    let head;
+    if (reportType == 'activity'|| reportType=='summary') {
+      head = [[ 'Resource Code', 'Resource Name', 'Platform', 'Total Mark ', 'Secured', 'Remark']];
+    } else if (reportType == 'resource') {
+      head = [['Assement Date','Activity','Total Mark ', 'Secured', 'Remark']];
+    }
+
+    // Table content
+    const data = [];
+    let lastDate = null;
+    assesmentData.forEach(detail => {
+
+      const dfg = detail.assementDate;
+      const dataRowColor = [255, 255, 255];
+      const rowData = [];
+      let activityData = '';
+      if (reportType == 'activity') {
+        const currentDate = detail.asesmentDate;
+        const formattedFromDate = this.datePipe.transform(detail.activityFromDate, 'd MMM yyyy');
+        const formattedToDate = this.datePipe.transform(detail.activityToDate, 'd MMM yyyy');
+        const formattedCurrentDate = this.datePipe.transform(currentDate, 'd MMM yyyy');
+        if (currentDate !== lastDate) {
+          data.push([{ content: `Period (${formattedFromDate} to ${formattedToDate})      Assessment Date:- ${formattedCurrentDate}`, colSpan: 7, styles: { fillColor: ['CEEEF5'] }  }]);
+          // data.push([{ content: 'Period (' + detail.activityFromDate + ' to ' + detail.activityToDate + ') Assesment Date ' + currentDate, colSpan: 7, styles: { fillColor: ['CEEEF5'] } }]);
+          lastDate = currentDate; // Update the last date
+        }
+        rowData.push(
+          { content: detail.resourceCode, styles: { fillColor: dataRowColor } },
+          { content: detail.resourceName, styles: { fillColor: dataRowColor } },
+          { content: detail.platform, styles: { fillColor: dataRowColor } },
+          { content: detail.doubleActivityMark, styles: { fillColor: dataRowColor } },
+          { content: detail.doubleSecuredMark, styles: { fillColor: dataRowColor } },
+          { content: detail.remark, styles: { fillColor: dataRowColor } },
+        );
+      } else if(reportType=='resource') {
+        const formattedAsesmentDate = this.datePipe.transform(detail.asesmentDate, 'd MMM yyyy');
+         rowData.push(
+           { content: formattedAsesmentDate, styles: { fillColor: dataRowColor } },
+           { content: detail.activityName, styles: { fillColor: dataRowColor } },
+           { content: detail.doubleActivityMark, styles: { fillColor: dataRowColor } },
+           { content: detail.doubleSecuredMark, styles: { fillColor: dataRowColor } },
+           { content: detail.remark, styles: { fillColor: dataRowColor } },
+         );
+      }else{
+        const formattedAsesmentDate = this.datePipe.transform(detail.asesmentDate, 'd MMM yyyy');
+         rowData.push(
+          { content: detail.resourceCode, styles: { fillColor: dataRowColor } },
+          { content: detail.resourceName, styles: { fillColor: dataRowColor } },
+          { content: detail.platform, styles: { fillColor: dataRowColor } },
+          { content: detail.doubleActivityMark, styles: { fillColor: dataRowColor } },
+          { content: detail.doubleSecuredMark, styles: { fillColor: dataRowColor } },
+          { content: detail.remark, styles: { fillColor: dataRowColor } },
+         );
+
+      }
+      data.push(rowData);
+    });
+
+    // Create auto table
+    var finalY = null;
+
+    autoTable(pdf, {
+      head: head,
+      body: data,
+      didDrawPage: function (data) {
+        finalY = Math.round(data.cursor.y);
+      },
+      startY: startYpos,
+      styles: {
+        lineColor: [0, 0, 0],
+        lineWidth: 0.5,
+      },
+      headStyles: {
+        fillColor: [104, 211, 245],
+        textColor: [9, 9, 9],
+        lineColor: [0, 0, 0],
+        lineWidth: 0.5,
+        fontStyle: 'bold',
+      },
+      margin: { left: 10 },
+    });
+    pdf.save('assesment_report.pdf');
+  }
+
+
+
+  generateAssesmentExcel(reportType: string, assesmentData: any[], fromDate: Date, toDate: Date){
+
+    const formatFromDate = new Date(fromDate);
+    const formatFromday = formatFromDate.getDate();
+    const formatFrommonth = formatFromDate.toLocaleString('default', { month: 'short' });
+    const formatFromyear = formatFromDate.getFullYear();
+    const formatteFromdDate = `${formatFromday} ${formatFrommonth} ${formatFromyear}`;
+
+    const formatTodate = new Date(toDate);
+    const formatToday = formatTodate.getDate();
+    const formatTomonth = formatTodate.toLocaleString('default', { month: 'short' });
+    const formatToyear = formatTodate.getFullYear();
+    const formattedToDate = `${formatToday} ${formatTomonth} ${formatToyear}`;
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([], { skipHeader: true });
+    
+    let headerRow = [];
+    if (reportType == 'activity') {
+      ws['!cols'] = [
+        { wch: 20 }, // Resource code
+        { wch: 20 }, // Resource Name
+        { wch: 15 }, // Platform
+        { wch: 15 }, // Total Mark
+        { wch: 15 }, // Secured Mark
+        { wch: 20 }, // Remark
+      ];
+      headerRow = ['Resource Code', 'Resource Name', 'Platform', 'Total Mark', 'Secured Mark','Remark'];
+    } else if (reportType == 'resource') {
+      const colWidths= [
+        { wch: 15 }, // Total Mark
+        { wch: 15 }, // Secured Mark
+        { wch: 20 }, // Remark
+      ];
+      headerRow = ['Total Mark', 'Secured Mark','Remark'];
+    }
+
+    //Heading Start From
+    if (reportType == 'activity') {
+      XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A6' });
+    } else if (reportType == 'resource') {
+      XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A7' });
+    }else if(reportType=='summary'){
+      XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A6' });
+    }
+
+    for (let col = 0; col < headerRow.length; col++) {
+      let rowNumber;
+      if (reportType == 'activity') {
+        rowNumber = 5;
+      } else if (reportType == 'resource') {
+        rowNumber = 6;
+      }else if(reportType=='summary'){
+        rowNumber = 5
+      }
+      const cellAddress = XLSX.utils.encode_cell({ r: rowNumber, c: col });
+      ws[cellAddress].s = {
+        font: { bold: true },
+        fill: {
+          patternType: 'solid',
+          fgColor: { rgb: '52D8F9' },
+        },
+        alignment: {
+          wrapText: true
+        },
+      };
+    }
+
+    ws['A1'] = {
+      v: 'Assesment Report',
+      t: 's',
+      s: {
+        font: {
+          bold: true,
+          size: 14,
+          color: { rgb: '1D05EE' },
+        },
+        alignment: {
+          horizontal: 'center',
+          vertical: 'center',
+          wrapText: true,
+        },
+      },
+    };
+
+    if(formatteFromdDate===formattedToDate){
+      ws['A3'] = {
+        v: `Date : ${formatteFromdDate}`,
+        t: 's',
+      };
+    }else{
+      ws['A3'] = {
+        v: `Date Range: ${formatteFromdDate} to ${formattedToDate}`,
+        t: 's',
+      };
+    }
+
+   
+
+    if (reportType == 'activity') {
+      ws['A4'] = {
+        v: `Activity Name:  ${assesmentData[0]?.activityAttenDetails[0]?.activityName}`,
+        t: 's',
+      };
+    }
+
+    if (reportType == 'resource') {
+      ws['A4'] = {
+        v: `Resource Name:  ${assesmentData[0]?.resourceName}`,
+        t: 's',
+      };
+      ws['C4'] = {
+        v: `Resource Code:  ${assesmentData[0]?.resourceCode}`,
+        t: 's',
+      };
+
+      ws['A5'] = {
+        v: `Platform:  ${assesmentData[0]?.platform}`,
+        t: 's',
+      };
+      ws['C5'] = {
+        v: `Designamtion:  ${assesmentData[0]?.designation}`,
+        t: 's',
+      };
+    }
+    
+    //HEADING MERGED
+    const colMergerd=assesmentData.length+3;
+    let colMergerdResource;
+    if(reportType == 'resource'){
+      // colMergerdResource=activityHeadResource.length;
+    }
+    if (reportType == 'activity') {
+      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }]; // Merge cells
+    } else if (reportType == 'resource') {
+      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: colMergerdResource } }];
+    }else if(reportType=='summary'){
+      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: colMergerd  } }];
+    }
+
+    const data: any[] = [];
+    const processedDates = new Set<string>();
+    assesmentData.forEach(detail => {
+  
+      if (reportType == 'activity' || reportType=='summary') {
+        const atendanceDate = detail.atendanceDate;
+        if (!processedDates.has(atendanceDate)) {
+          const dateRowColor = processedDates.has(atendanceDate) ? 'white' : 'red';
+          data.push([atendanceDate]);
+          const currentRowIndex = data.length + 5;
+          let dateMerged;
+          if(reportType=='activity'){
+              dateMerged=4;
+          }
+          ws['!merges'].push({ s: { r: currentRowIndex, c: 0 }, e: { r: currentRowIndex, c: dateMerged } });
+          // Apply the fill color to each cell in the merged range
+          for (let col = 0; col < 5; col++) {
+            const cellAddress = XLSX.utils.encode_cell({ r: currentRowIndex, c: col });
+            ws[cellAddress] = {
+              v: null,
+              s: {
+                font: {
+                  bold: true,
+                },
+                fill: {
+                  patternType: 'solid',
+                  fgColor: { rgb: 'CEEEF5' },
+                },
+                alignment: {
+                  wrapText: true,
+                },
+              },
+            };
+          }
+          processedDates.add(atendanceDate);
+        }
+      }
+      const rowData = [];
+      let activityData='';
+      if (reportType == 'activity') {
+      
+        
+        rowData.push(
+          { v: detail.resourceCode, s: { alignment: { wrapText: true } } },
+          { v: detail.resourceName, s: { alignment: { wrapText: true } } },
+          { v: detail.designation, s: { alignment: { wrapText: true } } },
+          { v: detail.platform, s: { alignment: { wrapText: true } } },
+          { v: activityData, s: { alignment: { wrapText: true } } },
+        );
+      } 
+      data.push(rowData);
+    });
+
+    // Add data to worksheet
+    if (reportType == 'activity') {
+      XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A7' });
+    } else if (reportType == 'resource') {
+      XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A8' });
+    }else if(reportType=='summary'){
+      XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A7' });
+    }
+
+
+    // Create a workbook
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Assesmentt Report');
+
+    // Save the workbook as an Excel file
+    XLSX.writeFile(wb, 'attendance_report.xlsx');
+
   }
 }

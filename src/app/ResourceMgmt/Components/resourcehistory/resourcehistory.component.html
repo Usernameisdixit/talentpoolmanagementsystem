@@ -1,15 +1,17 @@
 <div class="container mt-3">
-  <div class="text-right mb-3">
+  
+  <div class="search-container mb-3">
+    <input type="text" class="form-control form-control-sm" placeholder="Search" [(ngModel)]="searchQuery" (input)="applySearch()">
+  </div>
+  <hr>
+  <div class="text-right mb-3" *ngIf="resourceHisDateWise.length!==0">
     <div class="export-buttons">
       <button class="btn btn-success btn-sm" (click)="exportToExcel()" title="Download Excel">
         <i class="fas fa-file-excel"></i> Download Complete Report
       </button>
     </div>
   </div>
-  
-  <div class="search-container mb-3">
-    <input type="text" class="form-control form-control-sm" placeholder="Search" [(ngModel)]="searchQuery" (input)="applySearch()">
-  </div>
+  <div *ngIf="resourceHisDateWise.length===0" class="text-center text-danger"><h2> Resources are not allocated. </h2></div>
   
   <!-- Accordion -->
   <div class="accordion" id="accordionExample">
@@ -44,7 +46,8 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let record of dateRange.filteredResources | paginate: { itemsPerPage: dateRange.itemsPerPage, currentPage: dateRange.currentPage, totalItems: dateRange.count }; let i = index">
+                <!-- <tr *ngFor="let record of dateRange.filteredResources | paginate: { itemsPerPage: dateRange.itemsPerPage, currentPage: dateRange.currentPage, totalItems: dateRange.count }; let i = index"> -->
+                <tr *ngFor="let record of dateRange.filteredResources; let i = index">
                   <td>{{ (dateRange.currentPage - 1) * dateRange.itemsPerPage + i + 1 }}</td> 
                   <td>{{ record[2] }}</td>
                   <td>{{ record[1] }}</td>
@@ -58,11 +61,11 @@
                 </tr>
               </tbody>
             </table>
-            <div class="d-flex justify-content-end mt-2" [id]="'pagination' + accordionIndex" [ngClass]="{'highlighted-pagination': selectedAccordionIndex === accordionIndex}">
+            <!-- <div class="d-flex justify-content-end mt-2" [id]="'pagination' + accordionIndex" [ngClass]="{'highlighted-pagination': selectedAccordionIndex === accordionIndex}">
               <pagination-controls previousLabel="Prev" nextLabel="Next" 
                                    (pageChange)="onPageChange($event, accordionIndex)">
               </pagination-controls>
-          </div>
+          </div> -->
           
             
             

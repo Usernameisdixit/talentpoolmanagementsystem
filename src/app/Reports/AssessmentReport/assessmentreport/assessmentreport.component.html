@@ -11,11 +11,11 @@
                 (change)="clearActivityInput()"  value="resource">
                 <label class="form-check-label" for="inputResource">Resource Wise</label>
             </div>
-            <div class="form-check form-check-inline">
+            <!-- <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="inputType" id="inputSummary" [(ngModel)]="inputType"
                     (change)="clearResourceInput();clearActivityInput()" value="summary">
                 <label class="form-check-label" for="inputSummary">Summary</label>
-            </div>
+            </div> -->
         </div>
  <hr>       
         <div class="col-md-3">
@@ -68,7 +68,7 @@
 
         <div class="row justify-content-center mt-4">
             <div class="col-md-6">
-                <button *ngIf="inputType !== 'summary'" type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button>
+                <button  type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button>
                 <!-- <button type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button> -->
                 <div class="button-space"></div>
                 <button type="button" class="btn btn-success" (click)="generateExcel()">Generate Excel</button>

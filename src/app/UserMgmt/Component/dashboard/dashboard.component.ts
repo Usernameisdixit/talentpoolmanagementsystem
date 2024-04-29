@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd, NavigationExtras } from '@angular/router';
-import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { Component, OnInit,ViewChild } from '@angular/core';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { BsDatepickerConfig,BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { filter } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { AssessmentserviceService } from 'src/app/AssessmentMgmt/Service/assessmentservice.service';
@@ -15,6 +15,8 @@ import { LoginService } from '../../Service/login.service';
 })
 export class DashboardComponent  implements OnInit{
 
+  @ViewChild('dp') datepicker: BsDatepickerDirective;
+  @ViewChild('dp1') datepicker1: BsDatepickerDirective;
   resources:any;
   allocationDate: any;
   // allocationDate: any;
@@ -34,7 +36,6 @@ export class DashboardComponent  implements OnInit{
   ActivtiesPlanned : any;
   atnDate: string;
   alDate: any;
-  dashboardDate: string=null;
 
   constructor(private  contactService:ContactService,private datePipe:DatePipe,
     private apiService: AssessmentserviceService,private loginService:LoginService,
@@ -56,15 +57,12 @@ export class DashboardComponent  implements OnInit{
       this.allocationDate = response.map(date => this.datePipe.transform(date, 'dd-MMM-yyyy'));
       this.alDate=this.allocationDate[this.allocationDate.length-1];
       //this.alDate.sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
-      this.sendDate(this.alDate);
+      this.sendDateFromResource(this.alDate);
     });
-
-    if(this.dashboardDate==null){
-      debugger;
+    debugger;
     this.atnDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');
 
     this.selectedDate=this.datePipe.transform(this.atnDate, 'dd-MMM-yyyy');
-    }
     this.loginService.getAttendance(this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd')).subscribe((response:any)=>{
       debugger;
       //response=[];
@@ -72,9 +70,8 @@ export class DashboardComponent  implements OnInit{
         this.attendanceData=null;
       }else{
       this.attendanceData=response;
-      this.dashboardDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');;
       }
-      console.log(this.attendanceData); 
+      console.log(this.attendanceData);
       
     });
 
@@ -135,7 +132,7 @@ export class DashboardComponent  implements OnInit{
         {
           this.assessmentDateArr=null;
         }
-   else{
+        else{
         this.assessmentDateArr = dates.map(date => this.transformDate(date));
         // Sort the dates in descending order (latest to oldest)
         this.assessmentDateArr.sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
@@ -163,7 +160,7 @@ export class DashboardComponent  implements OnInit{
 
 
 //Dashboard->For Resource
-  sendDate(alDate:string) {
+  sendDateFromResource(alDate:string) {
     debugger;
     // Transform the parsed date into 'yyyy-MM-dd' format using datePipe
     const formattedDate = this.datePipe.transform(this.alDate, 'yyyy-MM-dd');
@@ -183,7 +180,7 @@ export class DashboardComponent  implements OnInit{
     this.router.navigate(['takeAtten']);
     
     }
-
+    // attendance data for dashboard modal
     getDateFromAttendanceDashboard(atnDate:string){
       debugger;
       this.loginService.getAttendance(this.datePipe.transform(atnDate, 'yyyy-MM-dd')).subscribe((response:any)=>{
@@ -274,6 +271,16 @@ export class DashboardComponent  implements OnInit{
         // alert(this.ActivtiesPlanned);
        });
 
+    }
+
+    openDatepicker(): void {
+      this.datepicker.show();
+  
+    }
+
+    openDatepicker1():void{
+
+      this.datepicker1.show();
     }
 
     
