@@ -361,6 +361,70 @@ public class ReportServiceImpl implements ReportService {
 			e1.printStackTrace();
 		}
 		return  activityRepository.getActvitiesByDateRangeForAssement(formattedFromDate,formattedToDate);
+	}
+
+	@Override
+	public List<Map<String, Object>> getAssesmentData(String reportType, String fromDate, String toDate,
+			String activityId, String resourceValue) {
+		SimpleDateFormat inputFormat = new SimpleDateFormat("M/d/yyyy, h:mm:ss a");
+		SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+		String formattedFromDate = null;
+		String formattedToDate = null;
+		try {
+			if (fromDate != null && !fromDate.equals("undefined")) {
+				Date date = inputFormat.parse(fromDate);
+				formattedFromDate = outputFormat.format(date);
+			}
+			if (toDate != null && !toDate.equals("undefined")) {
+				Date date = inputFormat.parse(toDate);
+				formattedToDate = outputFormat.format(date);
+			}
+		} catch (ParseException e1) {
+
+			e1.printStackTrace();
+		}
+		String sqls = "{call TPMS_ATTENDANCE(?,?,?,?,?,?,?)}";
+		List<Map<String, Object>> assesmentDetails = new ArrayList<>();
+
+		DataSource ds = jdbcTemplate.getDataSource();
+		if (ds != null) {
+			try (Connection con = ds.getConnection(); CallableStatement assesmentQuerey = con.prepareCall(sqls);) {
+				assesmentQuerey.setString(1, "ASSESMENT_REPORT_DATA");
+				assesmentQuerey.setString(2, formattedFromDate);
+				assesmentQuerey.setString(3, formattedToDate);
+				assesmentQuerey.setString(4, activityId);
+				assesmentQuerey.setString(5, reportType);
+				assesmentQuerey.setString(6, resourceValue);
+				assesmentQuerey.setInt(7, 0);
+
+				try (ResultSet rs = assesmentQuerey.executeQuery();) {
+					if (rs != null) {
+						Map<String, Object> assement = null;
+						while (rs.next()) {
+							assement = new HashMap<>();
+							assement.put("asesmentId", rs.getString("asesmentId"));
+							assement.put("resourceName", rs.getString("resourceName"));
+							assement.put("resourceCode", rs.getString("resourceCode"));
+							assement.put("activityName", rs.getString("activityName"));
+							assement.put("doubleActivityMark", rs.getString("doubleActivityMark"));
+							assement.put("platform", rs.getString("platform"));
+							assement.put("asesmentDate", rs.getString("asesmentDate"));
+							assement.put("activityFromDate", rs.getString("activityFromDate"));
+							assement.put("activityToDate", rs.getString("activityToDate"));
+							assement.put("doubleSecuredMark", rs.getString("doubleSecuredMark"));
+							assement.put("designation", rs.getString("designation"));
+							assement.put("remark", rs.getString("remark"));
+							assesmentDetails.add(assement);
+						}
+					}
+
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		}
+		return assesmentDetails;
 	}	
 	
 	

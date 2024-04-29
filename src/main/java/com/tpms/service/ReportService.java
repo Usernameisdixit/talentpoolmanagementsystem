@@ -26,6 +26,9 @@ public interface ReportService {
 			String resourceValue);
 
 	List<Activity> getActivityOnDateRangForAssement(String fromDate, String toDate);
+
+	List<Map<String, Object>> getAssesmentData(String reportType, String fromDate, String toDate, String activityId,
+			String resourceValue);
 	
 
 }

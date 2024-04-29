@@ -212,24 +212,26 @@ public class ActivityServiceImpl implements ActivityService {
 		List<Map<String, String>> existingResourceList = new ArrayList<>();
 		Integer activityCountByDate = 0;
 		Integer activityCountBySession = 0;
-		if (allocData.getActivityAllocateId() == null) {
-			existingResourceList = activityAllocRepo.checkExistingResourcesByDateRange(resourceIdList, allocData.getActivityFromDate(), allocData.getActivityToDate(),
-					allocData.getFromHours(), allocData.getToHours());
-			response.put("category", "resource");
-			response.put("data", existingResourceList);
-		}
-		if (existingResourceList.isEmpty()) {
-			activityCountByDate = activityAllocRepo.countExistingActivitiesByDateRange(
+		
+		if(allocData.getActivityAllocateId() == null) {
+			activityCountByDate = activityAllocRepo.countExistingActivityByDateRange(
 					allocData.getActivity().getActivityId(), allocData.getActivityFromDate(), allocData.getActivityToDate(), allocData.getFromHours(),
 					allocData.getToHours());
 			response.put("category", "activityByDate");
 			response.put("data", activityCountByDate);
-		}
-		if(activityCountByDate == 0) {
-			activityCountBySession = activityAllocRepo.countExistingActivitiesBySession(allocData.getActivity().getActivityId(),
-					allocData.getActivityFromDate(), allocData.getActivityToDate(), allocData.getActivityFor());
-			response.put("category", "activityBySession");
-			response.put("data", activityCountBySession);
+			
+			if(activityCountByDate == 0) {
+				activityCountBySession = activityAllocRepo.countExistingActivityBySession(allocData.getActivity().getActivityId(),
+						allocData.getActivityFromDate(), allocData.getActivityToDate(), allocData.getActivityFor());
+				response.put("category", "activityBySession");
+				response.put("data", activityCountBySession);
+			}
+			if (activityCountByDate==0 && activityCountBySession==0 && !allocData.getActivity().getIsProject()) {
+				existingResourceList = activityAllocRepo.checkExistingResourcesByDateRange(resourceIdList, allocData.getActivityFromDate(), allocData.getActivityToDate(),
+						allocData.getFromHours(), allocData.getToHours());
+				response.put("category", "resource");
+				response.put("data", existingResourceList);
+			}
 		}
 
 		if (existingResourceList.isEmpty() && activityCountByDate == 0 && activityCountBySession == 0) {

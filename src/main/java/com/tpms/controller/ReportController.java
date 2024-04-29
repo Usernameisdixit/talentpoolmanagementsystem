@@ -87,15 +87,33 @@ public class ReportController {
 	    }
 	}
 	
+	@PostMapping("assesmentReportData")
+	public String getAssesmentReportData(@RequestBody Map<String, String> params) throws JsonProcessingException {
+	    String reportType = params.get("reportType");
+	    String fromDate = params.get("fromDate");
+	    String toDate = params.get("toDate");
+	    String activityId = params.get("activityId");
+	    String resourceValue = params.get("resourceValue");
+	    
+	   
+    	
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    if(reportType.equals("activity")) {
+	    List<Map<String, Object>> assesmentReportData = reportService.getAssesmentData(reportType, fromDate,toDate,activityId,resourceValue);
+	    System.err.println(assesmentReportData);
+	    return objectMapper.writeValueAsString(assesmentReportData);
+	    }else {
+	    	  List<Map<String, Object>> assesmentReportData = reportService.getAssesmentData(reportType, fromDate,toDate,activityId,resourceValue);
+	  	    System.err.println(assesmentReportData);
+	  	    return objectMapper.writeValueAsString(assesmentReportData);
+	    }
+//	    else {
+//	    	JSONArray allDetails = reportService.getAttendanceDataSummary(reportType, fromDate,toDate,activityId,resourceValue);
+//	    	return allDetails.toString();
+//	    }
+	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
+		
 	
 }
