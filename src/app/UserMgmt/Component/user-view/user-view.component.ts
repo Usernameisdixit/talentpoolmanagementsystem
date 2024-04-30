@@ -20,7 +20,7 @@ export class UserViewComponent {
   userList:boolean;
   
   currentPage: number = 1;
-  pageSize: number = 10;
+  pageSize: number;
   totalPages: number[] = [];  totalElements: number = 0;
   
   constructor(private userService:UserService,private route:Router){}
@@ -35,9 +35,9 @@ export class UserViewComponent {
     this.userService.getUserDetails(this.currentPage).subscribe((response:any)=>{
         debugger;
         this.userDetails=response.content;
-        this.totalPages = Array.from({ length: response.totalPages }, (_, i) => i + 1); // Create array of page numbers
+        //this.totalPages = Array.from({ length: response.totalPages }, (_, i) => i + 1); // Create array of page numbers
         this.totalElements = response.totalElements;
-      
+        this.pageSize=response.pageSize;
         if (Object.keys(this.userDetails).length === 0) {
            this.userList = false;
         }

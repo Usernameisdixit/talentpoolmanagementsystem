@@ -16,62 +16,55 @@
     <div class="col-md-12">
       <div class="assessment-table-container mt-5">
         <div>
-          <table>
-            <thead>
-              <tr class="text-align:center">
-                <th>
-                  <!--ResourceId-->Sl No
-                </th>
-                <th>Res. Code</th>
-                <th>Res. Name</th>
-                <th>Designation</th>
-                <th>Platform</th>
-                <th>Location</th>
-                <th>Exp.</th>
-                <th>Mobile</th>
-                <th>Email</th>
-                <th>Allocation Date</th>
-                <th>Duration</th>
-                <!-- <th>Status</th> -->
-                <th>Action</th>
-              </tr>
-
-            </thead>
-            <tbody>
-              <tr *ngFor="let c of talent | paginate :{
-    itemsPerPage : tableSize,
-    currentPage : page ,
-    totalItems: count
+  <table>
+      <thead>
+        <tr class="text-align:center">
+  <th><!--ResourceId-->Sl No</th>
+  <th>Res. Code</th>
+  <th>Res. Name</th>
+  <th>Designation</th>
+  <th>Platform</th>
+  <th>Location</th>
+  <th>Exp.</th>
+  <th>Mobile</th>
+  <th>Email</th>
+  <th>Allocation Date</th>
+  <th>Duration</th>
+  <!-- <th>Status</th> -->
+  <th>Action</th>
+        </tr>
+  
+      </thead>
+  <tbody>
+  <tr *ngFor="let c of talent | paginate :{
+    itemsPerPage : pageSize,
+    currentPage : currentPage ,
+    totalItems: totalElements
     }; let i = index" class="text-align:center">
-                <td>
-                  <!--{{c.resourceId}}-->{{ (page - 1) * tableSize + i + 1 }}
-                </td>
-                <td>{{c.resourceCode}}</td>
-                <td>{{c.resourceName}}</td>
-                <td>{{c.designation}}</td>
-                <td>{{c.platform}}</td>
-                <td>{{c.location}}</td>
-                <td>{{c.experience}}</td>
-                <td>{{c.phoneNo}}</td>
-                <td>{{c.email}}</td>
-                <td>{{c.allocationDate | date: 'dd-MMM-yyyy'}}</td>
-                <td>
-                  <ng-container *ngIf="isAllocationDateLessThanCurrent(c)">
-                    <input type="button" (click)=getDetails(c) data-bs-toggle="modal" value="{{c.duration}}"
-                      data-bs-target="#exampleModal">
-                  </ng-container>
-                  <ng-container *ngIf="!isAllocationDateLessThanCurrent(c)">
-                    <input type="button" (click)=getDetails(c) data-bs-toggle="modal" value="0 months,0 days"
-                      data-bs-target="#exampleModal">
-                  </ng-container>
-                </td>
-                <td>
-                  <div class="button-container">
-                    <button type="button" class="btn btn-primary btn-sm" (click)="editalent(c.resourceId)"><i
-                        class="fas fa-edit"></i></button>&nbsp;
-                    <!-- <button type="button" class="btn btn-danger" (click)="deletetalent($event, c.resourceId)">Delete</button> -->
-
-                    <!-- <button *ngIf="!c.deletedFlag" class="btn btn-danger btn-sm" title="Inactive" (click)="deletetalent($event, c.resourceId);"><i class="fa-solid fa-xmark"></i></button>
+  <td><!--{{c.resourceId}}-->{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+  <td>{{c.resourceCode}}</td>
+  <td>{{c.resourceName}}</td>
+  <td>{{c.designation}}</td>
+  <td>{{c.platform}}</td>
+  <td>{{c.location}}</td>
+  <td>{{c.experience}}</td>
+  <td>{{c.phoneNo}}</td>
+  <td>{{c.email}}</td>
+   <td>{{c.allocationDate | date: 'dd-MMM-yyyy'}}</td>
+  <td>
+    <ng-container *ngIf="isAllocationDateLessThanCurrent(c)">
+    <input type="button" (click)=getDetails(c) data-bs-toggle="modal" value="{{c.duration}}" data-bs-target="#exampleModal">
+  </ng-container>
+  <ng-container *ngIf="!isAllocationDateLessThanCurrent(c)">
+    <input type="button" (click)=getDetails(c) data-bs-toggle="modal" value="0 months,0 days" data-bs-target="#exampleModal">
+  </ng-container>
+  </td>
+  <td>
+    <div class="button-container">
+      <button type="button" class="btn btn-primary btn-sm" (click)="editalent(c.resourceId)"><i class="fas fa-edit"></i></button>&nbsp;
+     <!-- <button type="button" class="btn btn-danger" (click)="deletetalent($event, c.resourceId)">Delete</button> -->
+     
+      <!-- <button *ngIf="!c.deletedFlag" class="btn btn-danger btn-sm" title="Inactive" (click)="deletetalent($event, c.resourceId);"><i class="fa-solid fa-xmark"></i></button>
               
       <button *ngIf="c.deletedFlag" class="btn btn-danger btn-sm" title="Active" (click)="deletetalent($event, c.resourceId);"><i class="fa-solid fa-check"></i></button> -->
                   </div>

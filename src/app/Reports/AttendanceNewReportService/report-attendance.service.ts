@@ -311,7 +311,7 @@ export class ReportAttendanceService {
         t: 's',
       };
       ws['C5'] = {
-        v: `Designamtion:  ${attendanceData[0]?.designation}`,
+        v: `Designation:  ${attendanceData[0]?.designation}`,
         t: 's',
       };
     }

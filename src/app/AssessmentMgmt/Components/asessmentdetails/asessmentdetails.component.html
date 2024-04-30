@@ -119,13 +119,13 @@
                 
                 <tbody>
                     <ng-container *ngFor="let assessment of assessments | paginate :{
-                        itemsPerPage : tableSize,
-                        currentPage : page ,
-                        totalItems: count
+                        itemsPerPage : pageSize,
+                        currentPage : currentPage ,
+                        totalItems: totalElements
                         }; let i = index;">                          
                       
                             <tr>
-                                <td>{{ (page - 1) * tableSize + i + 1 }}</td>
+                                <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
                                 <td >{{assessment[2] }}</td>
                                 <td >{{assessment[3] }}</td>
                                 <td >{{assessment[4]}}</td>
@@ -173,13 +173,13 @@
                 
                 <tbody>
                     <ng-container *ngFor="let assessment of assessmentsExist | paginate :{
-                        itemsPerPage : tableSize1,
-                        currentPage : page1 ,
-                        totalItems: count1
+                        itemsPerPage : pageSize,
+                        currentPage : currentPage1 ,
+                        totalItems: totalElements
                         }; let i = index;">                          
                       
                             <tr>
-                                <td>{{ (page1 - 1) * tableSize1 + i + 1 }}</td>
+                                <td>{{ (currentPage1 - 1) * pageSize + i + 1 }}</td>
                                 <td >{{assessment[2] }}</td>
                                 <td >{{assessment[3] }}</td>
                                 <td >{{assessment[4]}}</td>
@@ -210,10 +210,10 @@
     <div class="row mt-3" *ngIf="detailsRetrieved">
         <div class="col-md-12 d-flex justify-content-center">
             <button class="btn btn-success space" (click)="submitAssessments()">
-                {{ status === 's' ? 'Save' : 'Update' }}</button>
+                {{ status === 's' ? 'Submit' : 'Update' }}</button>
             <button class="btn btn-danger" (click)="confirmReset()" *ngIf="status==='s'">Reset</button>
 
-            <button class="btn btn-danger" (click)="cancel()" *ngIf="status==='u'">Cancel</button>
+            <button class="btn btn-warning" (click)="cancel()" *ngIf="status==='u'">Cancel</button>
 
         </div>
      

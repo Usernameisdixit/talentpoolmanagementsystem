@@ -47,8 +47,8 @@
                   <th>Activity Name</th>
                   <th>Total Marks</th>
                   <th>Secured Marks</th>
-                  <th>Cumulative Percentage</th>
                   <th>Remarks</th>
+                  <th>Cumulative Percentage</th>
                 </tr>
               </thead>
             
@@ -69,8 +69,11 @@
                     <td>{{ assessment[2] }}</td>
                     <td>{{ assessment[3] }}</td>
                     <td>{{ assessment[4] }}</td>
-                    <td>{{ calculateCumulativePercentage(group.assessments).get(assessment[0]) }}%</td>
                     <td>{{ assessment[5] }}</td>
+                    <ng-container *ngIf="j === 0">
+                      <td [rowSpan]="2">{{ calculateCumulativePercentage(group.assessments).get(assessment[0]) }}%</td>
+                    </ng-container>
+                    
                   </tr>
                 </ng-container>
               </tbody>

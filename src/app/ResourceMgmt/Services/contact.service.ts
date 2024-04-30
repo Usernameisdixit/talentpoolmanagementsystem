@@ -22,9 +22,8 @@ export class ContactService {
     return this.httpClient.post(`${this.baseUrl}/updatetalent`, talent, { responseType: "text" });
   }
 
-  getTalent(pageIn1:any,pegeEnd1:any) {
-    // return this.httpClient.get<Talent[]>(`${this.baseUrl}/uploadedData`);
-    let fullUrl = getResourceList;
+  getTalent(pageNumber:number) {
+    let fullUrl = `${getResourceList}?pageNumber=${pageNumber}`;
     return this.httpClient.get(fullUrl);
 
   }

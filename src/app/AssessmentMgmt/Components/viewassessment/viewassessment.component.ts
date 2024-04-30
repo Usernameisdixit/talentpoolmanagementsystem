@@ -301,8 +301,9 @@ export class ViewassessmentComponent implements OnInit {
 
     const cumulativePercentagesResult = new Map<number, number>();
     cumulativePercentages.forEach((value, key) => {
-      const cumulativePercentage = (value.totalSecuredMarks / value.totalPossibleMarks) * 100;
-      cumulativePercentagesResult.set(key, cumulativePercentage);
+      let cumulativePercentage = (value.totalSecuredMarks / value.totalPossibleMarks) * 100;
+      
+      cumulativePercentagesResult.set(key, parseFloat(cumulativePercentage.toFixed(2)));
     });
 
     return cumulativePercentagesResult;
