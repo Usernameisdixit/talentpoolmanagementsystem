@@ -130,8 +130,8 @@ export class ReportAttendanceService {
                 rowData.push(
                     { content: (activityDetail.activityFor === '1' ? '1st half :' :
                     activityDetail.activityFor === '2' ? '2nd half :' :
-                    activityDetail.activityFor === '-1' ? ' ' : 
-                    'Unknown' )+activityDetail.attendanceStatus+'\n', activity:activityDetail.activityName, styles: { fillColor: dataRowColor } },
+                    activityDetail.activityFor === '3' ? ' ' : 
+                    'Both' )+activityDetail.attendanceStatus+'\n', activity:activityDetail.activityName, styles: { fillColor: dataRowColor } },
                 );
               else
                 rowData.push(
@@ -311,7 +311,7 @@ export class ReportAttendanceService {
         t: 's',
       };
       ws['C5'] = {
-        v: `Designamtion:  ${attendanceData[0]?.designation}`,
+        v: `Designation:  ${attendanceData[0]?.designation}`,
         t: 's',
       };
     }
@@ -406,8 +406,8 @@ export class ReportAttendanceService {
               rowData.push(
                   { v: (activityDetail.activityFor === '1' ? '1st half :' :
                   activityDetail.activityFor === '2' ? '2nd half :' :
-                  activityDetail.activityFor === '-1' ? ' ' : 
-                  'Unknown')+activityDetail.attendanceStatus+'\n', activity:activityDetail.activityName, s: { alignment: { wrapText: true } } }
+                  activityDetail.activityFor === '3' ? ' ' : 
+                  'Both Half')+activityDetail.attendanceStatus+'\n', activity:activityDetail.activityName, s: { alignment: { wrapText: true } } }
               );
               else
               rowData.push({v:'',s: { alignment: { wrapText: true } } }

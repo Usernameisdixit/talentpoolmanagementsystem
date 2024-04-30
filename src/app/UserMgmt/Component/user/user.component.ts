@@ -121,7 +121,7 @@ export class UserComponent {
         const userData=this.userForm.value;
         userData.userId=this.userId;
           Swal.fire({
-            title: this.userId===0?'Do you want to save?':'Do you want to update?',
+            title: this.userId===0?'Do you want to submit?':'Do you want to update?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Yes',
@@ -141,9 +141,6 @@ export class UserComponent {
               console.log(error);
               Swal.fire( 'Error occured while saving','', 'error');
             });
-              
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-              Swal.fire('Your data is not submitted','', 'error');
               
             }
           }); 

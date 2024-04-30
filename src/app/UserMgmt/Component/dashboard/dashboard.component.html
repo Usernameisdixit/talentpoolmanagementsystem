@@ -50,8 +50,8 @@
 
               <mat-form-field class="smaller-select">
                 <input matInput type="text"  bsDatepicker [(ngModel)]="fromDate"
-                            [maxDate]="maxDate" [bsConfig]="bsConfig"  (ngModelChange)="sendActivityPlanneddata()">
-                <mat-icon matSuffix>date_range</mat-icon>
+                            [maxDate]="maxDate" [bsConfig]="bsConfig"  (ngModelChange)="sendActivityPlanneddata()" #dp="bsDatepicker">
+                <mat-icon (click)="openDatepicker()" matSuffix>date_range</mat-icon>
               </mat-form-field>
           </div>
           </div>
@@ -63,8 +63,8 @@
 
               <mat-form-field class="smaller-select">
                 <input matInput type="text"  bsDatepicker [(ngModel)]="toDate"
-                            [maxDate]="maxDate" [bsConfig]="bsConfig"  (ngModelChange)="sendActivityPlanneddata()">
-                <mat-icon matSuffix>date_range</mat-icon>
+                            [maxDate]="maxDate" [bsConfig]="bsConfig"  (ngModelChange)="sendActivityPlanneddata()" #dp1="bsDatepicker">
+                <mat-icon (click)="openDatepicker1()" matSuffix>date_range</mat-icon>
               </mat-form-field>
           </div>
         </div>
