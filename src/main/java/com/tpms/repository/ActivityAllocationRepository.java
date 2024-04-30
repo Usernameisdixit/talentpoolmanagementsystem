@@ -31,7 +31,7 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
 			 "INNER JOIN resource_pool r ON r.resourceId=asmt.resourceId " +
 			 "INNER JOIN activity act ON act.activityId=asmt.activityId " +
 			 "WHERE asmt.activityId = :activityId AND asmt.activityFromDate=:fromDate " +
-			 "AND asmt.activityToDate= :toDate", nativeQuery = true)
+			 "AND asmt.activityToDate= :toDate order by resourceName asc", nativeQuery = true)
 		List<Object[]> getAssessmentDetails(Integer activityId, Date fromDate, Date toDate);
 		
 		
@@ -43,7 +43,7 @@ public interface ActivityAllocationRepository extends JpaRepository<ActivityAllo
             "INNER JOIN activity act ON act.activityId = a.activityId " +
             "LEFT JOIN platforms p ON p.platformId = aa.platformId " +
             "WHERE a.activityId = :activityId " +
-            "AND a.activityFromDate >= :fromDate AND a.activityToDate <= :toDate", nativeQuery = true)
+            "AND a.activityFromDate >= :fromDate AND a.activityToDate <= :toDate order by resourceName asc", nativeQuery = true)
 List<Object[]> getActivityDetails(Integer activityId, Date fromDate, Date toDate);
 
 
