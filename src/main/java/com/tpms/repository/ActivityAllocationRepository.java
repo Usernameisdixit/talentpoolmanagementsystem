@@ -72,7 +72,7 @@ List<Object[]> getActivityDetails(Integer activityId, Date fromDate, Date toDate
 			AND :fromDate<=alloc.activityToDate
 			AND TIME_FORMAT(:toTime, '%H:%i')>TIME_FORMAT(alloc.fromHours, '%H:%i')
 			AND TIME_FORMAT(:fromTime, '%H:%i')<TIME_FORMAT(alloc.toHours, '%H:%i')
-			AND resource.resourceId IN :resourceIdList""",
+			AND resource.resourceId IN :resourceIdList AND act.isProject=false""",
 		nativeQuery = true)
 	List<Map<String,String>> checkExistingResourcesByDateRange(List<Integer> resourceIdList, Date fromDate, Date toDate, String fromTime, String toTime);
 

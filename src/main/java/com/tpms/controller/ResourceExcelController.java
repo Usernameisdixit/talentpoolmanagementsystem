@@ -50,6 +50,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tpms.dto.PageResponse;
 import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
 import com.tpms.repository.ExcelUploadHistoryRepository;
@@ -167,9 +168,11 @@ public class ResourceExcelController {
 	}
 
 	@GetMapping("/emp/getResourceList")
-	public List<ResourcePool> gettbl_resource_pool(){
-	return this.resourcepoolserviceimpl.getAllEmploye();
+	public PageResponse<ResourcePool> gettbl_resource_pool(@RequestParam(defaultValue = "1") Integer pageNumber){
+			
+	PageResponse<ResourcePool> resourceList=resourcepoolserviceimpl.getAllEmploye(pageNumber,10);
 	 
+	return resourceList;
 	}
 	
 	
