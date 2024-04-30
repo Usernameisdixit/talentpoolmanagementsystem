@@ -101,8 +101,8 @@ export class BulkAllocationComponent {
     arr.push(row);
 
     Swal.fire({
-      title: 'Do you want to save?',
-      icon: 'question',
+      title: 'Do you want to submit?',
+      icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes',
       cancelButtonText: 'No',
