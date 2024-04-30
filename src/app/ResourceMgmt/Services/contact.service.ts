@@ -22,7 +22,7 @@ export class ContactService {
     return this.httpClient.post(`${this.baseUrl}/updatetalent`, talent, { responseType: "text" });
   }
 
-  getTalent() {
+  getTalent(pageIn1:any,pegeEnd1:any) {
     // return this.httpClient.get<Talent[]>(`${this.baseUrl}/uploadedData`);
     let fullUrl = getResourceList;
     return this.httpClient.get(fullUrl);

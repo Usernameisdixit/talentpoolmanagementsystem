@@ -22,6 +22,15 @@ export class TalentlistComponent implements OnInit {
   c: Talent[];
   duration: any = [];
   listData: any = [];
+  pageIn: any;
+  pageEnd: any;
+  selectedIndex: any;
+  first: any;
+  last: any;
+  newList: any = [];
+  pgList: any = [];
+  pgElement: any;
+  pageElement: any;
   constructor(private service: ContactService, private router: Router, private datePipe: DatePipe) { }
 
 
@@ -31,9 +40,15 @@ export class TalentlistComponent implements OnInit {
 
 
   getTalent() {
-    this.service.getTalent().subscribe(response => {
+    let pageIn1=this.pageIn;
+   let pegeEnd1= this.pageEnd;
+    this.service.getTalent(pageIn1,pegeEnd1).subscribe(response => {
       this.talent = response;
-      this.listData = JSON.parse(this.talent);
+      console.log(this.talent);
+      
+      // this.listData = JSON.parse(this.talent);
+      console.log(this.listData);
+      
     })
   }
 
@@ -171,4 +186,5 @@ export class TalentlistComponent implements OnInit {
     const currentDate = new Date();
     return allocationDate < currentDate;
   }
+
 }
