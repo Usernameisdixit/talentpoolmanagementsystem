@@ -26,7 +26,7 @@ export class AssessmentserviceService {
   }
 
 
-  getAssessmentDetails(activityId: number, fromDate: string, toDate: string,currentPage:number): Observable<any[]> {
+  getAssessmentDetails(activityId: number, fromDate: string, toDate: string): Observable<any[]> {
     
     const url = `${this.apiUrl}`;
   
@@ -34,18 +34,18 @@ export class AssessmentserviceService {
     params = params.append('activityId', activityId.toString());
     params = params.append('fromDate', fromDate);
     params = params.append('toDate', toDate);
-    params=params.append('pageNumber',currentPage);
+    //params=params.append('pageNumber',currentPage);
     return this.http.get<any[]>(url, { params: params });
   }
 
-  getActivityDetails(selectedActivity: any, formattedFromDate: string, formattedToDate: string,currentPage:number) {
+  getActivityDetails(selectedActivity: any, formattedFromDate: string, formattedToDate: string) {
     const url = `${this.baseUrl}/getActivityDetails`;
   
     let params = new HttpParams();
     params = params.append('activityId', selectedActivity.toString());
     params = params.append('fromDate', formattedFromDate);
     params = params.append('toDate', formattedToDate);
-    params=params.append('pageNumber',currentPage);
+   // params=params.append('pageNumber',currentPage);
     return this.http.get<any[]>(url, { params: params });
   }
 

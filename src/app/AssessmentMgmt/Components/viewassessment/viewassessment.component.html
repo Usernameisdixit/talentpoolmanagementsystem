@@ -71,7 +71,7 @@
                     <td>{{ assessment[4] }}</td>
                     <td>{{ assessment[5] }}</td>
                     <ng-container *ngIf="j === 0">
-                      <td [rowSpan]="2">{{ calculateCumulativePercentage(group.assessments).get(assessment[0]) }}%</td>
+                      <td [attr.rowspan]="group.rowspan">{{ calculateCumulativePercentage(group.assessments).get(assessment[0]) }}%</td>
                     </ng-container>
                     
                   </tr>
