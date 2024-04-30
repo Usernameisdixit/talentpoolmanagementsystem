@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -84,15 +85,15 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public PageResponse<User> getUserDetails(int pageNumber, int pageSize) {
-	    Pageable pageable = PageRequest.of(pageNumber-1, pageSize);
+	    Pageable pageable = PageRequest.of(pageNumber-1, pageSize,Sort.by("userFullName"));
 	    Page<User> page = userRepository.findAll(pageable);
 	    List<User> userList=page.getContent();
 	    PageResponse<User> pageResponse=new PageResponse<User>();
 	    pageResponse.setContent(userList);
 	    pageResponse.setTotalElements(page.getTotalElements());
 	    pageResponse.setTotalPages(page.getTotalPages());
+	    pageResponse.setPageSize(page.getSize());
 //	    pageResponse.setPageNumber(page.getNumber()+1);
-//	    pageResponse.setPageSize(page.getSize());
 //		pageResponse.setLast(page.isLast());
 	    
 	    return pageResponse;
