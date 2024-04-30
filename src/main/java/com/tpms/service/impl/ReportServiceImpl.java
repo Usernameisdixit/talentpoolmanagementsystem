@@ -411,9 +411,9 @@ public class ReportServiceImpl implements ReportService {
 							assement.put("asesmentDate", rs.getString("asesmentDate"));
 							assement.put("activityFromDate", rs.getString("activityFromDate"));
 							assement.put("activityToDate", rs.getString("activityToDate"));
-							assement.put("doubleSecuredMark", rs.getString("doubleSecuredMark"));
+							assement.put("doubleSecuredMark", rs.getString("doubleSecuredMark")!=null?rs.getString("doubleSecuredMark"):"--");
 							assement.put("designation", rs.getString("designation"));
-							assement.put("remark", rs.getString("remark"));
+							assement.put("remark", rs.getString("remark")!=null?rs.getString("remark"):"--");
 							assesmentDetails.add(assement);
 						}
 					}
