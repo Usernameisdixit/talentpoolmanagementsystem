@@ -24,6 +24,10 @@ export class TalentlistComponent implements OnInit {
   listData: any = [];
   constructor(private service: ContactService, private router: Router, private datePipe: DatePipe) { }
 
+  currentPage: number = 1;
+  pageSize: number;
+  totalPages: number[] = []; 
+  totalElements: number = 0;
 
   ngOnInit(): void {
     this.getTalent();
@@ -31,9 +35,12 @@ export class TalentlistComponent implements OnInit {
 
 
   getTalent() {
-    this.service.getTalent().subscribe(response => {
-      this.talent = response;
-      this.listData = JSON.parse(this.talent);
+    this.service.getTalent(this.currentPage).subscribe((response:any) => {
+      this.talent = response.content;
+      //this.listData = JSON.parse(this.talent);
+      //this.totalPages = Array.from({ length: response.totalPages }, (_, i) => i + 1); // Create array of page numbers
+      this.totalElements = response.totalElements;
+      this.pageSize=response.pageSize;
     })
   }
 
@@ -52,18 +59,10 @@ export class TalentlistComponent implements OnInit {
     }
   }
 
-  // for pagination
-  indexNumber: number = 0;
-  page: number = 1;
-  tableSize: number = 10;
-  count: number = 0;
-  pageSizes = [10, 20, 30, 40, 50];
 
   //pagination functionality
   getTableDataChange(event: any) {
-
-    this.page = event;
-    this.indexNumber = (this.page - 1) * this.tableSize;
+    this.currentPage = event;
     this.getTalent();
   }
 

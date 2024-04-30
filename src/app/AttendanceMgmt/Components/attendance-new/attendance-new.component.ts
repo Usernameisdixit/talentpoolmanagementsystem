@@ -164,7 +164,7 @@ export class AttendanceNewComponent {
   submitForm() {
     let title: string;
     if (this.status === 's') {
-      title = 'Do you want to save?';
+      title = 'Do you want to submit?';
     } else if (this.status === 'u') {
       title = 'Do you want to update?';
     } else {
@@ -173,7 +173,7 @@ export class AttendanceNewComponent {
 
     Swal.fire({
       title: title,
-      icon: 'question',
+      icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes',
       cancelButtonText: 'No'
