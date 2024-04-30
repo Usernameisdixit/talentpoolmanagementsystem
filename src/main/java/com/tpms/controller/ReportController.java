@@ -98,15 +98,19 @@ public class ReportController {
 	   
     	
 	    ObjectMapper objectMapper = new ObjectMapper();
-	    if(reportType.equals("activity")) {
 	    List<Map<String, Object>> assesmentReportData = reportService.getAssesmentData(reportType, fromDate,toDate,activityId,resourceValue);
 	    System.err.println(assesmentReportData);
 	    return objectMapper.writeValueAsString(assesmentReportData);
-	    }else {
-	    	  List<Map<String, Object>> assesmentReportData = reportService.getAssesmentData(reportType, fromDate,toDate,activityId,resourceValue);
-	  	    System.err.println(assesmentReportData);
-	  	    return objectMapper.writeValueAsString(assesmentReportData);
-	    }
+	    
+//	    if(reportType.equals("activity")) {
+//	    List<Map<String, Object>> assesmentReportData = reportService.getAssesmentData(reportType, fromDate,toDate,activityId,resourceValue);
+//	    System.err.println(assesmentReportData);
+//	    return objectMapper.writeValueAsString(assesmentReportData);
+//	    }else {
+//	    	  List<Map<String, Object>> assesmentReportData = reportService.getAssesmentData(reportType, fromDate,toDate,activityId,resourceValue);
+//	  	    System.err.println(assesmentReportData);
+//	  	    return objectMapper.writeValueAsString(assesmentReportData);
+//	    }
 //	    else {
 //	    	JSONArray allDetails = reportService.getAttendanceDataSummary(reportType, fromDate,toDate,activityId,resourceValue);
 //	    	return allDetails.toString();

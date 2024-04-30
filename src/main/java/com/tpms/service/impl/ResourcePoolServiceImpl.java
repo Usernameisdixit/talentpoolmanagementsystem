@@ -9,12 +9,18 @@ import java.util.ArrayList;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.tpms.dto.PageResponse;
 import com.tpms.dto.ResourcePoolHistoryDto;
 import com.tpms.entity.ResourcePool;
 import com.tpms.entity.ResourcePoolHistory;
@@ -204,10 +210,22 @@ public class ResourcePoolServiceImpl {
 
 	}
 
-	public List<ResourcePool> getAllEmploye() {
+	public PageResponse<ResourcePool> getAllEmploye(int pageNumber, int pageSize) {
 
 		List<ResourcePool> tbl_resource_pool = new ArrayList<>();
-		tbl_resource_pool = tbl_resource_pool_Repository.findAllByDeletedFlag();
+		Pageable pageable=PageRequest.of(pageNumber-1, pageSize,Sort.by("resourceName"));
+		Page<ResourcePool> page=tbl_resource_pool_Repository.findAllByDeletedFlag(pageable);
+		
+		tbl_resource_pool =page.getContent(); 
+//		List<ResourcePool> sortedList=tbl_resource_pool.stream().sorted((a,b)->a.getResourceName()
+//				.compareTo(b.getResourceName())).collect(Collectors.toList());
+		PageResponse<ResourcePool> pageResponse=new PageResponse<ResourcePool>();
+		pageResponse.setContent(tbl_resource_pool);
+		pageResponse.setPageSize(page.getSize());
+		pageResponse.setTotalElements(page.getTotalElements());
+		pageResponse.setTotalPages(page.getTotalPages());
+		pageResponse.setLast(page.isLast());
+
 		List<ResourcePoolHistoryDto> tbl_resource_pooldto = new ArrayList<>();
 		List<Object[]> tbl_resource_poolfindMinMax = tbl_resource_pool_Repository_history.MinMaxAllocationDate();
 
@@ -227,7 +245,7 @@ public class ResourcePoolServiceImpl {
 				}
 			}
 		}
-		return tbl_resource_pool;
+		return pageResponse;
 
 	}
 

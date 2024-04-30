@@ -1,14 +1,16 @@
 package com.tpms.repository;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.tpms.dto.PageResponse;
 import com.tpms.dto.ResourcePoolProjection;
 import com.tpms.entity.ResourcePool;
 
@@ -50,7 +52,7 @@ public interface ResourcePoolRepository extends JpaRepository<ResourcePool, Inte
 	List<ResourcePoolProjection> findAllWithoutRelatedEntity();
 
 	 @Query(value = "SELECT * FROM resource_pool rp WHERE rp.deletedFlag = 0", nativeQuery = true)
-	    List<ResourcePool> findAllByDeletedFlag();
+	    Page<ResourcePool> findAllByDeletedFlag(Pageable pageable);
 	 
 	 @Query(value="select COUNT(*) from resource_pool_history where allocationDate= :allocationDate and deletedFlag=0 ",nativeQuery = true)
 		Integer findAllActiveResource(String allocationDate);
