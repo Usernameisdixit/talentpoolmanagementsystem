@@ -287,8 +287,8 @@ export class AsessmentdetailsComponent implements OnInit {
 
    if (!errorFlag) {
       Swal.fire({
-        title: this.status==='s'?'Do you want to save?':'Do you want to update?',
-        icon: 'question',
+        title: this.status==='s'?'Do you want to submit?':'Do you want to update?',
+        icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes',
         cancelButtonText: 'No',
