@@ -38,11 +38,11 @@
       </thead>
   <tbody>
   <tr *ngFor="let c of talent | paginate :{
-    itemsPerPage : tableSize,
-    currentPage : page ,
-    totalItems: count
+    itemsPerPage : pageSize,
+    currentPage : currentPage ,
+    totalItems: totalElements
     }; let i = index" class="text-align:center">
-  <td><!--{{c.resourceId}}-->{{ (page - 1) * tableSize + i + 1 }}</td>
+  <td><!--{{c.resourceId}}-->{{ (currentPage - 1) * pageSize + i + 1 }}</td>
   <td>{{c.resourceCode}}</td>
   <td>{{c.resourceName}}</td>
   <td>{{c.designation}}</td>
