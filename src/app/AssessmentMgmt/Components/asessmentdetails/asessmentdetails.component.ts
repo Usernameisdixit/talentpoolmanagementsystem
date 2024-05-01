@@ -34,6 +34,8 @@ export class AsessmentdetailsComponent implements OnInit {
   assessments: any[];
   assessmentsExist: any[];
   assessmentDtos: AssessmentDto[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
   assessmentDate: Date;
   detailsRetrieved: boolean = false;
   activities: any[]; 
@@ -47,13 +49,6 @@ export class AsessmentdetailsComponent implements OnInit {
   dateRanges: string[] = [];
   selectedDateRange: string = '';
   fieldValuesList: any[][]=[];
-
-  currentPage: number = 1;
-  pageSize: number;
-  totalPages: number[] = [];  
-  totalElements: number = 0;
-
-  currentPage1: number = 1;
    
 
   constructor(private http: HttpClient, private datePipe: DatePipe, private apiService: AssessmentserviceService,private route:Router) {
@@ -70,7 +65,6 @@ export class AsessmentdetailsComponent implements OnInit {
     this.fetchFromToDate();
   
   }
-  
 
   fetchFromToDate(): void {
     this.apiService.getFromToDate().subscribe(
@@ -134,7 +128,8 @@ export class AsessmentdetailsComponent implements OnInit {
  
 
   validateAndGetDetails() {
-  
+    this.page=1;
+    this.page1=1;
     if (!this.selectedActivity) {
       Swal.fire('All fields are required','', 'warning');
       return;
@@ -155,13 +150,10 @@ export class AsessmentdetailsComponent implements OnInit {
       .subscribe((result: boolean) => {
         if (result) {
           this.showAssessmentTable = !this.showAssessmentTable;     
-          this.apiService.getAssessmentDetails(this.selectedActivity, formattedFromDate, formattedToDate,this.currentPage1)
-            .subscribe((data: any) => {
+          this.apiService.getAssessmentDetails(this.selectedActivity, formattedFromDate, formattedToDate)
+            .subscribe((data: any[]) => {
               console.log(data);
-              this.assessmentsExist = data.content;
-              this.totalPages = Array.from({ length: data.totalPages }, (_, i) => i + 1); // Create array of page numbers
-              this.totalElements = data.totalElements;
-              this.pageSize=data.pageSize;
+              this.assessmentsExist = data;
               data.forEach(obj => {
                this.assessmentDate = new Date(obj[11]);
                this.totalMarks = obj[8];
@@ -181,14 +173,12 @@ export class AsessmentdetailsComponent implements OnInit {
         } else {
           this.showActivityTable = !this.showActivityTable;
           
-          this.apiService.getActivityDetails(this.selectedActivity, formattedFromDate, formattedToDate,this.currentPage)
-            .subscribe((data: any) => {
+          this.apiService.getActivityDetails(this.selectedActivity, formattedFromDate, formattedToDate)
+            .subscribe((data: any[]) => {
               console.log(data);
               
-              this.assessments = data.content;
-              this.totalPages = Array.from({ length: data.totalPages }, (_, i) => i + 1); // Create array of page numbers
-              this.totalElements = data.totalElements;
-              this.pageSize=data.pageSize;
+              this.assessments = data;
+
               this.detailsRetrieved = true;
               this.assessmentDtos = this.mapAssessmentDtos(data);
               this.status='s';
@@ -371,7 +361,45 @@ updateTotalMarks(assessment: any): void {
   });
 }
 
-// Validation methods
+
+getTotalPages(): number {
+  return Math.ceil(this.assessments.length / this.itemsPerPage);
+}
+
+// Get assessments for the current page
+getCurrentPageAssessments(): any[] {
+  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  const endIndex = startIndex + this.itemsPerPage;
+  return this.assessments.slice(startIndex, endIndex);
+}
+
+// Go to previous page
+goToPreviousPage(): void {
+  if (this.currentPage > 1) {
+    this.currentPage--;
+  }
+}
+
+// Go to next page
+goToNextPage(): void {
+  if (this.currentPage < this.getTotalPages()) {
+    this.currentPage++;
+  }
+}
+
+// Go to specific page
+goToPage(pageNumber: number): void {
+  if (pageNumber >= 1 && pageNumber <= this.getTotalPages()) {
+    this.currentPage = pageNumber;
+  }
+}
+
+getPageNumbers(): number[] {
+  return Array.from({ length: this.getTotalPages() }, (_, index) => index + 1);
+}
+  
+
+
  validTotalMark(): void {
      if(this.totalMarks>100 || this.totalMarks<0){
         Swal.fire({
@@ -439,13 +467,6 @@ validateSecuredMarks(assessment: any): void {
       });
       assessment.marks='';
     }
-
-    if(assessment.marks < 0){
-      Swal.fire({
-        title: 'Secured marks should not be less than 0',
-      });
-      assessment.marks='';
-    }
   }
   else{
     if (assessment[9] > assessment[8]) {
@@ -453,12 +474,6 @@ validateSecuredMarks(assessment: any): void {
         title: 'Secured marks should not be greater than total marks.',
       });
       assessment[9] = '';
-    }
-    if(assessment[9] < 0){
-      Swal.fire({
-        title: 'Secured marks should not be less than 0',
-      });
-      assessment[9]='';
     }
   }
 }
@@ -481,16 +496,27 @@ getMonthIndex(month: string): number {
 
 
  // for pagination
- 
+ indexNumber : number = 0;
+ page : number = 1;
+ tableSize : number = 10;
+ count : number = 0;
+
 getTableDataChange(event : any , details : any[]){
- this.currentPage = event;
- this.validateAndGetDetails();
+ this.page = event;
+ this.indexNumber = (this.page - 1) * this.tableSize;
+ this.assessments=details;
  
 }
 
+indexNumber1 : number = 0;
+ page1 : number = 1;
+ tableSize1 : number = 10;
+ count1 : number = 0;
 getTableDataChange1(event : any , details : any[]){
-  this.currentPage1 = event;
-  this.validateAndGetDetails();
+  this.page1 = event;
+  this.indexNumber1 = (this.page1 - 1) * this.tableSize1;
+ 
+  this.assessmentsExist=details;
   
  }
 
