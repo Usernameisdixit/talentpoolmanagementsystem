@@ -53,6 +53,11 @@
                                 attendanceDetails[0]?.firstHalf[0]?.fromHours }} to {{
                                 attendanceDetails[0]?.firstHalf[0]?.toHours }}
                             </span>
+                            <span *ngIf="attendanceDetails[0]?.firstHalf[0]?.activityFor === '3'">
+                                <b>Activity: </b> Full Day &nbsp;&nbsp; <b>Time: </b> {{
+                                attendanceDetails[0]?.firstHalf[0]?.fromHours }} to {{
+                                attendanceDetails[0]?.firstHalf[0]?.toHours }}
+                            </span>
                         </div>
 
                         <table>

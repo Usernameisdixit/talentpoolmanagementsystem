@@ -39,15 +39,15 @@
             let activity of activities
               | paginate
                 : {
-                    itemsPerPage: tableSize,
-                    currentPage: pageno,
-                    totalItems: count
+                    itemsPerPage: pageSize,
+                    currentPage: currentPage,
+                    totalItems: totalElements
                   };
             let i = index
           "
           (click)="setActiveActivity(activity, i)"
         >
-          <td>{{ (pageno - 1) * tableSize + i + 1 }}</td>
+          <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
           <!-- <td>{{ activity.activityRefNo }}</td> -->
           <td>{{ activity.activityName }}</td>
           <td>{{ activity.description }}</td>
