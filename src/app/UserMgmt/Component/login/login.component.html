@@ -15,7 +15,7 @@
                                 <div class="error-container" style="text-align: center">
                                     <div *ngIf="errorMessage" class="error-message" style="color: red;">{{ errorMessage }}</div>
                                 </div>
-                                <form>
+                                <form (keyup.enter)="onSubmit()">
                                     <mat-form-field class="full-width">
                                         <mat-label>Username</mat-label>
                                         <input [(ngModel)]="credentials.username" required type="text" name="username" matInput class="input-with-hover">

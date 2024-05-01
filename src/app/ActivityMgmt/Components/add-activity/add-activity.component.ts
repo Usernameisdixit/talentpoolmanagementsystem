@@ -47,6 +47,7 @@ export class AddActivityComponent {
     }else{
       reqActivityName= this.myControl.value;
     }
+    reqActivityName = reqActivityName.charAt(0).toUpperCase() + reqActivityName.slice(1);
     const data = {
       activityName: reqActivityName,
       description:this.activity.description,

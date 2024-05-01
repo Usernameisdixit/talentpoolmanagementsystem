@@ -97,13 +97,13 @@
                 
                 <tbody>
                     <ng-container *ngFor="let assessment of assessments | paginate :{
-                        itemsPerPage : pageSize,
-                        currentPage : currentPage ,
-                        totalItems: totalElements
+                        itemsPerPage : tableSize,
+                        currentPage : page ,
+                        totalItems: count
                         }; let i = index;">                          
                       
                             <tr>
-                                <td>{{ (currentPage - 1) * pageSize + i + 1 }}</td>
+                                <td>{{ (page - 1) * tableSize + i + 1 }}</td>
                                 <td >{{assessment[2] }}</td>
                                 <td >{{assessment[3] }}</td>
                                 <td >{{assessment[4]}}</td>
@@ -151,13 +151,13 @@
                 
                 <tbody>
                     <ng-container *ngFor="let assessment of assessmentsExist | paginate :{
-                        itemsPerPage : pageSize,
-                        currentPage : currentPage1 ,
-                        totalItems: totalElements
+                        itemsPerPage : tableSize1,
+                        currentPage : page1 ,
+                        totalItems: count1
                         }; let i = index;">                          
                       
                             <tr>
-                                <td>{{ (currentPage1 - 1) * pageSize + i + 1 }}</td>
+                                <td>{{ (page1 - 1) * tableSize1 + i + 1 }}</td>
                                 <td >{{assessment[2] }}</td>
                                 <td >{{assessment[3] }}</td>
                                 <td >{{assessment[4]}}</td>
