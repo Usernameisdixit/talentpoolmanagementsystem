@@ -44,10 +44,14 @@ export class AddActivityComponent {
     let reqActivityName='';
     if (typeof this.myControl.value === 'object' && this.myControl.value !=null) {
         reqActivityName= this.myControl.value.name;
+        reqActivityName = reqActivityName.charAt(0).toUpperCase() + reqActivityName.slice(1);
     }else{
       reqActivityName= this.myControl.value;
+      if(this.myControl.value!=null){
+      reqActivityName = reqActivityName.charAt(0).toUpperCase() + reqActivityName.slice(1);
+      }
     }
-    reqActivityName = reqActivityName.charAt(0).toUpperCase() + reqActivityName.slice(1);
+   
     const data = {
       activityName: reqActivityName,
       description:this.activity.description,
@@ -64,9 +68,6 @@ export class AddActivityComponent {
     }
     else if (data.responsPerson1=='') {
       Swal.fire("Please enter the response person1");
-    }
-    else if (data.responsPerson2=='') {
-      Swal.fire("Please enter the response person2");
     }else{    
       Swal.fire({
         title: 'Do you want to submit?',
