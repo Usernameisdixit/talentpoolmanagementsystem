@@ -29,14 +29,22 @@ export class ActivityListComponent implements OnInit {
     private router: Router
   ) {}
 
+  currentPage: number = 1;
+  pageSize: number;
+  totalPages: number[] = [];
+  totalElements: number = 0;
+
   ngOnInit(): void {
     this.retrieveActivities();
   }
 
   retrieveActivities(): void {
-    this.activityService.getAll().subscribe({
-      next: (data) => {
-        this.activities = data;
+    this.activityService.getAll(this.currentPage).subscribe({
+      next: (data:any) => {
+        debugger;
+        this.activities = data.content;
+        this.totalElements = data.totalElements;
+        this.pageSize=data.pageSize;
         console.log('Retrieved activities:', this.activities);
         // this.setPage(this.currentPage);
 
@@ -233,18 +241,12 @@ export class ActivityListComponent implements OnInit {
   //   });
   // }
 
-  // for pagination
-  indexNumber: number = 0;
-  pageno: number = 1;
-  tableSize: number = 10;
-  count: number = 0;
-  pageSizes = [10, 20, 30, 40, 50];
 
   //pagination functionality
   getTableDataChange(event: any) {
-    this.pageno = event;
-    this.indexNumber = (this.pageno - 1) * this.tableSize;
-    console.log(this.indexNumber);
+    this.currentPage = event;
+    // this.indexNumber = (this.pageno - 1) * this.tableSize;
+    // console.log(this.indexNumber);
 
     this.retrieveActivities();
   }
