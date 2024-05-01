@@ -23,8 +23,8 @@ const activityCheck='http://localhost:9999/tpms/activityCheck';
 export class ActivityService {
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<Activity[]> {
-    return this.http.get<Activity[]>(baseUrl);
+  getAll(pageNumber:number): Observable<Activity[]> {
+    return this.http.get<Activity[]>(`${baseUrl}?pageNumber=${pageNumber}`);
   }
 
   getAllActivity(value: string): Observable<any[]> {

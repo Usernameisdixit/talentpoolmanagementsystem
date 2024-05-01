@@ -54,7 +54,7 @@
             <div class="form-group">
                 <label for="date">Resorce: <span class="required">*</span></label>
                 <div class="input-group">
-                    <input id="date" class="form-control" type="text" matInput [formControl]="myControl"
+                    <input id="date" class="form-control" type="text" matInput [formControl]="myControl" (click)="getResourNamesforReportActivityOnClick()"
                         [matAutocomplete]="auto" />
                     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                         <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
