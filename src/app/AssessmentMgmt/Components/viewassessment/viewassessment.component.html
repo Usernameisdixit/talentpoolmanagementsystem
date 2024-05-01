@@ -8,7 +8,6 @@
         <div class="form-group">
           <label for="assessmentDate">Assessment Date:</label>
           <select id="assessmentDate" class="form-control" [(ngModel)]="assessmentDate" (change)="onDateSelected()">
-            <option value="" select="selected">Select</option>
             <option *ngFor="let date of assessmentDateArr" [ngValue]="date">
               {{ date | date:'dd-MMM-yyyy' }}
             </option>
