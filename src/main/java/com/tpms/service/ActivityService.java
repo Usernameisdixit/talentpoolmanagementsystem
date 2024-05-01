@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.json.JSONArray;
 
+import com.tpms.dto.PageResponse;
 import com.tpms.dto.ResourcePoolProjection;
 import com.tpms.entity.Activity;
 import com.tpms.entity.ActivityAllocation;
@@ -16,7 +17,7 @@ public interface ActivityService {
 	
 	public Activity SaveActivity(Activity activity);
 	
-	public List<Activity> getAllActivities();
+	public PageResponse<Activity> getAllActivities(Integer pageNumber,Integer pageSize);
 	
     public Activity getActivityById(Integer intactivityid);
     

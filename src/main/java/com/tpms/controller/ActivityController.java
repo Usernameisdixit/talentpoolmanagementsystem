@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tpms.dto.PageResponse;
 import com.tpms.dto.ResourcePoolProjection;
 import com.tpms.entity.Activity;
 import com.tpms.entity.ActivityAllocation;
@@ -46,8 +47,12 @@ public class ActivityController {
 	ActivityRepository activityRepository;
 
 	@GetMapping("/get/activity")
-	public List<Activity> getAllActivities() {
-		return activityServiceImpl.getAllActivities();
+	public ResponseEntity<PageResponse<Activity>> getAllActivities(
+			@RequestParam(defaultValue = "1") Integer pageNumber) {
+		
+	PageResponse<Activity> actvityDetails=activityServiceImpl.getAllActivities(pageNumber,10);
+	
+	return ResponseEntity.ok(actvityDetails);
 
 	}
 
