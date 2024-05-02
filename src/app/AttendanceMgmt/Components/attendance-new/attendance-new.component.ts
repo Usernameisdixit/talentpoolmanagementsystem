@@ -184,11 +184,11 @@ export class AttendanceNewComponent {
           this.attendanceNewService.submitAttendance(this.attendanceDetails, this.selectedDate.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })).subscribe(
             (response: any) => {
               if (response.success === 'Attendance Save Succesfully' && this.status === 's') {
-                Swal.fire('Attendance saved successfully!', '', 'success');
+                Swal.fire('Attendance submitted successfully!', '', 'success');
                 this.status = 'u';
                 this.uncheckCheckboxStatus[this.page - 1] = true;
               } else if (response.success === 'Attendance Save Succesfully' && this.status === 'u') {
-                Swal.fire('Attendance update successfully!', '', 'success');
+                Swal.fire('Attendance updated successfully!', '', 'success');
                 this.uncheckCheckboxStatus[this.page - 1] = true;
               }
               else {

@@ -30,6 +30,7 @@ export class AssessmentreportComponent {
   options1: User[] = [];
   filteredOptions: Observable<User[]>;
   resourceValue: any;
+  hr:string="";
 
   constructor(private localeService: BsLocaleService, private assesmentService: AssesmentService, private reportAttendanceService: ReportAttendanceService) {
     this.bsConfig = {
@@ -103,6 +104,22 @@ export class AssessmentreportComponent {
       }
     });
   }
+
+  getResourNamesforReportActivityOnClick() {
+    
+    this.reportAttendanceService.getResource(this.hr).subscribe(data => {
+      this.options1 = data.map(name => ({ name }));
+      
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map(value => {
+          const name = typeof value === 'string' ? value : (value as User)?.name;
+          return name ? this._filter(name as string) : this.options1.slice();
+        }),
+      );
+    });
+  
+}
 
   private _filter(name: string): User[] {
     const filterValue = name.toLowerCase();

@@ -279,7 +279,7 @@ export class ActivitynewreportserviceService {
         t: 's',
       };
       ws['B5'] = {
-        v: `Designamtion:  ${attendanceData[0]?.designation}`,
+        v: `Designation:  ${attendanceData[0]?.designation}`,
         t: 's',
       };
     }

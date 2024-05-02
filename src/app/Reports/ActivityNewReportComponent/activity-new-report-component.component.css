@@ -1,5 +1,6 @@
 .button-space {
-    margin-right: 10px; /* Adjust the margin as needed */
+    margin-left: 10px; /* Adjust the value as needed for the desired space */
+    display: inline-block;
 }
 
 .required {
