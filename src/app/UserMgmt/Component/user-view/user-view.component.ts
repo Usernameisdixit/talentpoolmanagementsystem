@@ -136,17 +136,19 @@ export class UserViewComponent {
 
 // export to pdf
 exportToPDF() {
+  debugger;
   const doc = new jsPDF();
   const pageTitle = 'User Details';
-
-  this.userService.getUserDetails(this.currentPage).
+let slNo=1;
+  this.userService.getUserDetails(0).
     pipe(
        map((data: any[]) => {
              return data.map(user => [
-               user.userId, user.userFullName, user.userName, user.role.roleName, user.email, user.phoneNo
+               slNo++,user.userFullName, user.userName, user.role.roleName, user.email, user.phoneNo
             ]);
         })
      ).subscribe((tableData) => {
+      debugger;
           const textWidth = doc.getTextDimensions(pageTitle).w;
           const pageWidth = doc.internal.pageSize.getWidth();
           const x = (pageWidth - textWidth) / 2;
@@ -165,11 +167,12 @@ exportToPDF() {
 // excel export work
   
 exportToExcel() {
-  this.userService.getUserDetails(this.currentPage).
+  let slNo=1;
+  this.userService.getUserDetails(0).
     pipe(
         map((data: any[]) => {
              return data.map(user => [
-                user.userId, user.userFullName, user.userName, user.role.roleName, user.email, user.phoneNo
+                slNo++, user.userFullName, user.userName, user.role.roleName, user.email, user.phoneNo
            ]);
         })
       ).subscribe((tableData) => {

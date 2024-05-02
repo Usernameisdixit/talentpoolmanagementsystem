@@ -101,7 +101,7 @@ export class BulkAllocationComponent {
     arr.push(row);
 
     Swal.fire({
-      title: 'Do you want to submit?',
+      title: 'Do you want to ' + (this.allocateId==null?'save':'update') + '?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes',
@@ -114,7 +114,7 @@ export class BulkAllocationComponent {
         this.allocationService.saveBulkAllocation(this.markedResources, data).subscribe((res) => {
           if(res.category == null) {
             Swal.fire(
-              'Activity allocation details has been saved successfully.','',
+              'Activity allocation has been ' + (this.allocateId==null?'saved':'updated') + ' successfully.','',
               'success'
             ).then(()=>{
               // const queryParams = {activityFromDate:this.selectedFromDate, activityToDate:this.selectedToDate};

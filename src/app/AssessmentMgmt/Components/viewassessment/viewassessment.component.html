@@ -8,7 +8,6 @@
         <div class="form-group">
           <label for="assessmentDate">Assessment Date:</label>
           <select id="assessmentDate" class="form-control" [(ngModel)]="assessmentDate" (change)="onDateSelected()">
-            <option value="" select="selected">Select</option>
             <option *ngFor="let date of assessmentDateArr" [ngValue]="date">
               {{ date | date:'dd-MMM-yyyy' }}
             </option>
@@ -71,7 +70,7 @@
                     <td>{{ assessment[4] }}</td>
                     <td>{{ assessment[5] }}</td>
                     <ng-container *ngIf="j === 0">
-                      <td [attr.rowspan]="group.rowspan">{{ calculateCumulativePercentage(group.assessments).get(assessment[0]) }}%</td>
+                      <td [attr.rowspan]="group.rowspan" >{{ calculateCumulativePercentage(group.assessments).get(assessment[0])!==0? calculateCumulativePercentage(group.assessments).get(assessment[0])+"%":""}}</td>
                     </ng-container>
                     
                   </tr>
