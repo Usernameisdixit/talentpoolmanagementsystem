@@ -1,5 +1,7 @@
 package com.tpms.service;
 
+import java.util.List;
+
 import org.springframework.http.HttpHeaders;
 
 import com.tpms.dto.PageResponse;
@@ -17,6 +19,8 @@ public interface UserService {
 	void deleteUserById(Integer intUserId, Boolean deletedFlag);
 
 	String getStatusOfDuplicacyCheck(String value, String colName);
+
+	List<User> getAllUsers();
 
 
 }
