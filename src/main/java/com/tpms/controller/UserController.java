@@ -3,6 +3,7 @@ package com.tpms.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,9 +69,15 @@ public class UserController {
 	}
 	
 	@GetMapping("/userList")
-	public ResponseEntity<PageResponse<User>> getUserList(
+	public ResponseEntity<?> getUserList(
 			@RequestParam(defaultValue = "1") Integer pageNumber){		
+		if(pageNumber==0) {
+			List<User> userList=userService.getAllUsers();
+			userList=userList.stream().sorted((a,b)->a.getUserFullName().compareTo(b.getUserFullName())).collect(Collectors.toList());
+			return ResponseEntity.ok().body(userList);
+		}
 	    PageResponse<User> userList = userService.getUserDetails(pageNumber, 10);
+	    
 		return ResponseEntity.ok().body(userList);
 	}
 	

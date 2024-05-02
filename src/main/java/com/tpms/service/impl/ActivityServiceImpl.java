@@ -20,9 +20,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.tpms.dto.PageResponse;
 import com.tpms.dto.ResourcePoolProjection;
 import com.tpms.entity.Activity;
 import com.tpms.entity.ActivityAllocation;
@@ -68,9 +73,18 @@ public class ActivityServiceImpl implements ActivityService {
     }
     
     
-    public List<Activity> getAllActivities()
+    public PageResponse<Activity> getAllActivities(Integer pageNumber,Integer pageSize)
     {
-    	 return activityRepository.findAll();
+    	Pageable pageable=PageRequest.of(pageNumber-1, pageSize);
+    	Page<Activity> page=activityRepository.findAll(pageable);
+    	List<Activity> activityDetails=page.getContent();
+    	PageResponse<Activity> pageResponse=new PageResponse<>();
+    	pageResponse.setContent(activityDetails);
+    	pageResponse.setPageSize(page.getSize());
+    	pageResponse.setTotalElements(page.getTotalElements());
+    	
+    	
+    	 return pageResponse;
     }
     
     
@@ -327,5 +341,7 @@ public class ActivityServiceImpl implements ActivityService {
 		}
 		return res;
 	}
+
+
 
 }

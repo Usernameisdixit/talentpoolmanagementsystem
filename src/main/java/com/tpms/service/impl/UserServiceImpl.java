@@ -86,6 +86,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public PageResponse<User> getUserDetails(int pageNumber, int pageSize) {
 	    Pageable pageable = PageRequest.of(pageNumber-1, pageSize,Sort.by("userFullName"));
+	   
 	    Page<User> page = userRepository.findAll(pageable);
 	    List<User> userList=page.getContent();
 	    PageResponse<User> pageResponse=new PageResponse<User>();
@@ -141,6 +142,12 @@ public class UserServiceImpl implements UserService{
 			result="Exist";
 		
 		return result;
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		List<User> userList=userRepository.findAll();
+		return userList;
 	}
 
 }
