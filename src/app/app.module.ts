@@ -168,7 +168,7 @@ defineLocale('en-gb', enGbLocale); //
         "http://localhost:9999/tpms/allResourceName",
         "http://localhost:9999/tpms/getActivityOnFromTo",
         "http://localhost:9999/tpms/getRoleDetails",
-        "http://localhost:9999/tpms/activityByDate",
+        // "http://localhost:9999/tpms/activityByDate",
         "http://localhost:9999/tpms/getActivities",
         "http://localhost:9999/tpms/duplicateCheck/",
         
