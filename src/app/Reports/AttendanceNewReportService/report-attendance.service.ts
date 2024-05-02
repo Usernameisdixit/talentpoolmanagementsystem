@@ -173,7 +173,7 @@ export class ReportAttendanceService {
   private getActivityData(detail: any): string {
     let activityData = '';
     detail.activityAttenDetails.forEach((firstHalfObj, index, array) => {
-      activityData += `${firstHalfObj.attendanceStatus} : ${firstHalfObj.activityFor === '1' ? '1st half' : '2nd half'}`;
+      activityData += `${firstHalfObj.attendanceStatus}`;
       if (index < array.length - 1) {
         activityData += '\n';
       }

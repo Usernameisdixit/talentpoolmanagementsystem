@@ -88,9 +88,7 @@ export class ActivityDetailsComponent implements OnInit {
       Swal.fire('Please enter the description!');
     } else if (this.currentActivity.responsPerson1 == '') {
       Swal.fire('Please enter the respons person1!');
-    } else if (this.currentActivity.responsPerson2 == '') {
-      Swal.fire('Please enter the response person2!');
-    } else {
+    }else {
       Swal.fire({
         title: 'Do you want to update?',
         icon: 'warning',
