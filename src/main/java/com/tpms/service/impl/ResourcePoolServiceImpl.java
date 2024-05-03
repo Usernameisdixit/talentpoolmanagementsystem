@@ -295,6 +295,26 @@ public class ResourcePoolServiceImpl {
 
 	public List<ResourcePool> getAllResources() {
 		List<ResourcePool> resourceList=tbl_resource_pool_Repository.findAll();
+		
+		List<ResourcePoolHistoryDto> tbl_resource_pooldto = new ArrayList<>();
+		List<Object[]> tbl_resource_poolfindMinMax = tbl_resource_pool_Repository_history.MinMaxAllocationDate();
+
+		for (Object[] ob : tbl_resource_poolfindMinMax) {
+			ResourcePoolHistoryDto rgdt = new ResourcePoolHistoryDto();
+			rgdt.setResourceCode(ob[0].toString());
+			rgdt.setResourceName(ob[1].toString());
+			String Dur = DateUtils.monthDayDifference(ob[2].toString(), ob[3].toString());
+			rgdt.setDuration(Dur);
+			tbl_resource_pooldto.add(rgdt);
+		}
+
+		for (ResourcePool resource : resourceList) {
+			for (ResourcePoolHistoryDto resourcedto : tbl_resource_pooldto) {
+				if (resource.getResourceCode().equalsIgnoreCase(resourcedto.getResourceCode())) {
+					resource.setDuration(resourcedto.getDuration());
+				}
+			}
+		}
 		return resourceList;
 	}
 
