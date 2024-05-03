@@ -22,6 +22,7 @@ export class UserViewComponent {
   currentPage: number = 1;
   pageSize: number;
   totalPages: number[] = [];  totalElements: number = 0;
+  viewUserDetails: any;
   
   constructor(private userService:UserService,private route:Router){}
 
@@ -48,6 +49,11 @@ export class UserViewComponent {
     (error)=>{
       console.log(error);
       
+    });
+
+    //for pdf and excel.....
+    this.userService.getUserDetails(0).subscribe((data: any) => {
+      this.viewUserDetails = data;
     });
   }
 
@@ -136,19 +142,11 @@ export class UserViewComponent {
 
 // export to pdf
 exportToPDF() {
-  debugger;
-  const doc = new jsPDF();
-  const pageTitle = 'User Details';
-let slNo=1;
-  this.userService.getUserDetails(0).
-    pipe(
-       map((data: any[]) => {
-             return data.map(user => [
-               slNo++,user.userFullName, user.userName, user.role.roleName, user.email, user.phoneNo
-            ]);
-        })
-     ).subscribe((tableData) => {
-      debugger;
+          debugger;
+          const doc = new jsPDF();
+          const tableData = this.getTableData();
+          const pageTitle = 'User Details';
+
           const textWidth = doc.getTextDimensions(pageTitle).w;
           const pageWidth = doc.internal.pageSize.getWidth();
           const x = (pageWidth - textWidth) / 2;
@@ -160,30 +158,35 @@ let slNo=1;
               margin: { top: 15 }
             });
           doc.save('users-details.pdf');
-       });
+       
 }
+
+
+
+private getTableData(): any[] {
+  return this.viewUserDetails.map((user, index) => [
+    index + 1,
+    user.userFullName, user.userName, user.role.roleName, user.email, user.phoneNo
+
+  ]);
+
+}
+
 
 
 // excel export work
   
 exportToExcel() {
-  let slNo=1;
-  this.userService.getUserDetails(0).
-    pipe(
-        map((data: any[]) => {
-             return data.map(user => [
-                slNo++, user.userFullName, user.userName, user.role.roleName, user.email, user.phoneNo
-           ]);
-        })
-      ).subscribe((tableData) => {
-            const header = ['Sl.No', 'User Full Name', 'User Name', 'Role', 'Email', 'Phone No'];
-            tableData.unshift(header);
-            const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
-            const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-            const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-            this.saveAsExcelFile(excelBuffer, 'user-details');
 
-        });
+    const tableData = this.getTableData();
+
+    const header = ['Sl.No', 'User Full Name', 'User Name', 'Role', 'Email', 'Phone No'];
+    tableData.unshift(header);
+    const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
+    const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    this.saveAsExcelFile(excelBuffer, 'user-details');
+
   }
 
     
