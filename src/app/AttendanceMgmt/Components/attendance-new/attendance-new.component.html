@@ -30,13 +30,13 @@
                         <ng-container *ngIf="activity.activityFor === 1"> (First Half)</ng-container>
                         <ng-container *ngIf="activity.activityFor === 2"> (Second Half)</ng-container>
                         <ng-container *ngIf="activity.activityFor !== 1 && activity.activityFor !== 2">
-                            (Both)</ng-container>
+                            (Full Day)</ng-container>
                     </option>
                 </select>
             </div>
         </div>
         <hr class="mt-3">
-        <div class="container mt-4">
+        <!-- <div class="container mt-4"> -->
             <div class="row justify-content-start">
                 <div class="col-md-12">
                     <div class="container" *ngIf="isPresents">
@@ -58,6 +58,7 @@
                                 attendanceDetails[0]?.firstHalf[0]?.fromHours }} to {{
                                 attendanceDetails[0]?.firstHalf[0]?.toHours }}
                             </span>
+                            <span >hi</span>
                         </div>
 
                         <table>
@@ -126,5 +127,5 @@
                 </div>
             </div>
 
-        </div>
+        <!-- </div> -->
     </div>

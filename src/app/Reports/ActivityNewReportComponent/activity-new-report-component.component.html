@@ -64,12 +64,17 @@
     </div>
 </div>
 </div>
-<div class="row">
-    <div class="col-md-12 d-flex align-items-center justify-content-center mt-4">
+
+<div class="form-group mt-2" *ngIf="inputType === 'activity' && activities!=null && activities.length === 0" >
+    <span class="required">Note : No activity plan on this date range</span>
+</div>
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
         <button type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button>
         <!-- <button type="button" class="btn btn-success" (click)="generatePDF()">Generate PDF</button> -->
         <div class="button-space"></div>
-        <button type="button" class="btn btn-success button-space"  (click)="generateExcel()">Generate Excel</button>
+        <button type="button" class="btn btn-success"  (click)="generateExcel()">Generate Excel</button>
     </div>
 </div>
 

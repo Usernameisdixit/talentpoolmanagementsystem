@@ -18,6 +18,7 @@ import { DatePipe } from '@angular/common';
 export class TalentlistComponent implements OnInit {
 
   talent: any = [];
+  resourceDetails:any=[];
   delmsg: string = "";
   c: Talent[];
   duration: any = [];
@@ -42,6 +43,10 @@ export class TalentlistComponent implements OnInit {
       this.totalElements = response.totalElements;
       this.pageSize=response.pageSize;
     })
+    //for pdf and excel.....
+    this.service.getTalent(0).subscribe((data: Talent[]) => {
+      this.resourceDetails = data;
+    });
   }
 
   editalent(id: number) {
@@ -66,13 +71,18 @@ export class TalentlistComponent implements OnInit {
     this.getTalent();
   }
 
+  // private getResourcesForPDFAndExcel():void{
+  //   this.service.getTalent(0).subscribe((data: Talent[]) => {
+  //     this.resourceDetails = data;
+  //   });
+  // }
+
 
 
   exportToPDF() {
     const doc = new jsPDF();
-
+          
     const data = this.getTableData();
-
     // Add title centered
     const pageTitle = 'Talent Pool Resource Details';
     const textWidth = doc.getTextDimensions(pageTitle).w;
@@ -91,9 +101,8 @@ export class TalentlistComponent implements OnInit {
     doc.save('Talent_Pool_Resource_List.pdf');
   }
 
-  private getTableData(): any[][] {
-
-    return this.talent.map((c, index) => [
+  private getTableData(): any[] {
+    return this.resourceDetails.map((c, index) => [
       //c.resourceId
       index + 1,
       c.resourceName,
