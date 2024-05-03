@@ -293,4 +293,9 @@ public class ResourcePoolServiceImpl {
 		return tbl_resource_pool_Repository_history.getResourceDetailsWithFileNameR();
 	}
 
+	public List<ResourcePool> getAllResources() {
+		List<ResourcePool> resourceList=tbl_resource_pool_Repository.findAll();
+		return resourceList;
+	}
+
 }
