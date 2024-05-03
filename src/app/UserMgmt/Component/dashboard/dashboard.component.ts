@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { AssessmentserviceService } from 'src/app/AssessmentMgmt/Service/assessmentservice.service';
 import { ContactService } from 'src/app/ResourceMgmt/Services/contact.service';
 import { LoginService } from '../../Service/login.service';
+import { UserService } from '../../Service/user.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -39,7 +40,8 @@ export class DashboardComponent  implements OnInit{
 
   constructor(private  contactService:ContactService,private datePipe:DatePipe,
     private apiService: AssessmentserviceService,private loginService:LoginService,
-    private router:Router){
+    private router:Router,
+    private _userService:UserService){
 
       this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY',showWeekNumbers : false });
       
@@ -211,6 +213,8 @@ export class DashboardComponent  implements OnInit{
       };
       
       this.router.navigate(['/viewasessment'], navigationExtras);
+      this._userService.changeTitle("View Assessment");
+      localStorage.setItem("activeLink","View Assessment");
     }                         
   
     onviewActivity(): void{
@@ -286,6 +290,13 @@ export class DashboardComponent  implements OnInit{
     openDatepicker1():void{
 
       this.datepicker1.show();
+    }
+
+    onResourceView(){
+
+      this.router.navigate(['resourceHistory']);
+      this._userService.changeTitle("View Resource Log");
+      //localStorage.setItem("activeLink","Edit User");
     }
 
     

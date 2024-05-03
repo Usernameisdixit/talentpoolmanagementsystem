@@ -80,6 +80,8 @@ export class UserViewComponent {
   //edit user
   editUser(userId:any){
     this.route.navigate(["editUser/"+userId]);
+    this.userService.changeTitle("Edit User");
+    localStorage.setItem("activeLink","Edit User");
   }
 
   //active or inactive user
