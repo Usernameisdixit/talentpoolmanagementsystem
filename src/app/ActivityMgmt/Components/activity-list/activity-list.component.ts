@@ -91,7 +91,7 @@ export class ActivityListComponent implements OnInit {
 
   editActivity(intActivityId: string): void {
     this.getActivity(intActivityId);
-    this.router.navigate(['/activity', intActivityId]); // Navigate to the detail page for editing
+    this.router.navigate(['/activity', intActivityId]);
   }
 
   refreshList(): void {

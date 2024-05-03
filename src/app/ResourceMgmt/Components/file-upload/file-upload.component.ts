@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
+import { UserService } from 'src/app/UserMgmt/Service/user.service';
 
 
 @Component({
@@ -24,7 +25,8 @@ export class FileUploadComponent {
   formattedDate: string;
   fileError: string;
 
-  constructor(private http: HttpClient, private localeService: BsLocaleService, private datePipe: DatePipe,private route : Router) {
+  constructor(private http: HttpClient, private localeService: BsLocaleService, private datePipe: DatePipe,private route : Router,
+    private _userService:UserService) {
     this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY', showWeekNumbers : false });
     this.localeService.use('en-gb');
   }
@@ -94,6 +96,8 @@ export class FileUploadComponent {
           title: 'Resource allocated successfully'
         });
         this.route.navigateByUrl('/talents');
+        this._userService.changeTitle("View Resources");
+        localStorage.setItem("activeLink","View Resources");
         this.selectedFile = null;
         this.allocationDate = null;
         this.isUploading = false;

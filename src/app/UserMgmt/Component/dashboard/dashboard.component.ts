@@ -185,6 +185,8 @@ export class DashboardComponent  implements OnInit{
       selectedDate=this.datePipe.transform(selectedDate,'yyyy-MM-dd')
     this.loginService.setSelectedActivityName(activityName,selectedDate);
     this.router.navigate(['takeAtten']);
+    this._userService.changeTitle("Attendance Management");
+    localStorage.setItem("activeLink","Attendance Management");
     
     }
     // attendance data for dashboard modal
@@ -292,11 +294,11 @@ export class DashboardComponent  implements OnInit{
       this.datepicker1.show();
     }
 
-    onResourceView(){
+    onViewResource(){
 
       this.router.navigate(['resourceHistory']);
       this._userService.changeTitle("View Resource Log");
-      //localStorage.setItem("activeLink","Edit User");
+      localStorage.setItem("activeLink","View Resource Log");
     }
 
     

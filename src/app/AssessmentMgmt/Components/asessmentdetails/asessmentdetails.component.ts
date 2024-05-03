@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { DATE } from 'ngx-bootstrap/chronos/units/constants';
 import { DateRange } from 'src/app/Model/DateRange';
 import { NgModel } from '@angular/forms';
+import { UserService } from 'src/app/UserMgmt/Service/user.service';
 
 @Component({
   selector: 'app-asessmentdetails',
@@ -51,7 +52,8 @@ export class AsessmentdetailsComponent implements OnInit {
   fieldValuesList: any[][]=[];
    
 
-  constructor(private http: HttpClient, private datePipe: DatePipe, private apiService: AssessmentserviceService,private route:Router) {
+  constructor(private http: HttpClient, private datePipe: DatePipe, 
+    private apiService: AssessmentserviceService,private route:Router, private _userService:UserService) {
     this.bsConfig = {
       containerClass: 'theme-dark-blue',
       dateInputFormat: 'DD-MMM-YYYY',
@@ -319,6 +321,8 @@ export class AsessmentdetailsComponent implements OnInit {
                //  this.validateAndGetDetails();
                // location.reload();
                this.route.navigate(['viewasessment']);
+               this._userService.changeTitle("View Assessment");
+               localStorage.setItem("activeLink","View Assessment");
                 } else {
                   console.error('Unexpected response:', response);
                   Swal.fire('Failed to submit assessments','', 'error');
