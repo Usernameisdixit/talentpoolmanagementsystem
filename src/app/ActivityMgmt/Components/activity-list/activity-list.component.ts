@@ -103,7 +103,6 @@ export class ActivityListComponent implements OnInit {
     this.router.navigate(['/activity', intActivityId]);
     this._uerService.changeTitle("Edit Activity");
     localStorage.setItem('activeLink',"Edit Activity");
-
   }
 
   refreshList(): void {

@@ -8,6 +8,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { RouterModule, RouterEvent } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { UserService } from 'src/app/UserMgmt/Service/user.service';
 
 @Component({
   selector: 'app-talentlist',
@@ -23,7 +24,8 @@ export class TalentlistComponent implements OnInit {
   c: Talent[];
   duration: any = [];
   listData: any = [];
-  constructor(private service: ContactService, private router: Router, private datePipe: DatePipe) { }
+  constructor(private service: ContactService, private router: Router, private datePipe: DatePipe,
+    private _userService:UserService) { }
 
   currentPage: number = 1;
   pageSize: number;
@@ -51,6 +53,8 @@ export class TalentlistComponent implements OnInit {
 
   editalent(id: number) {
     this.router.navigate(["/editalent", id]);
+    this._userService.changeTitle("Edit Resource");
+    localStorage.setItem("activeLink","Edit Resource");
   }
 
   deletetalent(event: any, id: number) {

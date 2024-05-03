@@ -44,6 +44,7 @@ export class UserService {
     return this.http.get(duplicateCheckUrl+`${value}/${colName}`);
   }
   changeTitle(title:any){
+
      this.dataSubject.next(title);
   }
 
