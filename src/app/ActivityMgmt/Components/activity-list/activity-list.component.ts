@@ -8,6 +8,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { UserService } from 'src/app/UserMgmt/Service/user.service';
 
 @Component({
   selector: 'app-activity-list',
@@ -18,6 +19,7 @@ export class ActivityListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   // tutorials?: Tutorial[];
   activities?: Activity[];
+  activitiesdetails?: Activity[];
   currentActivity: Activity = {};
   currentIndex = -1;
   title = '';
@@ -26,7 +28,8 @@ export class ActivityListComponent implements OnInit {
 
   constructor(
     private activityService: ActivityService,
-    private router: Router
+    private router: Router,
+    private _uerService:UserService
   ) {}
 
   currentPage: number = 1;
@@ -41,7 +44,7 @@ export class ActivityListComponent implements OnInit {
   retrieveActivities(): void {
     this.activityService.getAll(this.currentPage).subscribe({
       next: (data:any) => {
-        debugger;
+
         this.activities = data.content;
         this.totalElements = data.totalElements;
         this.pageSize=data.pageSize;
@@ -51,6 +54,12 @@ export class ActivityListComponent implements OnInit {
         console.log(data);
       },
       error: (e) => console.error(e),
+    });
+
+
+    this.activityService.getAll(0).subscribe((data: any) => {
+
+      this.activitiesdetails = data;
     });
   }
 
@@ -91,7 +100,10 @@ export class ActivityListComponent implements OnInit {
 
   editActivity(intActivityId: string): void {
     this.getActivity(intActivityId);
-    this.router.navigate(['/activity', intActivityId]); // Navigate to the detail page for editing
+    this.router.navigate(['/activity', intActivityId]);
+    this._uerService.changeTitle("Edit Activity");
+    localStorage.setItem('activeLink',"Edit Activity");
+
   }
 
   refreshList(): void {
@@ -149,7 +161,6 @@ export class ActivityListComponent implements OnInit {
       head: [
         [
           'SL#',
-          'ActivityRefNo',
           'ActivityName',
           'ActivityDescription	',
           'ActivityResponsPerson1',
@@ -166,7 +177,7 @@ export class ActivityListComponent implements OnInit {
   }
   private getTableDataa(): any[][] {
     let serialNumber = 1;
-    return this.activities.map((c, index) => [
+    return this.activitiesdetails.map((c, index) => [
       serialNumber++,
       // c.activityRefNo,
       c.activityName,
@@ -181,16 +192,18 @@ export class ActivityListComponent implements OnInit {
   exportToExcel() {
     const tableData = this.getTableDataa();
 
-    const headerStyle = { bold: true };
-    const header = [
-      { v: 'SL#', s: headerStyle },
-      { v: 'ActivityRefNo', s: headerStyle },
-      { v: 'ActivityName', s: headerStyle },
-      { v: 'ActivityDescription', s: headerStyle },
-      { v: 'ActivityResponsPerson1', s: headerStyle },
-      { v: 'ActivityResponsPerson2', s: headerStyle },
-      { v: 'Status', s: headerStyle },
-    ];
+    let headerStyle = {
+      font: { bold: true }
+  };
+
+  const header = [
+    { v: 'SL#', s: headerStyle },
+    { v: 'ActivityName', s: headerStyle },
+    { v: 'ActivityDescription', s: headerStyle },
+    { v: 'ActivityResponsPerson1', s: headerStyle },
+    { v: 'ActivityResponsPerson2', s: headerStyle },
+    { v: 'Status', s: headerStyle },
+];
 
     tableData.unshift(header);
 
@@ -251,5 +264,5 @@ export class ActivityListComponent implements OnInit {
     this.retrieveActivities();
   }
 
-  
+
 }
