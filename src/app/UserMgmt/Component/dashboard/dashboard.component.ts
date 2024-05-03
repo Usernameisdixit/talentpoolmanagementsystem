@@ -41,7 +41,7 @@ export class DashboardComponent  implements OnInit{
     private apiService: AssessmentserviceService,private loginService:LoginService,
     private router:Router){
 
-      this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
+      this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY',showWeekNumbers : false });
       
     }
   ngOnInit(): void {
