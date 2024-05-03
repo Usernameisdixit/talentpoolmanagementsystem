@@ -67,10 +67,12 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "tpms:build:production"
+              "browserTarget": "tpms:build:production",
+              "host": "0.0.0.0"
             },
             "development": {
-              "browserTarget": "tpms:build:development"
+              "browserTarget": "tpms:build:development",
+              "host": "0.0.0.0"
             }
           },
           "defaultConfiguration": "development"

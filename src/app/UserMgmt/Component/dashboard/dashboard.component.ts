@@ -41,15 +41,15 @@ export class DashboardComponent  implements OnInit{
     private apiService: AssessmentserviceService,private loginService:LoginService,
     private router:Router){
 
-      this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY' });
+      this.bsConfig = Object.assign({}, { containerClass: 'theme-dark-blue', dateInputFormat: 'DD-MMM-YYYY',showWeekNumbers : false });
       
     }
   ngOnInit(): void {
     //throw new Error('Method not implemented.');
-    debugger;
+    
     this.maxDate=new Date();
     this.loginService.getAllocationDates().subscribe((response: any[]) => {
-      debugger;
+      
       //response=[];
       if(response.length==0){
         this.resources=null;
@@ -59,12 +59,12 @@ export class DashboardComponent  implements OnInit{
       //this.alDate.sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
       this.sendDateFromResource(this.alDate);
     });
-    debugger;
+    
     this.atnDate=this.datePipe.transform(new Date(), 'dd-MMM-yyyy');
 
     this.selectedDate=this.datePipe.transform(this.atnDate, 'dd-MMM-yyyy');
     this.loginService.getAttendance(this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd')).subscribe((response:any)=>{
-      debugger;
+      
       //response=[];
       if(response.length==0){
         this.attendanceData=null;
@@ -89,14 +89,19 @@ export class DashboardComponent  implements OnInit{
     //alert(curr);
     
     var curr = new Date;
-    var firstday = new Date(curr.setDate(curr.getDate() - curr.getDay()));
-    var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+6));
- 
+    console.log("curr"+curr);
+    
+    var firstday = new Date(curr.setDate(curr.getDate() - (curr.getDay()-1)));
+    var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+5));
+    console.log("firstDay"+firstday);
+    console.log("lastDay"+lastday);
+
     this.fromDate=this.datePipe.transform(firstday, 'dd-MMM-yyyy');
     this.toDate=this.datePipe.transform(lastday, 'dd-MMM-yyyy');
 
     this.loginService.gettotalActivitiesPlanned(this.datePipe.transform(firstday, 'yyyy-MM-dd'),this.datePipe.transform(lastday, 'yyyy-MM-dd')).subscribe((response: any) => {
     //response=0;
+  
       if(response==0)
       {
         this.ActivtiesPlanned=null;
@@ -126,7 +131,7 @@ export class DashboardComponent  implements OnInit{
   fetchAssessmentDates() {
     this.apiService.getAssessmentDates().subscribe(
       (dates: string[]) => {
-        debugger;        
+                
         //dates=[];
         if(dates.length===0)
         {
@@ -161,12 +166,12 @@ export class DashboardComponent  implements OnInit{
 
 //Dashboard->For Resource
   sendDateFromResource(alDate:string) {
-    debugger;
+    
     // Transform the parsed date into 'yyyy-MM-dd' format using datePipe
     const formattedDate = this.datePipe.transform(this.alDate, 'yyyy-MM-dd');
     this.loginService.setSelectedDate(formattedDate);
       this.loginService.getResources(formattedDate).subscribe((response: any) => {
-      debugger;
+      
       this.resources = response;
       console.log(this.resources); 
     });
@@ -174,7 +179,7 @@ export class DashboardComponent  implements OnInit{
 //Dashboard ->For Attendance
   sendActivityNameandDate(activityName: any,selectedDate:string) {
     //throw new Error('Method not implemented.');
-      debugger;
+      
       selectedDate=this.datePipe.transform(selectedDate,'yyyy-MM-dd')
     this.loginService.setSelectedActivityName(activityName,selectedDate);
     this.router.navigate(['takeAtten']);
@@ -182,9 +187,9 @@ export class DashboardComponent  implements OnInit{
     }
     // attendance data for dashboard modal
     getDateFromAttendanceDashboard(atnDate:string){
-      debugger;
+      
       this.loginService.getAttendance(this.datePipe.transform(atnDate, 'yyyy-MM-dd')).subscribe((response:any)=>{
-        debugger;
+        
         this.attendanceData=response;
         console.log(this.attendanceData);
         
@@ -250,7 +255,7 @@ export class DashboardComponent  implements OnInit{
    
 
     this.loginService.activityFromto(fromDate,toDate).subscribe((response: any) => {
-     // debugger;
+     // 
       this.ActivityData = response;
      // console.log(this.ActivityData); 
      // alert(this.ActivityData);
@@ -265,7 +270,7 @@ export class DashboardComponent  implements OnInit{
       //alert(toDate);
 
       this.loginService.gettotalActivitiesPlanned(fromDate,toDate).subscribe((response: any) => {
-        // debugger;
+       
          this.ActivtiesPlanned = response;
         // console.log(this.ActivityData); 
         // alert(this.ActivtiesPlanned);
