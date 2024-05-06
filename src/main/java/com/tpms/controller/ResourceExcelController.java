@@ -168,11 +168,16 @@ public class ResourceExcelController {
 	}
 
 	@GetMapping("/emp/getResourceList")
-	public PageResponse<ResourcePool> gettbl_resource_pool(@RequestParam(defaultValue = "1") Integer pageNumber){
+	public ResponseEntity<?> gettbl_resource_pool(@RequestParam(defaultValue = "1") Integer pageNumber){
 			
+		if(pageNumber==0) {
+			List<ResourcePool> resourceList=resourcepoolserviceimpl.getAllResources();
+			resourceList=resourceList.stream().sorted((a,b)->a.getResourceName().compareTo(b.getResourceName())).collect(Collectors.toList());
+		return ResponseEntity.ok(resourceList);
+		}
 	PageResponse<ResourcePool> resourceList=resourcepoolserviceimpl.getAllEmploye(pageNumber,10);
 	 
-	return resourceList;
+	return ResponseEntity.ok(resourceList);
 	}
 	
 	
