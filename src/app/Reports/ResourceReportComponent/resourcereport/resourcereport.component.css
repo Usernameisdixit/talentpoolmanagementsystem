@@ -1,0 +1,54 @@
+.export-buttons {
+    position: absolute;
+    top: -10px;
+    left: 900px;
+    right: 0;
+    display: flex;
+}
+
+/* Badge styling */
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+
+.status-active {
+  color: #28a745;
+}
+
+.status-inactive {
+  color: #dc3545;
+}
+
+  .export-buttons {
+  margin-top: 20px;
+}
+
+.export-btn {
+  margin-right: 10px;
+}
+
+.btn-medium {
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+.btn-light {
+  background-color: #f8f9fa;
+  color: #000;
+  border-color: #dee2e6;
+}
+
+.btn-light:hover {
+  background-color: #e2e6ea;
+  color: #000;
+}
+
+.button-container {
+  display: flex;
+}
+

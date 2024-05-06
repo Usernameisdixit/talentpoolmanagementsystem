@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ContactService } from '../../Services/contact.service';
 import { Talent } from 'src/app/Model/talent';
 import { Router } from '@angular/router';
 import jsPDF from 'jspdf';
@@ -8,24 +7,35 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { RouterModule, RouterEvent } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { UserService } from 'src/app/UserMgmt/Service/user.service';
+import { ResourcereportService } from '../../ResourceReportService/resourcereport.service';
 
 @Component({
-  selector: 'app-talentlist',
-  templateUrl: './talentlist.component.html',
-  styleUrls: ['./talentlist.component.css']
+  selector: 'app-resourcereport',
+  templateUrl: './resourcereport.component.html',
+  styleUrls: ['./resourcereport.component.css']
 })
-
-export class TalentlistComponent implements OnInit {
-
+export class ResourcereportComponent {
   talent: any = [];
-  resourceDetails:any=[];
   delmsg: string = "";
   c: Talent[];
   duration: any = [];
   listData: any = [];
-  constructor(private service: ContactService, private router: Router, private datePipe: DatePipe,
-    private _userService:UserService) { }
+ 
+// Deleting These Variables
+  inputType: string = 'activity';
+  selectedFromDate: Date = null;
+  selectedToDate: Date = null;
+  activity: string = '0';
+  auto: any;
+  activities: any[];
+  activitiesByUser: any[];
+  resourceValue: any;
+  hr:string="";
+
+
+
+
+  constructor(private router: Router, private datePipe: DatePipe, private resourcereportService: ResourcereportService) {}
 
   currentPage: number = 1;
   pageSize: number;
@@ -36,57 +46,39 @@ export class TalentlistComponent implements OnInit {
     this.getTalent();
   }
 
-
   getTalent() {
-    this.service.getTalent(this.currentPage).subscribe((response:any) => {
+    this.resourcereportService.getTalent(this.currentPage).subscribe((response:any) => {
       this.talent = response.content;
       //this.listData = JSON.parse(this.talent);
       //this.totalPages = Array.from({ length: response.totalPages }, (_, i) => i + 1); // Create array of page numbers
       this.totalElements = response.totalElements;
       this.pageSize=response.pageSize;
     })
-    //for pdf and excel.....
-    this.service.getTalent(0).subscribe((data: Talent[]) => {
-      this.resourceDetails = data;
+  }
+
+
+
+  getDetails(resource: any) {
+    console.log(typeof (resource.resourceCode));
+    this.resourcereportService.fetchDurations(resource.resourceCode).subscribe(data => {
+      this.duration = data;
+      console.log(data);
     });
   }
 
-  editalent(id: number) {
-    this.router.navigate(["/editalent", id]);
-    this._userService.changeTitle("Edit Resource");
-    localStorage.setItem("activeLink","Edit Resource");
-  }
 
-  deletetalent(event: any, id: number) {
-
-    if (window.confirm('Do you want to delete the resource from resource pool')) {
-      event.target.innerText = "Deleting....";
-      this.service.deleteByResourceNumber(id).subscribe(response => {
-        this.delmsg = response;
-        this.getTalent();
-      });
+    //pagination functionality
+    getTableDataChange(event: any) {
+      this.currentPage = event;
+      this.getTalent();
     }
-  }
-
-
-  //pagination functionality
-  getTableDataChange(event: any) {
-    this.currentPage = event;
-    this.getTalent();
-  }
-
-  // private getResourcesForPDFAndExcel():void{
-  //   this.service.getTalent(0).subscribe((data: Talent[]) => {
-  //     this.resourceDetails = data;
-  //   });
-  // }
-
-
+  
 
   exportToPDF() {
     const doc = new jsPDF();
-          
+
     const data = this.getTableData();
+
     // Add title centered
     const pageTitle = 'Talent Pool Resource Details';
     const textWidth = doc.getTextDimensions(pageTitle).w;
@@ -105,8 +97,9 @@ export class TalentlistComponent implements OnInit {
     doc.save('Talent_Pool_Resource_List.pdf');
   }
 
-  private getTableData(): any[] {
-    return this.resourceDetails.map((c, index) => [
+  private getTableData(): any[][] {
+
+    return this.talent.map((c, index) => [
       //c.resourceId
       index + 1,
       c.resourceName,
@@ -156,18 +149,10 @@ export class TalentlistComponent implements OnInit {
     const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     this.saveAsExcelFile(excelBuffer, 'Talent_Pool_Resource_List');
   }
-
+   
   private saveAsExcelFile(buffer: any, fileName: string): void {
     const data: Blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
-  }
-
-  getDetails(resource: any) {
-    console.log(typeof (resource.resourceCode));
-    this.service.fetchDurations(resource.resourceCode).subscribe(data => {
-      this.duration = data;
-      console.log(data);
-    });
   }
 
   calculateDuration(startDate: string, endDate: string): number {
@@ -183,5 +168,31 @@ export class TalentlistComponent implements OnInit {
     const currentDate = new Date();
     return allocationDate < currentDate;
   }
+
+
+  generatePDF(resource: any) {
+    console.log(typeof (resource.resourceCode));
+    this.resourcereportService.fetchDurations(resource.resourceCode).subscribe(data => {
+      this.duration = data;
+      this.resourcereportService.generateResourceReportPdf(data, this.talent);
+      console.log(data);
+    });
+  }
+
+    generateExcel(resource: any) {
+      console.log(typeof (resource.resourceCode));
+      this.resourcereportService.fetchDurations(resource.resourceCode).subscribe(data => {
+        this.duration = data;
+        this.resourcereportService.generateResourceReportPdf(data, this.talent);
+        console.log(data);
+        alert(data);
+      });
+     
+ 
+
+  }
+
+
+
 
 }

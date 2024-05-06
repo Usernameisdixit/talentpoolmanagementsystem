@@ -81,7 +81,7 @@ import { PlatformViewComponent } from './ResourceMgmt/Components/platform-master
 import { PlatformComponent } from './ResourceMgmt/Components/platform-master/platform/platform.component';
 import { HideIdInterceptor } from './HideIdInterceptor.service';
 import { ActivityNewReportComponentComponent } from './Reports/ActivityNewReportComponent/activity-new-report-component.component';
-
+import { ResourcereportComponent } from './Reports/ResourceReportComponent/resourcereport/resourcereport.component';
 
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
@@ -126,7 +126,8 @@ defineLocale('en-gb', enGbLocale); //
    
     PlatformViewComponent,
     PlatformComponent,
-    ActivityNewReportComponentComponent
+    ActivityNewReportComponentComponent,
+    ResourcereportComponent
 
   ],
   imports: [

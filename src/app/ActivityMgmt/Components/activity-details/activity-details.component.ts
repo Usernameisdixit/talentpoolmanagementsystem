@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 //import { Tutorial } from '../../models/tutorial.model';
 import { ActivityService } from 'src/app/ActivityMgmt/Service/activity.service';
 import { Activity } from 'src/app/Model/activity.model';
+import { UserService } from 'src/app/UserMgmt/Service/user.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -36,7 +37,8 @@ export class ActivityDetailsComponent implements OnInit {
   constructor(
     private activityService: ActivityService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private _uerService:UserService
   ) {}
 
   ngOnInit(): void {
@@ -108,6 +110,8 @@ export class ActivityDetailsComponent implements OnInit {
                   'success'
                 );
                 this.router.navigate(['/activities']);
+                this._uerService.changeTitle("View Activity");
+                localStorage.setItem('activeLink',"View Activity");
               },
               (error) => {
                 console.log(error);
@@ -162,6 +166,8 @@ export class ActivityDetailsComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.router.navigate(['/activities']);
+        this._uerService.changeTitle("View Activity");
+        localStorage.setItem('activeLink',"View Activity");
       }
     });
   }

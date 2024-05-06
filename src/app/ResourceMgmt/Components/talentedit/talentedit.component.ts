@@ -4,6 +4,7 @@ import { Talent } from 'src/app/Model/talent';
 import { ContactService } from '../../Services/contact.service';
 import { FormGroup } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { UserService } from 'src/app/UserMgmt/Service/user.service';
 
 @Component({
   selector: 'app-talentedit',
@@ -15,7 +16,8 @@ export class TalenteditComponent {
   talent:Talent= new Talent();
   id:number=0;
   talentedit:FormGroup;
-  constructor(private service:ContactService, private router:Router, private activeRouter:ActivatedRoute){}
+  constructor(private service:ContactService, private router:Router, private activeRouter:ActivatedRoute,
+    private _userService:UserService){}
   
   ngOnInit():void{
     this.getContact();
@@ -47,6 +49,8 @@ updateContact(){
         text:  'Resource Data has been updated successfully!',
       });
       this.router.navigate(['talents']);
+      this._userService.changeTitle("View Resources");
+      localStorage.setItem("activeLink","View Resources");
       console.log(data);
     },
     error=>{
@@ -61,6 +65,8 @@ cancelData(){
 
 
   this.router.navigate(['talents']);
+  this._userService.changeTitle("View Resources");
+  localStorage.setItem("activeLink","View Resources");
 }
 
 
