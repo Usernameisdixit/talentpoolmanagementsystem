@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.json.JSONArray;
 
+import com.tpms.dto.PageResponse;
 import com.tpms.entity.Activity;
+import com.tpms.entity.ResourcePool;
 
 public interface ReportService {
 
@@ -29,6 +31,8 @@ public interface ReportService {
 
 	List<Map<String, Object>> getAssesmentData(String reportType, String fromDate, String toDate, String activityId,
 			String resourceValue);
+
+	PageResponse<ResourcePool> getAllEmployeResourceReport(int pageNumber, int pageSize);
 	
 
 }

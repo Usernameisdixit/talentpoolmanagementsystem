@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tpms.dto.PageResponse;
 import com.tpms.entity.Activity;
+import com.tpms.entity.ResourcePool;
 import com.tpms.service.ReportService;
+import com.tpms.service.impl.ResourcePoolServiceImpl;
 
 @RestController
 @CrossOrigin("*")
@@ -23,6 +26,9 @@ public class ReportController {
 	
 	@Autowired
 	private ReportService reportService;
+	
+	@Autowired
+	private ResourcePoolServiceImpl resourcepoolserviceimpl;
 	
 	@GetMapping("getActivityOnFromTo")
 	public List<Activity> getActivityInDateRange(@RequestParam String fromDate,@RequestParam String toDate) {
@@ -116,6 +122,35 @@ public class ReportController {
 //	    	return allDetails.toString();
 //	    }
 	}
+	
+	
+	//Resource Report Controller Methode
+	
+	@GetMapping("/emp/getResourceReportList")
+	public PageResponse<ResourcePool> gettbl_resource_pool(@RequestParam(defaultValue = "1") Integer pageNumber){
+			
+	PageResponse<ResourcePool> resourceList=reportService.getAllEmployeResourceReport(pageNumber,10);
+	 
+	return resourceList;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 		

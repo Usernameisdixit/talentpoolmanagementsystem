@@ -56,5 +56,13 @@ public interface ResourcePoolRepository extends JpaRepository<ResourcePool, Inte
 	 
 	 @Query(value="select COUNT(*) from resource_pool_history where allocationDate= :allocationDate and deletedFlag=0 ",nativeQuery = true)
 		Integer findAllActiveResource(String allocationDate);
+	 
+	 
+	 //Resource Report Repository
+	 @Query(value = "SELECT * FROM resource_pool rp", nativeQuery = true)
+	    Page<ResourcePool> findAllByDeletedUndeletedFlag(Pageable pageable); 
+	 
+	 
+	 
 
 }
