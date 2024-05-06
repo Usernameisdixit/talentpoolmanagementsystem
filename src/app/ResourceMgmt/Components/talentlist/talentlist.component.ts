@@ -183,4 +183,5 @@ export class TalentlistComponent implements OnInit {
     const currentDate = new Date();
     return allocationDate < currentDate;
   }
+
 }
