@@ -191,72 +191,40 @@ export class ResourcereportService {
     return diffDays + 1;
   }
 
-  generateAteendanceExcel(reportType: string, attendanceData: any[], fromDate: Date, toDate: Date,activityHead:any[],activityHeadResource:any[]) {
-    const formatFromDate = new Date(fromDate);
-    const formatFromday = formatFromDate.getDate();
-    const formatFrommonth = formatFromDate.toLocaleString('default', { month: 'short' });
-    const formatFromyear = formatFromDate.getFullYear();
-    const formatteFromdDate = `${formatFromday} ${formatFrommonth} ${formatFromyear}`;
-
-    const formatTodate = new Date(toDate);
-    const formatToday = formatTodate.getDate();
-    const formatTomonth = formatTodate.toLocaleString('default', { month: 'short' });
-    const formatToyear = formatTodate.getFullYear();
-    const formattedToDate = `${formatToday} ${formatTomonth} ${formatToyear}`;
-
+  generateAteendanceExcel(attendanceData: any, talent:any) {
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([], { skipHeader: true });
     
     let headerRow = [];
-    if (reportType == 'activity') {
-      ws['!cols'] = [
-        { wch: 20 }, // Resource code
-        { wch: 20 }, // Resource Name
-        { wch: 15 }, // Platform
-        { wch: 25 }, // Designation
-        { wch: 20 }, // Attendane Status
-      ];
-     // headerRow = ['Resource Code', 'Resource Name', 'Designation', 'Platform', 'Attendance Status'];
-     headerRow = ['Resource Code', 'Resource Name', 'Designation', 'Platform'];
-    } else if (reportType == 'resource') {
+    let index=0;
+    let Total=0;
       const colWidths= [
-        { wch: 20 }, // Date
-      ];
-      activityHeadResource.forEach(() => colWidths.push({ wch: 10 }));
-      ws['!cols'] = colWidths;
-     // headerRow = ['Date',...activityHeadResource];
-     headerRow = ['Period','Activity_Name'];
-    }else if(reportType=='summary'){
-      const colWidths = [
-        { wch: 20 }, // Date
-        { wch: 20 }, // Resource Name
-        { wch: 25 }, // Platform
-        { wch: 15 }, // Designation
+        { wch: 40 }, // Date
       ];
 
-       const dynamicHeaders = activityHead.map(item => item.activityName);
-        dynamicHeaders.forEach(() => colWidths.push({ wch: 10 }));
-        ws['!cols'] = colWidths;
-         headerRow = ['Resource Code', 'Resource Name', 'Designation', 'Platform', ...dynamicHeaders];
-    }
+      for (let i = 0; i < talent.length; i++) {
+        if (attendanceData.resource_code==talent[i].resourceCode){
+        colWidths.push({ wch: 30 });
+        index=i; 
+
+        }
+       }
+
+      //attendanceData.forEach(() => colWidths.push({ wch: 10 }));
+      ws['!cols'] = colWidths;
+     // headerRow = ['Date',...activityHeadResource];
+     headerRow = ['Sl. No','Period','Days'];
+    
    
     //Heading Start From
-    if (reportType == 'activity') {
-      XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A6' });
-    } else if (reportType == 'resource') {
-      XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A7' });
-    }else if(reportType=='summary'){
-      XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A6' });
-    }
+     
+      XLSX.utils.sheet_add_aoa(ws, [headerRow], { origin: 'A9' });
+    
 
     for (let col = 0; col < headerRow.length; col++) {
       let rowNumber;
-      if (reportType == 'activity') {
-        rowNumber = 5;
-      } else if (reportType == 'resource') {
-        rowNumber = 6;
-      }else if(reportType=='summary'){
-        rowNumber = 5
-      }
+      
+        rowNumber = 8;
+      
       const cellAddress = XLSX.utils.encode_cell({ r: rowNumber, c: col });
       ws[cellAddress].s = {
         font: { bold: true },
@@ -271,7 +239,7 @@ export class ResourcereportService {
     }
 
     ws['A1'] = {
-      v: 'Activity Report',
+      v: 'Resource Report',
       t: 's',
       s: {
         font: {
@@ -287,162 +255,147 @@ export class ResourcereportService {
       },
     };
 
-    if(formatteFromdDate===formattedToDate){
-      ws['A3'] = {
-        v: `Date : ${formatteFromdDate}`,
-        t: 's',
-      };
-    }else{
-      ws['A3'] = {
-        v: `Date Range: ${formatteFromdDate} to ${formattedToDate}`,
-        t: 's',
-      };
-    }
+
 
    
 
-    if (reportType == 'activity') {
-      ws['A4'] = {
-        v: `Activity Name:  ${attendanceData[0]?.activityName}`,
+    
+      ws['A3'] = {
+        v: `Resource Name:  ${talent[index].resourceName}`,
         t: 's',
       };
-    }
+      ws['B3'] = {
+        v: `Resource Code:  ${attendanceData.resource_code}`,
+        t: 's',
+      };
 
-    if (reportType == 'resource') {
       ws['A4'] = {
-        v: `Resource Name:  ${attendanceData[0]?.resourceName}`,
+        v: `Designation:  ${talent[index].designation}`,
         t: 's',
       };
+
       ws['B4'] = {
-        v: `Resource Code:  ${attendanceData[0]?.resourceCode}`,
+        v: `Platform:  ${talent[index].platform}`,
         t: 's',
       };
 
       ws['A5'] = {
-        v: `Platform:  ${attendanceData[0]?.platform}`,
+        v: `Location:  ${talent[index].location}`,
         t: 's',
       };
+
       ws['B5'] = {
-        v: `Designation:  ${attendanceData[0]?.designation}`,
+        v: `Experience:  ${talent[index].experience}`,
         t: 's',
       };
-    }
+    
+      ws['A6'] = {
+        v: `Email_ID:  ${talent[index].email}`,
+        t: 's',
+      };
+
+      ws['B6'] = {
+        v: `Phone:  ${talent[index].phoneNo}`,
+        t: 's',
+      };
+
+
+     
+
     
     //HEADING MERGED
-    const colMergerd=activityHead.length+3;
+    const colMergerd=attendanceData.allocation_periods.length+1;
     let colMergerdResource;
-    if(reportType == 'resource'){
-      colMergerdResource=activityHeadResource.length;
-    }
-    if (reportType == 'activity') {
-      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 4 } }]; // Merge cells
-    } else if (reportType == 'resource') {
+   
+      colMergerdResource=attendanceData.allocation_periods.length;
+    
+    
       ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: colMergerdResource } }];
-    }else if(reportType=='summary'){
-      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: colMergerd  } }];
-    }
+    
 
     const data: any[] = [];
-    const processedDates = new Set<string>();
-    attendanceData.forEach(detail => {
-     console.log(attendanceData.length);
-      if (reportType == 'activity' || reportType=='summary') {
-        const atendanceDate = detail.atendanceDate;
-        if (!processedDates.has(atendanceDate)) {
-          const dateRowColor = processedDates.has(atendanceDate) ? 'white' : 'red';
-          data.push([atendanceDate]);
-          const currentRowIndex = data.length + 5;
-          let dateMerged;
-          if(reportType=='activity'){
-              dateMerged=4;
-          }else if(reportType=='summary'){
-              dateMerged=activityHead.length+3;
-          }
-          ws['!merges'].push({ s: { r: currentRowIndex, c: 0 }, e: { r: currentRowIndex, c: dateMerged } });
-          // Apply the fill color to each cell in the merged range
-          for (let col = 0; col < 5; col++) {
-            const cellAddress = XLSX.utils.encode_cell({ r: currentRowIndex, c: col });
-            ws[cellAddress] = {
-              v: null,
-              s: {
-                font: {
-                  bold: true,
-                },
-                fill: {
-                  patternType: 'solid',
-                  fgColor: { rgb: 'CEEEF5' },
-                },
-                alignment: {
-                  wrapText: true,
-                },
-              },
-            };
-          }
-          processedDates.add(atendanceDate);
-        }
-      }
-      const rowData = [];
-      if (reportType == 'activity') {
-        
-        rowData.push(
-          { v: detail.resourceCode, s: { alignment: { wrapText: true } } },
-          { v: detail.resourceName, s: { alignment: { wrapText: true } } },
-          { v: detail.designation, s: { alignment: { wrapText: true } } },
-          { v: detail.platform, s: { alignment: { wrapText: true } } },
-          { v: detail.attendanceStatus, s: { alignment: { wrapText: true } } },
-        );
-      } else if (reportType == 'resource') {
-        rowData.push(
-          { v: detail.atendanceDate, s: { alignment: { wrapText: true } } },
-          // { v: detail.activityName, s: { alignment: { wrapText: true } } },
-          // { v: detail.attendanceStatus, s: { alignment: { wrapText: true } } },
-          { v: detail.activityName, s: { alignment: { wrapText: true } } },
-        );
-       if (detail.activityAttenDetails) {
-          detail.activityAttenDetails.forEach(activityDetail => {
-            rowData.push(
-                { v: activityDetail.attendanceStatus, s: { alignment: { wrapText: true } } }
-            );
-        });
-      }
-      }else if(reportType=='summary'){
-        debugger;
-        rowData.push(
-          // { v: detail.atendanceDate, s: { alignment: { wrapText: true } } },
-        { v: detail.resourceCode, s: { alignment: { wrapText: true } } },
-        { v: detail.resourceName, s: { alignment: { wrapText: true } } },
-        { v: detail.designation, s: { alignment: { wrapText: true } } },
-        { v: detail.platform, s: { alignment: { wrapText: true } } },      
-        );
-        if (detail.activityAttenDetails) {
-        detail.activityAttenDetails.forEach(activityDetail => {
-          rowData.push(
-              { v: activityDetail.attendanceStatus, s: { alignment: { wrapText: true } } }
-          );
-      });
-    }
+    for (let i = 0; i < attendanceData.allocation_periods.length; i++) {
      
-      }
+     console.log(attendanceData.allocation_periods.length);
 
+     const dataRowColor = [255, 255, 255];
+      const rowData = [];
+
+      const formatFromDate = new Date(attendanceData.allocation_periods[i].start_date);
+      const formatFromday = formatFromDate.getDate();
+      const formatFrommonth = formatFromDate.toLocaleString('default', { month: 'short' });
+      const formatFromyear = formatFromDate.getFullYear();
+      const formatteFromdDate = `${formatFromday} ${formatFrommonth} ${formatFromyear}`;
+  
+      const formatTodate = new Date(attendanceData.allocation_periods[i].end_date);
+      const formatToday = formatTodate.getDate();
+      const formatTomonth = formatTodate.toLocaleString('default', { month: 'short' });
+      const formatToyear = formatTodate.getFullYear();
+      const formattedToDate = `${formatToday} ${formatTomonth} ${formatToyear}`;
+
+      const range = `${formatteFromdDate} To ${formattedToDate}`;
+      
+      const days = this.calculateDuration(attendanceData.allocation_periods[i].start_date, attendanceData.allocation_periods[i].end_date);
+      Total=Total+days;
+        rowData.push(
+          { v: i+1, s: { alignment: { wrapText: true } } },
+          { v: range, s: { alignment: { wrapText: true } } },
+          // { v: detail.attendanceStatus, s: { alignment: { wrapText: true } } },
+          { v: days, s: { alignment: { wrapText: true } } },
+        );
+      
       data.push(rowData);
-    });
+    }
+
+    //const data2: any[] = [];
+    let h="";
+    let Str="TOTAL DAYS IN TALENT POOL";
+    let Final= Total+" Days";
+    const rowData2 = [];
+    rowData2.push(
+      { v: h, s: { fill: {
+        patternType: 'solid',
+        fgColor: { rgb: '52D8F9' },
+      }, alignment: { wrapText: true } } },
+      { v: Str, s: {
+        font: {
+          bold: true,
+          size: 8,
+          color: { rgb: '1D05EE' },
+        },
+        fill: {
+          patternType: 'solid',
+          fgColor: { rgb: '52D8F9' },
+        }, 
+        alignment: { wrapText: true } } },
+      { v: Final, s: { 
+        font: {
+        bold: true,
+        size: 10,
+        color: { rgb: '1D05EE' },
+        fill: {
+          patternType: 'solid',
+          fgColor: { rgb: '52D8F9' },
+        }
+      },  alignment: { wrapText: true } } },
+     );
+
+     data.push(rowData2);
+
+
+  
 
     // Add data to worksheet
-    if (reportType == 'activity') {
-      XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A7' });
-    } else if (reportType == 'resource') {
-      XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A8' });
-    }else if(reportType=='summary'){
-      XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A7' });
-    }
+    XLSX.utils.sheet_add_json(ws, data,  { skipHeader: true, origin: 'A10' });
+    
 
 
     // Create a workbook
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Activity Report');
+    XLSX.utils.book_append_sheet(wb, ws, 'Resource Report');
 
     // Save the workbook as an Excel file
-    XLSX.writeFile(wb, 'activity_report.xlsx');
+    XLSX.writeFile(wb, 'Resource_report.xlsx');
   }
 
 

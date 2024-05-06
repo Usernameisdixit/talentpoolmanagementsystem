@@ -21,20 +21,6 @@ export class ResourcereportComponent {
   duration: any = [];
   listData: any = [];
  
-// Deleting These Variables
-  inputType: string = 'activity';
-  selectedFromDate: Date = null;
-  selectedToDate: Date = null;
-  activity: string = '0';
-  auto: any;
-  activities: any[];
-  activitiesByUser: any[];
-  resourceValue: any;
-  hr:string="";
-
-
-
-
   constructor(private router: Router, private datePipe: DatePipe, private resourcereportService: ResourcereportService) {}
 
   currentPage: number = 1;
@@ -183,9 +169,8 @@ export class ResourcereportComponent {
       console.log(typeof (resource.resourceCode));
       this.resourcereportService.fetchDurations(resource.resourceCode).subscribe(data => {
         this.duration = data;
-        this.resourcereportService.generateResourceReportPdf(data, this.talent);
+        this.resourcereportService.generateAteendanceExcel(data, this.talent);
         console.log(data);
-        alert(data);
       });
      
  
