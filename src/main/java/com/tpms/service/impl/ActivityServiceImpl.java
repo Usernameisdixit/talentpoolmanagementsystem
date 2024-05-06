@@ -75,7 +75,7 @@ public class ActivityServiceImpl implements ActivityService {
     
     public PageResponse<Activity> getAllActivities(Integer pageNumber,Integer pageSize)
     {
-    	Pageable pageable=PageRequest.of(pageNumber-1, pageSize);
+    	Pageable pageable=PageRequest.of(pageNumber-1, pageSize,Sort.by("activityName"));
     	Page<Activity> page=activityRepository.findAll(pageable);
     	List<Activity> activityDetails=page.getContent();
     	PageResponse<Activity> pageResponse=new PageResponse<>();
@@ -340,6 +340,12 @@ public class ActivityServiceImpl implements ActivityService {
 			e.printStackTrace();
 		}
 		return res;
+	}
+
+
+	public List<Activity> getAllActivityDetails() {
+		
+		return activityRepository.findAll();
 	}
 
 
