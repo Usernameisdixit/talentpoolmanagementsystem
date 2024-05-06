@@ -136,6 +136,8 @@ export class UserComponent {
                 Swal.fire('User Saved Successfully','', 'success');
               }
               this.route.navigate(['viewUser']);
+              this.userService.changeTitle("View User");
+              localStorage.setItem("activeLink","View User");
             },
             (error) => {
               console.log(error);
@@ -176,6 +178,8 @@ export class UserComponent {
 
 
     this.route.navigate(['viewUser']);
+    this.userService.changeTitle("View User");
+    localStorage.setItem("activeLink","View User");
   }
 
 

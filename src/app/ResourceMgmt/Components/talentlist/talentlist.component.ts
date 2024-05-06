@@ -8,6 +8,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { RouterModule, RouterEvent } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { UserService } from 'src/app/UserMgmt/Service/user.service';
 
 @Component({
   selector: 'app-talentlist',
@@ -18,11 +19,13 @@ import { DatePipe } from '@angular/common';
 export class TalentlistComponent implements OnInit {
 
   talent: any = [];
+  resourceDetails:any=[];
   delmsg: string = "";
   c: Talent[];
   duration: any = [];
   listData: any = [];
-  constructor(private service: ContactService, private router: Router, private datePipe: DatePipe) { }
+  constructor(private service: ContactService, private router: Router, private datePipe: DatePipe,
+    private _userService:UserService) { }
 
   currentPage: number = 1;
   pageSize: number;
@@ -42,10 +45,16 @@ export class TalentlistComponent implements OnInit {
       this.totalElements = response.totalElements;
       this.pageSize=response.pageSize;
     })
+    //for pdf and excel.....
+    this.service.getTalent(0).subscribe((data: Talent[]) => {
+      this.resourceDetails = data;
+    });
   }
 
   editalent(id: number) {
     this.router.navigate(["/editalent", id]);
+    this._userService.changeTitle("Edit Resource");
+    localStorage.setItem("activeLink","Edit Resource");
   }
 
   deletetalent(event: any, id: number) {
@@ -66,13 +75,18 @@ export class TalentlistComponent implements OnInit {
     this.getTalent();
   }
 
+  // private getResourcesForPDFAndExcel():void{
+  //   this.service.getTalent(0).subscribe((data: Talent[]) => {
+  //     this.resourceDetails = data;
+  //   });
+  // }
+
 
 
   exportToPDF() {
     const doc = new jsPDF();
-
+          
     const data = this.getTableData();
-
     // Add title centered
     const pageTitle = 'Talent Pool Resource Details';
     const textWidth = doc.getTextDimensions(pageTitle).w;
@@ -91,9 +105,8 @@ export class TalentlistComponent implements OnInit {
     doc.save('Talent_Pool_Resource_List.pdf');
   }
 
-  private getTableData(): any[][] {
-
-    return this.talent.map((c, index) => [
+  private getTableData(): any[] {
+    return this.resourceDetails.map((c, index) => [
       //c.resourceId
       index + 1,
       c.resourceName,

@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { startWith, map ,Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { UserService } from 'src/app/UserMgmt/Service/user.service';
 
 export interface ActivityName {
   name: string;
@@ -33,7 +34,8 @@ export class AddActivityComponent {
   filteredOptions: Observable<ActivityName[]>;
   name:any;
 
-  constructor(private activityService: ActivityService,private router:Router) {}
+  constructor(private activityService: ActivityService,private router:Router,
+    private _uerService:UserService) {}
 
   ngOnInit() {
     this.getAllActivity();
@@ -51,7 +53,7 @@ export class AddActivityComponent {
       reqActivityName = reqActivityName.charAt(0).toUpperCase() + reqActivityName.slice(1);
       }
     }
-   
+
     const data = {
       activityName: reqActivityName,
       description:this.activity.description,
@@ -68,7 +70,7 @@ export class AddActivityComponent {
     }
     else if (data.responsPerson1=='') {
       Swal.fire("Please enter the response person1");
-    }else{    
+    }else{
       Swal.fire({
         title: 'Do you want to submit?',
         icon: 'warning',
@@ -79,15 +81,17 @@ export class AddActivityComponent {
       }).then((result) => {
         if (result.isConfirmed) {
           this.activityService.create(data).subscribe((data) => {
-            Swal.fire('Activity saved successfully', '', 'success'); 
+            Swal.fire('Activity saved successfully', '', 'success');
           this.router.navigate(['/activities']);
+          this._uerService.changeTitle("View Activity");
+          localStorage.setItem('activeLink',"View Activity");
         },
         (error) => {
           console.log(error);
         });
-          
-        } 
-      }); 
+
+        }
+      });
   }
   }
 
@@ -154,5 +158,5 @@ export class AddActivityComponent {
   reset(){
     window.location.reload();
   }
-  
+
 }
