@@ -372,12 +372,13 @@ export class ResourcereportService {
         font: {
         bold: true,
         size: 10,
+      },
         color: { rgb: '1D05EE' },
         fill: {
           patternType: 'solid',
           fgColor: { rgb: '52D8F9' },
-        }
-      },  alignment: { wrapText: true } } },
+        },
+        alignment: { wrapText: true } } },
      );
 
      data.push(rowData2);
