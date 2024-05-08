@@ -98,4 +98,11 @@ List<Object[]> getActivityDetails(Integer activityId, Date fromDate, Date toDate
 	Integer countExistingActivityBySession(Integer activityId, Date fromDate, Date toDate,
 			Byte activityFor);
 
+	@Query(value = """
+			SELECT EXISTS (SELECT * FROM activity_allocation alloc
+			WHERE :toDate>=alloc.activityFromDate AND :fromDate<=alloc.activityToDate
+			AND alloc.activityFor=3)""",
+		nativeQuery = true)
+	Byte isFullDayActivityPresent(Date fromDate, Date toDate);
+
 }

@@ -16,13 +16,23 @@ import javax.sql.DataSource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tpms.dto.PageResponse;
+import com.tpms.dto.ResourcePoolHistoryDto;
 import com.tpms.entity.Activity;
+import com.tpms.entity.ResourcePool;
 import com.tpms.repository.ActivityRepository;
+import com.tpms.repository.ResourcePoolHistoryRepository;
+import com.tpms.repository.ResourcePoolRepository;
 import com.tpms.service.ReportService;
+import com.tpms.utils.DateUtils;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -33,8 +43,13 @@ public class ReportServiceImpl implements ReportService {
 	@Autowired
 	private ActivityRepository activityRepository;
 	
-	
+	@Autowired
+	private ResourcePoolRepository tbl_resource_pool_Repository;
 
+
+	@Autowired
+	private ResourcePoolHistoryRepository tbl_resource_pool_Repository_history;
+	
 	@Override
 	public List<Map<String, Object>> getAttendanceData(String reportType, String fromDate, String toDate, String activityId,
 			String resourceValue) {
@@ -428,7 +443,47 @@ public class ReportServiceImpl implements ReportService {
 	}	
 	
 	
+	//Resource Report Service
 	
+		@Override
+		public PageResponse<ResourcePool> getAllEmployeResourceReport(int pageNumber, int pageSize) {
+			List<ResourcePool> tbl_resource_pool = new ArrayList<>();
+			Pageable pageable=PageRequest.of(pageNumber-1, pageSize,Sort.by("resourceName"));
+			Page<ResourcePool> page=tbl_resource_pool_Repository.findAllByDeletedUndeletedFlag(pageable);
+			
+			tbl_resource_pool =page.getContent(); 
+//			List<ResourcePool> sortedList=tbl_resource_pool.stream().sorted((a,b)->a.getResourceName()
+//					.compareTo(b.getResourceName())).collect(Collectors.toList());
+			PageResponse<ResourcePool> pageResponse=new PageResponse<ResourcePool>();
+			pageResponse.setContent(tbl_resource_pool);
+			pageResponse.setPageSize(page.getSize());
+			pageResponse.setTotalElements(page.getTotalElements());
+			pageResponse.setTotalPages(page.getTotalPages());
+			pageResponse.setLast(page.isLast());
+
+			List<ResourcePoolHistoryDto> tbl_resource_pooldto = new ArrayList<>();
+			List<Object[]> tbl_resource_poolfindMinMax = tbl_resource_pool_Repository_history.MinMaxAllocationDate();
+
+			for (Object[] ob : tbl_resource_poolfindMinMax) {
+				ResourcePoolHistoryDto rgdt = new ResourcePoolHistoryDto();
+				rgdt.setResourceCode(ob[0].toString());
+				rgdt.setResourceName(ob[1].toString());
+				String Dur = DateUtils.monthDayDifference(ob[2].toString(), ob[3].toString());
+				rgdt.setDuration(Dur);
+				tbl_resource_pooldto.add(rgdt);
+			}
+
+			for (ResourcePool resource : tbl_resource_pool) {
+				for (ResourcePoolHistoryDto resourcedto : tbl_resource_pooldto) {
+					if (resource.getResourceCode().equalsIgnoreCase(resourcedto.getResourceCode())) {
+						resource.setDuration(resourcedto.getDuration());
+					}
+				}
+			}
+			return pageResponse;
+		}
+		
+		
 	
 	
 }
