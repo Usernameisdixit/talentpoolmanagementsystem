@@ -142,6 +142,11 @@ export class BulkAllocationComponent {
               'Activity already exists in this session.',
             );
           }
+          else if(res.category == 'fullDayActivity') {
+            Swal.fire(
+              'An activity already exists for full day.',
+            );
+          }
         }, () => {
           Swal.fire(
             'An error occurred while saving your data.','',
@@ -236,6 +241,7 @@ export class BulkAllocationComponent {
   edit(row: DynamicGrid): void {
     this.uncheckAll();
 
+    // Undo edits
     if(this.allocateId!=null && this.allocateId==row.activityAllocateId) {
       this.activity = {activityName: null, activityId: 0};
       this.selectedSession = 0;
@@ -244,6 +250,7 @@ export class BulkAllocationComponent {
       this.allocateId = null;
     }
 
+    // Edit allocation record
     else {
       this.activity = row.activity;
       this.selectedSession = row.activityFor;
@@ -293,6 +300,7 @@ export class BulkAllocationComponent {
       .subscribe(data=>{
         this.dynamicArray = data;
       });
+      this.uncheckAll();
   }
   
   isValid(): boolean {
