@@ -11,7 +11,6 @@ export class MailService {
   constructor(private httpClient: HttpClient) { }
 
   getAllActivityAllocationDetails(fromDate: string, toDate: string) {
-    debugger;
     const url = `${this.url}/allocationDataForMail`;
     const params = {
       fromDate: fromDate,
@@ -53,7 +52,8 @@ export class MailService {
       ];
 
       //  const dynamicHeaders = activityHead.map(item => item.activityName);
-      //   dynamicHeaders.forEach(() => colWidths.push({ wch: 10 }));
+      activityHead.forEach(() => colWidths.push({ wch: 15 }));
+
         ws['!cols'] = colWidths;
          headerRow = ['Resource Code', 'Resource Name', 'Designation', 'Platform', ...activityHead];
    

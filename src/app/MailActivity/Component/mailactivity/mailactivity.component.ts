@@ -28,6 +28,7 @@ export class MailactivityComponent {
   selectedToDate: Date = null;
   alocationDetails: any = [];
   activities: any[];
+  activitiesForHead: any[];
 
   constructor(private apiService: AssessmentserviceService, private datePipe: DatePipe, private mailService: MailService) {
 
@@ -96,24 +97,39 @@ export class MailactivityComponent {
   }
 
   fetchEmailAndContent() {
+    debugger;
     this.mailIds = this.alocationDetails.map(resource => resource.email);
     this.mailService.fetContent(this.inputType)
     .subscribe(data => {
-      console.log(data);
      this.subject=data.subject;
      this.editorContent=data.contents;
+    //  this.editorContent=this.editorContent.concat("<br><ul>");
+    //  this.activitiesForHead.forEach(detail=>{
+    //       this.editorContent=this.editorContent.concat("<li>").concat(detail).concat("</li><br>");
+    //  });
+    //  this.editorContent.concat("</ul");
     });
 
   }
 
 
   fetchActivities(): void {
+    debugger
     const uniqueActivityNames = new Set();
+    const uniqueActivityNamesWithTime = new Set();
     this.alocationDetails.forEach(entry => {
       entry.activityAllocationDetails.forEach(detail => {
         uniqueActivityNames.add(detail.activityName);
       });
     });
+
+    this.alocationDetails.forEach(entry => {
+      entry.activityAllocationDetails.forEach(detail => {
+        const { activityName, fromHours, toHours } = detail;
+        uniqueActivityNamesWithTime.add(`${activityName}(${fromHours} to ${toHours})`);
+      });
+    });
+    this.activitiesForHead=Array.from(uniqueActivityNamesWithTime).sort();
     this.activities = Array.from(uniqueActivityNames).sort();
     // this.activities=result;
   }
@@ -154,7 +170,7 @@ export class MailactivityComponent {
       this.sortActivityAttenDetails(entry.activityAllocationDetails);
     });
 
-    this.mailService.generateExcel(this.alocationDetails, this.selectedFromDate, this.selectedToDate, this.activities);
+    this.mailService.generateExcel(this.alocationDetails, this.selectedFromDate, this.selectedToDate, this.activitiesForHead);
 
   }
 

@@ -52,7 +52,10 @@
          <div class="form-group">
             <label for="description">Description:</label>
             <ckeditor [(ngModel)]="editorContent" [editor]="Editor" (change)="onEditorChange($event)"
-            (ready)="onEditorReady($event)"></ckeditor>   
+            (ready)="onEditorReady($event)">       
+            </ckeditor>
+        
+             
           </div> 
 
 
