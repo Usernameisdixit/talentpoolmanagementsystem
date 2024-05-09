@@ -3,6 +3,8 @@ package com.tpms.repository;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -132,6 +134,13 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 			+ "			    order by alo.activityFromDate,res.resourceName", nativeQuery = true)
      List<Object[]> getAllResourceByCode(@Param("resourceCode") String resourceCode);
 
+     @Query(value="""
+		      select * from activity
+             where activityId=if(:activityId=0,activityId,:activityId)
+            and (responsPerson1 like if(:activityPerson='',responsPerson1 ,CONCAT('%', :activityPerson, '%'))
+            or responsPerson2 like if(:activityPerson='',responsPerson2 ,CONCAT('%', :activityPerson, '%')));
+		""", nativeQuery = true)
+Page<Activity> findByActivityNameAndActivityPerson(Integer activityId, String activityPerson,Pageable pageable);
 	
 	
 
