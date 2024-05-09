@@ -1,0 +1,69 @@
+<div class="container">
+    <div class="row justify-content-start maxscrn">
+        <div class="col-md-12">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inputType" id="inputActivity" [(ngModel)]="inputType"
+                    value="allocation">
+                <label class="form-check-label" for="allocation">Allocation </label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inputType" id="inputAttendance"
+                    [(ngModel)]="inputType" value="attendance">
+                <label class="form-check-label" for="attendance">Attendance </label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inputType" id="inputAssesment"
+                    [(ngModel)]="inputType" value="assesment">
+                <label class="form-check-label" for="assesment">Assesment</label>
+            </div>
+        </div>
+
+        <div class="form-group mt-2" *ngIf="inputType === 'allocation'">
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <label for="activity">Period: <span class="required">*</span></label>
+                    <select id="activity" class="form-control" [(ngModel)]="selectedDateRange" (ngModelChange)="onDateChange()">
+                        <option value='0' selected>--Select--</option>
+                        <option *ngFor="let range of dateRanges" [ngValue]="range">{{ range }}</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button (click)="downloadExcelReport()" class="btn btn-icon export-btn mb-2" title="Download Excel">
+                        <i class="fas fa-file-excel fa-lg excel-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="mailIds">Send To:</label>
+            <textarea id="mailIds" name="mailIds" class="form-control" rows="3" [(ngModel)]="mailIds" ></textarea>
+          </div>
+    
+          <div class="form-group">
+            <label for="cc">CC:</label>
+            <textarea id="cc" name="cc" class="form-control" rows="3" [(ngModel)]="cc"></textarea>
+          </div>
+    
+          <div class="form-group">
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject" class="form-control" [(ngModel)]="subject">
+          </div>
+
+         <div class="form-group">
+            <label for="description">Description:</label>
+            <ckeditor [(ngModel)]="editorContent" [editor]="Editor" (change)="onEditorChange($event)"
+            (ready)="onEditorReady($event)">       
+            </ckeditor>
+        
+             
+          </div> 
+
+
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-6">
+                <button (click)="sendMail()">Send </button>
+            </div>
+        </div>
+
+    </div>
+</div>
