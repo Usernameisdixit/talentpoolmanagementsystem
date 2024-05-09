@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -134,7 +137,14 @@ public class ReportController {
 	return resourceList;
 	}
 	
-	
+	// For getting ACtivities of Particular Resource
+		@GetMapping("/emp/ractive")
+		public ResponseEntity<?> getDurationDetails(@RequestParam("code") String resourceCode) throws JSONException {
+			JSONObject details = reportService.getDetails(resourceCode);
+			System.out.println(details);
+			return ResponseEntity.ok(details.toString());
+
+		}
 	
 	
 	

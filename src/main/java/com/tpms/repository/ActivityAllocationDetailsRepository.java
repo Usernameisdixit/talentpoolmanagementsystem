@@ -32,6 +32,16 @@ public interface ActivityAllocationDetailsRepository extends JpaRepository<Activ
             "AND act_alloc.activityToDate <= STR_TO_DATE(:toDate, '%Y-%m-%d')", nativeQuery = true)
 
 	List<Object[]> getActivitiesBetweenDates(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
+	
+	@Query(value="select alo.fromHours,alo.toHours,act.activityName,det.resourceId,res.resourceName,res.designation,res.platform,res.resourceCode,res.email "
+			+"from activity_allocation_details det "
+			+ "inner join activity_allocation alo on alo.activityAllocateId=det.activityAllocateId "
+			+ "inner join activity act on act.activityId=alo.activityId "
+			+ "inner join resource_pool res on res.resourceId=det.resourceId "
+			+ "where activityFromDate =:formattedFromDate "
+			+"and activityToDate =:formattedToDate "
+			+"order by res.resourceName",nativeQuery=true)
+	List<Map<String, Object>> getallocationDataForMail(String formattedFromDate, String formattedToDate);
 
  
 	
