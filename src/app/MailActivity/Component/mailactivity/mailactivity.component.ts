@@ -29,6 +29,7 @@ export class MailactivityComponent {
   alocationDetails: any = [];
   activities: any[];
   activitiesForHead: any[];
+  selectedFile: File | null = null;
 
   constructor(private apiService: AssessmentserviceService, private datePipe: DatePipe, private mailService: MailService) {
 
@@ -103,13 +104,17 @@ export class MailactivityComponent {
     .subscribe(data => {
      this.subject=data.subject;
      this.editorContent=data.contents;
-    //  this.editorContent=this.editorContent.concat("<br><ul>");
-    //  this.activitiesForHead.forEach(detail=>{
-    //       this.editorContent=this.editorContent.concat("<li>").concat(detail).concat("</li><br>");
-    //  });
-    //  this.editorContent.concat("</ul");
+     this.editorContent=this.editorContent.concat("<br><ul>");
+     this.activitiesForHead.forEach(detail=>{
+          this.editorContent=this.editorContent.concat("<li>").concat(detail).concat("</li><br>");
+     });
+     this.editorContent.concat("</ul");
     });
+      console.log(this.editorContent);
+  }
 
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
   }
 
 
@@ -200,6 +205,10 @@ export class MailactivityComponent {
     formData.append('cc', this.cc);
     formData.append('subject', this.subject);
     formData.append('text', this.editorContent);
+
+    if (this.selectedFile) {
+      formData.append('attachment', this.selectedFile, this.selectedFile.name);
+    }
   
   
     this.mailService.sendMail(formData).subscribe({
