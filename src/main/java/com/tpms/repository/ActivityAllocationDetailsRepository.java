@@ -33,7 +33,7 @@ public interface ActivityAllocationDetailsRepository extends JpaRepository<Activ
 
 	List<Object[]> getActivitiesBetweenDates(@Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 	
-	@Query(value="select act.activityName,det.resourceId,res.resourceName,res.designation,res.platform,res.resourceCode,res.email "
+	@Query(value="select alo.fromHours,alo.toHours,act.activityName,det.resourceId,res.resourceName,res.designation,res.platform,res.resourceCode,res.email "
 			+"from activity_allocation_details det "
 			+ "inner join activity_allocation alo on alo.activityAllocateId=det.activityAllocateId "
 			+ "inner join activity act on act.activityId=alo.activityId "

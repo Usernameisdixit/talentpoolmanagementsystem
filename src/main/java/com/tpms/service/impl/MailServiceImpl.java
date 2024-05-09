@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -46,13 +47,14 @@ public class MailServiceImpl {
     @Autowired
     private ActivityAllocationDetailsRepository activityAllocationDetailsRepository;
     
-  
+    @Value("spring.mail.username")
+    private String senderEmail;
 
 
     public void sendMail(String[] to, String[] cc, String subject, String text, MultipartFile file) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setFrom("suraj11khuntia@gmail.com");
+        helper.setFrom(senderEmail);
         helper.setTo(to);
         helper.setCc(cc);
         helper.setSubject(subject);
@@ -127,6 +129,8 @@ public class MailServiceImpl {
 			JSONObject detailObject = new JSONObject();
 			detailObject.put("activityName", mapObject.get("activityName"));
 			detailObject.put("isActivity", "Yes");
+			detailObject.put("fromHours", mapObject.get("fromHours"));
+			detailObject.put("toHours", mapObject.get("toHours"));
 			activityAllocationDetails.put(detailObject);
 			
 		}
