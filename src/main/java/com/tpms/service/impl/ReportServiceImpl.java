@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -483,6 +485,36 @@ public class ReportServiceImpl implements ReportService {
 			return pageResponse;
 		}
 		
+
+		// For getting ACtivities of Particular Resource
+		public JSONObject getDetails(String resourceCode)  throws JSONException {
+			List<Object[]> resoHistList=activityRepository.getAllResourceByCode(resourceCode);
+			List<JSONObject> Activity = new ArrayList<>();
+			String rcode = null;
+			if (!resoHistList.isEmpty()) {
+			    Object[] firstRow = resoHistList.get(0);
+			    rcode = (String) firstRow[0];
+			}
+		
+	        // Create JSON object containing resource name and allocation periods
+	        JSONObject resourceAllocation = new JSONObject();
+	    
+	        for(int i=0;i<resoHistList.size();i++) {
+	        	JSONObject allocationPeriod = new JSONObject();
+	        	allocationPeriod.put("Activity",resoHistList.get(i)[1]);
+	        	Activity.add(allocationPeriod);
+	        }
+	        
+	        
+	        for(int i=0;i<resoHistList.size();i++) {
+	        	//for (int j=0;j<resoHistList.get(i).length;j++  )
+	     
+	         resourceAllocation.put("resource_Code",resoHistList.get(i)[0]); 
+	        resourceAllocation.put("periodsArray",Activity); 
+		}
+	        
+	        return resourceAllocation;
+		}		
 		
 	
 	

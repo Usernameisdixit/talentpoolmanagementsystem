@@ -120,5 +120,19 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 			WHERE ass.asesmentDate BETWEEN :formattedFromDate AND :formattedToDate
 			    		""", nativeQuery = true)
 	List<Activity> getActvitiesByDateRangeForAssement(String formattedFromDate, String formattedToDate);
+	
+	
+	@Query(value = "SELECT   res.resourceCode,act.activityName\r\n"
+			+ "			FROM  activity_allocation alo \r\n"
+			+ "			inner join activity_allocation_details dt  on alo.activityAllocateId=dt.activityAllocateId\r\n"
+			+ "			inner join resource_pool res on res.resourceId=dt.resourceId\r\n"
+			+ "			inner join platforms pla on pla.platform=res.platform\r\n"
+			+ "			inner join activity act on act.activityId=alo.activityId\r\n"
+			+ "			WHERE  res.resourceCode = :resourceCode\r\n"
+			+ "			    order by alo.activityFromDate,res.resourceName", nativeQuery = true)
+     List<Object[]> getAllResourceByCode(@Param("resourceCode") String resourceCode);
+
+	
+	
 
 }
