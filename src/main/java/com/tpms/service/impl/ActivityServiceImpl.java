@@ -364,7 +364,7 @@ public class ActivityServiceImpl implements ActivityService {
 	@Override
 	public PageResponse<Activity> searchActivity(Integer activityId, String activityPerson, Integer pageNumber, int pageSize) {
 		
-		Pageable pageable=PageRequest.of(pageNumber-1, pageSize,Sort.by("activityName"));
+		Pageable pageable=PageRequest.of(pageNumber-1, pageSize);
     	Page<Activity> page=activityRepository.findByActivityNameAndActivityPerson(activityId,activityPerson,pageable);
     	List<Activity> activityDetails=page.getContent();
     	PageResponse<Activity> pageResponse=new PageResponse<>();
