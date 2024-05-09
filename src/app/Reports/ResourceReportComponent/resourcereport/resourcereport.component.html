@@ -26,10 +26,10 @@
       <th>Location</th>
       <th>Exp.</th>
       <th>Mobile</th>
-      <th>Email</th>
-      <th>Allocation Date</th>
+    <!--  <th>Email</th>
+      <th>Allocation Date</th>  -->
       <th>Duration</th>
-      <!-- <th>Status</th> -->
+       <th>Status</th> 
       <th>Action</th>
             </tr>
       
@@ -48,9 +48,10 @@
             <td>{{c.location}}</td>
             <td>{{c.experience}}</td>
             <td>{{c.phoneNo}}</td>
-            <td>{{c.email}}</td>
+            <!--<td>{{c.email}}</td>
              <td>{{c.allocationDate | date: 'dd-MMM-yyyy'}}</td>
-            <td>
+            -->
+             <td>
               <ng-container *ngIf="isAllocationDateLessThanCurrent(c)">
                 <input type="button" (click)=getDetails(c) data-bs-toggle="modal" value="{{c.duration}}" data-bs-target="#exampleModal">
               </ng-container>
@@ -58,7 +59,17 @@
                 <input type="button" (click)=getDetails(c) data-bs-toggle="modal" value="0 months,0 days" data-bs-target="#exampleModal">
               </ng-container>
               </td>
+              <td>
+                <div class="button-container">
+                  <span class="status-badge status-{{ c.deletedFlag ? 'inactive' : 'active' }}">
+                    {{ c.deletedFlag ? 'Inactive' : 'Active' }}
+                  </span> 
+                  </div>
+              </td>
               
+
+
+
             <td>
               <div class="button-container">
                 <button type="button" class="btn btn-icon export-btn" (click)="generatePDF(c)" ><i class="fas fa-file-pdf fa-lg pdf-icon"></i></button>&nbsp; &nbsp;
