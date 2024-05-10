@@ -249,10 +249,20 @@ public class ActivityController {
 		}
 		
 		@GetMapping("searchActivity")
-		public ResponseEntity<PageResponse<Activity>> searchActivity(@RequestParam("activityId") Integer activityId,
+		public ResponseEntity<?> searchActivity(@RequestParam("activityId") Integer activityId,
 				@RequestParam("activityPerson") String activityPerson,
 				@RequestParam(defaultValue = "1") Integer pageNumber){
-			  PageResponse<Activity> searchDataDetails=activityService.searchActivity(activityId,activityPerson,pageNumber,10);
-			return ResponseEntity.ok().body(searchDataDetails);
+			
+			if(activityId==0 && activityPerson.equals("")) {
+			    List<Activity> getActivityDetails=activityService.getActivityList();
+			    getActivityDetails=getActivityDetails.stream().sorted((a,b)->a.getActivityName().compareTo(b.getActivityName())).collect(Collectors.toList());
+			   return ResponseEntity.ok().body(getActivityDetails);
+			}else {
+				 PageResponse<Activity> searchDataDetails=activityService.searchActivity(activityId,activityPerson,pageNumber,10);
+				  List<Activity> getActivityDetails=searchDataDetails.getContent();
+				  List<Activity> sortedFormOfActivity= getActivityDetails.stream().sorted((a,b)->a.getActivityName().compareTo(b.getActivityName())).collect(Collectors.toList());
+				  searchDataDetails.setContent(sortedFormOfActivity);
+			  return ResponseEntity.ok().body(searchDataDetails);
+			}
 		}
 }
