@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 import java.util.ArrayList;
-
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -275,7 +275,34 @@ public class ResourcePoolServiceImpl {
 	public String addorUpdateEmployee(ResourcePool emp) {
 
 		try {
-			tbl_resource_pool_Repository.save(emp);
+			
+	List<ResourcePoolHistory> resourcedata	=	tbl_resource_pool_Repository_history.findByResourceName(emp.getResourceName());
+	
+	List<Integer> resid = new ArrayList<Integer>();
+	for(int k=0;k<resourcedata.size();k++) {
+		resid.add(resourcedata.get(k).getResourceHistoryId());
+	}
+	
+	System.out.println(resourcedata);
+	Integer i=Collections.max(resid);
+	
+	for(int j=0;j<resourcedata.size();j++) {
+		if(resourcedata.get(j).getResourceHistoryId()==i) {
+			resourcedata.get(j).setPhoneNo(emp.getPhoneNo());
+			resourcedata.get(j).setDesignation(emp.getDesignation());                 
+			resourcedata.get(j).setExperience(emp.getExperience());
+			resourcedata.get(j).setPlatform(emp.getPlatform());
+			resourcedata.get(j).setEngagementPlan(emp.getEngagementPlan());
+			resourcedata.get(j).setLocation(emp.getLocation());
+			resourcedata.get(j).setEmail(emp.getEmail());
+					
+		}
+	}
+	
+	tbl_resource_pool_Repository_history.saveAll(resourcedata);
+	
+	tbl_resource_pool_Repository.save(emp);
+			
 
 		} catch (Exception e) {
 			// TODO: handle exception
