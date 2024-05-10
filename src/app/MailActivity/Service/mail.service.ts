@@ -137,10 +137,10 @@ export class MailService {
       XLSX.utils.sheet_add_json(ws, data, { skipHeader: true, origin: 'A7' });
     // Create a workbook
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Allcation Details');
+    XLSX.utils.book_append_sheet(wb, ws, 'All0cation Details');
 
     // Save the workbook as an Excel file
-    XLSX.writeFile(wb, 'allocation_details.xlsx');
+    XLSX.writeFile(wb, 'Talent Pool engagement planner'+formatteFromdDate+ ' to '+ formattedToDate +'.xlsx');
 
   }
 
