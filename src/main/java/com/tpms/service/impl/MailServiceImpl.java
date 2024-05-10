@@ -58,8 +58,8 @@ public class MailServiceImpl {
         helper.setTo(to);
         helper.setCc(cc);
         helper.setSubject(subject);
-        helper.setText(text);
-
+        helper.setText(text,true);
+        
         if (file != null) {
             helper.addAttachment(file.getOriginalFilename(), new InputStreamSource() {
                 @Override
