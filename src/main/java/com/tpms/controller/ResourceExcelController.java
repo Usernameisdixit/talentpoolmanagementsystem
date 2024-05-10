@@ -18,9 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -46,7 +44,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -102,6 +99,24 @@ public class ResourceExcelController {
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please Upload Excel File Only");
 	}
+	
+	@PostMapping("/uploadCheck")
+	public String UploadCheckExcel(@RequestParam("file") MultipartFile file
+			) throws IOException {
+		
+		byte[] fileContent = file.getBytes();
+
+		if (ExcelUtils.CheckExcelFormat(file)) { 
+	 String Emp =ExcelUtils.CheckExcelinproperorder(file.getInputStream()); 
+			System.out.println(Emp);
+			if(Emp.equalsIgnoreCase("2")) {
+		return "2";	
+		  }}
+		  
+		return "1";
+	}
+	
+	
 
 	private void createDirectoryIfNotExists(String directoryPath) throws IOException {
 		Path path = Paths.get(directoryPath);

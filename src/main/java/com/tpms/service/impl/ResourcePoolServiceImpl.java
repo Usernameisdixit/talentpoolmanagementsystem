@@ -50,7 +50,7 @@ public class ResourcePoolServiceImpl {
 			List<ResourcePoolHistory> tbl_resource_poolNotMatch = new ArrayList<>(ExcelEmp.size());
 
 			List<ResourcePool> tbl_resource_poolNotMatch1 = new ArrayList<>();
-
+			
 			List<ResourcePool> tbl_resource_poolMatch = new ArrayList<>((tbl_resource_pool.size()));
 
 			tbl_resource_poolNotMatch.addAll(ExcelEmp);
@@ -106,9 +106,31 @@ public class ResourcePoolServiceImpl {
 
 					String ResourceCodeExcel = ExcelEmp.get(i).getResourceCode();
 					String ResourceCodepool = tbl_resource_pool.get(j).getResourceCode();
+					
+					/***********Matched Record Both in Excel and Table are Updated in Table************/
+					if (tbl_resource_pool.get(j).getResourceCode() != null)
+					{
+					tbl_resource_pool.get(j).setDesignation(ExcelEmp.get(i).getDesignation());
+					tbl_resource_pool.get(j).setPlatform(ExcelEmp.get(i).getPlatform());
+					tbl_resource_pool.get(j).setEmail(ExcelEmp.get(i).getEmail());
+					tbl_resource_pool.get(j).setPhoneNo(ExcelEmp.get(i).getPhoneNo());
+					tbl_resource_pool.get(j).setLocation(ExcelEmp.get(i).getLocation());
+					tbl_resource_pool.get(j).setEngagementPlan(ExcelEmp.get(i).getEngagementPlan());
+					tbl_resource_pool.get(j).setExperience(ExcelEmp.get(i).getExperience());
+					//tbl_resource_pool.get(j).setAllocationDate(allocationDate);
+					if(tbl_resource_pool.get(j).getDeletedFlag()== 1) {
+					  tbl_resource_pool.get(j).setAllocationDate(allocationDate);
+					}
+					tbl_resource_pool.get(j).setDeletedFlag((byte) 0);
+					
+					
+					}
+					this.tbl_resource_pool_Repository.saveAll(tbl_resource_pool);
+					
+					/***************************************************************************************/
 
 					/*************************
-					 * Updated Data that is not Present in Excel (Tagged Resources)
+					 * Updated List Data that is not Present in Excel (Tagged Resources)
 					 ******************/
 					if (ResourceCodepool != null) {
 						for (ResourcePool obj : tbl_resource_poolMatch) {
