@@ -34,6 +34,8 @@ import { ReportAttendanceComponent } from './Reports/AttendanceNewReportComponen
 import { PlatformComponent } from './ResourceMgmt/Components/platform-master/platform/platform.component';
 import { PlatformViewComponent } from './ResourceMgmt/Components/platform-master/platform-view/platform-view.component';
 import { ActivityNewReportComponentComponent } from './Reports/ActivityNewReportComponent/activity-new-report-component.component';
+import { ResourcereportComponent } from './Reports/ResourceReportComponent/resourcereport/resourcereport.component';
+import { MailactivityComponent } from './MailActivity/Component/mailactivity/mailactivity.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -81,6 +83,8 @@ const routes: Routes = [
        { path : 'viewPlatform', component: PlatformViewComponent, canActivate: [authGuard]},
        { path : 'editPlatform/:platformId', component: PlatformComponent, canActivate: [authGuard] },
        { path : 'activitynewReport', component: ActivityNewReportComponentComponent, canActivate: [authGuard] },
+       { path : 'resourcereport', component: ResourcereportComponent, canActivate: [authGuard] },	
+       { path : 'mail', component: MailactivityComponent, canActivate: [authGuard] },	
     ]
   }
 ];

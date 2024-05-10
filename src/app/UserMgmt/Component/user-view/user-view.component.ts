@@ -63,20 +63,6 @@ export class UserViewComponent {
     this.getUserDetails();
   }
 
-  // onPrevPage(): void {
-  //   if (this.currentPage > 1) {
-  //     this.currentPage--;
-  //     this.getUserDetails();
-  //   }
-  // }
-
-  // onNextPage(): void {
-  //   if (this.currentPage < this.totalPages.length) {
-  //     this.currentPage++;
-  //     this.getUserDetails();
-  //   }
-  // }
-
   //edit user
   editUser(userId:any){
     this.route.navigate(["editUser/"+userId]);
@@ -127,19 +113,6 @@ export class UserViewComponent {
          });
       }
 }
-
-  // for pagination
-//   indexNumber : number = 0;
-//   page : number = 1;
-//   tableSize : number = 10;
-//   count : number = 0;
-
-// //pagination functionality
-// getTableDataChange(event : any){
-//   this.page = event;
-//   this.indexNumber = (this.page - 1) * this.tableSize;
-//   this.getUserDetails();
-// }
 
 
 // export to pdf

@@ -81,7 +81,9 @@ import { PlatformViewComponent } from './ResourceMgmt/Components/platform-master
 import { PlatformComponent } from './ResourceMgmt/Components/platform-master/platform/platform.component';
 import { HideIdInterceptor } from './HideIdInterceptor.service';
 import { ActivityNewReportComponentComponent } from './Reports/ActivityNewReportComponent/activity-new-report-component.component';
-
+import { ResourcereportComponent } from './Reports/ResourceReportComponent/resourcereport/resourcereport.component';
+import { MailactivityComponent } from './MailActivity/Component/mailactivity/mailactivity.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
@@ -126,7 +128,9 @@ defineLocale('en-gb', enGbLocale); //
    
     PlatformViewComponent,
     PlatformComponent,
-    ActivityNewReportComponentComponent
+    ActivityNewReportComponentComponent,
+    ResourcereportComponent,
+    MailactivityComponent
 
   ],
   imports: [
@@ -161,6 +165,7 @@ defineLocale('en-gb', enGbLocale); //
     MatDatepickerModule,
     MatNativeDateModule,
     NgxUiLoaderModule,
+    CKEditorModule,
     NgxUiLoaderHttpModule.forRoot({
       showForeground: true,
       exclude: ["http://localhost:9999/tpms/getActivityForAuto",

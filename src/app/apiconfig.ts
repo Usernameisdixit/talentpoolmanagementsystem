@@ -21,3 +21,6 @@ export const getRoles=baseUrl+'/getRoles';
 export const deleteRole=baseUrl+'/deleteRole/';
 export const editRole=baseUrl+'/editRole/';
 export const updateRole=baseUrl+'/updateRole/';
+
+ //Resource Report
+ export const getResourceResurceList= baseUrl +'/emp/getResourceReportList';

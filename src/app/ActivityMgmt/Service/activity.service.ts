@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Activity } from 'src/app/Model/activity.model';
 
@@ -14,7 +14,7 @@ const baseUrl4='http://localhost:9999/tpms/update-deleted-flag';
 const dataActivityName='http://localhost:9999/tpms/dataActivityName';
 const activityCheck='http://localhost:9999/tpms/activityCheck';
 
-
+const searchActivityUrl='http://localhost:9999/tpms/searchActivity';
 
 
 @Injectable({
@@ -68,6 +68,15 @@ export class ActivityService {
 
   activityExist(id :any){
     return this.http.get<boolean>(`${activityCheck}?activityId=${id}`);
+  }
+
+  findByActivityNameandPerson(activityId:string,activityPerson:string,pageNumber:number){
+    let params = new HttpParams();
+    params = params.append('activityId', activityId);
+    params = params.append('activityPerson', activityPerson);
+    params=params.append('pageNumber',pageNumber);
+  
+    return this.http.get(searchActivityUrl, { params: params }); 
   }
 
 }
