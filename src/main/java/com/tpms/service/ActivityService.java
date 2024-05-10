@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.springframework.http.ResponseEntity;
 
 import com.tpms.dto.PageResponse;
 import com.tpms.dto.ResourcePoolProjection;
@@ -62,5 +63,9 @@ public interface ActivityService {
 	 * @return 1 if records are deleted, 0 if no records are deleted, -1 if there's an error
 	 */
 	public int deleteAllocation(Long id);
+
+	public PageResponse<Activity> searchActivity(Integer activityId, String activityPerson, Integer pageNumber, int pageSize);
+
+	public List<Activity> getActivityList();
 
 }
