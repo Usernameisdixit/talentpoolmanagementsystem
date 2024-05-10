@@ -32,7 +32,57 @@ export class FileUploadComponent {
   }
 
   onFileSelected(event): void {
+    
     this.selectedFile = event.target.files[0];
+    if (!this.selectedFile.name.endsWith('.xlsx')) {
+      let fileFormat = '';
+      fileFormat = 'Unsupported file type. Please select a .xlsx file.\n';
+      if (fileFormat) {
+        Swal.fire( fileFormat);
+        return;
+      }
+    }
+    
+    const formattedDate = this.datePipe.transform(this.allocationDate, 'yyyy-MM-dd');
+    const formData = new FormData();
+    formData.append('file', this.selectedFile);
+    formData.append('allocationDate', formattedDate);
+    this.http.post('http://localhost:9999/tpms/uploadCheck', formData)
+    .subscribe(response => {
+      console.log('File uploaded successfully', response);
+      // Display success message using SweetAlert
+
+      if(response=="2")
+     {
+        Swal.fire({
+          icon: 'error',
+          text: 'Please Upload Excel File in Required Given Format Only.'
+        });
+
+        this.selectedFile = null;
+        this.allocationDate = null;
+        this.isUploading = false;
+      }
+
+    }, error => {
+      console.error('Error uploading file', error);
+     
+      Swal.fire({
+        icon: 'error',
+        text: 'Failed to upload file. Please try again later.'
+      });
+
+      this.selectedFile = null;
+      this.allocationDate = null;
+      this.isUploading = false;
+      });
+
+
+
+
+
+   
+
   }
  
 
@@ -67,7 +117,41 @@ export class FileUploadComponent {
     }
     
    // this.checkFileFormat(this.selectedFile);
-   
+   ////////////////////////////////////////////////////////////
+   const formattedDate = this.datePipe.transform(this.allocationDate, 'yyyy-MM-dd');
+   const formData = new FormData();
+   formData.append('file', this.selectedFile);
+   formData.append('allocationDate', formattedDate);
+   this.http.post('http://localhost:9999/tpms/uploadCheck', formData)
+   .subscribe(response => {
+     console.log('File uploaded successfully', response);
+     // Display success message using SweetAlert
+
+     if(response=="2")
+    {
+       Swal.fire({
+         icon: 'error',
+         text: 'Please Upload Excel File in Required Given Format Only.'
+       });
+
+       this.selectedFile = null;
+       this.allocationDate = null;
+       this.isUploading = false;
+     }
+
+   }, error => {
+     console.error('Error uploading file', error);
+    
+     Swal.fire({
+       icon: 'error',
+       text: 'Failed to upload file. Please try again later.'
+     });
+
+     this.selectedFile = null;
+     this.allocationDate = null;
+     this.isUploading = false;
+     });
+     ////////////////////////////////////////////////////////////////
 
     if (fileFormat) {
       Swal.fire( fileFormat);
