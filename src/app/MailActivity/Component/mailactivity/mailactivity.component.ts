@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AssessmentserviceService } from 'src/app/AssessmentMgmt/Service/assessmentservice.service';
 import { DateRange } from 'src/app/Model/DateRange';
 import { DatePipe, formatDate } from '@angular/common';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { MailService } from '../../Service/mail.service';
 import Swal from 'sweetalert2';
+import { BsDatepickerConfig, BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
+import { ReportAttendanceService } from 'src/app/Reports/AttendanceNewReportService/report-attendance.service';
 // import { MyUploadAdapter } from 'src/app/MyUploadAdopter';
 
 @Component({
@@ -18,7 +20,7 @@ export class MailactivityComponent {
   dateRanges: string[] = [];
   selectedDateRange: string = '';
   content: any[];
-  mailIds: string[] = [];
+  mailIds: any;
   cc: string = '';
   subject: any ;
   description: string = '';
@@ -29,9 +31,23 @@ export class MailactivityComponent {
   alocationDetails: any = [];
   activities: any[];
   activitiesForHead: any[];
+  activitiesForAtten: any[];
   selectedFile: File | null = null;
 
-  constructor(private apiService: AssessmentserviceService, private datePipe: DatePipe, private mailService: MailService) {
+  @ViewChild('dp') datepicker: BsDatepickerDirective;
+  @ViewChild('dp1') datepicker1: BsDatepickerDirective;
+  bsConfig: Partial<BsDatepickerConfig>;
+  selectedFromDateAtten: Date = null;
+  selectedToDateAtten: Date = null;
+  statusForAttenContent: boolean = false;
+
+
+  constructor(private apiService: AssessmentserviceService, private datePipe: DatePipe, private mailService: MailService,private reportAttendanceService:ReportAttendanceService) {
+    this.bsConfig = {
+      containerClass: 'theme-dark-blue',
+      dateInputFormat: 'DD-MMM-YYYY',
+      showWeekNumbers : false
+    };
 
   }
 
@@ -83,7 +99,6 @@ export class MailactivityComponent {
   }
 
   getAllActivityAllocationDetails() {
-    debugger;
     const dateRangeString = this.selectedDateRange;
     const dates = dateRangeString.split(' to ');
 
@@ -97,19 +112,43 @@ export class MailactivityComponent {
       });
   }
 
+  onInputTypeChange(): void {
+    console.log('Selected inputType:', this.inputType);
+    if(this.inputType=='attendance'){
+      this.editorContent='';
+      this.mailIds=null;
+      this.statusForAttenContent=false;
+    }
+    this.fetchEmailAndContent();
+    
+  }
+
   fetchEmailAndContent() {
-    debugger;
+    if(this.selectedDateRange=="0"){
+      this.editorContent='';
+    }
+   
+    if(this.inputType=='allocation'){
     this.mailIds = this.alocationDetails.map(resource => resource.email);
+    }
     this.mailService.fetContent(this.inputType)
     .subscribe(data => {
-     this.subject=data.subject;
+      this.subject=data.subject;
+     if(this,this.inputType=='allocation' && this.selectedDateRange!="0"){
      this.editorContent=data.contents;
      this.editorContent=this.editorContent.concat("<br><ul>");
      this.activitiesForHead.forEach(detail=>{
           this.editorContent=this.editorContent.concat("<li>").concat(detail).concat("</li><br>");
      });
      this.editorContent.concat("</ul");
+    }else if(this.inputType=='attendance' && this.statusForAttenContent==true){
+    this.editorContent=data.contents;
+    this.editorContent = this.editorContent.replace('fromdate', this.selectedFromDateAtten.toString);
+    this.editorContent = this.editorContent.replace('todate', this.selectedToDateAtten.toString);
+      alert(this.editorContent);
+    }    
     });
+    console.log("input"+this.inputType);
       console.log(this.editorContent);
   }
 
@@ -119,7 +158,7 @@ export class MailactivityComponent {
 
 
   fetchActivities(): void {
-    debugger
+   
     const uniqueActivityNames = new Set();
     const uniqueActivityNamesWithTime = new Set();
     this.alocationDetails.forEach(entry => {
@@ -143,22 +182,20 @@ export class MailactivityComponent {
   //rati
 
   onEditorReady(editor: any) {
-    debugger;
+   
     editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
       //  return new MyUploadAdapter( loader );
     };
   }
 
   onEditorChange(event: any) {
-    debugger;
+
     const editor = event.editor;
     const data = editor.getData();
     console.log('Editor content:', data);
   }
   //rati
   downloadExcelReport() {
-
-
     this.alocationDetails.forEach(entry => {
       if (entry.activityAllocationDetails) {
         this.activities.forEach(activity => {
@@ -179,8 +216,69 @@ export class MailactivityComponent {
 
   }
 
+  downloadExcelReportAttendance(){
+    this.fetchActivitiesForAtt();
+    //use attendance report functionality as there summary 
+    this.reportAttendanceService.attendanceData("summary", this.selectedFromDateAtten?.toLocaleString(), this.selectedToDateAtten?.toLocaleString(), "0", "0")
+        .subscribe(data => {
+        
+          if (data.length != 0) {
+            //START NA LOGIC   
+              data.forEach(entry => {
+                if (entry.activityAttenDetails) {
+                  this.activitiesForAtten.forEach(activity => {
+                    if (!entry.activityAttenDetails.some(detail => detail.activityName === activity.activityName)) {
+                      entry.activityAttenDetails.push({
+                        activityName: activity.activityName,
+                        attendanceStatus: 'NA'
+                      });
+                    }
+                  });
+                }
+              });
+
+              data.forEach(entry => {
+                this.sortAttenDetails(entry.activityAttenDetails);
+              });
+            
+        
+            //END
+            try{
+            this.reportAttendanceService.generateAteendanceExcel("summary", data, this.selectedFromDate, this.selectedToDate, this.activitiesForAtten,undefined);
+            this.statusForAttenContent=true;
+            this.fetchEmailAndContent();
+            }catch(error){
+              console.error('Error generating attendance Excel:', error);
+              this.statusForAttenContent=false;
+            }
+          } else {
+            Swal.fire('No attendance data found in this date range');
+
+          }
+        });
+
+  }
+
+  fetchActivitiesForAtt(){
+    if (this.selectedFromDateAtten && this.selectedToDateAtten) {
+      this.reportAttendanceService.getActivities(this.selectedFromDateAtten?.toLocaleString(), this.selectedToDateAtten?.toLocaleString())
+        .subscribe(data => {
+          //NEW LOGIC//
+          const uniqueActivities = {};
+          data.forEach(activity => {
+            const { activityId, activityName } = activity;
+            if (!uniqueActivities[activityName]) {
+                uniqueActivities[activityName] = [];
+            }
+            uniqueActivities[activityName].push(activityId);
+        });
+        const result = Object.entries(uniqueActivities).map(([activityName, activityId]) => ({ activityName, activityId })); 
+        this.activitiesForAtten = result;
+        });
+    }
+  }
+
   sortActivityAttenDetails(activityAttenDetails) {
-    debugger;
     if (activityAttenDetails) {
       // Sort the array  on activityName
       activityAttenDetails.sort((a, b) => {
@@ -196,12 +294,31 @@ export class MailactivityComponent {
     }
   }
 
+  sortAttenDetails(activityAttenDetails) {
+    if (activityAttenDetails) {
+      // Sort the array  on activityName
+      activityAttenDetails.sort((a, b) => {
+        const activityNameA = a.activityName.trim().toUpperCase();
+        const activityNameB = b.activityName.trim().toUpperCase();
+
+        if (activityNameA < activityNameB) return -1; 
+        if (activityNameA > activityNameB) return 1;  
+        return 0; 
+      });
+    } else {
+      console.log("activityAttenDetails is undefined or null");
+    }
+  }
+
   sendMail() {
-    debugger;
-    // const editorContent = this.description;
-    // console.log(editorContent);
+    if(this.selectedFile==null){
+      Swal.fire("please attached the file for "+this.inputType);
+    }else{
+    if(this.inputType=='attendance'){
+      this.mailIds=this.mailIds.trim().split(',')
+    }
     const formData = new FormData();
-    formData.append('to', this.mailIds.join(','));
+    formData.append('to', this.mailIds.join(','));   
     formData.append('cc', this.cc);
     formData.append('subject', this.subject);
     formData.append('text', this.editorContent);
@@ -228,13 +345,24 @@ export class MailactivityComponent {
       }
     });
   }
+  }
 
   resetForm() {
     this.mailIds = [];
     this.cc = '';
     this.subject = '';
     this.description = '';
-  
+    this.editorContent='';
+    this.selectedDateRange="0";  
+  }
+
+  openDatepicker(): void {
+    this.datepicker.show(); 
+    
+  }
+
+  openDatepicker1():void{
+    this.datepicker1.show();
   }
 
 }

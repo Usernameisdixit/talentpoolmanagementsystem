@@ -3,19 +3,19 @@
         <div class="col-md-12">
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="inputType" id="inputActivity" [(ngModel)]="inputType"
-                    value="allocation">
+                    value="allocation" (change)="onInputTypeChange()">
                 <label class="form-check-label" for="allocation">Allocation </label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="inputType" id="inputAttendance"
-                    [(ngModel)]="inputType" value="attendance">
+                    [(ngModel)]="inputType" value="attendance" (change)="onInputTypeChange()">
                 <label class="form-check-label" for="attendance">Attendance </label>
             </div>
-            <div class="form-check form-check-inline">
+            <!-- <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="inputType" id="inputAssesment"
-                    [(ngModel)]="inputType" value="assesment">
+                    [(ngModel)]="inputType" value="assesment" (change)="onInputTypeChange()">
                 <label class="form-check-label" for="assesment">Assesment</label>
-            </div>
+            </div> -->
         </div>
 
         <div class="form-group mt-2" *ngIf="inputType === 'allocation'">
@@ -34,9 +34,38 @@
                 </div>
             </div>
         </div>
+        <div class="form-group mt-2" *ngIf="inputType === 'attendance'">
+            <div class="row">
+            <div class="col-md-3">
+            <div class="form-group">
+                <label for="date">From Date: <span class="required">*</span></label>
+                <div class="input-group">
+                    <input id="date" class="form-control" type="text" autocomplete="off" [(ngModel)]="selectedFromDateAtten"   bsDatepicker
+                        [bsConfig]="bsConfig" placeholder="Select date"  #dp="bsDatepicker"/>
+                    <span class="input-group-text" (click)="openDatepicker()"><i class="material-icons">date_range</i></span>
+                </div>
+            </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="date">To Date: <span class="required">*</span></label>
+                    <div class="input-group">
+                        <input id="date" class="form-control" type="text" autocomplete="off" [(ngModel)]="selectedToDateAtten"  bsDatepicker
+                            [bsConfig]="bsConfig" placeholder="Select date"  #dp1="bsDatepicker"/>
+                        <span class="input-group-text" (click)="openDatepicker1()"><i class="material-icons">date_range</i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <button (click)="downloadExcelReportAttendance()" class="btn btn-icon export-btn mb-2" title="Download Excel">
+                    <i class="fas fa-file-excel fa-lg excel-icon"></i>
+                </button>
+            </div>
+        </div>
+        </div>
         <div class="form-group">
             <label for="mailIds">Send To:</label>
-            <textarea id="mailIds" name="mailIds" class="form-control" rows="3" [(ngModel)]="mailIds" ></textarea>
+            <textarea id="mailIds" name="mailIds" class="form-control" rows="3" [(ngModel)]="mailIds"  [readonly]="inputType === 'allocation'"></textarea>
           </div>
     
           <div class="form-group">
