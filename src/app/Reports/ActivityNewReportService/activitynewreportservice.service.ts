@@ -149,7 +149,7 @@ export class ActivitynewreportserviceService {
       pdf.save('Activity Report For Activity '+activityNameForExcel+'-'+formatteFromdDate+' to '+formattedToDate+'.pdf');
     }else if(reportType=='resource'){
       let resourceNameForExcel = attendanceData[0]?.resourceName;
-      pdf.save('Activity Report For Resource'+resourceNameForExcel+'-'+formatteFromdDate+' to '+formattedToDate+'.pdf');
+      pdf.save('Activity Report For Resource '+resourceNameForExcel+'-'+formatteFromdDate+' to '+formattedToDate+'.pdf');
     }else{
       pdf.save('Activity Summary Report For -'+formatteFromdDate+' to '+formattedToDate+'.pdf');
     }

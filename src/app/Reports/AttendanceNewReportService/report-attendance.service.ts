@@ -172,7 +172,7 @@ export class ReportAttendanceService {
       pdf.save('Attendance Report Activity'+activityNameForExcel+'-'+formatteFromdDate+' to '+formattedToDate+'.pdf');
     }else if(reportType=='resource'){
       let resourceNameForExcel = attendanceData[0]?.resourceName;
-      pdf.save('Attendance Report For Resource'+resourceNameForExcel+'-'+formatteFromdDate+' to '+formattedToDate+'.pdf');
+      pdf.save('Attendance Report For Resource '+resourceNameForExcel+'-'+formatteFromdDate+' to '+formattedToDate+'.pdf');
     }else{
       pdf.save('Attendance Summary Report For -'+formatteFromdDate+' to '+formattedToDate+'.pdf');
     }
@@ -475,10 +475,10 @@ export class ReportAttendanceService {
     // Save the workbook as an Excel file
     if(reportType=='activity'){
       let activityNameForExcel = attendanceData[0]?.activityAttenDetails[0]?.activityName;
-      XLSX.writeFile(wb, 'Attendance Report Activity'+activityNameForExcel+'-'+formatteFromdDate+' to '+formattedToDate+'.xlsx');
+      XLSX.writeFile(wb, 'Attendance Report Activity '+activityNameForExcel+'-'+formatteFromdDate+' to '+formattedToDate+'.xlsx');
     }else if(reportType=='resource'){
       let resourceNameForExcel = attendanceData[0]?.resourceName;
-      XLSX.writeFile(wb, 'Attendance Report For Resource'+resourceNameForExcel+'-'+formatteFromdDate+' to '+formattedToDate+'.xlsx');
+      XLSX.writeFile(wb, 'Attendance Report For Resource '+resourceNameForExcel+'-'+formatteFromdDate+' to '+formattedToDate+'.xlsx');
     }else{
       XLSX.writeFile(wb, 'Attendance Summary Report For -'+formatteFromdDate+' to '+formattedToDate+'.xlsx');
     }
