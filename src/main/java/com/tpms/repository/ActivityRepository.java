@@ -49,7 +49,9 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 	List<Activity> getActvitiesByDateRange(String formattedFromDate, String formattedToDate);
 
 	@Query(value = "select distinct aa.activityName,\r\n" + "case when aal.activityFor=1 then '1st Half' \r\n"
-			+ "when aal.activityFor=2 then '2nd Half' end as activityFor, \r\n"
+			+ "when aal.activityFor=2 then '2nd Half' "
+			+ "when aal.activityFor=3 then 'Full Day' "
+			+ "end as activityFor, \r\n"
 			+ "aal.fromHours, aal.toHours ,aal.activityFromDate,aal.activitytoDate\r\n"
 			+ " from activity_allocation aal \r\n" + " inner join activity aa \r\n"
 			+ " on aal.activityId=aa.activityId\r\n"
