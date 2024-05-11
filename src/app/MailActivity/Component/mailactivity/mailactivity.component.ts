@@ -315,11 +315,13 @@ export class MailactivityComponent {
 
   sendMail() {
     debugger;
-    if(this.mailIds.length==0){
+    if(this.inputType=='alocation' && this.mailIds.length==0){
+      Swal.fire("The message must have at least one recipient. ");
+    }else if(this.inputType=='attendance' && this.mailIds==null){
       Swal.fire("The message must have at least one recipient. ");
     }
     else if(this.selectedFile==null){  
-      Swal.fire("please attached the "+this.inputType+" file for ");
+      Swal.fire("please attached the "+this.inputType+" file ");
     }else{
     if(this.inputType=='attendance'){
       this.mailIds=this.mailIds.trim().split(',')
