@@ -212,7 +212,8 @@ export class ResourcereportService {
       },
       margin: { left: 10 },
     });
-    pdf.save('Resource_Report.pdf');
+    let resourceName=attendanceData.resource_name;
+    pdf.save('Resource_report   For -'+ resourceName +' '+'.pdf');
   }
 
   calculateDuration(startDate: string, endDate: string): number {
@@ -444,7 +445,9 @@ export class ResourcereportService {
     XLSX.utils.book_append_sheet(wb, ws, 'Resource Report');
 
     // Save the workbook as an Excel file
-    XLSX.writeFile(wb, 'Resource_report.xlsx');
+    let resourceName=talent[index].resourceName;
+    XLSX.writeFile(wb, 'Resource_report   For -'+ resourceName +' '+'.xlsx');
+    // XLSX.writeFile(wb, 'Resource_report.xlsx');
   }
 
 
