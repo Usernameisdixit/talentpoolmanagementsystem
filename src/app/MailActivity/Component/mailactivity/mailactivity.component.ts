@@ -124,6 +124,7 @@ export class MailactivityComponent {
   }
 
   fetchEmailAndContent() {
+    debugger;
     if(this.selectedDateRange=="0"){
       this.editorContent='';
     }
@@ -141,6 +142,8 @@ export class MailactivityComponent {
           this.editorContent=this.editorContent.concat("<li>").concat(detail).concat("</li><br>");
      });
      this.editorContent.concat("</ul");
+     let dynamicDate=this.getNextWorkingDateAsString();
+     this.editorContent=this.editorContent.replace('dateinput',dynamicDate);
     }else if(this.inputType=='attendance' && this.statusForAttenContent==true){
     this.editorContent=data.contents;
     this.editorContent = this.editorContent.replace('fromdate', this.selectedFromDateAtten.toString);
@@ -311,8 +314,14 @@ export class MailactivityComponent {
   }
 
   sendMail() {
-    if(this.selectedFile==null){
-      Swal.fire("please attached the file for "+this.inputType);
+    debugger;
+    if(this.inputType=='alocation' && this.mailIds.length==0){
+      Swal.fire("The message must have at least one recipient. ");
+    }else if(this.inputType=='attendance' && this.mailIds==null){
+      Swal.fire("The message must have at least one recipient. ");
+    }
+    else if(this.selectedFile==null){  
+      Swal.fire("please attached the "+this.inputType+" file ");
     }else{
     if(this.inputType=='attendance'){
       this.mailIds=this.mailIds.trim().split(',')
@@ -354,6 +363,7 @@ export class MailactivityComponent {
     this.description = '';
     this.editorContent='';
     this.selectedDateRange="0";  
+    this.selectedFile=null;
   }
 
   openDatepicker(): void {
@@ -364,5 +374,24 @@ export class MailactivityComponent {
   openDatepicker1():void{
     this.datepicker1.show();
   }
+
+  getNextWorkingDateAsString(): string {
+    const currentDate = this.selectedToDate;
+    currentDate.setDate(currentDate.getDate() + 1);
+    while (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const dayName = dayNames[currentDate.getDay()];
+    const day = ("0" + currentDate.getDate()).slice(-2); 
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthIndex = currentDate.getMonth();
+    const month = monthNames[monthIndex];
+    const year = currentDate.getFullYear();
+    console.log(`${dayName} ${day}-${month}-${year}`);
+    return `${dayName} (i.e ${day}-${month}-${year})`;
+}
+
 
 }

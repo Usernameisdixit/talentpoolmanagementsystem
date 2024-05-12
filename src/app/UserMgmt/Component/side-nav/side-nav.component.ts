@@ -21,6 +21,9 @@ ngOnInit(){
     // window.location.reload();
   }
   getReload(){
+    if( localStorage.getItem('activeLink') === 'Attendance'){
+      localStorage.setItem("activeLink","change");
+    }
     window.location.reload();
   }
 

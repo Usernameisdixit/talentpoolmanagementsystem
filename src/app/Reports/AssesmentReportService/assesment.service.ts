@@ -150,7 +150,16 @@ export class AssesmentService {
       },
       margin: { left: 10 },
     });
-    pdf.save('assesment_report.pdf');
+    if(reportType=='activity'){
+      let activityNameForExcel = assesmentData[0]?.activityName;
+      pdf.save('Assesment Report For Activity '+activityNameForExcel+'-'+formatteFromdDate+' to '+formattedToDate+'.pdf');
+    }else if(reportType=='resource'){
+      let resourceNameForExcel = assesmentData[0]?.resourceName;
+      pdf.save('Assesment Report For Resource '+resourceNameForExcel+'-'+formatteFromdDate+' to '+formattedToDate+'.pdf');
+    }else{
+      pdf.save('Assesment Summary Report For -'+formatteFromdDate+' to '+formattedToDate+'.pdf');
+    }
+    // pdf.save('assesment_report.pdf');
   }
 
 
@@ -370,7 +379,16 @@ export class AssesmentService {
     XLSX.utils.book_append_sheet(wb, ws, 'Assesmentt Report');
 
     // Save the workbook as an Excel file
-    XLSX.writeFile(wb, 'assesment.xlsx');
+    if(reportType=='activity'){
+      let activityNameForExcel = assesmentData[0]?.activityName;
+      XLSX.writeFile(wb, 'Assesment Report For Activity '+activityNameForExcel+'-'+formatteFromdDate+' to '+formattedToDate+'.xlsx');
+    }else if(reportType=='resource'){
+      let resourceNameForExcel = assesmentData[0]?.resourceName;
+      XLSX.writeFile(wb, 'Assesment Report For Resource '+resourceNameForExcel+'-'+formatteFromdDate+' to '+formattedToDate+'.xlsx');
+    }else{
+      XLSX.writeFile(wb, 'Assesment Summary Report For -'+formatteFromdDate+' to '+formattedToDate+'.xlsx');
+    }
+    // XLSX.writeFile(wb, 'assesment.xlsx');
 
   }
 }

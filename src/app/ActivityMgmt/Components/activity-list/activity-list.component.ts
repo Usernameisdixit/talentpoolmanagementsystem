@@ -235,10 +235,14 @@ export class ActivityListComponent implements OnInit {
     this.activityService.findByActivityNameandPerson(activityId.value,activityPerson.value,this.currentPage)
     .subscribe({
       next:(data:any)=>{
-        console.log(data);
+        if(activityId.value==='0' && activityPerson.value===''){
+           this.activities=data;
+        }
+        else{
         this.activities = data.content;
         this.totalElements = data.totalElements;
         this.pageSize=data.pageSize;
+        }
       },
       error:(e)=>console.log(e) 
     });
