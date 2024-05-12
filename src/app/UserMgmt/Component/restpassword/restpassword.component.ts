@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { LoginService } from '../../Service/login.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -28,6 +28,10 @@ export class RestpasswordComponent implements OnInit{
       this.credentials.email = this.email;
     });
   }
+  @HostListener('window:popstate', ['$event'])
+    onPopState(event: any) {
+      this.router.navigate(['login']);  
+    }
 
   onSubmit() {
      //alert(this.credentials.email);
