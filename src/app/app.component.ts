@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
     @HostListener('window:popstate', ['$event'])
     onPopState(event: any) {
       event.preventDefault();
+      if (!(this.router.url === '/login' || this.router.url==='/forgotPassword' || this.router.url==='/restpassword/')) {
       if (!this.confirmationShown) {
         const stayOnPage = confirm("You are going to be logged out !");
         if (!stayOnPage) {
@@ -47,6 +48,7 @@ export class AppComponent implements OnInit {
       } else {
         this.confirmationShown = false; 
       }
+    }
     }
     
 }
