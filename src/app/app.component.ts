@@ -33,21 +33,20 @@ export class AppComponent implements OnInit {
     //Back button handled
     @HostListener('window:popstate', ['$event'])
     onPopState(event: any) {
-      const stayOnPage = this.confirmLogout();
-    
+      event.preventDefault();
       if (!this.confirmationShown) {
+        const stayOnPage = confirm("You are going to be logged out !");
         if (!stayOnPage) {
-          // Redirect to previous page
-          this.location.forward();
+          this.location.forward(); 
+          this.confirmationShown = true; 
         } else {
           this.router.navigate(['login']);
+          this.confirmationShown = false;
+         // window.location.reload();
         }
+      } else {
+        this.confirmationShown = false; 
       }
-      this.confirmationShown = false;
-    }
-    
-    private confirmLogout(): boolean {
-      return confirm("You are going to be logged out !");
     }
     
 }
