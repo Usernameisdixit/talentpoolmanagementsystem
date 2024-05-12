@@ -33,7 +33,6 @@ export class AppComponent implements OnInit {
     //Back button handled
     @HostListener('window:popstate', ['$event'])
     onPopState(event: any) {
-      debugger;
       const stayOnPage = this.confirmLogout();
     
       if (!this.confirmationShown) {

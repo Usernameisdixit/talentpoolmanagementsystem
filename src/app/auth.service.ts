@@ -9,7 +9,6 @@ export class AuthService {
 
   constructor() { }
   isLoggedIn(token: any) {
-    debugger;
     if(token==null || token=="undefined" || token==='' || this.isTokenExpired(token))
       this.userLogIn=false;
     else

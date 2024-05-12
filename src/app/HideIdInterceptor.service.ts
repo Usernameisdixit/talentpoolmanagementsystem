@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 export class HideIdInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Modify the URL to hide sensitive information like email or ID
-    debugger;
     const modifiedReq = req.clone({
      // url: this.modifyUrl(req.url)
     });
