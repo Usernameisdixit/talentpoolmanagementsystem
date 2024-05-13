@@ -63,18 +63,6 @@ export class ActivityListComponent implements OnInit {
     });
   }
 
-  // setPage(pageIndex: number): void {
-  //   const startIndex = (pageIndex - 1) * this.pageSize;
-  //   const endIndex = Math.min(startIndex + this.pageSize, this.activities.length);
-  //   this.pagedActivities = this.activities.slice(startIndex, endIndex);
-  // }
-
-  // onPageChange(event: PageEvent): void {
-
-  //   this.currentPage = event.pageIndex + 1;
-  //   this.setPage(this.currentPage);
-  // }
-
   getActivity(id: string): void {
     this.activityService.get(id).subscribe({
       next: (data: Activity) => {
@@ -174,6 +162,7 @@ export class ActivityListComponent implements OnInit {
 
     doc.save('Activity_Details.pdf');
   }
+
   private getTableDataa(): any[][] {
     let serialNumber = 1;
     return this.activitiesdetails.map((c, index) => [
@@ -230,37 +219,33 @@ export class ActivityListComponent implements OnInit {
     saveAs(data, fileName + '_export_' + new Date().getTime() + '.xlsx');
   }
 
-  // removeAllTutorials(): void {
-  //   this.tutorialService.deleteAll().subscribe({
-  //     next: (res) => {
-  //       console.log(res);
-  //       this.refreshList();
-  //     },
-  //     error: (e) => console.error(e)
-  //   });
-  // }
-
-  // searchTitle(): void {
-  //   this.currentActivity = {};
-  //   this.currentIndex = -1;
-
-  //   this.tutorialService.findByTitle(this.title).subscribe({
-  //     next: (data) => {
-  //       this.tutorials = data;
-  //       console.log(data);
-  //     },
-  //     error: (e) => console.error(e)
-  //   });
-  // }
-
-
   //pagination functionality
   getTableDataChange(event: any) {
     this.currentPage = event;
-    // this.indexNumber = (this.pageno - 1) * this.tableSize;
-    // console.log(this.indexNumber);
-
     this.retrieveActivities();
+  }
+
+  // ........... for searching section.................
+
+  searchBtn(){
+    this.currentPage=1;
+    let activityId=document.getElementById("activityName") as HTMLSelectElement ;
+    let activityPerson=document.getElementById("activityPerson") as HTMLInputElement;
+    
+    this.activityService.findByActivityNameandPerson(activityId.value,activityPerson.value,this.currentPage)
+    .subscribe({
+      next:(data:any)=>{
+        if(activityId.value==='0' && activityPerson.value===''){
+           this.activities=data;
+        }
+        else{
+        this.activities = data.content;
+        this.totalElements = data.totalElements;
+        this.pageSize=data.pageSize;
+        }
+      },
+      error:(e)=>console.log(e) 
+    });
   }
 
 

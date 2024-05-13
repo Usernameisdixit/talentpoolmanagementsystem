@@ -186,7 +186,7 @@ export class DashboardComponent  implements OnInit{
     this.loginService.setSelectedActivityName(activityName,selectedDate);
     this.router.navigate(['takeAtten']);
     this._userService.changeTitle("Attendance Management");
-    localStorage.setItem("activeLink","Attendance Management");
+    localStorage.setItem("activeLink","Attendance");
     
     }
     // attendance data for dashboard modal

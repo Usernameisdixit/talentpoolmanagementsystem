@@ -19,6 +19,7 @@ export class ResourcereportComponent {
   delmsg: string = "";
   c: Talent[];
   duration: any = [];
+  activities:any=[];
   listData: any = [];
  
   constructor(private router: Router, private datePipe: DatePipe, private resourcereportService: ResourcereportService) {}
@@ -74,7 +75,8 @@ export class ResourcereportComponent {
 
     // Add the table
     (doc as any).autoTable({
-      head: [['Sl. No.', 'Res. Name', 'Desig.', 'Res. Code', 'Platform', 'Location', 'Exp.', 'Mobile', 'Email', 'Duration']],
+     // head: [['Sl. No.', 'Res. Name', 'Desig.', 'Res. Code', 'Platform', 'Location', 'Exp.', 'Mobile', 'Email', 'Duration']],
+      head: [['Sl. No.', 'Res. Name', 'Desig.', 'Res. Code', 'Platform', 'Location', 'Exp.', 'Status', 'Duration']],
       body: data,
       startY: 20,
       margin: { top: 15 }
@@ -94,8 +96,9 @@ export class ResourcereportComponent {
       c.platform,
       c.location,
       c.experience,
-      c.phoneNo,
-      c.email,
+      c.deletedFlag ? 'InActive' : 'Active',
+      //c.phoneNo,
+      //c.email,
       c.duration
 
     ]);
@@ -118,8 +121,9 @@ export class ResourcereportComponent {
       { v: 'Platform', s: headerStyle },
       { v: 'Location', s: headerStyle },
       { v: 'Experience', s: headerStyle },
-      { v: 'Mobile', s: headerStyle },
-      { v: 'Email', s: headerStyle },
+      { v: 'Status', s: headerStyle },
+     // { v: 'Mobile', s: headerStyle },
+     // { v: 'Email', s: headerStyle },
       { v: 'Duration', s: headerStyle }
     ];
 
@@ -155,12 +159,24 @@ export class ResourcereportComponent {
     return allocationDate < currentDate;
   }
 
+  getActivites(resourceCode:any){
+    console.log(typeof (resourceCode));
+   this.resourcereportService.fetchActivities(resourceCode).subscribe(data => {
+    this.activities=data;
+    }); 
+  }
 
   generatePDF(resource: any) {
     console.log(typeof (resource.resourceCode));
-    this.resourcereportService.fetchDurations(resource.resourceCode).subscribe(data => {
+   //console.log(typeof (resourceCode));
+   this.resourcereportService.fetchActivities(resource.resourceCode).subscribe(data => {
+    this.activities=data;
+    }); 
+
+  this.resourcereportService.fetchDurations(resource.resourceCode).subscribe(data => {
       this.duration = data;
-      this.resourcereportService.generateResourceReportPdf(data, this.talent);
+     // this.getActivites(resource.resourceCode);
+      this.resourcereportService.generateResourceReportPdf(data, this.talent, this.activities);
       console.log(data);
     });
   }
@@ -169,7 +185,8 @@ export class ResourcereportComponent {
       console.log(typeof (resource.resourceCode));
       this.resourcereportService.fetchDurations(resource.resourceCode).subscribe(data => {
         this.duration = data;
-        this.resourcereportService.generateAteendanceExcel(data, this.talent);
+        this.getActivites(resource.resourceCode);
+        this.resourcereportService.generateAteendanceExcel(data, this.talent,  this.activities);
         console.log(data);
       });
      

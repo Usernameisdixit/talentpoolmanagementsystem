@@ -89,12 +89,17 @@ export class ResourcereportService {
     return this.httpClient.get<string[]>(`${this.baseUrl}/durations?code=${code}`);
   }
 
+  fetchActivities(code: string): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseUrl}/ractive?code=${code}`);
+  }
+
   
-  generateResourceReportPdf(attendanceData: any,  talent:any) {
+  generateResourceReportPdf(attendanceData: any,  talent:any, activities:any) {
     debugger;
     const pdf = new jsPDF();
     let startYpos = 0;
-
+    let Active ="";
+    let Activeind:any;
     pdf.text('Resource Report', 75, 10);
 
     for (let i = 0; i < talent.length; i++) {
@@ -109,9 +114,24 @@ export class ResourcereportService {
          pdf.text('Experience : ' + talent[i].experience, 100, 38);
          pdf.text('Email ID : ' + talent[i].email, 10, 44);
          pdf.text('Phone : ' + talent[i].phoneNo, 100, 44);
-         startYpos = 50;
+         startYpos = 56;
+      
+         //Activeind = activities.periodsArray.length;
 
+         Activeind= activities.periodsArray? activities.periodsArray.length : 0;
+           if(Activeind>0){
+
+         console.log(activities.periodsArray);
+         for (let k = 0; k < Activeind; k++) {
+           Active += activities.periodsArray[k].Activity+ " ,"
+           //pdf.text('Activities : ' + activities.periodsArray[k].Activity, 10, 50);
+         pdf.text('Activities : ' + Active, 10, 50);
+         }
+         }
+        
       }}
+
+      
     let head;
      head = [['Sl. No','Period','Days']];
     let Total=0;
@@ -119,12 +139,16 @@ export class ResourcereportService {
     // Table content
     const data = [];
     let lastDate = null;
-    
+    const rowData1 = [];
+    const dataRowColorT = [104, 211, 245];
+
     for (let i = 0; i < attendanceData.allocation_periods.length; i++) {
 
      // const atendanceDate = detail.atendanceDate;
       const dataRowColor = [255, 255, 255];
       const rowData = [];
+
+      
 
       const formatFromDate = new Date(attendanceData.allocation_periods[i].start_date);
       const formatFromday = formatFromDate.getDate();
@@ -154,8 +178,16 @@ export class ResourcereportService {
       data.push(rowData);
 
     }
-    
-    pdf.text('Total Number of Days in Talent Pool: ' + Total+" Days", 10, 100);
+
+       rowData1.push(
+      { content: "", styles: { fillColor: dataRowColorT , textColor: [9, 9, 9],fontStyle: 'bold'} },
+      { content: "Total Number of Days in Talent Pool:" , styles: { fillColor: dataRowColorT , textColor: [9, 9, 9],fontStyle: 'bold' } },
+      { content: Total +" Days" , styles: { fillColor: dataRowColorT, textColor: [9, 9, 9],fontStyle: 'bold' }},
+     
+      );
+    data.push(rowData1);
+
+    //pdf.text('Total Number of Days in Talent Pool: ' + Total+" Days", 10, 100);
 
     // Create auto table
     var finalY = null;
@@ -176,11 +208,12 @@ export class ResourcereportService {
         textColor: [9, 9, 9],
         lineColor: [0, 0, 0],
         lineWidth: 0.5,
-        fontStyle: 'bold',
+        
       },
       margin: { left: 10 },
     });
-    pdf.save('Resource_Report.pdf');
+    let resourceName=attendanceData.resource_name;
+    pdf.save('Resource_report   For -'+ resourceName +' '+'.pdf');
   }
 
   calculateDuration(startDate: string, endDate: string): number {
@@ -191,7 +224,7 @@ export class ResourcereportService {
     return diffDays + 1;
   }
 
-  generateAteendanceExcel(attendanceData: any, talent:any) {
+  generateAteendanceExcel(attendanceData: any, talent:any, activities:any) {
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([], { skipHeader: true });
     
     let headerRow = [];
@@ -208,6 +241,17 @@ export class ResourcereportService {
 
         }
        }
+       
+       let Active ="";
+       let Activeind:any;
+       Activeind= activities.periodsArray? activities.periodsArray.length : 0;
+       if(Activeind>0){
+
+     console.log(activities.periodsArray);
+     for (let k = 0; k < Activeind; k++) {
+       Active += activities.periodsArray[k].Activity+ " ,"
+      }
+     }
 
       //attendanceData.forEach(() => colWidths.push({ wch: 10 }));
       ws['!cols'] = colWidths;
@@ -244,9 +288,13 @@ export class ResourcereportService {
       s: {
         font: {
           bold: true,
-          size: 14,
+          size: 20,
           color: { rgb: '1D05EE' },
         },
+        fill: {
+          patternType: 'solid',
+          fgColor: { rgb: 'f5deb3' },
+        }, 
         alignment: {
           horizontal: 'center',
           vertical: 'center',
@@ -256,10 +304,6 @@ export class ResourcereportService {
     };
 
 
-
-   
-
-    
       ws['A3'] = {
         v: `Resource Name:  ${talent[index].resourceName}`,
         t: 's',
@@ -298,19 +342,24 @@ export class ResourcereportService {
         v: `Phone:  ${talent[index].phoneNo}`,
         t: 's',
       };
+      ws['A7'] = {
+        v: `Activities:  ${Active}`,
+        t: 's',
+      };
 
 
      
 
     
     //HEADING MERGED
-    const colMergerd=attendanceData.allocation_periods.length+1;
+    const colMergerd=attendanceData.allocation_periods.length;
     let colMergerdResource;
    
-      colMergerdResource=attendanceData.allocation_periods.length;
+      //colMergerdResource=attendanceData.allocation_periods.length;
+      colMergerdResource=2;
     
     
-      ws['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: colMergerdResource } }];
+      ws['!merges'] = [{ s: { r: 0, c: 0}, e: { r: 0, c: colMergerdResource } }];
     
 
     const data: any[] = [];
@@ -396,7 +445,9 @@ export class ResourcereportService {
     XLSX.utils.book_append_sheet(wb, ws, 'Resource Report');
 
     // Save the workbook as an Excel file
-    XLSX.writeFile(wb, 'Resource_report.xlsx');
+    let resourceName=talent[index].resourceName;
+    XLSX.writeFile(wb, 'Resource_report   For -'+ resourceName +' '+'.xlsx');
+    // XLSX.writeFile(wb, 'Resource_report.xlsx');
   }
 
 

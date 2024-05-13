@@ -50,7 +50,7 @@ export class AttendanceNewComponent {
     this.uncheckCheckboxStatus = Array<boolean>(this.pageSizes.length).fill(false);
     this.getActivity();
     this.selectActivity = this.loginService.selectedActivityName;
-    this.dashboard = localStorage.getItem('activeLink') === 'Dashboard';
+    this.dashboard = localStorage.getItem('activeLink') === 'Attendance';
     if (this.dashboard) {
       if (this.selectActivity && this.loginService.selectedDate) {
         this.selectedActivity = this.selectActivity;
@@ -107,7 +107,7 @@ export class AttendanceNewComponent {
 
 
   getActivity() {
-    if (this.loginService.selectedDate && (localStorage.getItem('activeLink') === 'Dashboard')) {
+    if (this.loginService.selectedDate && (localStorage.getItem('activeLink') === 'Attendance')) {
       this.selectedDate = new Date(this.loginService.selectedDate);
     }
     this.attendanceNewService.fetchActivities(this.selectedDate?.toLocaleString()).subscribe((data) => {
