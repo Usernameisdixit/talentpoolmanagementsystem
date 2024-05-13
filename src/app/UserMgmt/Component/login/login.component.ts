@@ -3,6 +3,8 @@ import { LoginService } from '../../Service/login.service';  // Update the path
 import { User } from 'src/app/Model/user';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-login',
@@ -91,12 +93,19 @@ export class LoginComponent implements OnInit {
 
           },
           (error) => {
-            alert('Internal server Error,Please contact to admin !');
-            this.router.navigate(['login']);
-            setTimeout(() => {
-              this.errorMessage = '';
-            }, 2000);
+           // this.errorMessage = 'Internal server error,Please contact to admin !';
+            Swal.fire({
+              title: "Error!",
+              text: 'Internal server error,Please contact to admin !',
+              icon: "error",
+              confirmButtonText: "OK",
+            }).then(() => {
+              this.router.navigate(['login']);
+              setTimeout(() => {
+              }, 2000);
+            });
           }
+ 
         );
       } else {
         // Inform the user that password is required
