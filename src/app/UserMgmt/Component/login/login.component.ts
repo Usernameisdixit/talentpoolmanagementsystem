@@ -91,7 +91,7 @@ export class LoginComponent implements OnInit {
 
           },
           (error) => {
-            alert('Internal Error,Please contact to admin !');
+            alert('Internal server Error,Please contact to admin !');
             this.router.navigate(['login']);
             setTimeout(() => {
               this.errorMessage = '';
