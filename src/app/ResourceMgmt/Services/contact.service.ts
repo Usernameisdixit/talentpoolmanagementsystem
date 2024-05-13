@@ -4,14 +4,12 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { Observable, catchError, throwError } from 'rxjs';
 import { Talent } from 'src/app/Model/talent';
 import { ResourceHistory } from 'src/app/Model/ResourceHistory';
-import {getResourceDetailsWithFileName, getResourceList } from 'src/app/apiconfig';
+import {getDesignationData, getLocationData, getPlaformListData, getResourceDetailsWithFileName, getResourceList, searchFilterData } from 'src/app/apiconfig';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContactService {
-
-
 
   private baseUrl = "http://localhost:9999/tpms/emp"
 
@@ -88,4 +86,29 @@ export class ContactService {
     return this.httpClient.get<string[]>(`${this.baseUrl}/durations?code=${code}`);
   }
 
+  getDesignation() {
+    let fullUrl = getDesignationData;
+    return this.httpClient.get(fullUrl);
+  }
+  getPlaformListData() {
+    let fullUrl = getPlaformListData;
+    return this.httpClient.get(fullUrl);
+  }
+
+  getLocation() {
+    let fullUrl = getLocationData;
+    return this.httpClient.get(fullUrl);
+  }
+
+  searchData(designation: any, location: any, platform: any,page:any) {
+      let queryparams = new HttpParams()
+        .append('designation', designation)
+        .append('location', location)
+        .append('platform', platform);
+      let options = {
+        params: queryparams
+      }
+      let fullUrl = searchFilterData;
+      return this.httpClient.get(fullUrl, options)
+  }
 }

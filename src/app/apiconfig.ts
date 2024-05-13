@@ -24,3 +24,7 @@ export const updateRole=baseUrl+'/updateRole/';
 
  //Resource Report
  export const getResourceResurceList= baseUrl +'/emp/getResourceReportList';
+ export const getDesignationData = baseUrl + '/getDesignation';
+ export const getPlaformListData = baseUrl + '/getPlatform';
+ export const getLocationData =  baseUrl + '/getLocation';
+ export const searchFilterData = baseUrl + '/searchFilterData';

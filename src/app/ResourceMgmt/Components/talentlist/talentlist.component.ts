@@ -9,6 +9,7 @@ import { saveAs } from 'file-saver';
 import { RouterModule, RouterEvent } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { UserService } from 'src/app/UserMgmt/Service/user.service';
+import $ from 'jquery';
 
 @Component({
   selector: 'app-talentlist',
@@ -24,6 +25,13 @@ export class TalentlistComponent implements OnInit {
   c: Talent[];
   duration: any = [];
   listData: any = [];
+  getDesignationList: any=[];
+  getPlaformList: any=[];
+  getLocationList: any=[];
+  designation: any;
+  location: any;
+  platform: any;
+  record: any;
   constructor(private service: ContactService, private router: Router, private datePipe: DatePipe,
     private _userService:UserService) { }
 
@@ -34,9 +42,44 @@ export class TalentlistComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTalent();
+    this.getDesignation();
+    this.getLocation();
+    this.getPlaformListData();
   }
 
-
+getDesignation(){
+  this.location="";
+  this.service.getDesignation().subscribe((response:any)=>{
+      this.getDesignationList = response;
+  },
+    (error) => {
+     
+    });
+  
+}
+getLocation(){
+  this.designation="";
+  this.service.getLocation().subscribe((response:any)=>{
+      this.getLocationList = response;
+  },
+    (error) => {
+     
+    });
+  
+}
+getPlaformListData(){
+  debugger;
+  this.platform="";
+  this.service.getPlaformListData().subscribe((response:any)=>{
+   
+      this.getPlaformList = response;      
+  
+  },
+    (error) => {
+      // this.swal('', 'Something went wrong.', 'error');
+    });
+  
+}
   getTalent() {
     this.service.getTalent(this.currentPage).subscribe((response:any) => {
       this.talent = response.content;
@@ -183,5 +226,33 @@ export class TalentlistComponent implements OnInit {
     const currentDate = new Date();
     return allocationDate < currentDate;
   }
+  reset(){
+    window.location.reload();
+  }
 
+  search(){
+    debugger;
+    this.currentPage=1;
+    this.designation=$('#designation').val();
+   this.location= $('#location').val();
+    this.platform= $('#platform').val();
+    if(this.designation==undefined){
+      this.designation="";
+    }
+    if(this.location==undefined){
+      this.location="";
+    }
+    if( this.platform==undefined){
+      this.platform=0;
+    }
+    this.service.searchData(this.designation,this.location,this.platform,this.currentPage).subscribe(
+      (result) => {
+        this.talent = [];
+        console.log(this.talent);
+        // this.talent = result;
+      },
+      (error) => console.log(error)
+    )
+   
+  }
 }
