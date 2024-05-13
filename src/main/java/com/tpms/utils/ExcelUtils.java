@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -126,15 +127,77 @@ public static List<ResourcePoolHistory> convertExceltoListofEmployee(InputStream
 		}
 		
 		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	return Emplist;
+}
+
+
+@SuppressWarnings("resource")
+public static String CheckExcelinproperorder(InputStream is){
+	
+	String Ach="";
+	
+	List<String> ExcelColoums = new ArrayList<>();
+	
+	List<String> firsrowColoums = new ArrayList<>();
+	Collections.addAll(firsrowColoums, "Sl No","Employee Code","Employee Name","Designation","Technology","Email","Phone","Location","Engagement Plan","Exp.");
+	System.out.println(firsrowColoums);
+	
+	try {
+		
+		XSSFWorkbook workbook =new XSSFWorkbook(is);
+		//workbook.getSheetAt("data");
+		XSSFSheet sheet=workbook.getSheetAt(0);
+		
+		int rowNumber=0;
+		
+		Iterator<Row> iterator=sheet.iterator();
+		while(iterator.hasNext()) {
+			Row row= iterator.next();
+			
+		Iterator<Cell> cells=	row.iterator();
+		
+		int cid=0;
+		
+		while (cells.hasNext())
+		{
+			Cell cell = cells.next();
+			String cellValue = cellToString(cell);
+			ExcelColoums.add(cellValue);
+			cid++;
+		}
+		
+		break;
+		
+		}
+		
+		System.out.println(ExcelColoums);
+		
+		for(int i=0;i<ExcelColoums.size();i++) {
+			for(int j=i;j<=i;j++) {
+				
+				if(ExcelColoums.get(i).equalsIgnoreCase(firsrowColoums.get(j))) {
+					Ach="1";
+				}else {
+					Ach="2";
+					break;
+			
+				}
+					
+			}
+		}
+		
 		
 		
 		
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
-	return Emplist;
+	return Ach;
 }
-	
+
 
 
 private static String cellToString(Cell cell) {

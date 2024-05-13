@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.tpms.dto.PageResponse;
 import com.tpms.entity.Activity;
@@ -31,6 +33,8 @@ public interface ReportService {
 
 	List<Map<String, Object>> getAssesmentData(String reportType, String fromDate, String toDate, String activityId,
 			String resourceValue);
+	
+	public JSONObject getDetails(String resourceCode) throws JSONException;
 
 	PageResponse<ResourcePool> getAllEmployeResourceReport(int pageNumber, int pageSize);
 	

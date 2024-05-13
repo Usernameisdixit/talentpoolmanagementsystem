@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,10 +48,14 @@ public class ActivityController {
 	ActivityRepository activityRepository;
 
 	@GetMapping("/get/activity")
-	public ResponseEntity<PageResponse<Activity>> getAllActivities(
+	public ResponseEntity<?> getAllActivities(
 			@RequestParam(defaultValue = "1") Integer pageNumber) {
-		
-	PageResponse<Activity> actvityDetails=activityServiceImpl.getAllActivities(pageNumber,10);
+		if(pageNumber==0) {
+			List<Activity> activityDetails=activityService.getActivityList();
+			activityDetails=activityDetails.stream().sorted((a,b)->a.getActivityName().compareTo(b.getActivityName())).collect(Collectors.toList());
+			return ResponseEntity.ok().body(activityDetails);
+		}
+	    PageResponse<Activity> actvityDetails=activityServiceImpl.getAllActivities(pageNumber,10);
 	
 	return ResponseEntity.ok(actvityDetails);
 
@@ -241,5 +246,23 @@ public class ActivityController {
 		@GetMapping("deleteAllocation")
 		public int deleteAllocation(@RequestParam Long id) {
 			return activityService.deleteAllocation(id);
+		}
+		
+		@GetMapping("searchActivity")
+		public ResponseEntity<?> searchActivity(@RequestParam("activityId") Integer activityId,
+				@RequestParam("activityPerson") String activityPerson,
+				@RequestParam(defaultValue = "1") Integer pageNumber){
+			
+			if(activityId==0 && activityPerson.equals("")) {
+			    List<Activity> getActivityDetails=activityService.getActivityList();
+			    getActivityDetails=getActivityDetails.stream().sorted((a,b)->a.getActivityName().compareTo(b.getActivityName())).collect(Collectors.toList());
+			   return ResponseEntity.ok().body(getActivityDetails);
+			}else {
+				 PageResponse<Activity> searchDataDetails=activityService.searchActivity(activityId,activityPerson,pageNumber,10);
+				  List<Activity> getActivityDetails=searchDataDetails.getContent();
+				  List<Activity> sortedFormOfActivity= getActivityDetails.stream().sorted((a,b)->a.getActivityName().compareTo(b.getActivityName())).collect(Collectors.toList());
+				  searchDataDetails.setContent(sortedFormOfActivity);
+			  return ResponseEntity.ok().body(searchDataDetails);
+			}
 		}
 }

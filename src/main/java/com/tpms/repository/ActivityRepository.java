@@ -3,6 +3,8 @@ package com.tpms.repository;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -47,7 +49,9 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 	List<Activity> getActvitiesByDateRange(String formattedFromDate, String formattedToDate);
 
 	@Query(value = "select distinct aa.activityName,\r\n" + "case when aal.activityFor=1 then '1st Half' \r\n"
-			+ "when aal.activityFor=2 then '2nd Half' end as activityFor, \r\n"
+			+ "when aal.activityFor=2 then '2nd Half' "
+			+ "when aal.activityFor=3 then 'Full Day' "
+			+ "end as activityFor, \r\n"
 			+ "aal.fromHours, aal.toHours ,aal.activityFromDate,aal.activitytoDate\r\n"
 			+ " from activity_allocation aal \r\n" + " inner join activity aa \r\n"
 			+ " on aal.activityId=aa.activityId\r\n"
@@ -120,5 +124,26 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
 			WHERE ass.asesmentDate BETWEEN :formattedFromDate AND :formattedToDate
 			    		""", nativeQuery = true)
 	List<Activity> getActvitiesByDateRangeForAssement(String formattedFromDate, String formattedToDate);
+	
+	
+	@Query(value = "SELECT   res.resourceCode,act.activityName\r\n"
+			+ "			FROM  activity_allocation alo \r\n"
+			+ "			inner join activity_allocation_details dt  on alo.activityAllocateId=dt.activityAllocateId\r\n"
+			+ "			inner join resource_pool res on res.resourceId=dt.resourceId\r\n"
+			+ "			inner join platforms pla on pla.platform=res.platform\r\n"
+			+ "			inner join activity act on act.activityId=alo.activityId\r\n"
+			+ "			WHERE  res.resourceCode = :resourceCode\r\n"
+			+ "			    order by alo.activityFromDate,res.resourceName", nativeQuery = true)
+     List<Object[]> getAllResourceByCode(@Param("resourceCode") String resourceCode);
+
+     @Query(value="""
+		      select * from activity
+             where activityId=if(:activityId=0,activityId,:activityId)
+            and (responsPerson1 like if(:activityPerson='',responsPerson1 ,CONCAT('%', :activityPerson, '%'))
+            or responsPerson2 like if(:activityPerson='',responsPerson2 ,CONCAT('%', :activityPerson, '%')));
+		""", nativeQuery = true)
+Page<Activity> findByActivityNameAndActivityPerson(Integer activityId, String activityPerson,Pageable pageable);
+	
+	
 
 }
