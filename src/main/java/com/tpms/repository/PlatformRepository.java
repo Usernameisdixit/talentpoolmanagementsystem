@@ -39,5 +39,8 @@ public interface PlatformRepository extends JpaRepository<Platform, Integer> {
 	@Query(value = "select count(1) from platforms where platformCode=:platformCode",nativeQuery = true)
 	Integer getDuplicateProgramCodeCount(String platformCode);
 
+	 @Query(value = "SELECT distinct  platform FROM platforms", nativeQuery = true)
+	List<String> findData();
+
 	
 }

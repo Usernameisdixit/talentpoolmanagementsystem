@@ -14,6 +14,7 @@ import com.tpms.dto.PageResponse;
 import com.tpms.dto.ResourcePoolProjection;
 import com.tpms.entity.ResourcePool;
 
+import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
 
 public interface ResourcePoolRepository extends JpaRepository<ResourcePool, Integer> {
@@ -55,12 +56,22 @@ public interface ResourcePoolRepository extends JpaRepository<ResourcePool, Inte
 	    Page<ResourcePool> findAllByDeletedFlag(Pageable pageable);
 	 
 	 @Query(value="select COUNT(*) from resource_pool_history where allocationDate= :allocationDate and deletedFlag=0 ",nativeQuery = true)
-		Integer findAllActiveResource(String allocationDate);
+	 Integer findAllActiveResource(String allocationDate);
 	 
 	 
 	 //Resource Report Repository
 	 @Query(value = "SELECT * FROM resource_pool rp", nativeQuery = true)
-	    Page<ResourcePool> findAllByDeletedUndeletedFlag(Pageable pageable); 
+	 Page<ResourcePool> findAllByDeletedUndeletedFlag(Pageable pageable);
+
+	
+	 @Query(value = "SELECT DISTINCT designation FROM resource_pool", nativeQuery = true)
+	List<String> findDesignationData();
+
+	 @Query(value = "SELECT DISTINCT location FROM resource_pool", nativeQuery = true)
+	List<String> findLocationData();
+
+	@Query("SELECT r FROM ResourcePool r WHERE r.designation = :designation OR r.location = :location OR r.platform = :platform")
+	List<ResourcePool> getFilterData(String designation, String location, String platform);
 	 
 	 
 	 

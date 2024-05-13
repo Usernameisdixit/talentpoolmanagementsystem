@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +60,8 @@ import com.tpms.repository.ResourcePoolRepository;
 import com.tpms.service.impl.ExcelUploadEmployeeServiceImpl;
 import com.tpms.service.impl.ResourcePoolServiceImpl;
 import com.tpms.utils.ExcelUtils;
+
+import jakarta.annotation.Resource;
 
 @RestController
 @CrossOrigin("*")
@@ -168,19 +171,18 @@ public class ResourceExcelController {
 	}
 
 	@GetMapping("/emp/getResourceList")
-	public ResponseEntity<?> gettbl_resource_pool(@RequestParam(defaultValue = "1") Integer pageNumber){
-			
-		if(pageNumber==0) {
-			List<ResourcePool> resourceList=resourcepoolserviceimpl.getAllResources();
-			resourceList=resourceList.stream().sorted((a,b)->a.getResourceName().compareTo(b.getResourceName())).collect(Collectors.toList());
-		return ResponseEntity.ok(resourceList);
+	public ResponseEntity<?> gettbl_resource_pool(@RequestParam(defaultValue = "1") Integer pageNumber) {
+
+		if (pageNumber == 0) {
+			List<ResourcePool> resourceList = resourcepoolserviceimpl.getAllResources();
+			resourceList = resourceList.stream().sorted((a, b) -> a.getResourceName().compareTo(b.getResourceName()))
+					.collect(Collectors.toList());
+			return ResponseEntity.ok(resourceList);
 		}
-	PageResponse<ResourcePool> resourceList=resourcepoolserviceimpl.getAllEmploye(pageNumber,10);
-	 
-	return ResponseEntity.ok(resourceList);
+		PageResponse<ResourcePool> resourceList = resourcepoolserviceimpl.getAllEmploye(pageNumber, 10);
+
+		return ResponseEntity.ok(resourceList);
 	}
-	
-	
 
 	@GetMapping("/emp/getResourceDetailsWithFileName")
 	public List<Object[]> getResourceDetailsWithFileNameC() {
@@ -305,7 +307,6 @@ public class ResourceExcelController {
 		}
 	}
 
-
 	// Duration count
 	@GetMapping("/emp/durations")
 	public ResponseEntity<?> getDurationDetails(@RequestParam("code") String resourceCode) throws JSONException {
@@ -325,8 +326,40 @@ public class ResourceExcelController {
 	@GetMapping("/getAllAllocationDate")
 	public ResponseEntity<?> getAllAllocationDate() {
 		List<Date> allocateDate = excelUploadHistoryRepository.findLatestDate();
-		//allocateDate=allocateDate.stream().sorted().collect(Collectors.toList());
+		// allocateDate=allocateDate.stream().sorted().collect(Collectors.toList());
 		return ResponseEntity.ok(allocateDate);
+	}
+	
+	@GetMapping("/getDesignation")
+	public List<String> getDesignaion(){
+		return  resourcepoolserviceimpl.getDesignation();
+	}
+	
+	@GetMapping("/getLocation")
+	public List<String> getLocation(){
+		return  resourcepoolserviceimpl.getLocation();
+	}
+	
+	
+	@GetMapping("/getPlatform")
+	@ResponseBody
+	public List<Platform> getPlatform() {
+		return resourcepoolserviceimpl.getPlatform();
+	}
+	
+	@GetMapping("/searchFilterData")
+	public List<ResourcePool> getsearchFilterData(
+			@RequestParam(value = "designation",required = false) String designation,
+			@RequestParam(value = "location",required = false) String location,
+			@RequestParam(value = "platform" ,required = false) String platform) {
+		List<ResourcePool> getsearchFilterData = null;
+		try {
+			System.out.println(designation+" "+location+" "+platform);
+			getsearchFilterData = resourcepoolserviceimpl.getsearchFilterData(designation,location,platform);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return getsearchFilterData;
 	}
 
 }

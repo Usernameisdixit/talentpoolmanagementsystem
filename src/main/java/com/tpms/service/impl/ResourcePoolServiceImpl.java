@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,13 +24,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tpms.dto.PageResponse;
 import com.tpms.dto.ResourcePoolHistoryDto;
+import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
 import com.tpms.entity.ResourcePoolHistory;
-
+import com.tpms.repository.PlatformRepository;
 import com.tpms.repository.ResourcePoolHistoryRepository;
 import com.tpms.repository.ResourcePoolRepository;
 import com.tpms.utils.DateUtils;
 import com.tpms.utils.ExcelUtils;
+
+import jakarta.annotation.Resource;
 
 @Service
 public class ResourcePoolServiceImpl {
@@ -38,6 +43,9 @@ public class ResourcePoolServiceImpl {
 
 	@Autowired
 	private ResourcePoolRepository tbl_resource_pool_Repository;
+	
+	@Autowired
+	private PlatformRepository platformRepository;
 
 	public void save(MultipartFile file, LocalDate allocationDate) {
 
@@ -318,4 +326,56 @@ public class ResourcePoolServiceImpl {
 		return resourceList;
 	}
 
+	public List<String> getDesignation() {
+		List<String> getList=  new ArrayList<>();
+		try {
+			getList=tbl_resource_pool_Repository.findDesignationData();		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return getList;
+	}
+
+	public List<Platform> getPlatform() {
+		List<Platform> platformData= null;
+		try {
+			platformData=platformRepository.findAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return platformData;
+	}
+
+	public List<String> getLocation() {
+		List<String> getList=  new ArrayList<>();
+		try {
+			getList=tbl_resource_pool_Repository.findLocationData();		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return getList;
+	}
+
+	public List<ResourcePool> getsearchFilterData(String designation, String location, String platform) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+//	public List<ResourcePool> getsearchFilterData(String designation, String location, String platform) {
+//		List<ResourcePool> getResouceFilterList=null;
+//		List<ResourcePool> getResouceFilterList1=null;
+//		try {
+////			if((designation.equals("")&& location.equals("")&&platform.equals("")){
+////				getResouceFilterList1=tbl_resource_pool_Repository.findAll();
+////			}
+//			getResouceFilterList=tbl_resource_pool_Repository.getFilterData(designation,location,platform);
+//			
+//			System.out.println(getResouceFilterList);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return getResouceFilterList;
+//	}
+
+	
 }
