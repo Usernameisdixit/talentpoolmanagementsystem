@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-//import { Tutorial } from '../../models/tutorial.model';
 import { ActivityService } from 'src/app/ActivityMgmt/Service/activity.service';
 import { Activity } from 'src/app/Model/activity.model';
 import { UserService } from 'src/app/UserMgmt/Service/user.service';
@@ -14,12 +13,6 @@ import Swal from 'sweetalert2';
 export class ActivityDetailsComponent implements OnInit {
   @Input() viewMode = false;
   activityField = true;
-
-  // @Input() currentTutorial: Tutorial = {
-  //   title: '',
-  //   description: '',
-  //   published: false
-  // };
 
   @Input() currentActivity: Activity = {
     activityId: '',
@@ -53,32 +46,10 @@ export class ActivityDetailsComponent implements OnInit {
       next: (data) => {
         this.currentActivity = data;
         this.checkActivity();
-        // console.log(data);
       },
       error: (e) => console.error(e),
     });
   }
-
-  // updatePublished(status: boolean): void {
-  //   const data = {
-  //     title: this.currentTutorial.title,
-  //     description: this.currentTutorial.description,
-  //     published: status
-  //   };
-
-  //   this.message = '';
-
-  //   this.tutorialService.update(this.currentActivity.activityId, data).subscribe({
-  //     next: (res) => {
-  //       console.log(res);
-  //       this.currentTutorial.published = status;
-  //       this.message = res.message
-  //         ? res.message
-  //         : 'The status was updated successfully!';
-  //     },
-  //     error: (e) => console.error(e)
-  //   });
-  // }
 
   updateActivity(): void {
     if (
@@ -120,21 +91,11 @@ export class ActivityDetailsComponent implements OnInit {
         }
       });
     }
-
-    // this.activityService
-    //   .update(this.currentActivity.activityId, this.currentActivity)
-    //   .subscribe({
-    //     next: (res) => {
-
-    //     },
-    //     error: (e) => console.error(e)
-    //   });
   }
 
   deleteActivity(): void {
     this.activityService.delete(this.currentActivity.activityId).subscribe({
       next: (res) => {
-        // console.log(res);
         this.router.navigate(['/tutorials']);
       },
       error: (e) => console.error(e),
@@ -142,7 +103,6 @@ export class ActivityDetailsComponent implements OnInit {
   }
 
   checkActivity() {
-    debugger;
     this.activityService
       .activityExist(this.currentActivity.activityId)
       .subscribe({

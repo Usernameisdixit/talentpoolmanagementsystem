@@ -198,7 +198,6 @@ export class ActivityListComponent implements OnInit {
     const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
 
     // Add header row
-    //const header = ['ResourceId', 'Resource Name', 'Resource Code', 'Platform', 'Location', 'Experience', 'Mobile','Email'];
     XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' });
 
     const workbook: XLSX.WorkBook = {
@@ -235,14 +234,14 @@ export class ActivityListComponent implements OnInit {
     this.activityService.findByActivityNameandPerson(activityId.value,activityPerson.value,this.currentPage)
     .subscribe({
       next:(data:any)=>{
-        if(activityId.value==='0' && activityPerson.value===''){
-           this.activities=data;
-        }
-        else{
+      //  if(activityId.value==='0' && activityPerson.value===''){
+       //    this.activities=data.;
+       // }
+       // else{
         this.activities = data.content;
         this.totalElements = data.totalElements;
         this.pageSize=data.pageSize;
-        }
+        //}
       },
       error:(e)=>console.log(e) 
     });
