@@ -3,9 +3,8 @@ import { environment } from "src/environments/environments";
 let baseUrl=environment.apiUrl;
 
 export const attendenceUrl=baseUrl+'/emp/attendance';
-export const getResourceDetailsWithFileName =baseUrl +'/emp/getResourceDetailsWithFileName';
 export const download = baseUrl +'download';
-export const getResourceList= baseUrl +'/emp/getResourceList';
+
 
 // user management
 export const addUser=baseUrl+'/addUser';
@@ -49,3 +48,5 @@ export const updateRole=baseUrl+'/updateRole/';
  //Resource Report
  export const updatetalent=baseUrl+'/emp/updatetalent';
  export const downloadOnResReport=baseUrl+'/emp/download/';
+ export const getResourceDetailsWithFileName =baseUrl +'/emp/getResourceDetailsWithFileName';
+ export const getResourceList= baseUrl +'/emp/getResourceList';
