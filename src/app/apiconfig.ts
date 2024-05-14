@@ -59,3 +59,14 @@ export const updateRole=baseUrl+'/updateRole/';
  export const deleteResource= baseUrl +'/emp/delete/talent/';
  export const durations= baseUrl +'/emp/durations';
  export const getActiveResorces= baseUrl +'/getActiveResorces';
+
+ //Activity Management
+ export const getActivity=baseUrl+'/get/activity';
+ export const getActivityForAuto=baseUrl+'/getActivityForAuto';
+ export const saveActivity=baseUrl+'/save/activity';
+ export const updateActivity=baseUrl+'/update/activity';
+ export const deleteActivity=baseUrl+'/delete/activity';
+ export const updateDeletedFlag=baseUrl+'/update-deleted-flag';
+ export const dataActivityName=baseUrl+'/dataActivityName';
+ export const activityCheck=baseUrl+'/activityCheck';
+ export const searchActivity=baseUrl+'/searchActivity';
