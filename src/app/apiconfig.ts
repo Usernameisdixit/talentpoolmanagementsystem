@@ -3,9 +3,8 @@ import { environment } from "src/environments/environments";
 let baseUrl=environment.apiUrl;
 
 export const attendenceUrl=baseUrl+'/emp/attendance';
-export const getResourceDetailsWithFileName =baseUrl +'/emp/getResourceDetailsWithFileName';
 export const download = baseUrl +'download';
-export const getResourceList= baseUrl +'/emp/getResourceList';
+
 
 // user management
 export const addUser=baseUrl+'/addUser';
@@ -29,3 +28,34 @@ export const updateRole=baseUrl+'/updateRole/';
  export const activityForAtt=baseUrl+'/activityByDate';
  export const attendDataByActivUrl=baseUrl+'/attDataByActivity';
  export const attendanceSaveUrl=baseUrl+'/saveAttendanceByActivity';
+
+ //Mail
+ export const allocationDataForMailUrl=baseUrl+'/allocationDataForMail';
+ export const mailContentUrl=baseUrl+'/mailContent';
+
+ //Report
+
+ //Attendance Report
+ export const getActivityOnFromToUrl=baseUrl+'/getActivityOnFromTo';
+ export const attedanceDataReportUrl=baseUrl+'/attedanceDataReport';
+ export const allResourceName=baseUrl+'/allResourceName';
+ //ActivityReport 
+ export const activitynewDataReport=baseUrl+'/activitynewDataReport';
+ export const getActivityReportOnFromTo=baseUrl+'/getActivityReportOnFromTo';
+ //AssesmentReport
+ export const getActivityForAssesment=baseUrl+'/getActivityForAssesment';
+ export const assesmentReportData=baseUrl+'/assesmentReportData';
+ //Resource Report
+ export const updatetalent=baseUrl+'/emp/updatetalent';
+ export const downloadOnResReport=baseUrl+'/emp/download/';
+ export const getResourceDetailsWithFileName =baseUrl +'/emp/getResourceDetailsWithFileName';
+ export const getResourceList= baseUrl +'/emp/getResourceList';
+ export const getAciveResource= baseUrl +'/getActiveResorces';
+ export const fetchActiv= baseUrl+'/emp/ractive';
+ export const fetchDuration= baseUrl+'/emp/durations';
+ export const findByResourceNo= baseUrl+'/emp/talent/';
+ export const deleteByResourceNo= baseUrl+'/emp/delete/talent/';
+ export const getEditResource= baseUrl +'/emp/talent/';
+ export const deleteResource= baseUrl +'/emp/delete/talent/';
+ export const durations= baseUrl +'/emp/durations';
+ export const getActiveResorces= baseUrl +'/getActiveResorces';

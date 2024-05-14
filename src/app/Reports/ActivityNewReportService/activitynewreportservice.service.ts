@@ -4,24 +4,23 @@ import { Observable } from 'rxjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx-js-style';
+import { activitynewDataReport,getActivityReportOnFromTo} from 'src/app/apiconfig';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActivitynewreportserviceService {
 
-  private url = 'http://localhost:9999/tpms';
 
   constructor(private httpClient: HttpClient) { }
 
 
   getActivities(fromDate: string, toDate: string): Observable<any[]> {
-    const urlF = `${this.url}/getActivityReportOnFromTo`;
-    return this.httpClient.get<string[]>(`${urlF}?fromDate=${fromDate}&toDate=${toDate}`);
+    return this.httpClient.get<string[]>(`${getActivityReportOnFromTo}?fromDate=${fromDate}&toDate=${toDate}`);
   }
 
   attendanceData(reportType: string, fromDate: string, toDate: string, activityId: string, resourceValue: string) {
-    const url = `${this.url}/activitynewDataReport`;
+    const url = `${activitynewDataReport}`;
     const params = {
       reportType: reportType,
       fromDate: fromDate,

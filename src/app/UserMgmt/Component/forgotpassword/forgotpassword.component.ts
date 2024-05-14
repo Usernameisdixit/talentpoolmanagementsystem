@@ -23,10 +23,8 @@ export class ForgotpasswordComponent implements OnInit{
     }
 
   onSubmit() {
-     //alert(this.email)
     this.loginService.sendEmail(this.email).subscribe(
       (response) => {
-        debugger;
         console.log('Email sent successfully:', response);
         const responseObject = JSON.parse(response);
         const status = responseObject?.status;

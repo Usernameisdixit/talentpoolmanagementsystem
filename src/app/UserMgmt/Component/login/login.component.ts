@@ -35,7 +35,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //throw new Error('Method not implemented.');
     if (this.authService.isLoggedIn) {
       this.router.navigate(['/dashboard'])
       this.authService.logout();
@@ -44,13 +43,10 @@ export class LoginComponent implements OnInit {
 
 
   onSubmit() {
-    debugger;
-    // if(this.backendAvailable){
     if (this.credentials.username) {
       if (this.credentials.password) {
         this.loginService.sendData(this.credentials).subscribe(
           (response: any) => {
-            debugger;
             const responseObject = JSON.parse(response);
             const tokenTime = responseObject?.tokenTime;
             localStorage.setItem("tokenTime", tokenTime);
@@ -92,8 +88,8 @@ export class LoginComponent implements OnInit {
             }
 
           },
+          //If backend application is not started
           (error) => {
-           // this.errorMessage = 'Internal server error,Please contact to admin !';
             Swal.fire({
               title: "Error!",
               text: 'Internal server error,Please contact to admin !',
@@ -121,17 +117,9 @@ export class LoginComponent implements OnInit {
         this.errorMessage = '';
       }, 2000);
     }
-  //}
-  // else{
-  //    // Inform the user that backend application has not been started yet
-  //    this.errorMessage = 'Please run your backend application !';
-  //    setTimeout(() => {
-  //      this.errorMessage = '';
-  //    }, 2000);
-  // }
 
   }
-  // Add this method to your component class
+  // for hiding the password while entering in the field
   togglePasswordVisibility() {
     this.hidePassword = !this.hidePassword;
   }
