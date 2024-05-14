@@ -38,7 +38,7 @@ export class ForgotpasswordComponent implements OnInit{
         this.router.navigate(['forgotPassword']);
         setTimeout(() => {
           this.errorMessage = '';
-        }, 1000);
+        }, 2000);
         }
         
       },
