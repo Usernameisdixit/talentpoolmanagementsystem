@@ -20,7 +20,6 @@ export class DashboardComponent  implements OnInit{
   @ViewChild('dp1') datepicker1: BsDatepickerDirective;
   resources:any;
   allocationDate: any;
-  // allocationDate: any;
   attendanceData: any;
   assessmentDateArr: any[];
   assessmentDate: string;
@@ -47,18 +46,14 @@ export class DashboardComponent  implements OnInit{
       
     }
   ngOnInit(): void {
-    //throw new Error('Method not implemented.');
     
     this.maxDate=new Date();
     this.loginService.getAllocationDates().subscribe((response: any[]) => {
-      
-      //response=[];
-      if(response.length==0){
+        if(response.length==0){
         this.resources=null;
       }
       this.allocationDate = response.map(date => this.datePipe.transform(date, 'dd-MMM-yyyy'));
       this.alDate=this.allocationDate[this.allocationDate.length-1];
-      //this.alDate.sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
       this.sendDateFromResource(this.alDate);
     });
     
@@ -67,7 +62,6 @@ export class DashboardComponent  implements OnInit{
     this.selectedDate=this.datePipe.transform(this.atnDate, 'dd-MMM-yyyy');
     this.loginService.getAttendance(this.datePipe.transform(this.selectedDate, 'yyyy-MM-dd')).subscribe((response:any)=>{
       
-      //response=[];
       if(response.length==0){
         this.attendanceData=null;
       }else{
@@ -85,33 +79,22 @@ export class DashboardComponent  implements OnInit{
       this.allocationDate = this.datePipe.transform(inputDate, 'd MMMM yyyy');
     })
 
-   
-    //var curr =new Date;
-    //alert(this.fromDate);
-    //alert(curr);
-    
     var curr = new Date;
-    console.log("curr"+curr);
     
     var firstday = new Date(curr.setDate(curr.getDate() - (curr.getDay()-1)));
     var lastday = new Date(curr.setDate(curr.getDate() - curr.getDay()+5));
-    console.log("firstDay"+firstday);
-    console.log("lastDay"+lastday);
 
     this.fromDate=this.datePipe.transform(firstday, 'dd-MMM-yyyy');
     this.toDate=this.datePipe.transform(lastday, 'dd-MMM-yyyy');
 
-    this.loginService.gettotalActivitiesPlanned(this.datePipe.transform(firstday, 'yyyy-MM-dd'),this.datePipe.transform(lastday, 'yyyy-MM-dd')).subscribe((response: any) => {
-    //response=0;
-  
+    this.loginService.gettotalActivitiesPlanned(this.datePipe.transform(firstday, 'yyyy-MM-dd'),this.datePipe.transform(lastday, 'yyyy-MM-dd')).subscribe((response: any) => {  
       if(response==0)
       {
         this.ActivtiesPlanned=null;
       }else{
        this.ActivtiesPlanned = response;
       }
-      // console.log(this.ActivityData); 
-      // alert(this.ActivtiesPlanned);
+
      });
     
   }
@@ -120,7 +103,6 @@ export class DashboardComponent  implements OnInit{
     const modal = document.getElementById('detailsModal1');
     if (modal) {
       modal.classList.remove('show');
-      //document.body.classList.remove('modal-open');
       modal.style.display = 'none';
       const modalBackdrop = document.getElementsByClassName('modal-backdrop')[0];
       if (modalBackdrop) {
@@ -133,8 +115,6 @@ export class DashboardComponent  implements OnInit{
   fetchAssessmentDates() {
     this.apiService.getAssessmentDates().subscribe(
       (dates: string[]) => {
-                
-        //dates=[];
         if(dates.length===0)
         {
           this.assessmentDateArr=null;
@@ -195,7 +175,6 @@ export class DashboardComponent  implements OnInit{
       this.loginService.getAttendance(this.datePipe.transform(atnDate, 'yyyy-MM-dd')).subscribe((response:any)=>{
         
         this.attendanceData=response;
-        console.log(this.attendanceData);
         
       });
     }
@@ -261,10 +240,8 @@ export class DashboardComponent  implements OnInit{
    
 
     this.loginService.activityFromto(fromDate,toDate).subscribe((response: any) => {
-     // 
       this.ActivityData = response;
-     // console.log(this.ActivityData); 
-     // alert(this.ActivityData);
+    
     });
     }
 
@@ -273,13 +250,10 @@ export class DashboardComponent  implements OnInit{
       const fromDate = this.datePipe.transform(this.fromDate, 'yyyy-MM-dd');
       const toDate = this.datePipe.transform(this.toDate, 'yyyy-MM-dd');
 
-      //alert(toDate);
-
       this.loginService.gettotalActivitiesPlanned(fromDate,toDate).subscribe((response: any) => {
        
-         this.ActivtiesPlanned = response;
-        // console.log(this.ActivityData); 
-        // alert(this.ActivtiesPlanned);
+      this.ActivtiesPlanned = response;
+      
        });
 
     }

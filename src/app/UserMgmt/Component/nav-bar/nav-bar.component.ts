@@ -21,25 +21,18 @@ userName: any;
   formattedDate: string;
   constructor(private loginService: LoginService,public authService: AuthService,private datePipe: DatePipe) { 
     this.users=[]
-    //this.isLoggedIn=this.authService.isLoggedIn();
   }
   errormessage: any;
   successMessage: any;
   ngOnInit(): void {
-    console.log("navbar++++++++++",this.isLoggedIn);
-    
-    //throw new Error('Method not implemented.');
     this.currentDate = new Date();
     // Update the currentDate every second
     setInterval(() => {
       this.currentDate = new Date();
       this.formattedDate = this.datePipe.transform(this.currentDate, 'EEE MMM dd yyyy hh:mm:ss a');
-
       this.userName=this.authService.getUsername();
       this.fullName=this.authService.getUserFullname();   
-      
-      //console.log("navbar++++++++++++++",this.userName,"++",this.fullName);
-      
+            
     }, 1000);
   }
   logout() {

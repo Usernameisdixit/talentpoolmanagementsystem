@@ -24,7 +24,6 @@ export class RestpasswordComponent implements OnInit{
     // Retrieve email from route parameters
      this.route.params.subscribe(params => {
       this.email = params['email'];
-      // Set the email in your credentials object or use it as needed
       this.credentials.email = this.email;
     });
   }
@@ -33,14 +32,9 @@ export class RestpasswordComponent implements OnInit{
       this.router.navigate(['login']);  
     }
 
-  onSubmit() {
-     //alert(this.credentials.email);
-    
+  onSubmit() {    
     this.loginService.sendResetData(this.credentials).subscribe(
       (response) => {
-        console.log(response);
-        
-        debugger;
         const responseObject = JSON.parse(response);
         const status = responseObject?.status;
         if(status==='mismatch'){
