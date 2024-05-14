@@ -70,3 +70,17 @@ export const updateRole=baseUrl+'/updateRole/';
  export const dataActivityName=baseUrl+'/dataActivityName';
  export const activityCheck=baseUrl+'/activityCheck';
  export const searchActivity=baseUrl+'/searchActivity';
+
+  //Assement
+export const platformUrl=baseUrl+'/getPlatforms';
+export const assesmentDetails = baseUrl+'/api/assessment-details';
+export const getActivityDetails=baseUrl+'/getActivityDetails';
+export const checkAssessments=baseUrl+'/checkAssessments';
+export const viewAssesmentDetails=baseUrl+'/viewAssesmentDetails';
+export const editAssesment=baseUrl+'/editAssessment';
+export const updateUrl=baseUrl+'/updateAssessment';
+export const getActivities=baseUrl+'/getActivities';
+export const viewAssesmentDetailsDateWise=baseUrl+'/viewAssesmentDetailsDateWise';
+export const getAssesmentDate=baseUrl+'/assessmentDates';
+export const saveAssement=baseUrl+'/assessments';
+export const getFromToDate=baseUrl+'/getFromToDate';
