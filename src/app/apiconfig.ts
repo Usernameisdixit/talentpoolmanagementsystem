@@ -7,12 +7,30 @@ export const download = baseUrl +'download';
 
 
 // user management
-export const addUser=baseUrl+'/addUser';
-export const userList=baseUrl+'/userList';
-export const getRoleDetails=baseUrl+'/getRoleDetails';
-export const getUserById=baseUrl+'/getUserById/'
-export const deleteUser=baseUrl+'/deleteUser/';
-export const duplicateCheck = baseUrl+'/duplicateCheck/';
+    //user
+    export const addUser=baseUrl+'/addUser';
+    export const userList=baseUrl+'/userList';
+    export const getRoleDetails=baseUrl+'/getRoleDetails';
+    export const getUserById=baseUrl+'/getUserById/'
+    export const deleteUser=baseUrl+'/deleteUser/';
+    export const duplicateCheck = baseUrl+'/duplicateCheck/';
+
+    // login
+    export const getAllUsers=baseUrl+'/getAllUsers';
+    export const login=baseUrl+'/login';
+    export const getEmail=baseUrl+'/getEmail';
+    export const resetPassword=baseUrl+'/resetPassword';
+    export const getAllAllocationDate=baseUrl+'/getAllAllocationDate';
+    export const getAttendanceData=baseUrl+'/getAttendanceData';
+    export const activityByFromToDate=baseUrl+'/activityByFromToDate';
+    export const totalActivitiesPlanned=baseUrl+'/totalActivitiesPlanned';
+
+    //platform
+    export const addPlatformUrl=baseUrl+'/addPlatform';
+    export const viewPlatformUrl=baseUrl+'/platformList';
+    export const editPlatformUrl=baseUrl+'/getPlatformById/';
+    export const deletePlatformUrl=baseUrl+'/deletePlatform/';
+    export const duplicateCheckForPlatform=baseUrl+'/duplicateCheckForPlatform/';
 
 //role 
 export const saveRoles=baseUrl+'/saveRoles';
@@ -32,6 +50,7 @@ export const updateRole=baseUrl+'/updateRole/';
  //Mail
  export const allocationDataForMailUrl=baseUrl+'/allocationDataForMail';
  export const mailContentUrl=baseUrl+'/mailContent';
+ export const send=baseUrl+'/send';
 
  //Report
 
@@ -71,7 +90,20 @@ export const updateRole=baseUrl+'/updateRole/';
  export const activityCheck=baseUrl+'/activityCheck';
  export const searchActivity=baseUrl+'/searchActivity';
 
-  //Assement
+ // Activity Allocation
+ export const platforms=baseUrl+'/platforms';
+ export const resources=baseUrl+'/resources';
+ export const activities=baseUrl+'/activities';
+ export const saveAllocation=baseUrl+'/saveAllocation';
+ export const allocationDetails=baseUrl+'/allocationDetails';
+ export const resource=baseUrl+'/resource';
+ export const resourcesExcludeRelated=baseUrl+'/resources/exclude-related';
+ export const saveBulkAllocation=baseUrl+'/saveBulkAllocation';
+ export const platformsIdByName=baseUrl+'/platformsIdByName';
+ export const fetchDataByDateRange=baseUrl+'/fetchDataByDateRange';
+ export const deleteAllocation=baseUrl+'/deleteAllocation';
+
+//Assessment
 export const platformUrl=baseUrl+'/getPlatforms';
 export const assesmentDetails = baseUrl+'/api/assessment-details';
 export const getActivityDetails=baseUrl+'/getActivityDetails';
@@ -84,3 +116,10 @@ export const viewAssesmentDetailsDateWise=baseUrl+'/viewAssesmentDetailsDateWise
 export const getAssesmentDate=baseUrl+'/assessmentDates';
 export const saveAssement=baseUrl+'/assessments';
 export const getFromToDate=baseUrl+'/getFromToDate';
+
+// file upload
+export const uploadCheck=baseUrl+'/uploadCheck';
+export const uploadCheckPhone=baseUrl+'/uploadCheckPhone';
+export const uploadCheckEmail=baseUrl+'/uploadCheckEmail';
+export const upload=baseUrl+'/upload';
+export const downloadTemplate=baseUrl+'/downloadTemplate';
