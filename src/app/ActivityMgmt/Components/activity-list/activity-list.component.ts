@@ -198,7 +198,6 @@ export class ActivityListComponent implements OnInit {
     const worksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableData);
 
     // Add header row
-    //const header = ['ResourceId', 'Resource Name', 'Resource Code', 'Platform', 'Location', 'Experience', 'Mobile','Email'];
     XLSX.utils.sheet_add_aoa(worksheet, [header], { origin: 'A1' });
 
     const workbook: XLSX.WorkBook = {
