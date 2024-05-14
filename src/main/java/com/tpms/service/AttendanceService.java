@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
-import com.tpms.entity.Activity;
 import com.tpms.entity.Platform;
 
 public interface AttendanceService {

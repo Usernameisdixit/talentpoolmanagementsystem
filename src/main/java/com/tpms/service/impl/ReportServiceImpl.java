@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -25,7 +24,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tpms.dto.PageResponse;
 import com.tpms.dto.ResourcePoolHistoryDto;
 import com.tpms.entity.Activity;
@@ -331,7 +329,6 @@ public class ReportServiceImpl implements ReportService {
 			
 			List<Object[]> activitydata = activityRepository.getactivitydataaccordingtoresource(formattedFromDate,formattedToDate,resourceValue);
 			
-			System.out.println(activitydata);
 			
 			Map<String, Object> attendance = null;
 			for(Object ob[]:activitydata)
