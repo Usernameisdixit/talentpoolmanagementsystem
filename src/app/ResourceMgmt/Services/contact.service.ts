@@ -100,11 +100,12 @@ export class ContactService {
     return this.httpClient.get(fullUrl);
   }
 
-  searchData(designation: any, location: any, platform: any,page:any) {
+  searchData(designation: any, location: any, platform: any,currentPage:any) {
       let queryparams = new HttpParams()
         .append('designation', designation)
         .append('location', location)
-        .append('platform', platform);
+        .append('platform', platform)
+        .append('currentPage', currentPage);
       let options = {
         params: queryparams
       }

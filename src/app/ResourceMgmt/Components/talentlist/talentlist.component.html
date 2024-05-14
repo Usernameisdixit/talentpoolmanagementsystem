@@ -31,7 +31,7 @@
             <select class="form-select" id="platform" aria-label="Disabled select example">
               <option value="" selected>Select Platform</option>
               <ng-container *ngFor="let item of getPlaformList">
-                <option [value]="item.platformId">{{ item.platform }}</option>
+                <option value={{item}}>{{item}}</option>
               </ng-container>
             </select>
 

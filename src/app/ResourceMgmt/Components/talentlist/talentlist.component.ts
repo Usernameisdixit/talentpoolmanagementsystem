@@ -231,7 +231,6 @@ getPlaformListData(){
   }
 
   search(){
-    debugger;
     this.currentPage=1;
     this.designation=$('#designation').val();
    this.location= $('#location').val();
@@ -249,7 +248,7 @@ getPlaformListData(){
       (result) => {
         this.talent = [];
         console.log(this.talent);
-        // this.talent = result;
+        this.talent = result;
       },
       (error) => console.log(error)
     )
