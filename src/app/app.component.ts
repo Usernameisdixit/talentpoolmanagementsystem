@@ -30,14 +30,12 @@ export class AppComponent implements OnInit {
 
       
     }
-
+    //Back button handled
     @HostListener('window:popstate', ['$event'])
     onPopState(event: any) {
-      debugger;
+      event.preventDefault();
+      if (!(this.router.url === '/login' || this.router.url==='/forgotPassword' || this.router.url==='/restpassword/')) {
       if (!this.confirmationShown) {
-        event.preventDefault(); 
-  
-        // Show the confirmation dialog
         const stayOnPage = confirm("You are going to be logged out !");
         if (!stayOnPage) {
           this.location.forward(); 
@@ -45,10 +43,12 @@ export class AppComponent implements OnInit {
         } else {
           this.router.navigate(['login']);
           this.confirmationShown = false;
-          window.location.reload();
+         // window.location.reload();
         }
       } else {
         this.confirmationShown = false; 
       }
     }
+    }
+    
 }

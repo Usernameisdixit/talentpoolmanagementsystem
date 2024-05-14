@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
 import Swal from 'sweetalert2';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -44,12 +45,12 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     debugger;
+    // if(this.backendAvailable){
     if (this.credentials.username) {
       if (this.credentials.password) {
         this.loginService.sendData(this.credentials).subscribe(
           (response: any) => {
             debugger;
-
             const responseObject = JSON.parse(response);
             const tokenTime = responseObject?.tokenTime;
             localStorage.setItem("tokenTime", tokenTime);
@@ -89,13 +90,22 @@ export class LoginComponent implements OnInit {
                 this.errorMessage = '';
               }, 2000);
             }
+
           },
           (error) => {
-            this.router.navigate(['login']);
-            setTimeout(() => {
-              this.errorMessage = '';
-            }, 2000);
+           // this.errorMessage = 'Internal server error,Please contact to admin !';
+            Swal.fire({
+              title: "Error!",
+              text: 'Internal server error,Please contact to admin !',
+              icon: "error",
+              confirmButtonText: "OK",
+            }).then(() => {
+              this.router.navigate(['login']);
+              setTimeout(() => {
+              }, 2000);
+            });
           }
+ 
         );
       } else {
         // Inform the user that password is required
@@ -111,7 +121,14 @@ export class LoginComponent implements OnInit {
         this.errorMessage = '';
       }, 2000);
     }
-
+  //}
+  // else{
+  //    // Inform the user that backend application has not been started yet
+  //    this.errorMessage = 'Please run your backend application !';
+  //    setTimeout(() => {
+  //      this.errorMessage = '';
+  //    }, 2000);
+  // }
 
   }
   // Add this method to your component class

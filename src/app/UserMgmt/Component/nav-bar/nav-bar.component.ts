@@ -33,7 +33,7 @@ userName: any;
     // Update the currentDate every second
     setInterval(() => {
       this.currentDate = new Date();
-      this.formattedDate = this.datePipe.transform(this.currentDate, 'EEE MMM dd yyyy HH:mm:ss');
+      this.formattedDate = this.datePipe.transform(this.currentDate, 'EEE MMM dd yyyy hh:mm:ss a');
 
       this.userName=this.authService.getUsername();
       this.fullName=this.authService.getUserFullname();   
