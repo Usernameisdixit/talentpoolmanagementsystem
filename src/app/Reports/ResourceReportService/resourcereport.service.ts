@@ -93,7 +93,6 @@ export class ResourcereportService {
 
   
   generateResourceReportPdf(attendanceData: any,  talent:any, activities:any) {
-    debugger;
     const pdf = new jsPDF();
     let startYpos = 0;
     let Active ="";
