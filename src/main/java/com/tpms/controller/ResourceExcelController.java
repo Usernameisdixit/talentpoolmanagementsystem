@@ -101,19 +101,68 @@ public class ResourceExcelController {
 	}
 	
 	@PostMapping("/uploadCheck")
+	//public JSONObject UploadCheckExcel(@RequestParam("file") MultipartFile file
 	public String UploadCheckExcel(@RequestParam("file") MultipartFile file
-			) throws IOException {
+			) throws IOException, JSONException {
 		
 		byte[] fileContent = file.getBytes();
 
 		if (ExcelUtils.CheckExcelFormat(file)) { 
-	 String Emp =ExcelUtils.CheckExcelinproperorder(file.getInputStream()); 
+			String Emp = ExcelUtils.CheckExcelinproperorder(file.getInputStream());
 			System.out.println(Emp);
-			if(Emp.equalsIgnoreCase("2")) {
-		return "2";	
-		  }}
-		  
+			if (Emp.equalsIgnoreCase("2")) {
+				//return "{'A':'5'}";
+				//new JSONObject("{'A':'5'}");
+				return "2";
+			}
+		}
+
+		//return "{'B':'5'}";	
+		//return new JSONObject("{'B':'5'}");
 		return "1";
+	}
+	
+	
+	@PostMapping("/uploadCheckPhone")
+	public String UploadCheckExcelPhone(@RequestParam("file") MultipartFile file
+			) throws IOException {
+		
+		byte[] fileContent = file.getBytes();
+		String phone=null;
+		if (ExcelUtils.CheckExcelFormat(file)) { 
+	     phone =ExcelUtils.CheckExcelphoneDuplicacy(file); 
+			System.out.println(phone);
+			if(phone.equalsIgnoreCase("Uniqueness")) {
+		        //  return "Sucess";	
+		  }else {
+			  return phone;
+		  }
+			
+		}
+		  
+		return "Sucess";
+	}
+	
+	
+	
+	@PostMapping("/uploadCheckEmail")
+	public String UploadCheckExcelEmail(@RequestParam("file") MultipartFile file
+			) throws IOException {
+		
+		byte[] fileContent = file.getBytes();
+		String email=null;
+		if (ExcelUtils.CheckExcelFormat(file)) { 
+			email =ExcelUtils.CheckExcelEmailDuplicacy(file); 
+			System.out.println(email);
+			if(email.equalsIgnoreCase("Uniqueness")) {
+		         // return "Sucess";	
+		  }else {
+			  return email;
+		  }
+			
+		}
+		  
+		return "Sucess";
 	}
 	
 	
