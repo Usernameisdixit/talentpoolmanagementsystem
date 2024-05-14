@@ -33,3 +33,19 @@ export const updateRole=baseUrl+'/updateRole/';
  //Mail
  export const allocationDataForMailUrl=baseUrl+'/allocationDataForMail';
  export const mailContentUrl=baseUrl+'/mailContent';
+
+ //Report
+
+ //Attendance Report
+ export const getActivityOnFromToUrl=baseUrl+'/getActivityOnFromTo';
+ export const attedanceDataReportUrl=baseUrl+'/attedanceDataReport';
+ export const allResourceName=baseUrl+'/allResourceName';
+ //ActivityReport 
+ export const activitynewDataReport=baseUrl+'/activitynewDataReport';
+ export const getActivityReportOnFromTo=baseUrl+'/getActivityReportOnFromTo';
+ //AssesmentReport
+ export const getActivityForAssesment=baseUrl+'/getActivityForAssesment';
+ export const assesmentReportData=baseUrl+'/assesmentReportData';
+ //Resource Report
+ export const updatetalent=baseUrl+'/emp/updatetalent';
+ export const downloadOnResReport=baseUrl+'/emp/download/';
