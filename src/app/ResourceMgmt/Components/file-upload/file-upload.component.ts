@@ -47,7 +47,9 @@ export class FileUploadComponent {
     const formData = new FormData();
     formData.append('file', this.selectedFile);
     formData.append('allocationDate', formattedDate);
-    this.http.post('http://localhost:9999/tpms/uploadCheck', formData)
+    //var responsex= this.http.post('http://localhost:9999/tpms/uploadCheck', formData);
+    //console.log("RESPONSE=====>"+responsex);
+    this.http.post('http://localhost:9999/tpms/uploadCheck', formData,{ responseType: 'text'})
     .subscribe(response => {
       console.log('File uploaded successfully', response);
       // Display success message using SweetAlert
@@ -77,6 +79,79 @@ export class FileUploadComponent {
       this.isUploading = false;
       });
 
+////For Phone Number Check /////////////////////////////////////
+const formattedDate1 = this.datePipe.transform(this.allocationDate, 'yyyy-MM-dd');
+const formData1 = new FormData();
+formData1.append('file', this.selectedFile);
+formData1.append('allocationDate', formattedDate1);
+
+  this.http.post('http://localhost:9999/tpms/uploadCheckPhone', formData1,{ responseType: 'text'})
+.subscribe(response => {
+  console.log('File uploaded successfully', response);
+  // Display success message using SweetAlert
+
+  if(!(response=="Sucess"))
+ {
+    Swal.fire({
+      icon: 'error',
+      text: 'Please Remove Duplicate Phone Number:' +response
+    });
+
+    this.selectedFile = null;
+    this.allocationDate = null;
+    this.isUploading = false;
+  }else{
+    console.log()
+  }
+
+}, error => {
+  console.error('Error uploading file', error);
+ 
+  Swal.fire({
+    icon: 'error',
+    text: 'Failed to upload file. Please try again later.'
+  });
+
+  this.selectedFile = null;
+  this.allocationDate = null;
+  this.isUploading = false;
+  });
+
+
+///////Check For Email Duplicacy ////////////////////////////////////
+const formattedDate2 = this.datePipe.transform(this.allocationDate, 'yyyy-MM-dd');
+const formData2 = new FormData();
+formData2.append('file', this.selectedFile);
+formData2.append('allocationDate', formattedDate2);
+this.http.post('http://localhost:9999/tpms/uploadCheckEmail', formData2,{ responseType: 'text'})
+.subscribe(response => {
+  console.log('File uploaded successfully', response);
+  // Display success message using SweetAlert
+
+  if(!(response=="Sucess"))
+ {
+    Swal.fire({
+      icon: 'error',
+      text: 'Please Remove Duplicate Email_ID:' +response
+    });
+
+    this.selectedFile = null;
+    this.allocationDate = null;
+    this.isUploading = false;
+  }
+
+}, error => {
+  console.error('Error uploading file', error);
+ 
+  Swal.fire({
+    icon: 'error',
+    text: 'Failed to upload file. Please try again later.'
+  });
+
+  this.selectedFile = null;
+  this.allocationDate = null;
+  this.isUploading = false;
+  });
 
 
 
@@ -116,6 +191,11 @@ export class FileUploadComponent {
       fileFormat = 'Unsupported file type. Please select a .xlsx file.\n';
     }
     
+    if (fileFormat) {
+      Swal.fire( fileFormat);
+      return;
+    }
+
    // this.checkFileFormat(this.selectedFile);
    ////////////////////////////////////////////////////////////
    const formattedDate = this.datePipe.transform(this.allocationDate, 'yyyy-MM-dd');
@@ -153,11 +233,7 @@ export class FileUploadComponent {
      });
      ////////////////////////////////////////////////////////////////
 
-    if (fileFormat) {
-      Swal.fire( fileFormat);
-      return;
-    }
-
+  
     Swal.fire({
       title: 'Do you want to upload the file?',
       icon: 'warning',
