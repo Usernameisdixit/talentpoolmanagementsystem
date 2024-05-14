@@ -55,3 +55,7 @@ export const updateRole=baseUrl+'/updateRole/';
  export const fetchDuration= baseUrl+'/emp/durations';
  export const findByResourceNo= baseUrl+'/emp/talent/';
  export const deleteByResourceNo= baseUrl+'/emp/delete/talent/';
+ export const getEditResource= baseUrl +'/emp/talent/';
+ export const deleteResource= baseUrl +'/emp/delete/talent/';
+ export const durations= baseUrl +'/emp/durations';
+ export const getActiveResorces= baseUrl +'/getActiveResorces';
