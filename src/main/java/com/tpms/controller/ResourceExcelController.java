@@ -18,9 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -46,7 +44,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -102,6 +99,73 @@ public class ResourceExcelController {
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Please Upload Excel File Only");
 	}
+	
+	@PostMapping("/uploadCheck")
+	//public JSONObject UploadCheckExcel(@RequestParam("file") MultipartFile file
+	public String UploadCheckExcel(@RequestParam("file") MultipartFile file
+			) throws IOException, JSONException {
+		
+		byte[] fileContent = file.getBytes();
+
+		if (ExcelUtils.CheckExcelFormat(file)) { 
+			String Emp = ExcelUtils.CheckExcelinproperorder(file.getInputStream());
+			System.out.println(Emp);
+			if (Emp.equalsIgnoreCase("2")) {
+				//return "{'A':'5'}";
+				//new JSONObject("{'A':'5'}");
+				return "2";
+			}
+		}
+
+		//return "{'B':'5'}";	
+		//return new JSONObject("{'B':'5'}");
+		return "1";
+	}
+	
+	
+	@PostMapping("/uploadCheckPhone")
+	public String UploadCheckExcelPhone(@RequestParam("file") MultipartFile file
+			) throws IOException {
+		
+		byte[] fileContent = file.getBytes();
+		String phone=null;
+		if (ExcelUtils.CheckExcelFormat(file)) { 
+	     phone =ExcelUtils.CheckExcelphoneDuplicacy(file); 
+			System.out.println(phone);
+			if(phone.equalsIgnoreCase("Uniqueness")) {
+		        //  return "Sucess";	
+		  }else {
+			  return phone;
+		  }
+			
+		}
+		  
+		return "Sucess";
+	}
+	
+	
+	
+	@PostMapping("/uploadCheckEmail")
+	public String UploadCheckExcelEmail(@RequestParam("file") MultipartFile file
+			) throws IOException {
+		
+		byte[] fileContent = file.getBytes();
+		String email=null;
+		if (ExcelUtils.CheckExcelFormat(file)) { 
+			email =ExcelUtils.CheckExcelEmailDuplicacy(file); 
+			System.out.println(email);
+			if(email.equalsIgnoreCase("Uniqueness")) {
+		         // return "Sucess";	
+		  }else {
+			  return email;
+		  }
+			
+		}
+		  
+		return "Sucess";
+	}
+	
+	
 
 	private void createDirectoryIfNotExists(String directoryPath) throws IOException {
 		Path path = Paths.get(directoryPath);

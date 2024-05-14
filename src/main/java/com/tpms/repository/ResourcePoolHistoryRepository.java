@@ -38,6 +38,8 @@ public interface ResourcePoolHistoryRepository extends JpaRepository<ResourcePoo
 	                "ORDER BY allocationDate", nativeQuery = true)
 	 List<Object[]> getAllResourceByCode(@Param("resourceCode") String resourceCode);
 
+			List<ResourcePoolHistory> findByResourceName(String resourceName);
+
 	
 	
 }
