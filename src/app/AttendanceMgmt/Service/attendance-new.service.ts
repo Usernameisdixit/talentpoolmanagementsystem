@@ -8,9 +8,6 @@ import { activityForAtt,attendDataByActivUrl,attendanceSaveUrl} from 'src/app/ap
 })
 export class AttendanceNewService {
 
-  // private activityForAtt = 'http://localhost:9999/tpms/activityByDate';
-  // private attendDataByActivUrl = 'http://localhost:9999/tpms/attDataByActivity';
-  // private attendanceSaveUrl = 'http://localhost:9999/tpms/saveAttendanceByActivity';
   constructor(private httpClient: HttpClient) { }
 
 

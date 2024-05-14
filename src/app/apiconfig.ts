@@ -29,3 +29,7 @@ export const updateRole=baseUrl+'/updateRole/';
  export const activityForAtt=baseUrl+'/activityByDate';
  export const attendDataByActivUrl=baseUrl+'/attDataByActivity';
  export const attendanceSaveUrl=baseUrl+'/saveAttendanceByActivity';
+
+ //Mail
+ export const allocationDataForMailUrl=baseUrl+'/allocationDataForMail';
+ export const mailContentUrl=baseUrl+'/mailContent';
