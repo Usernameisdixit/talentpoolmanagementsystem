@@ -33,7 +33,6 @@ export class ActivitynewreportserviceService {
   }
 
   generateAteendancePdf(reportType: string, attendanceData: any[], fromDate: Date, toDate: Date,activityHeadResource:any[]) {
-    debugger;
     const pdf = new jsPDF();
     let startYpos = 0;
     const formatFromDate = new Date(fromDate);
@@ -49,7 +48,6 @@ export class ActivitynewreportserviceService {
     const formattedToDate = `${formatToday} ${formatTomonth} ${formatToyear}`;
 
     pdf.text('Activity Report', 75, 10);
-    debugger;
     if (formatteFromdDate === formattedToDate) {
       pdf.setFontSize(10);
       pdf.text('Date : ' + formatteFromdDate, 10, 20);
@@ -370,7 +368,6 @@ export class ActivitynewreportserviceService {
         });
       }
       }else if(reportType=='summary'){
-        debugger;
         rowData.push(
           // { v: detail.atendanceDate, s: { alignment: { wrapText: true } } },
         { v: detail.resourceCode, s: { alignment: { wrapText: true } } },

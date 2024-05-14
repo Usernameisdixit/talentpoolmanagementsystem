@@ -1,13 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as XLSX from 'xlsx-js-style';
-import { allocationDataForMailUrl,mailContentUrl} from 'src/app/apiconfig';
+import { allocationDataForMailUrl,mailContentUrl,send} from 'src/app/apiconfig';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MailService {
-  private url = 'http://localhost:9999/tpms';
+ 
 
   constructor(private httpClient: HttpClient) { }
 
@@ -144,6 +144,6 @@ export class MailService {
   }
 
   sendMail(mailData:any){
-    return this.httpClient.post(`${this.url}/send`, mailData);
+    return this.httpClient.post(`${send}`, mailData);
   }
 }
