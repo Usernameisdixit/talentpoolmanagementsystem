@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
 import { UserService } from 'src/app/UserMgmt/Service/user.service';
+import { downloadTemplate, upload, uploadCheck, uploadCheckEmail, uploadCheckPhone } from 'src/app/apiconfig';
 
 
 @Component({
@@ -47,9 +48,7 @@ export class FileUploadComponent {
     const formData = new FormData();
     formData.append('file', this.selectedFile);
     formData.append('allocationDate', formattedDate);
-    //var responsex= this.http.post('http://localhost:9999/tpms/uploadCheck', formData);
-    //console.log("RESPONSE=====>"+responsex);
-    this.http.post('http://localhost:9999/tpms/uploadCheck', formData,{ responseType: 'text'})
+    this.http.post(uploadCheck, formData,{ responseType: 'text'})
     .subscribe(response => {
       console.log('File uploaded successfully', response);
       // Display success message using SweetAlert
@@ -85,7 +84,7 @@ const formData1 = new FormData();
 formData1.append('file', this.selectedFile);
 formData1.append('allocationDate', formattedDate1);
 
-  this.http.post('http://localhost:9999/tpms/uploadCheckPhone', formData1,{ responseType: 'text'})
+  this.http.post(uploadCheckPhone, formData1,{ responseType: 'text'})
 .subscribe(response => {
   console.log('File uploaded successfully', response);
   // Display success message using SweetAlert
@@ -123,7 +122,7 @@ const formattedDate2 = this.datePipe.transform(this.allocationDate, 'yyyy-MM-dd'
 const formData2 = new FormData();
 formData2.append('file', this.selectedFile);
 formData2.append('allocationDate', formattedDate2);
-this.http.post('http://localhost:9999/tpms/uploadCheckEmail', formData2,{ responseType: 'text'})
+this.http.post(uploadCheckEmail, formData2,{ responseType: 'text'})
 .subscribe(response => {
   console.log('File uploaded successfully', response);
   // Display success message using SweetAlert
@@ -202,7 +201,7 @@ this.http.post('http://localhost:9999/tpms/uploadCheckEmail', formData2,{ respon
    const formData = new FormData();
    formData.append('file', this.selectedFile);
    formData.append('allocationDate', formattedDate);
-   this.http.post('http://localhost:9999/tpms/uploadCheck', formData)
+   this.http.post(uploadCheck, formData)
    .subscribe(response => {
      console.log('File uploaded successfully', response);
      // Display success message using SweetAlert
@@ -247,7 +246,7 @@ this.http.post('http://localhost:9999/tpms/uploadCheckEmail', formData2,{ respon
     formData.append('file', this.selectedFile);
     formData.append('allocationDate', formattedDate);
 
-    this.http.post('http://localhost:9999/tpms/upload', formData)
+    this.http.post(upload, formData)
       .subscribe(response => {
         console.log('File uploaded successfully', response);
         // Display success message using SweetAlert
@@ -283,7 +282,7 @@ this.http.post('http://localhost:9999/tpms/uploadCheckEmail', formData2,{ respon
 
 
   downloadTemplate(): void {
-    const templateURL = 'http://localhost:9999/tpms/downloadTemplate'; 
+    const templateURL = downloadTemplate; 
     this.http.get(templateURL, { responseType: 'blob' })
       .subscribe((response: Blob) => {
         const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -301,24 +300,5 @@ this.http.post('http://localhost:9999/tpms/uploadCheckEmail', formData2,{ respon
   openDatepicker(): void {
     this.datepicker.show(); 
   } 
-
-  /*checkFileFormat(uploadFile:File):boolean {
-    console.log(uploadFile.name);
-
-    const fileReader = new FileReader();
-    fileReader.onload = (uploadFile) => {
-     const arrayBuffer = uploadFile;
-     const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-     console.log(workbook);
-     const firstSheetName = workbook.SheetNames[0];
-     console.log(firstSheetName);
-     const worksheet = workbook.Sheets[firstSheetName];
-     console.log(worksheet);
-     
-    // const headers: string[] = [];
-    }
-    fileReader.readAsArrayBuffer(uploadFile);
-    return true;
-  }*/
 
 }
