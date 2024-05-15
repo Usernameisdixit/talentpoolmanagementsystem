@@ -220,14 +220,35 @@ export class ActivityListComponent implements OnInit {
 
   //pagination functionality
   getTableDataChange(event: any) {
-    this.currentPage = event;
-    this.retrieveActivities();
+    let activityId=document.getElementById("activityName") as HTMLSelectElement ;
+    let activityPerson=document.getElementById("activityPerson") as HTMLInputElement;
+    
+    if(activityId.value!=='0' && activityPerson.value!==''){
+      this.currentPage = event;
+      this.searchBtn(false);
+    }
+    else if(activityId.value!=='0' && activityPerson.value===''){
+      this.currentPage = event;
+      this.searchBtn(false);
+    }
+    else if(activityId.value==='0' && activityPerson.value!==''){
+      this.currentPage = event;
+      this.searchBtn(false);
+    }
+    else{
+      this.currentPage = event;
+      this.retrieveActivities();
+    }
+    
   }
 
-  // ........... for searching section.................
+  // ........... for search filter.................
 
-  searchBtn(){
-    this.currentPage=1;
+  searchBtn(flag:boolean){
+    if(flag){
+      this.currentPage=1;
+    }
+    
     let activityId=document.getElementById("activityName") as HTMLSelectElement ;
     let activityPerson=document.getElementById("activityPerson") as HTMLInputElement;
     
@@ -245,6 +266,7 @@ export class ActivityListComponent implements OnInit {
       },
       error:(e)=>console.log(e) 
     });
+
   }
 
 
