@@ -115,7 +115,7 @@ getPlaformListData(){
   //pagination functionality
   getTableDataChange(event: any) {
     this.currentPage = event;
-    this.getTalent();
+    // this.getTalent();
   }
 
   // private getResourcesForPDFAndExcel():void{
@@ -227,13 +227,14 @@ getPlaformListData(){
     return allocationDate < currentDate;
   }
   reset(){
-    // $('#designation').val('');
-    // $('#location').val('');
-    // $('#platform').val('');
-    window.location.reload();
+    $('#designation').val('');
+    $('#location').val('');
+    $('#platform').val('');
+    // window.location.reload();
   }
 
   search(){
+    debugger;
     this.currentPage=1;
     this.designation=$('#designation').val();
    this.location= $('#location').val();
@@ -252,12 +253,14 @@ getPlaformListData(){
         if(this.designation.value==='' && this.platform.value==='' && this.location.value===''){
           this.talent=result.content;
           this.totalElements = result.totalElements;
-       this.pageSize=result.pageSize;
+        this.pageSize=result.pageSize;
+        alert(this.talent+"--"+this.totalElements+"--"+this.pageSize);
        }
        else{
        this.talent = result.content;
        this.totalElements = result.totalElements;
        this.pageSize=result.pageSize;
+       alert(this.talent+"--"+this.totalElements+"--"+this.pageSize);
        }
       },
       (error) => console.log(error)
