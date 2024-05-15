@@ -69,7 +69,7 @@ export const updateRole=baseUrl+'/updateRole/';
  export const downloadOnResReport=baseUrl+'/emp/download/';
  export const getResourceDetailsWithFileName =baseUrl +'/emp/getResourceDetailsWithFileName';
  export const getResourceList= baseUrl +'/emp/getResourceList';
- export const getAciveResource= baseUrl +'/getActiveResorces';
+ //export const getAciveResource= baseUrl +'/getActiveResorces';
  export const fetchActiv= baseUrl+'/emp/ractive';
  export const fetchDuration= baseUrl+'/emp/durations';
  export const findByResourceNo= baseUrl+'/emp/talent/';
@@ -77,7 +77,7 @@ export const updateRole=baseUrl+'/updateRole/';
  export const getEditResource= baseUrl +'/emp/talent/';
  export const deleteResource= baseUrl +'/emp/delete/talent/';
  export const durations= baseUrl +'/emp/durations';
- export const getActiveResorces= baseUrl +'/getActiveResorces';
+ export const getActiveResorces= baseUrl +'/getActiveResources';
 
  //Activity Management
  export const getActivity=baseUrl+'/get/activity';

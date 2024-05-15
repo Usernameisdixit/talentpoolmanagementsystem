@@ -4,7 +4,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { Observable, catchError, throwError } from 'rxjs';
 import { Talent } from 'src/app/Model/talent';
 import { ResourceHistory } from 'src/app/Model/ResourceHistory';
-import {getResourceDetailsWithFileName, getAciveResource, getResourceResurceList,updatetalent,downloadOnResReport,fetchActiv,fetchDuration,findByResourceNo,deleteByResourceNo } from 'src/app/apiconfig';
+import {getResourceDetailsWithFileName, getActiveResorces, getResourceResurceList,updatetalent,downloadOnResReport,fetchActiv,fetchDuration,findByResourceNo,deleteByResourceNo } from 'src/app/apiconfig';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx-js-style';
@@ -80,7 +80,7 @@ export class ResourcereportService {
   }
 
   getResources(): Observable<any[]> {
-    return this.httpClient.get<any[]>(`${getAciveResource}`);
+    return this.httpClient.get<any[]>(`${getActiveResorces}`);
   }
 
   fetchDurations(code: string): Observable<string[]> {
