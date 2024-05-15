@@ -1,7 +1,6 @@
 package com.tpms.service.impl;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
@@ -9,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -283,7 +280,7 @@ public class ResourcePoolServiceImpl {
 		resid.add(resourcedata.get(k).getResourceHistoryId());
 	}
 	
-	System.out.println(resourcedata);
+	
 	Integer i=Collections.max(resid);
 	
 	for(int j=0;j<resourcedata.size();j++) {
