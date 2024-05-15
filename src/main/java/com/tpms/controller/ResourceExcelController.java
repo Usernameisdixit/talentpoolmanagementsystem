@@ -397,24 +397,28 @@ public class ResourceExcelController {
 	
 	
 	@GetMapping("/getPlatform")
-	@ResponseBody
-	public List<Platform> getPlatform() {
+	public List<String> getPlatform() {
 		return resourcepoolserviceimpl.getPlatform();
 	}
 	
 	@GetMapping("/searchFilterData")
-	public List<ResourcePool> getsearchFilterData(
-			@RequestParam(value = "designation",required = false) String designation,
-			@RequestParam(value = "location",required = false) String location,
-			@RequestParam(value = "platform" ,required = false) String platform) {
-		List<ResourcePool> getsearchFilterData = null;
+	ResponseEntity<?> getsearchFilterData(@RequestParam(value = "designation", required = false) String designation,
+			@RequestParam(value = "location", required = false) String location,
+			@RequestParam(value = "platform", required = false) String platform,
+			@RequestParam(defaultValue = "1") Integer currentPage) {
+		PageResponse<ResourcePool> getsearchFilterData = null;
 		try {
-			System.out.println(designation+" "+location+" "+platform);
-			getsearchFilterData = resourcepoolserviceimpl.getsearchFilterData(designation,location,platform);
+			if (location.equals("") && designation.equals("") && platform.equals("")) {
+				getsearchFilterData = resourcepoolserviceimpl.getAllEmploye(currentPage, 10);
+
+			} else {
+				getsearchFilterData = resourcepoolserviceimpl.getsearchFilterData(designation, location, platform,
+						currentPage, 10);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return getsearchFilterData;
+		return ResponseEntity.ok().body(getsearchFilterData);
 	}
 
 }

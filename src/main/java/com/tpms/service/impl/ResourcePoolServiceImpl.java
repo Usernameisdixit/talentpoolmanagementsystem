@@ -382,10 +382,10 @@ public class ResourcePoolServiceImpl {
 		return getList;
 	}
 
-	public List<Platform> getPlatform() {
-		List<Platform> platformData= null;
+	public List<String> getPlatform() {
+		List<String> platformData= null;
 		try {
-			platformData=platformRepository.findAll();
+			platformData=platformRepository.findData();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -402,26 +402,42 @@ public class ResourcePoolServiceImpl {
 		return getList;
 	}
 
-	public List<ResourcePool> getsearchFilterData(String designation, String location, String platform) {
-		// TODO Auto-generated method stub
-		return null;
+	public PageResponse<ResourcePool> getsearchFilterData(String designation, String location, String platform,
+			Integer pageNumber, int pageSize) {
+		Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+		Page<ResourcePool> page = null;
+		PageResponse<ResourcePool> pageResponse = new PageResponse<>();
+		try {
+			page = tbl_resource_pool_Repository.getsearchFilterData(designation, location, platform, pageable);
+			List<ResourcePool> getResouceList = page.getContent();
+			List<ResourcePoolHistoryDto> tbl_resource_pooldto = new ArrayList<>();
+			List<Object[]> tbl_resource_poolfindMinMax = tbl_resource_pool_Repository_history.MinMaxAllocationDate();
+
+			for (Object[] ob : tbl_resource_poolfindMinMax) {
+				ResourcePoolHistoryDto rgdt = new ResourcePoolHistoryDto();
+				rgdt.setResourceCode(ob[0].toString());
+				rgdt.setResourceName(ob[1].toString());
+				String Dur = DateUtils.monthDayDifference(ob[2].toString(), ob[3].toString());
+				rgdt.setDuration(Dur);
+				tbl_resource_pooldto.add(rgdt);
+			}
+
+			for (ResourcePool resource : getResouceList) {
+				for (ResourcePoolHistoryDto resourcedto : tbl_resource_pooldto) {
+					if (resource.getResourceCode().equalsIgnoreCase(resourcedto.getResourceCode())) {
+						resource.setDuration(resourcedto.getDuration());
+					}
+				}
+			}
+			pageResponse.setContent(getResouceList);
+			pageResponse.setPageSize(page.getSize());
+			pageResponse.setTotalElements(page.getTotalElements());
+
+			return pageResponse;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pageResponse;
 	}
-
-//	public List<ResourcePool> getsearchFilterData(String designation, String location, String platform) {
-//		List<ResourcePool> getResouceFilterList=null;
-//		List<ResourcePool> getResouceFilterList1=null;
-//		try {
-////			if((designation.equals("")&& location.equals("")&&platform.equals("")){
-////				getResouceFilterList1=tbl_resource_pool_Repository.findAll();
-////			}
-//			getResouceFilterList=tbl_resource_pool_Repository.getFilterData(designation,location,platform);
-//			
-//			System.out.println(getResouceFilterList);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return getResouceFilterList;
-//	}
-
 	
 }
