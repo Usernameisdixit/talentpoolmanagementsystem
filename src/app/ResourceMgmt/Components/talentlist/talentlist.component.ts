@@ -254,13 +254,11 @@ getPlaformListData(){
           this.talent=result.content;
           this.totalElements = result.totalElements;
         this.pageSize=result.pageSize;
-        alert(this.talent+"--"+this.totalElements+"--"+this.pageSize);
        }
        else{
        this.talent = result.content;
        this.totalElements = result.totalElements;
        this.pageSize=result.pageSize;
-       alert(this.talent+"--"+this.totalElements+"--"+this.pageSize);
        }
       },
       (error) => console.log(error)
