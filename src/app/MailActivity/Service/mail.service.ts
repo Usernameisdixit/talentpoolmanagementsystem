@@ -1,28 +1,27 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as XLSX from 'xlsx-js-style';
+import { allocationDataForMailUrl,mailContentUrl,send} from 'src/app/apiconfig';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MailService {
-  private url = 'http://localhost:9999/tpms';
+ 
 
   constructor(private httpClient: HttpClient) { }
 
   getAllActivityAllocationDetails(fromDate: string, toDate: string) {
-    const url = `${this.url}/allocationDataForMail`;
     const params = {
       fromDate: fromDate,
       toDate: toDate,  
     };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.post<any>(url, params, { headers });
+    return this.httpClient.post<any>(allocationDataForMailUrl, params, { headers });
   }
 
   fetContent(inputType : string){
-    const url = `${this.url}/mailContent`;
-    return this.httpClient.get<any>(`${url}?inputType=${inputType}`);
+    return this.httpClient.get<any>(`${mailContentUrl}?inputType=${inputType}`);
 
   }
 
@@ -145,6 +144,6 @@ export class MailService {
   }
 
   sendMail(mailData:any){
-    return this.httpClient.post(`${this.url}/send`, mailData);
+    return this.httpClient.post(`${send}`, mailData);
   }
 }

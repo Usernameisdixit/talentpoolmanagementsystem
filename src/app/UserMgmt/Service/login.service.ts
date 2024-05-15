@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from 'src/app/Model/user';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import { activityByFromToDate, getActiveResorces, getAllAllocationDate, getAllUsers, getAttendanceData, getEmail, login, resetPassword, totalActivitiesPlanned } from 'src/app/apiconfig';
 
 @Injectable({
   providedIn: 'root'
@@ -29,36 +30,36 @@ export class LoginService {
 
 
    getUserList(): Observable<User[]>{
-    return this.httpClient.get<User[]>('http://localhost:9999/tpms/getAllUsers');
+    return this.httpClient.get<User[]>(getAllUsers);
    }
 
  sendData(formData: any): Observable<any> {
   
-    return this.httpClient.post('http://localhost:9999/tpms/login', formData,{ responseType: 'text' });
+    return this.httpClient.post(login, formData,{ responseType: 'text' });
   }
 
   
   sendEmail(email: string): Observable<any> {
     const data = { email };
-    return this.httpClient.post('http://localhost:9999/tpms/getEmail', data,{responseType: 'text'});
+    return this.httpClient.post(getEmail, data,{responseType: 'text'});
   }
 
   sendResetData(formData: any): Observable<any> {
-    return this.httpClient.post('http://localhost:9999/tpms/resetPassword', formData,{ responseType: 'text'});
+    return this.httpClient.post(resetPassword, formData,{ responseType: 'text'});
     
   }
   
   getAllocationDates(): Observable<any[]> {
-    return this.httpClient.get<any[]>('http://localhost:9999/tpms/getAllAllocationDate');
+    return this.httpClient.get<any[]>(getAllAllocationDate);
   }
 
   getResources(selectDate:string){
-    return this.httpClient.post<any>('http://localhost:9999/tpms/getActiveResources',selectDate)
+    return this.httpClient.post<any>(getActiveResorces,selectDate)
 
   }
 
    getAttendance(selectedDate: string) {
-    return this.httpClient.post<any>('http://localhost:9999/tpms/getAttendanceData',selectedDate)
+    return this.httpClient.post<any>(getAttendanceData,selectedDate)
       
   }
 
@@ -72,17 +73,14 @@ export class LoginService {
   }
 
 
-  /* activityFromto(formData: any): Observable<any> {
-    return this.httpClient.post(`http://localhost:9999/tpms/activityByFromToDate`, formData,{ responseType : 'text'});
-    
-  }*/
-
   activityFromto(activityFromDate: string, activityToDate: string): Observable<any[]> {
-    return this.httpClient.get<any[]>(`http://localhost:9999/tpms/activityByFromToDate?activityFromDate=${activityFromDate}&activityToDate=${activityToDate}`);
+    let actvityByFromToDateUrl=activityByFromToDate;
+    return this.httpClient.get<any[]>(`${actvityByFromToDateUrl}?activityFromDate=${activityFromDate}&activityToDate=${activityToDate}`);
   }
 
   gettotalActivitiesPlanned(activityFromDate: string, activityToDate: string): Observable<any[]> {
-    return this.httpClient.get<any[]>(`http://localhost:9999/tpms/totalActivitiesPlanned?activityFromDate=${activityFromDate}&activityToDate=${activityToDate}`);
+    let totalActivitiesPlannedUrl=totalActivitiesPlanned;
+    return this.httpClient.get<any[]>(`${totalActivitiesPlannedUrl}?activityFromDate=${activityFromDate}&activityToDate=${activityToDate}`);
   }
 
 }

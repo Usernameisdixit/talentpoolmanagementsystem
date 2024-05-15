@@ -124,7 +124,6 @@ export class MailactivityComponent {
   }
 
   fetchEmailAndContent() {
-    debugger;
     if(this.selectedDateRange=="0"){
       this.editorContent='';
     }
@@ -314,7 +313,7 @@ export class MailactivityComponent {
   }
 
   sendMail() {
-    debugger;
+
     if(this.inputType=='alocation' && this.mailIds.length==0){
       Swal.fire("The message must have at least one recipient. ");
     }else if(this.inputType=='attendance' && this.mailIds==null){

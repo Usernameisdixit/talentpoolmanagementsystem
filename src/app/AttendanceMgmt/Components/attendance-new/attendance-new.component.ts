@@ -43,7 +43,6 @@ export class AttendanceNewComponent {
   uncheckCheckboxStatus: boolean[] = [];
 
   ngOnInit(): void {
-    debugger
     this.selectedDate = new Date();
     this.maxDate = new Date();
     this.uncheckCheckbox1 = false;
@@ -111,8 +110,8 @@ export class AttendanceNewComponent {
       this.selectedDate = new Date(this.loginService.selectedDate);
     }
     this.attendanceNewService.fetchActivities(this.selectedDate?.toLocaleString()).subscribe((data) => {
-      console.log("hi");
-      console.log(data);
+    
+     
       this.activities = data.map(activity => ({ id: activity.activityId, name: activity.activityName, activityFor: activity.activityFor, activityAllocateId: activity.activityAllocateId }));
     }, error => {
       console.error('Error fetching activities:', error);
@@ -317,7 +316,6 @@ export class AttendanceNewComponent {
 
   //COMMON ATTENDANCE STATUS
   private getActivityData(detail: any): string {
-    debugger;
     let activityData = '';
     detail.firstHalf.forEach((firstHalfObj, index, array) => {
       if (firstHalfObj.isPresent == 0) {
@@ -335,7 +333,6 @@ export class AttendanceNewComponent {
 
   downloadExcelReport() {
     let reportType='activity';
-    debugger;
     const formatFromDate = new Date(this.selectedDate);
     const formatFromday = formatFromDate.getDate();
     const formatFrommonth = formatFromDate.toLocaleString('default', { month: 'short' });
@@ -345,7 +342,7 @@ export class AttendanceNewComponent {
    
 
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([], { skipHeader: true });
-    debugger;
+  
     let headerRow = [];
    
       ws['!cols'] = [

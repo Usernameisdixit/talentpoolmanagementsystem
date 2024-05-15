@@ -4,24 +4,23 @@ import { Observable } from 'rxjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx-js-style';
+import { activitynewDataReport,getActivityReportOnFromTo} from 'src/app/apiconfig';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActivitynewreportserviceService {
 
-  private url = 'http://localhost:9999/tpms';
 
   constructor(private httpClient: HttpClient) { }
 
 
   getActivities(fromDate: string, toDate: string): Observable<any[]> {
-    const urlF = `${this.url}/getActivityReportOnFromTo`;
-    return this.httpClient.get<string[]>(`${urlF}?fromDate=${fromDate}&toDate=${toDate}`);
+    return this.httpClient.get<string[]>(`${getActivityReportOnFromTo}?fromDate=${fromDate}&toDate=${toDate}`);
   }
 
   attendanceData(reportType: string, fromDate: string, toDate: string, activityId: string, resourceValue: string) {
-    const url = `${this.url}/activitynewDataReport`;
+    const url = `${activitynewDataReport}`;
     const params = {
       reportType: reportType,
       fromDate: fromDate,
@@ -34,7 +33,6 @@ export class ActivitynewreportserviceService {
   }
 
   generateAteendancePdf(reportType: string, attendanceData: any[], fromDate: Date, toDate: Date,activityHeadResource:any[]) {
-    debugger;
     const pdf = new jsPDF();
     let startYpos = 0;
     const formatFromDate = new Date(fromDate);
@@ -50,7 +48,6 @@ export class ActivitynewreportserviceService {
     const formattedToDate = `${formatToday} ${formatTomonth} ${formatToyear}`;
 
     pdf.text('Activity Report', 75, 10);
-    debugger;
     if (formatteFromdDate === formattedToDate) {
       pdf.setFontSize(10);
       pdf.text('Date : ' + formatteFromdDate, 10, 20);
@@ -371,7 +368,6 @@ export class ActivitynewreportserviceService {
         });
       }
       }else if(reportType=='summary'){
-        debugger;
         rowData.push(
           // { v: detail.atendanceDate, s: { alignment: { wrapText: true } } },
         { v: detail.resourceCode, s: { alignment: { wrapText: true } } },
