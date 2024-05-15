@@ -22,7 +22,7 @@ export class TalentlistComponent implements OnInit {
   talent: any = [];
   resourceDetails:any=[];
   delmsg: string = "";
-  c: Talent[];
+  // c: Talent[];
   duration: any = [];
   listData: any = [];
   getDesignationList: any=[];
@@ -32,6 +32,7 @@ export class TalentlistComponent implements OnInit {
   location: any;
   platform: any;
   record: any;
+  allData: any=[];
   constructor(private service: ContactService, private router: Router, private datePipe: DatePipe,
     private _userService:UserService) { }
 
@@ -227,7 +228,9 @@ getPlaformListData(){
     return allocationDate < currentDate;
   }
   reset(){
-    window.location.reload();
+    $('#designation').val('');
+    $('#location').val('');
+    $('#platform').val('');
   }
 
   search(){
@@ -245,10 +248,17 @@ getPlaformListData(){
       this.platform=0;
     }
     this.service.searchData(this.designation,this.location,this.platform,this.currentPage).subscribe(
-      (result) => {
-        this.talent = [];
-        console.log(this.talent);
-        this.talent = result;
+      (result:any) => {
+        if(this.designation.value==='' && this.platform.value==='' && this.location.value===''){
+          this.talent=result.content;
+          this.totalElements = result.totalElements;
+       this.pageSize=result.pageSize;
+       }
+       else{
+       this.talent = result.content;
+       this.totalElements = result.totalElements;
+       this.pageSize=result.pageSize;
+       }
       },
       (error) => console.log(error)
     )
