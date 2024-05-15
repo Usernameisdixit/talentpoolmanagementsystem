@@ -8,25 +8,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.sql.DataSource;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.tpms.entity.Activity;
 import com.tpms.entity.Attendance;
 import com.tpms.entity.Platform;
-import com.tpms.entity.ResourcePool;
 import com.tpms.repository.ActivityRepository;
 import com.tpms.repository.AttendanceRepository;
 import com.tpms.repository.PlatformRepository;
@@ -212,7 +207,6 @@ public class AttendanceServiceImpl implements AttendanceService {
 				Date dateRequired = inputFormat.parse(date);
 				formattedDate = outputFormat.format(dateRequired);
 				finaldate = dateFormat.parse(formattedDate);
-				System.err.println("Final Date" + finaldate);
 				if (firstHalfArray.length() != 0) {
 					for (int j = 0; j < firstHalfArray.length(); j++) {
 						JSONObject firstHalfObject = firstHalfArray.getJSONObject(j);

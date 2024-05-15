@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.tpms.entity.Activity;
 import com.tpms.entity.CommunicationContent;
-import com.tpms.entity.ResourcePool;
 import com.tpms.service.impl.MailServiceImpl;
 
 import jakarta.mail.MessagingException;
