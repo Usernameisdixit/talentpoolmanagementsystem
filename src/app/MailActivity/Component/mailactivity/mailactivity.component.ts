@@ -72,7 +72,7 @@ export class MailactivityComponent {
           if (!toDate || toDateItem > toDate) {
             toDate = toDateItem;
           }
-
+          debugger;
           const dateRange = new DateRange(fromDateItem, toDateItem, this.datePipe);
           this.dateRanges.push(dateRange.toString());
           this.selectedDateRange = dateRange.toString();
@@ -81,7 +81,7 @@ export class MailactivityComponent {
         });
 
         if (this.dateRanges.length > 0) {
-          this.selectedDateRange = this.dateRanges[0];
+          this.selectedDateRange = "0";
           this.getAllActivityAllocationDetails();
           // this.fetchActivities();
         }
@@ -118,12 +118,14 @@ export class MailactivityComponent {
       this.editorContent='';
       this.mailIds=null;
       this.statusForAttenContent=false;
+      this.selectedDateRange="0";
     }
     this.fetchEmailAndContent();
     
   }
 
   fetchEmailAndContent() {
+    debugger;
     if(this.selectedDateRange=="0"){
       this.editorContent='';
     }
