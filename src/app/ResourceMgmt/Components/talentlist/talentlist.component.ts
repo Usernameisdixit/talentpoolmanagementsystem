@@ -69,7 +69,6 @@ getLocation(){
   
 }
 getPlaformListData(){
-  debugger;
   this.platform="";
   this.service.getPlaformListData().subscribe((response:any)=>{
    
@@ -228,9 +227,10 @@ getPlaformListData(){
     return allocationDate < currentDate;
   }
   reset(){
-    $('#designation').val('');
-    $('#location').val('');
-    $('#platform').val('');
+    // $('#designation').val('');
+    // $('#location').val('');
+    // $('#platform').val('');
+    window.location.reload();
   }
 
   search(){
