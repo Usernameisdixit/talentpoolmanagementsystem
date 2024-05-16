@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,7 +51,7 @@ public class ActivityController {
 			@RequestParam(defaultValue = "1") Integer pageNumber) {
 		if(pageNumber==0) {
 			List<Activity> activityDetails=activityService.getActivityList();
-			activityDetails=activityDetails.stream().sorted((a,b)->a.getActivityName().compareTo(b.getActivityName())).collect(Collectors.toList());
+			activityDetails=activityDetails.stream().sorted((a,b)->a.getActivityName().compareTo(b.getActivityName())).toList();
 			return ResponseEntity.ok().body(activityDetails);
 		}
 	    PageResponse<Activity> actvityDetails=activityServiceImpl.getAllActivities(pageNumber,10);
@@ -62,13 +61,13 @@ public class ActivityController {
 	}
 
 	@PostMapping("/save/activity")
-	public Activity SaveActivity(@RequestBody Activity activity) {
+	public Activity saveActivity(@RequestBody Activity activity) {
 		Activity listByRespAct = activityService.findByResponsPerson1AndActivityName(activity.getResponsPerson1(),
 				activity.getActivityName());
 		Activity activeActivity = activityService.getDataByActivityName(activity.getActivityName());
 		
 		if (listByRespAct != null) {
-			if (listByRespAct.getDeletedFlag() == true) {
+			if (Boolean.TRUE.equals(listByRespAct.getDeletedFlag())) {
 				listByRespAct.setDeletedFlag(false);
 				activityServiceImpl.SaveActivity(listByRespAct);
 				activeActivity.setDeletedFlag(true);
@@ -129,17 +128,18 @@ public class ActivityController {
 	ResponseEntity<Map<String, Object>> getAllocationDetailsByResource(@RequestParam("id") Integer resourceId,
 			@RequestParam("date") Date activityDate) {
 		Map<String, Object> response = new HashMap<>();
+		String key = "Error";
 		try {
 			String result = activityService.getAllocationDetailsByResource(resourceId, activityDate);
-			if (result == "success") {
+			if (result.equals("success")) {
 				response.put("status", 200);
 				response.put("success", "Attendance Save Succesfully");
 			} else {
-				response.put("Error", "Error");
+				response.put(key, key);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.put("Error", "Error");
+			response.put(key, key);
 		}
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -184,15 +184,13 @@ public class ActivityController {
 
 	@GetMapping("/platformsIdByName")
 	public Integer getPlatformIdByName(@RequestParam("platformName") String platformName) {
-		Integer platFormId = activityService.platformIdByName(platformName);
-		return platFormId;
+		return activityService.platformIdByName(platformName);
 	}
 
 	@GetMapping("getDistinctDate")
 	public List<String> getAllDistinctDateRange(@RequestParam("year") String year,
 			@RequestParam("month") String month) {
-		List<String> getAllDaterange = activityService.getAllDistinctDateRange(year, month);
-		return getAllDaterange;
+		return activityService.getAllDistinctDateRange(year, month);
 	}
 	
 	@GetMapping("fetchDataByDateRange")
@@ -201,34 +199,29 @@ public class ActivityController {
 	}
 
 	 @PostMapping("/getAttendanceData")
-	    public ResponseEntity<?> receiveDataFromFrontend(@RequestBody String atendanceDate) {
+	    public ResponseEntity<List<Map<String,String>> > receiveDataFromFrontend(@RequestBody String atendanceDate) {
 		 List<Map<String,String>> assessmentDetails = activityRepository.getActivityAttendanceSummary(atendanceDate);
 	        return ResponseEntity.ok(assessmentDetails);
 	    }
 	
 	 //DashboardPart
 	 @GetMapping("activityByFromToDate")
-		//public List<Activity> activityById(@RequestParam String selectedDate)
-		public ResponseEntity<?> activityByFromToDate(@RequestParam String activityFromDate,@RequestParam String activityToDate){
-		 //System.out.println(activityFromDate+"-----------------"+activityToDate);
+		public ResponseEntity<List<Map<String,String>> > activityByFromToDate(@RequestParam String activityFromDate,@RequestParam String activityToDate){
 		 List<Map<String,String>> activitydata = activityRepository.getactivitydata(activityFromDate,activityToDate);
-		 //System.out.println(activitydata);
 		 return ResponseEntity.ok(activitydata);
 		}
 	
 		// Dashboard part [ActivtiesPlanned]
 		@GetMapping("totalActivitiesPlanned")
-		public ResponseEntity<?> gettotalActivitiesPlanned(@RequestParam String activityFromDate,
+		public ResponseEntity<Integer> gettotalActivitiesPlanned(@RequestParam String activityFromDate,
 				@RequestParam String activityToDate) {
 			Integer resources = activityRepository.findAllActivityFromtodate(activityFromDate, activityToDate);
-			// System.out.println(resources);
 			return ResponseEntity.ok(resources);
 		}
 
 		@GetMapping("getActivityForAuto")
 		public List<String> getAllActivityAuto(@RequestParam String value) {
-			List<String> resNames = activityService.getAllActivityAuto(value);
-			return resNames;
+			return activityService.getAllActivityAuto(value);
 
 		}
 
@@ -239,8 +232,7 @@ public class ActivityController {
 		
 		@GetMapping("activityCheck")
 		public Integer activityExist(@RequestParam Integer activityId) {
-			Integer status= activityService.activityExist(activityId);
-			return status;
+			return activityService.activityExist(activityId);
 		}
 		
 		@GetMapping("deleteAllocation")
@@ -259,7 +251,7 @@ public class ActivityController {
 			}else {
 				 PageResponse<Activity> searchDataDetails=activityService.searchActivity(activityId,activityPerson,pageNumber,10);
 				  List<Activity> getActivityDetails=searchDataDetails.getContent();
-				  List<Activity> sortedFormOfActivity= getActivityDetails.stream().sorted((a,b)->a.getActivityName().compareTo(b.getActivityName())).collect(Collectors.toList());
+				  List<Activity> sortedFormOfActivity= getActivityDetails.stream().sorted((a,b)->a.getActivityName().compareTo(b.getActivityName())).toList();
 				  searchDataDetails.setContent(sortedFormOfActivity);
 			  return ResponseEntity.ok().body(searchDataDetails);
 			}

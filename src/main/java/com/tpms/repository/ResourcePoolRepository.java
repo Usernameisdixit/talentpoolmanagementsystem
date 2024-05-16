@@ -75,9 +75,9 @@ public interface ResourcePoolRepository extends JpaRepository<ResourcePool, Inte
 	@Query(value = """
 			SELECT * FROM resource_pool
 			WHERE deletedFlag = 0
-			AND (designation LIKE IF(:designation = '', designation, CONCAT('%', :designation, '%')))
-			AND (platform LIKE IF(:platform = '', platform, CONCAT('%', :platform, '%')))
-			AND (location LIKE IF(:location = '', location, CONCAT('%', :location, '%')));
+			AND (designation = IF(:designation = '', designation,  :designation))
+			AND (platform = IF(:platform = '', platform,:platform))
+			AND (location = IF(:location = '', location, :location));
 								""", nativeQuery = true)
 	Page<ResourcePool> getsearchFilterData(String designation, String location, String platform, Pageable pageable);
 	 
