@@ -21,7 +21,7 @@ export class MailactivityComponent {
   selectedDateRange: string = '';
   content: any[];
   mailIds: any;
-  cc: string = '';
+  cc: any;
   subject: any ;
   description: string = '';
   public Editor = ClassicEditor;
@@ -99,6 +99,7 @@ export class MailactivityComponent {
   }
 
   getAllActivityAllocationDetails() {
+    if(this.selectedDateRange!="0"){ 
     const dateRangeString = this.selectedDateRange;
     const dates = dateRangeString.split(' to ');
 
@@ -110,6 +111,14 @@ export class MailactivityComponent {
         this.fetchActivities();
         this.fetchEmailAndContent();
       });
+    }else{
+      this.mailIds = [];
+    this.cc = '';
+    this.description = '';
+    this.editorContent=''; 
+    this.selectedFile=null;
+
+    }
   }
 
   onInputTypeChange(): void {
@@ -128,6 +137,15 @@ export class MailactivityComponent {
     debugger;
     if(this.selectedDateRange=="0"){
       this.editorContent='';
+    }
+    if(this.alocationDetails.length!=0 && this.selectedDateRange!="0"){
+      this.cc = [
+        "amit@gmail.com",
+        "lovenish@gmail.com",
+        "uvvesh@gmail.com",
+        "suraj@gmail.com"
+    ];
+
     }
    
     if(this.inputType=='allocation'){
