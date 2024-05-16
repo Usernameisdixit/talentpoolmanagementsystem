@@ -69,18 +69,18 @@ public class ActivityController {
 		if (listByRespAct != null) {
 			if (Boolean.TRUE.equals(listByRespAct.getDeletedFlag())) {
 				listByRespAct.setDeletedFlag(false);
-				activityServiceImpl.SaveActivity(listByRespAct);
+				activityServiceImpl.saveActivity(listByRespAct);
 				activeActivity.setDeletedFlag(true);
-				activityServiceImpl.SaveActivity(activeActivity);
+				activityServiceImpl.saveActivity(activeActivity);
 			}
-			return activityServiceImpl.SaveActivity(listByRespAct);
+			return activityServiceImpl.saveActivity(listByRespAct);
 		} else {
 			if (activeActivity != null) {
 				activeActivity.setDeletedFlag(true);
-				activityServiceImpl.SaveActivity(activeActivity);
+				activityServiceImpl.saveActivity(activeActivity);
 			}
 			activity.setDeletedFlag(false);
-			return activityServiceImpl.SaveActivity(activity);
+			return activityServiceImpl.saveActivity(activity);
 
 		}
 		

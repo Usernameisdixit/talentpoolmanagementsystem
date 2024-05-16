@@ -16,7 +16,7 @@ import com.tpms.entity.ResourcePool;
 
 public interface ActivityService {
 	
-	public Activity SaveActivity(Activity activity);
+	public Activity saveActivity(Activity activity);
 	
 	public PageResponse<Activity> getAllActivities(Integer pageNumber,Integer pageSize);
 	
