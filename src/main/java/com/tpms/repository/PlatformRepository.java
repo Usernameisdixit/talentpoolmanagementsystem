@@ -4,6 +4,8 @@ package com.tpms.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tpms.entity.Platform;
+import com.tpms.entity.ResourcePool;
 
 @Repository
 public interface PlatformRepository extends JpaRepository<Platform, Integer> {
@@ -38,6 +41,14 @@ public interface PlatformRepository extends JpaRepository<Platform, Integer> {
 	
 	@Query(value = "select count(1) from platforms where platformCode=:platformCode",nativeQuery = true)
 	Integer getDuplicateProgramCodeCount(String platformCode);
+
+	 @Query(value = "SELECT distinct  platform FROM platforms", nativeQuery = true)
+	List<String> findData();
+
+	 
+	
+	
+
 
 	
 }

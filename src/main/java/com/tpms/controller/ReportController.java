@@ -42,7 +42,6 @@ public class ReportController {
 	@GetMapping("getActivityForAssesment")
 	public List<Activity> getActivityInDateRangeForAssement(@RequestParam String fromDate,@RequestParam String toDate) {
 	    List<Activity> activityListOnDateRange = reportService.getActivityOnDateRangForAssement(fromDate,toDate);
-	    System.err.println(activityListOnDateRange);
 	    return activityListOnDateRange;
 	}
 	
@@ -108,22 +107,9 @@ public class ReportController {
     	
 	    ObjectMapper objectMapper = new ObjectMapper();
 	    List<Map<String, Object>> assesmentReportData = reportService.getAssesmentData(reportType, fromDate,toDate,activityId,resourceValue);
-	    System.err.println(assesmentReportData);
 	    return objectMapper.writeValueAsString(assesmentReportData);
 	    
-//	    if(reportType.equals("activity")) {
-//	    List<Map<String, Object>> assesmentReportData = reportService.getAssesmentData(reportType, fromDate,toDate,activityId,resourceValue);
-//	    System.err.println(assesmentReportData);
-//	    return objectMapper.writeValueAsString(assesmentReportData);
-//	    }else {
-//	    	  List<Map<String, Object>> assesmentReportData = reportService.getAssesmentData(reportType, fromDate,toDate,activityId,resourceValue);
-//	  	    System.err.println(assesmentReportData);
-//	  	    return objectMapper.writeValueAsString(assesmentReportData);
-//	    }
-//	    else {
-//	    	JSONArray allDetails = reportService.getAttendanceDataSummary(reportType, fromDate,toDate,activityId,resourceValue);
-//	    	return allDetails.toString();
-//	    }
+
 	}
 	
 	
@@ -141,7 +127,6 @@ public class ReportController {
 		@GetMapping("/emp/ractive")
 		public ResponseEntity<?> getDurationDetails(@RequestParam("code") String resourceCode) throws JSONException {
 			JSONObject details = reportService.getDetails(resourceCode);
-			System.out.println(details);
 			return ResponseEntity.ok(details.toString());
 
 		}

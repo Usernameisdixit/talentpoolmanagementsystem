@@ -1,7 +1,6 @@
 package com.tpms.service.impl;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
@@ -9,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.apache.commons.collections4.CollectionUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,13 +21,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tpms.dto.PageResponse;
 import com.tpms.dto.ResourcePoolHistoryDto;
+import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
 import com.tpms.entity.ResourcePoolHistory;
-
+import com.tpms.repository.PlatformRepository;
 import com.tpms.repository.ResourcePoolHistoryRepository;
 import com.tpms.repository.ResourcePoolRepository;
 import com.tpms.utils.DateUtils;
 import com.tpms.utils.ExcelUtils;
+
+import jakarta.annotation.Resource;
 
 @Service
 public class ResourcePoolServiceImpl {
@@ -38,6 +40,9 @@ public class ResourcePoolServiceImpl {
 
 	@Autowired
 	private ResourcePoolRepository tbl_resource_pool_Repository;
+	
+	@Autowired
+	private PlatformRepository platformRepository;
 
 	public void save(MultipartFile file, LocalDate allocationDate) {
 
@@ -283,7 +288,7 @@ public class ResourcePoolServiceImpl {
 		resid.add(resourcedata.get(k).getResourceHistoryId());
 	}
 	
-	System.out.println(resourcedata);
+	
 	Integer i=Collections.max(resid);
 	
 	for(int j=0;j<resourcedata.size();j++) {
@@ -367,4 +372,72 @@ public class ResourcePoolServiceImpl {
 		return resourceList;
 	}
 
+	public List<String> getDesignation() {
+		List<String> getList=  new ArrayList<>();
+		try {
+			getList=tbl_resource_pool_Repository.findDesignationData();		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return getList;
+	}
+
+	public List<String> getPlatform() {
+		List<String> platformData= null;
+		try {
+			platformData=platformRepository.findData();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return platformData;
+	}
+
+	public List<String> getLocation() {
+		List<String> getList=  new ArrayList<>();
+		try {
+			getList=tbl_resource_pool_Repository.findLocationData();		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return getList;
+	}
+
+	public PageResponse<ResourcePool> getsearchFilterData(String designation, String location, String platform,
+			Integer pageNumber, int pageSize) {
+		Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+		Page<ResourcePool> page = null;
+		PageResponse<ResourcePool> pageResponse = new PageResponse<>();
+		try {
+			page = tbl_resource_pool_Repository.getsearchFilterData(designation, location, platform, pageable);
+			List<ResourcePool> getResouceList = page.getContent();
+			List<ResourcePoolHistoryDto> tbl_resource_pooldto = new ArrayList<>();
+			List<Object[]> tbl_resource_poolfindMinMax = tbl_resource_pool_Repository_history.MinMaxAllocationDate();
+
+			for (Object[] ob : tbl_resource_poolfindMinMax) {
+				ResourcePoolHistoryDto rgdt = new ResourcePoolHistoryDto();
+				rgdt.setResourceCode(ob[0].toString());
+				rgdt.setResourceName(ob[1].toString());
+				String Dur = DateUtils.monthDayDifference(ob[2].toString(), ob[3].toString());
+				rgdt.setDuration(Dur);
+				tbl_resource_pooldto.add(rgdt);
+			}
+
+			for (ResourcePool resource : getResouceList) {
+				for (ResourcePoolHistoryDto resourcedto : tbl_resource_pooldto) {
+					if (resource.getResourceCode().equalsIgnoreCase(resourcedto.getResourceCode())) {
+						resource.setDuration(resourcedto.getDuration());
+					}
+				}
+			}
+			pageResponse.setContent(getResouceList);
+			pageResponse.setPageSize(page.getSize());
+			pageResponse.setTotalElements(page.getTotalElements());
+
+			return pageResponse;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pageResponse;
+	}
+	
 }
