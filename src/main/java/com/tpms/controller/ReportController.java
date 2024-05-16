@@ -21,51 +21,42 @@ import com.tpms.dto.PageResponse;
 import com.tpms.entity.Activity;
 import com.tpms.entity.ResourcePool;
 import com.tpms.service.ReportService;
-import com.tpms.service.impl.ResourcePoolServiceImpl;
 
 @RestController
 @CrossOrigin("*")
 public class ReportController {
 	
+	private static final String RESOURCE_VALUE = "resourceValue";
+	private static final String ACTIVITY_ID = "activityId";
+	private static final String TO_DATE = "toDate";
+	private static final String FROM_DATE = "fromDate";
+	private static final String REPORT_TYPE = "reportType";
 	@Autowired
 	private ReportService reportService;
 	
-	@Autowired
-	private ResourcePoolServiceImpl resourcepoolserviceimpl;
 	
 	@GetMapping("getActivityOnFromTo")
 	public List<Activity> getActivityInDateRange(@RequestParam String fromDate,@RequestParam String toDate) {
-	    List<Activity> activityListOnDateRange = reportService.getAttendanceDataOnDateRang(fromDate,toDate);
-	    return activityListOnDateRange;
+	    return reportService.getAttendanceDataOnDateRang(fromDate,toDate);
 	}
 	
 	@GetMapping("getActivityForAssesment")
 	public List<Activity> getActivityInDateRangeForAssement(@RequestParam String fromDate,@RequestParam String toDate) {
-	    List<Activity> activityListOnDateRange = reportService.getActivityOnDateRangForAssement(fromDate,toDate);
-	    return activityListOnDateRange;
+	    return reportService.getActivityOnDateRangForAssement(fromDate,toDate);
 	}
 	
 	
 	@PostMapping("attedanceDataReport")
-	public String getAttendanceDataReprt(@RequestBody Map<String, String> params) throws JsonProcessingException {
-	    String reportType = params.get("reportType");
-	    String fromDate = params.get("fromDate");
-	    String toDate = params.get("toDate");
-	    String activityId = params.get("activityId");
-	    String resourceValue = params.get("resourceValue");
+	public String getAttendanceDataReprt(@RequestBody Map<String, String> params) {
+	    String reportType = params.get(REPORT_TYPE);
+	    String fromDate = params.get(FROM_DATE);
+	    String toDate = params.get(TO_DATE);
+	    String activityId = params.get(ACTIVITY_ID);
+	    String resourceValue = params.get(RESOURCE_VALUE);
 	    
 	    JSONArray allDetails = reportService.getAttendanceDataSummary(reportType, fromDate,toDate,activityId,resourceValue);
     	return allDetails.toString();
     	
-//	    ObjectMapper objectMapper = new ObjectMapper();
-//	    if(reportType.equals("44356")) {
-//	    List<Map<String, Object>> attendanceReportData = reportService.getAttendanceData(reportType, fromDate,toDate,activityId,resourceValue);
-//	    return objectMapper.writeValueAsString(attendanceReportData);
-//	    }
-//	    else {
-//	    	JSONArray allDetails = reportService.getAttendanceDataSummary(reportType, fromDate,toDate,activityId,resourceValue);
-//	    	return allDetails.toString();
-//	    }
 	}
 	
 	
@@ -73,17 +64,16 @@ public class ReportController {
 	
 	@GetMapping("getActivityReportOnFromTo")
 	public List<Activity> getActivityInDateRangeforActivityReort(@RequestParam String fromDate,@RequestParam String toDate) {
-	    List<Activity> activityListOnDateRange = reportService.getActivityDataOnDateRang(fromDate,toDate);
-	    return activityListOnDateRange;
+	    return reportService.getActivityDataOnDateRang(fromDate,toDate);
 	}
 	
 	@PostMapping("activitynewDataReport")
 	public String getActivitynewDataReport(@RequestBody Map<String, String> params) throws JsonProcessingException {
-	    String reportType = params.get("reportType");
-	    String fromDate = params.get("fromDate");
-	    String toDate = params.get("toDate");
-	    String activityId = params.get("activityId");
-	    String resourceValue = params.get("resourceValue");
+	    String reportType = params.get(REPORT_TYPE);
+	    String fromDate = params.get(FROM_DATE);
+	    String toDate = params.get(TO_DATE);
+	    String activityId = params.get(ACTIVITY_ID);
+	    String resourceValue = params.get(RESOURCE_VALUE);
 	    ObjectMapper objectMapper = new ObjectMapper();
 	    if(reportType.equals("activity")) {
 	    List<Map<String, Object>> attendanceReportData = reportService.getActivitynewDataReport(reportType, fromDate,toDate,activityId,resourceValue);
@@ -97,11 +87,11 @@ public class ReportController {
 	
 	@PostMapping("assesmentReportData")
 	public String getAssesmentReportData(@RequestBody Map<String, String> params) throws JsonProcessingException {
-	    String reportType = params.get("reportType");
-	    String fromDate = params.get("fromDate");
-	    String toDate = params.get("toDate");
-	    String activityId = params.get("activityId");
-	    String resourceValue = params.get("resourceValue");
+	    String reportType = params.get(REPORT_TYPE);
+	    String fromDate = params.get(FROM_DATE);
+	    String toDate = params.get(TO_DATE);
+	    String activityId = params.get(ACTIVITY_ID);
+	    String resourceValue = params.get(RESOURCE_VALUE);
 	    
 	   
     	
@@ -116,11 +106,9 @@ public class ReportController {
 	//Resource Report Controller Methode
 	
 	@GetMapping("/emp/getResourceReportList")
-	public PageResponse<ResourcePool> gettbl_resource_pool(@RequestParam(defaultValue = "1") Integer pageNumber){
+	public PageResponse<ResourcePool> getTblResourcePool(@RequestParam(defaultValue = "1") Integer pageNumber){
 			
-	PageResponse<ResourcePool> resourceList=reportService.getAllEmployeResourceReport(pageNumber,10);
-	 
-	return resourceList;
+	return reportService.getAllEmployeResourceReport(pageNumber,10);
 	}
 	
 	// For getting ACtivities of Particular Resource
