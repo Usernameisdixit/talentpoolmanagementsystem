@@ -3,9 +3,7 @@ package com.tpms.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,11 +30,16 @@ import com.tpms.service.UserService;
 @CrossOrigin("*")
 public class UserController {
 	
-	@Autowired
-	private UserService userService;
 	
-	@Autowired
-	private RoleService roleService;
+	private final UserService userService;
+	
+	
+	private final RoleService roleService;
+	
+	public UserController(UserService userService,RoleService roleService) {
+		this.userService=userService;
+		this.roleService=roleService;
+	}
 	
 	
 	@Value("${user.default.password}")
@@ -73,9 +76,10 @@ public class UserController {
 			@RequestParam(defaultValue = "1") Integer pageNumber){		
 		if(pageNumber==0) {
 			List<User> userList=userService.getAllUsers();
-			userList=userList.stream().sorted((a,b)->a.getUserFullName().compareTo(b.getUserFullName())).collect(Collectors.toList());
+			userList=userList.stream().sorted((a,b)->a.getUserFullName().compareTo(b.getUserFullName())).toList();
 			return ResponseEntity.ok().body(userList);
 		}
+		
 	    PageResponse<User> userList = userService.getUserDetails(pageNumber, 10);
 	    
 		return ResponseEntity.ok().body(userList);
