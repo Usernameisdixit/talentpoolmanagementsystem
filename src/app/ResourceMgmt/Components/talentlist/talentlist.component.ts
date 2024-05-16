@@ -46,6 +46,7 @@ export class TalentlistComponent implements OnInit {
     this.getDesignation();
     this.getLocation();
     this.getPlaformListData();
+    //this.search();
   }
 
 getDesignation(){
@@ -114,8 +115,43 @@ getPlaformListData(){
 
   //pagination functionality
   getTableDataChange(event: any) {
-    this.currentPage = event;
-    // this.getTalent();
+   debugger;
+    this.designation=$('#designation').val();
+    this.location= $('#location').val();
+     this.platform= $('#platform').val();
+     if(this.designation!=='' && this.platform!=='' && this.location!==''){
+      this.currentPage=event;
+      this.search(false);
+    }
+    else if(this.designation!=='' && this.platform==='' && this.location===''){
+      this.currentPage=event;
+      this.search(false);
+    }
+    else if(this.designation!=='' && this.platform!=='' && this.location===''){
+      this.currentPage=event;
+      this.search(false);
+    }
+    else if(this.designation!=='' && this.platform==='' && this.location!==''){
+      this.currentPage=event;
+      this.search(false);
+    }
+    else if(this.designation==='' && this.platform!=='' && this.location===''){
+      this.currentPage=event;
+      this.search(false);
+    }
+    else if(this.designation==='' && this.platform==='' && this.location!==''){
+      this.currentPage=event;
+      this.search(false);
+    }
+    else if(this.designation==='' && this.platform!=='' && this.location!==''){
+      this.currentPage=event;
+      this.search(false);
+    }
+    else{
+     this.currentPage = event;
+     this.getTalent();
+    }
+
   }
 
   // private getResourcesForPDFAndExcel():void{
@@ -233,9 +269,12 @@ getPlaformListData(){
     // window.location.reload();
   }
 
-  search(){
-    debugger;
-    this.currentPage=1;
+  search(flag: boolean){
+     debugger;
+     if(flag){
+        this.currentPage=1;
+     }
+    
     this.designation=$('#designation').val();
    this.location= $('#location').val();
     this.platform= $('#platform').val();
