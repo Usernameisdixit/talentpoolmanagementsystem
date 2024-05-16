@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,8 +22,13 @@ import com.tpms.service.RoleService;
 @RestController
 public class RoleController {
 
-	@Autowired
-	private RoleService roleService;
+	
+	private final RoleService roleService;
+	
+	public RoleController(RoleService roleService) {
+		this.roleService=roleService;
+		
+	}
 
 	@GetMapping("/getRoles")
 	public List<RoleDto> getAllRoles() {
@@ -47,8 +51,8 @@ public class RoleController {
 		createdRole.setDeletedFlag(false);
 		createdRole.setRoleName(role.getRoleName());
 		roleService.createRole(createdRole);
-		Map<String, Object> response = new HashMap<String, Object>();
-		;
+		Map<String, Object> response = new HashMap<>();
+		
 		response.put("Status", "Role entered Successfully");
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
@@ -64,7 +68,7 @@ public class RoleController {
 	public ResponseEntity<Map<String, Object>> deleteRole(@PathVariable(name = "id") Long id) {
 
 		Boolean result = roleService.getDeletedFlagByRoleId(id);
-		if (result == true) {
+		if (Boolean.TRUE.equals(result)) {
 			roleService.updateBitDeletedFlagByFalse(id);
 		} else {
 			roleService.updateBitDeletedFlagById(id);
@@ -73,7 +77,7 @@ public class RoleController {
 		Map<String, Object> response = new HashMap<>();
 		response.put("status", 200);
 		response.put("deleted", "Data Deleted Succesfully");
-		if (result == true) {
+		if (Boolean.TRUE.equals(result)) {
 			response.put("deletedFlag", false);
 		} else {
 			response.put("deletedFlag", true);

@@ -5,13 +5,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import javax.crypto.SecretKey;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtHelper {
@@ -22,27 +26,6 @@ public class JwtHelper {
    
     private String secret = "afafasfafafasfasfasfafacasdasfasxASFACASDFACASDFASFASFDAFASFASDAADSCSDFADCVSGCFVADXCcadwavfsfarvf";
 
-
-    public Date updateExpiryTime(String token, long additionalMillis) {
-        // Decode JWT token
-        Claims claims = Jwts.parser()
-                            .setSigningKey(secret)
-                            .parseClaimsJws(token)
-                            .getBody();
-
-        // Retrieve expiry time from decoded token
-        Date expiryDate = claims.getExpiration();
-
-        // Calculate new expiry time by adding additional milliseconds
-        Date newExpiryDate = new Date(expiryDate.getTime() + additionalMillis);
-
-        // Update expiry time in token
-        claims.setExpiration(newExpiryDate);
-
-        // Return the updated expiry date
-        return newExpiryDate;
-    }
-    
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -60,8 +43,16 @@ public class JwtHelper {
 
     //for retrieveing any information from token we will need the secret key
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        // Example key generation (you can use your own key generation mechanism)
+        SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+
+        // Create JwtParser with the secret key
+        JwtParser parser = Jwts.parserBuilder().setSigningKey(secretKey).build();
+        
+        // Parse the claims from the token
+        return parser.parseClaimsJws(token).getBody();
     }
+
 
     //check if the token has expired
     public Boolean isTokenExpired(String token) {
@@ -81,10 +72,15 @@ public class JwtHelper {
     //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
     //   compaction of the JWT to a URL-safe string
     private String doGenerateToken(Map<String, Object> claims, String subject) {
+        SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes());
 
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtTokenValidityMinutes *60* 1000))
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtTokenValidityMinutes * 60 * 1000))
+                .signWith(secretKey, SignatureAlgorithm.HS512)
+                .compact();
     }
 
     //validate token

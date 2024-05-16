@@ -10,22 +10,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class AppConfig {
 	
-	//SET THE STATIC USERNAME,PASS, AND ROLE
-
-//	@Bean
-//	public UserDetailsService userDetailsService() {
-//		UserDetails userDetails = User.builder().username("JIBAN").password(passwordEncoder().encode("JIBAN@123"))
-//				.roles("ADMIN").build();
-//		return new InMemoryUserDetailsManager(userDetails);
-//}
 
 	@Bean
-	public PasswordEncoder passwordEncoder() {
+	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
+	AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
 		return builder.getAuthenticationManager();
 	}
 
