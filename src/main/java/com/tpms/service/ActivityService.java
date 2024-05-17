@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
-import org.springframework.http.ResponseEntity;
 
 import com.tpms.dto.PageResponse;
 import com.tpms.dto.ResourcePoolProjection;

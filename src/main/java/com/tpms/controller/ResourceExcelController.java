@@ -104,21 +104,16 @@ public class ResourceExcelController {
 	}
 	
 	@PostMapping("/uploadCheck")
-	//public JSONObject UploadCheckExcel(@RequestParam("file") MultipartFile file
 	public String uploadCheckExcel(@RequestParam("file") MultipartFile file
-			) throws IOException, JSONException {
+			) throws IOException {
 		
 		if (ExcelUtils.CheckExcelFormat(file)) { 
-			String Emp = ExcelUtils.CheckExcelinproperorder(file.getInputStream());
-			if (Emp.equalsIgnoreCase("2")) {
-				//return "{'A':'5'}";
-				//new JSONObject("{'A':'5'}");
+			String check = ExcelUtils.checkExcelinproperorder(file.getInputStream());
+			if (check.equalsIgnoreCase("2")) {
 				return "2";
 			}
 		}
 
-		//return "{'B':'5'}";	
-		//return new JSONObject("{'B':'5'}");
 		return "1";
 	}
 	
@@ -129,7 +124,7 @@ public class ResourceExcelController {
 
 				String phone = null;
 				if (ExcelUtils.CheckExcelFormat(file)) {
-					phone = ExcelUtils.CheckExcelphoneDuplicacy(file);
+					phone = ExcelUtils.checkExcelphoneDuplicacy(file);
 					if (phone.equalsIgnoreCase("Uniqueness")) {
 						// return "Sucess";
 					} else {
@@ -334,7 +329,7 @@ public class ResourceExcelController {
 
 			Row headerRow = sheet.createRow(0);
 			String[] headers = { "SL No", "Employee Code", "Employee Name", "Designation", "Technology", "Email",
-					"PhoneNo", "Location", "Engagement Plan", "Exp" };
+					"PhoneNo", "Location", "Engagement Plan", "Exp." };
 			for (int i = 0; i < headers.length; i++) {
 				Cell cell = headerRow.createCell(i);
 				cell.setCellValue(headers[i]);
