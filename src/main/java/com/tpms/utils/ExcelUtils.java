@@ -233,7 +233,7 @@ public static List<ResourcePoolHistory> convertExceltoListofEmployeeForValidatio
 
 
 @SuppressWarnings("resource")
-public static String CheckExcelinproperorder(InputStream is){
+public static String checkExcelinproperorder(InputStream is){
 	
 	String Ach="";
 	
@@ -300,7 +300,7 @@ public static String CheckExcelinproperorder(InputStream is){
 //Check For Phone Duplicacy Validation
 
 @SuppressWarnings("resource")
-public static String CheckExcelphoneDuplicacy(MultipartFile file) throws IOException{
+public static String checkExcelphoneDuplicacy(MultipartFile file) throws IOException{
 	String phone=null;
 	List<ResourcePoolHistory> ExcelEmp = ExcelUtils.convertExceltoListofEmployeeForValidation(file.getInputStream());
 	List<String> phoneno = new ArrayList<String>();

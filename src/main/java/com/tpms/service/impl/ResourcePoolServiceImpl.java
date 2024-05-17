@@ -85,13 +85,10 @@ public class ResourcePoolServiceImpl {
 
 			}
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (IOException | IndexOutOfBoundsException e) {
+
 			e.printStackTrace();
-		} catch (IndexOutOfBoundsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 
 	}
 
@@ -254,7 +251,7 @@ public class ResourcePoolServiceImpl {
 		pageResponse.setLast(page.isLast());
 
 		List<ResourcePoolHistoryDto> tbl_resource_pooldto = new ArrayList<>();
-		List<Object[]> tbl_resource_poolfindMinMax = tbl_resource_pool_Repository_history.MinMaxAllocationDate();
+		List<Object[]> tbl_resource_poolfindMinMax = tbl_resource_pool_Repository_history.minMaxAllocationDate();
 
 		for (Object[] ob : tbl_resource_poolfindMinMax) {
 			ResourcePoolHistoryDto rgdt = new ResourcePoolHistoryDto();
@@ -310,7 +307,7 @@ public class ResourcePoolServiceImpl {
 			
 
 		} catch (Exception e) {
-			// TODO: handle exception
+
 			e.printStackTrace();
 		}
 		return "Record Updated";
@@ -318,14 +315,12 @@ public class ResourcePoolServiceImpl {
 
 	// For Deleting Any Resource
 	public String delete(Integer id) {
-		// TODO Auto-generated method stub
 		tbl_resource_pool_Repository.deleteById(id);
 		return "Resource Deleted";
 	}
 
 	@SuppressWarnings("deprecation")
 	public ResourcePool getTalentById(Integer id) {
-		// TODO Auto-generated method stub
 		return tbl_resource_pool_Repository.findById(id).get();
 
 	}
@@ -351,7 +346,7 @@ public class ResourcePoolServiceImpl {
 		List<ResourcePool> resourceList=tbl_resource_pool_Repository.findAll();
 		
 		List<ResourcePoolHistoryDto> tbl_resource_pooldto = new ArrayList<>();
-		List<Object[]> tbl_resource_poolfindMinMax = tbl_resource_pool_Repository_history.MinMaxAllocationDate();
+		List<Object[]> tbl_resource_poolfindMinMax = tbl_resource_pool_Repository_history.minMaxAllocationDate();
 
 		for (Object[] ob : tbl_resource_poolfindMinMax) {
 			ResourcePoolHistoryDto rgdt = new ResourcePoolHistoryDto();
@@ -411,7 +406,7 @@ public class ResourcePoolServiceImpl {
 			page = tbl_resource_pool_Repository.getsearchFilterData(designation, location, platform, pageable);
 			List<ResourcePool> getResouceList = page.getContent();
 			List<ResourcePoolHistoryDto> tbl_resource_pooldto = new ArrayList<>();
-			List<Object[]> tbl_resource_poolfindMinMax = tbl_resource_pool_Repository_history.MinMaxAllocationDate();
+			List<Object[]> tbl_resource_poolfindMinMax = tbl_resource_pool_Repository_history.minMaxAllocationDate();
 
 			for (Object[] ob : tbl_resource_poolfindMinMax) {
 				ResourcePoolHistoryDto rgdt = new ResourcePoolHistoryDto();

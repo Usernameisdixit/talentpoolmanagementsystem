@@ -489,7 +489,7 @@ public class ReportServiceImpl implements ReportService {
 			pageResponse.setLast(page.isLast());
 
 			List<ResourcePoolHistoryDto> tblResourcePoolDto = new ArrayList<>();
-			List<Object[]> tblResourcePoolfindMinMax = tblResourcePoolRepositoryHistory.MinMaxAllocationDate();
+			List<Object[]> tblResourcePoolfindMinMax = tblResourcePoolRepositoryHistory.minMaxAllocationDate();
 
 			for (Object[] ob : tblResourcePoolfindMinMax) {
 				ResourcePoolHistoryDto rgdt = new ResourcePoolHistoryDto();
