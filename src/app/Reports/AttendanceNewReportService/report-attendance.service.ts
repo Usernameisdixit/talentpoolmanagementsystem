@@ -188,6 +188,7 @@ export class ReportAttendanceService {
   }
 
   generateAteendanceExcel(reportType: string, attendanceData: any[], fromDate: Date, toDate: Date,activityHead:any[],activityHeadResource:any[]) {
+    debugger;
     const formatFromDate = new Date(fromDate);
     const formatFromday = formatFromDate.getDate();
     const formatFrommonth = formatFromDate.toLocaleString('default', { month: 'short' });

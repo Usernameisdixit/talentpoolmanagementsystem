@@ -43,10 +43,12 @@ export class LoginComponent implements OnInit {
 
 
   onSubmit() {
+    debugger;
     if (this.credentials.username) {
       if (this.credentials.password) {
         this.loginService.sendData(this.credentials).subscribe(
           (response: any) => {
+            debugger;
             const responseObject = JSON.parse(response);
             const tokenTime = responseObject?.tokenTime;
             localStorage.setItem("tokenTime", tokenTime);
@@ -57,11 +59,13 @@ export class LoginComponent implements OnInit {
             const email = user?.email;
             const username = user?.userName;
             const userFullName = user?.userFullName;
+            const signature = user?.signature;
             localStorage.setItem("email", email);
             localStorage.setItem('userName', username);
             localStorage.setItem("userId", user?.userId);
+            localStorage.setItem("userId", user?.userId);
             localStorage.setItem("userFullName", userFullName);
-            localStorage.setItem("user", JSON.stringify(user));
+            localStorage.setItem("signature", signature);
             const receivedToken = localStorage.getItem('token');
             if (typeof receivedToken !== 'undefined' && receivedToken) {
               if (status === 'firstlogin') {
