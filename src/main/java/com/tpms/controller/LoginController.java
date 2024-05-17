@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,18 +31,31 @@ import com.tpms.service.impl.UserServiceDetails;
 @CrossOrigin
 public class LoginController {
 	
-	@Autowired
-	private UserRepository userRepository;
-	
-	@Autowired
-    private UserServiceDetails userServiceDetails;
+	private static final String INVALID_CREDENTIALS = "Invalid credentials";
 
-    @Autowired
-    private JwtHelper helper;
+	private static final String SUCCESS = "success";
 
-//	@Value("${server.servlet.session.timeout}")
-//	private Integer sessionTime;
-	
+	private static final String MESSAGE = "message";
+
+	private static final String ERROR = "error";
+
+	private static final String STATUS = "status";
+
+	private static final ResponseEntity<Map<String, Object>> OK = ResponseEntity.ok(Map.of(STATUS, ERROR, MESSAGE, INVALID_CREDENTIALS));
+
+	private final UserRepository userRepository;
+
+    private final UserServiceDetails userServiceDetails;
+
+    private final JwtHelper helper;
+    
+    public LoginController (JwtHelper helper,UserServiceDetails userServiceDetails,UserRepository userRepository) {
+    	this.userRepository=userRepository;
+    	this.helper=helper;
+    	this.userServiceDetails=userServiceDetails;
+    }
+
+
 	@GetMapping("/getAllUsers")
 	public ResponseEntity<List<User>> getAllUSers()
 	{
@@ -52,9 +64,8 @@ public class LoginController {
 	}
 	
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody JWTRequest request) {
+    public ResponseEntity<Map<String,Object>> login(@RequestBody JWTRequest request) {
     	try {
-    	//UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
     	User user=doAuthenticate(request.getUsername(), request.getPassword());
 
         UserDetails userDetails = userServiceDetails.loadUserByUsername(request.getUsername());
@@ -62,20 +73,15 @@ public class LoginController {
         Date expiryTime=helper.getExpirationDateFromToken(token);
         Date currentTime = new Date();
         long tokenExpiryInMiliSeconds = expiryTime.getTime()-currentTime.getTime();
-        if (user.getIsFirstLogin()) {
-            return ResponseEntity.ok(Map.of("status", "firstlogin", "message", "First time user logged in.", "user", user));
+        if (Boolean.TRUE.equals(user.getIsFirstLogin())) {
+            return ResponseEntity.ok(Map.of(STATUS, "firstlogin", MESSAGE, "First time user logged in.", "user", user));
         } else {
-            return ResponseEntity.ok(Map.of("status", "success", "message", "Login successful", "token", token, "user", user,"tokenTime",tokenExpiryInMiliSeconds));
+            return ResponseEntity.ok(Map.of(STATUS, SUCCESS, MESSAGE, "Login successful", "token", token, "user", user,"tokenTime",tokenExpiryInMiliSeconds));
         }
     } catch (UsernameNotFoundException e) {
-        return ResponseEntity.ok(Map.of("status", "error", "message", "Invalid credentials"));
+        return OK;
     }
     }
-    
-    
-    
-    
-   
     
     public User doAuthenticate(String username, String password) {
         User user = userRepository.findByUserName(username);
@@ -86,7 +92,7 @@ public class LoginController {
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new UsernameNotFoundException("Invalid credentials");
+            throw new UsernameNotFoundException(INVALID_CREDENTIALS);
         }
         return user;
     }
@@ -99,57 +105,39 @@ public class LoginController {
 	
 	
 	@PostMapping("/getEmail")
-    public ResponseEntity<?> getEmail(@RequestBody FormData formEmail) {
+    public ResponseEntity<Map<String,String>> getEmail(@RequestBody FormData formEmail) {
         User user = userRepository.findByEmail(formEmail.getEmail());
 		if (user != null && formEmail.getEmail().equalsIgnoreCase(user.getEmail()))
 	    {
-			return ResponseEntity.ok(Map.of("status", "success", "message", "Mail Verified successfully"));
+			return ResponseEntity.ok(Map.of(STATUS, SUCCESS, MESSAGE, "Mail Verified successfully"));
 		}
 		else {
-			return ResponseEntity.ok(Map.of("status", "error", "message", "Invalid Email"));
+			return ResponseEntity.ok(Map.of(STATUS, ERROR, MESSAGE, "Invalid Email"));
 		}
     }
-//********Method For Checking Valid email********
-//	private boolean isValidEmail(String email) {
-//	    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-//	    return email.matches(emailRegex);
-//	}
-	
 	
 	@PostMapping("/resetPassword")
-	public ResponseEntity<?> resetPassword(@RequestBody FormData formData) {
+	public ResponseEntity<Map<String,String>> resetPassword(@RequestBody FormData formData) {
 		User user = userRepository.findByEmail(formData.getEmail());
 		if(!formData.getNewpassword().equalsIgnoreCase(formData.getConfirmpassword())) {
 			return ResponseEntity
-					.ok(Map.of("status", "mismatch", "message", "Enter Password Correctly."));
+					.ok(Map.of(STATUS, "mismatch", MESSAGE, "Enter Password Correctly."));
 		}
-//		***************condition for checking the password saved in database and entering password must be different**************
-//		if (user != null && !formPass.getConfirmpassword().equalsIgnoreCase(user.getVchPassword())) {
-//			user.setVchPassword(formPass.getConfirmpassword());
-//			userRepository.save(user);
-//			return ResponseEntity.ok(Map.of("status", "success", "message", "Password Verified successfully"));
-//		} 
 		
-		if (user != null && (formData.getNewpassword() != ""
+		if (user != null && (!"".equals(formData.getNewpassword())
 				&& formData.getNewpassword().equalsIgnoreCase(formData.getConfirmpassword()))) {
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			String pwd = encoder.encode(formData.getConfirmpassword());
 			user.setPassword(pwd);
 			user.setIsFirstLogin(false);
 			userRepository.save(user);
-			return ResponseEntity.ok(Map.of("status", "success", "message", "Password Verified successfully"));
+			return ResponseEntity.ok(Map.of(STATUS, SUCCESS, MESSAGE, "Password Verified successfully"));
 		} else {
 			return ResponseEntity
-					.ok(Map.of("status", "error", "message", "Password Must be different from the Previous one"));
+					.ok(Map.of(STATUS, ERROR, MESSAGE, "Password Must be different from the Previous one"));
 		}
 
 	}
 	
-	
-//	@GetMapping("/sessionTimeout")
-//    public ResponseEntity<Integer> getSessionTimeout() {
-//        int sessionTimeout =sessionTime; // Get session timeout from configuration or other source
-//        return ResponseEntity.ok(sessionTimeout);
-//    }
 
 }

@@ -10,13 +10,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 import javax.sql.DataSource;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -31,21 +30,54 @@ import com.tpms.service.AttendanceService;
 @Service
 public class AttendanceServiceImpl implements AttendanceService {
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private static final String ACTIVITY_ALLOCATE_DET_ID = "activityAllocateDetId";
 
-	@Autowired
-	private PlatformRepository platformRepository;
+	private static final String ACTIVITY_ALLOCATE_ID = "activityAllocateId";
 
-	@Autowired
-	private AttendanceRepository attendanceRepository;
+	private static final String ACTIVITY_FOR = "activityFor";
+
+	private static final String ACTIVITY_NAME = "activityName";
+
+	private static final String DESIGNATION = "designation";
+
+	private static final String FIRST_HALF = "firstHalf";
+
+	private static final String FROM_HOURS = "fromHours";
+
+	private static final String IS_PRESENT = "isPresent";
+
+	private static final String PLATFORM = "platform";
+
+	private static final String RESOURCE_CODE = "resourceCode";
+
+	private static final String RESOURCE_ID = "resourceId";
+
+	private static final String RESOURCE_NAME = "resourceName";
+
+	private static final String TO_HOURS = "toHours";
+
+	private static final String YYYY_MM_DD = "yyyy-MM-dd";
+
+	private final JdbcTemplate jdbcTemplate;
+
+	private final PlatformRepository platformRepository;
+
+	private final AttendanceRepository attendanceRepository;
 	
-	@Autowired
-	private ResourcePoolRepository resourcePoolRepository;
+	private final ResourcePoolRepository resourcePoolRepository;
 	
-	@Autowired
-	private ActivityRepository activityRepository;
-
+	private final ActivityRepository activityRepository;
+	
+	public AttendanceServiceImpl(JdbcTemplate jdbcTemplate,PlatformRepository platformRepository,
+			AttendanceRepository attendanceRepository,ResourcePoolRepository resourcePoolRepository,
+			ActivityRepository activityRepository) {
+		this.jdbcTemplate=jdbcTemplate;
+		this.platformRepository=platformRepository;
+		this.attendanceRepository=attendanceRepository;
+		this.resourcePoolRepository=resourcePoolRepository;
+		this.activityRepository=activityRepository;
+		
+	}
 	
 
 	@Override
@@ -57,18 +89,17 @@ public class AttendanceServiceImpl implements AttendanceService {
 	@Override
 	public List<String> getAllNames(String search) {
 		String searchLowerCase = search.toLowerCase();
-		List<String> allUniName=resourcePoolRepository.findAll().stream()
+		return resourcePoolRepository.findAll().stream()
                 .map(x -> x.getResourceName()+"("+x.getResourceCode()+")")
                 .filter(resourceName -> resourceName.toLowerCase().contains(searchLowerCase))
                 .distinct()
-                .collect(Collectors.toList());
-		return allUniName;
+                .toList();
 	}
 
 	@Override
 	public List<Map<String,Object>> getActvitiesByDate(String selectedDate) {
 		SimpleDateFormat inputFormat = new SimpleDateFormat("M/d/yyyy, h:mm:ss a");
-		SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat outputFormat = new SimpleDateFormat(YYYY_MM_DD);
 		String formattedDate = null;
 		
 		try {
@@ -86,8 +117,8 @@ public class AttendanceServiceImpl implements AttendanceService {
 		JSONArray data = new JSONArray();
 
 		SimpleDateFormat inputFormat = new SimpleDateFormat("M/d/yyyy, h:mm:ss a");
-		SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat outputFormat = new SimpleDateFormat(YYYY_MM_DD);
+		SimpleDateFormat dateFormat = new SimpleDateFormat(YYYY_MM_DD);
 		String formattedDate = null;
 		Date finalDate = null;
 		try {
@@ -105,7 +136,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 		DataSource ds = jdbcTemplate.getDataSource();
 		if (ds != null) {
 			try (Connection con = ds.getConnection(); CallableStatement attendanceQuerey = con.prepareCall(sqls);) {
-				if (atteldanceListPresentNew.size() == 0) {
+				if (atteldanceListPresentNew.isEmpty()) {
 					attendanceQuerey.setString(1, "ACTIVITY_ATTENDANCE1_ACTIVITY");
 				} else {
 					attendanceQuerey.setString(1, "ACTIVITY_ATTENDANCE2_ACTIVITY");
@@ -122,19 +153,18 @@ public class AttendanceServiceImpl implements AttendanceService {
 						Map<String, Object> attendance = null;
 						while (rs.next()) {
 							attendance = new HashMap<>();
-							attendance.put("activityFor", rs.getString("activityFor"));
-							attendance.put("resourceId", rs.getString("resourceId"));
-							attendance.put("resourceName", rs.getString("resourceName"));
-							attendance.put("fromHours", rs.getString("fromHours"));
-							attendance.put("toHours", rs.getString("toHours"));
-							attendance.put("activityName", rs.getString("activityName"));
-							attendance.put("activityAllocateDetId", rs.getString("activityAllocateDetId"));
-							attendance.put("platform", rs.getString("platform"));
-							attendance.put("activityAllocateId", rs.getString("activityAllocateId"));
-							attendance.put("activityAllocateDetId", rs.getString("activityAllocateDetId"));
-							attendance.put("isPresent", rs.getString("isPresent"));
-							attendance.put("designation", rs.getString("designation"));
-							attendance.put("resourceCode", rs.getString("resourceCode"));
+							attendance.put(ACTIVITY_FOR, rs.getString(ACTIVITY_FOR));
+							attendance.put(RESOURCE_ID, rs.getString(RESOURCE_ID));
+							attendance.put(RESOURCE_NAME, rs.getString(RESOURCE_NAME));
+							attendance.put(FROM_HOURS, rs.getString(FROM_HOURS));
+							attendance.put(TO_HOURS, rs.getString(TO_HOURS));
+							attendance.put(ACTIVITY_NAME, rs.getString(ACTIVITY_NAME));
+							attendance.put(ACTIVITY_ALLOCATE_DET_ID, rs.getString(ACTIVITY_ALLOCATE_DET_ID));
+							attendance.put(PLATFORM, rs.getString(PLATFORM));
+							attendance.put(ACTIVITY_ALLOCATE_ID, rs.getString(ACTIVITY_ALLOCATE_ID));
+							attendance.put(IS_PRESENT, rs.getString(IS_PRESENT));
+							attendance.put(DESIGNATION, rs.getString(DESIGNATION));
+							attendance.put(RESOURCE_CODE, rs.getString(RESOURCE_CODE));
 							attendanceDetails.add(attendance);
 						}
 					}
@@ -143,43 +173,39 @@ public class AttendanceServiceImpl implements AttendanceService {
 				Integer resourceId = 0;
 				JSONObject resource = new JSONObject();
 				JSONArray firstHalfArray = new JSONArray();
-				//JSONArray secondHalfArray = new JSONArray();
 				for (Map<String, Object> mapObject : attendanceDetails) {
-					Integer mapResourceId = Integer.valueOf((String) mapObject.get("resourceId"));
-					Integer intActivityFor = Integer.valueOf((String) mapObject.get("activityFor"));
+					Integer mapResourceId = Integer.valueOf((String) mapObject.get(RESOURCE_ID));
+					Integer intActivityFor = Integer.valueOf((String) mapObject.get(ACTIVITY_FOR));
 					if (resourceId == 0) {
 						resourceId = mapResourceId;
-					} else if (resourceId != mapResourceId) {
-						resource.put("firstHalf", firstHalfArray);
-						//resource.put("secondHalf", secondHalfArray);
+					} else if (!Objects.equals(resourceId, mapResourceId)) {
+						resource.put(FIRST_HALF, firstHalfArray);
 						data.put(resource);
 						resourceId = mapResourceId;
 						resource = new JSONObject();
 						firstHalfArray = new JSONArray();
-						//secondHalfArray = new JSONArray();
 					}
 					if (resource.length() == 0) {
-						resource.put("resourceName", mapObject.get("resourceName"));
-						resource.put("resourceId", mapResourceId);
-						resource.put("domain", mapObject.get("platform"));
-						resource.put("activityAllocateId", mapObject.get("activityAllocateId"));
-						resource.put("designation", mapObject.get("designation"));
-						resource.put("resourceCode", mapObject.get("resourceCode"));
-						resource.put("check", atteldanceListPresentNew.size() == 0 ? "s" : "u");
+						resource.put(RESOURCE_NAME, mapObject.get(RESOURCE_NAME));
+						resource.put(RESOURCE_ID, mapResourceId);
+						resource.put("domain", mapObject.get(PLATFORM));
+						resource.put(ACTIVITY_ALLOCATE_ID, mapObject.get(ACTIVITY_ALLOCATE_ID));
+						resource.put(DESIGNATION, mapObject.get(DESIGNATION));
+						resource.put(RESOURCE_CODE, mapObject.get(RESOURCE_CODE));
+						resource.put("check", atteldanceListPresentNew.isEmpty() ? "s" : "u");
 					}
 					JSONObject detailObject = new JSONObject();
-					detailObject.put("fromHours", mapObject.get("fromHours"));
-					detailObject.put("toHours", mapObject.get("toHours"));
-					detailObject.put("activityName", mapObject.get("activityName"));
-					detailObject.put("activityAllocateDetId", mapObject.get("activityAllocateDetId"));
-					detailObject.put("isPresent", mapObject.get("isPresent"));
-					detailObject.put("activityFor", mapObject.get("activityFor"));
+					detailObject.put(FROM_HOURS, mapObject.get(FROM_HOURS));
+					detailObject.put(TO_HOURS, mapObject.get(TO_HOURS));
+					detailObject.put(ACTIVITY_NAME, mapObject.get(ACTIVITY_NAME));
+					detailObject.put(ACTIVITY_ALLOCATE_DET_ID, mapObject.get(ACTIVITY_ALLOCATE_DET_ID));
+					detailObject.put(IS_PRESENT, mapObject.get(IS_PRESENT));
+					detailObject.put(ACTIVITY_FOR, mapObject.get(ACTIVITY_FOR));
 					if (intActivityFor == 1 || intActivityFor == 2 || intActivityFor == 3) 
 						firstHalfArray.put(detailObject);
 				}
 				if(resource.length()!=0) {
-				resource.put("firstHalf", firstHalfArray);
-				//resource.put("secondHalf", secondHalfArray);
+				resource.put(FIRST_HALF, firstHalfArray);
 				data.put(resource);
 				}
 			} catch (Exception e) {
@@ -192,16 +218,15 @@ public class AttendanceServiceImpl implements AttendanceService {
 	@Override
 	public String saveAttendanceByActivity(JSONArray allData, String date) {
 		boolean flag = false;
-		boolean flag2 = false;
 		String result = null;
 		for (int i = 0; i < allData.length(); i++) {
 			try {
 				JSONObject resourceObject = allData.getJSONObject(i);
-				JSONArray firstHalfArray = resourceObject.getJSONArray("firstHalf");
+				JSONArray firstHalfArray = resourceObject.getJSONArray(FIRST_HALF);
 
 				SimpleDateFormat inputFormat = new SimpleDateFormat("MM/dd/yyyy");
-				SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
-				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				SimpleDateFormat outputFormat = new SimpleDateFormat(YYYY_MM_DD);
+				SimpleDateFormat dateFormat = new SimpleDateFormat(YYYY_MM_DD);
 				String formattedDate = null;
 				Date finaldate = null;
 				Date dateRequired = inputFormat.parse(date);
@@ -210,23 +235,23 @@ public class AttendanceServiceImpl implements AttendanceService {
 				if (firstHalfArray.length() != 0) {
 					for (int j = 0; j < firstHalfArray.length(); j++) {
 						JSONObject firstHalfObject = firstHalfArray.getJSONObject(j);
-						Integer intActivityAllocateDetId = firstHalfObject.getInt("activityAllocateDetId");
+						Integer intActivityAllocateDetId = firstHalfObject.getInt(ACTIVITY_ALLOCATE_DET_ID);
 						List<Attendance> findByActivityAllocateDetId = attendanceRepository
 								.findByActivityAllocateDetIdAndAtendanceDate(intActivityAllocateDetId, finaldate);
 						Attendance attendance = null;
-						if (findByActivityAllocateDetId.size() != 0) {
+						if (!findByActivityAllocateDetId.isEmpty()) {
 							attendance = findByActivityAllocateDetId.get(0);
 						} else {
 							attendance = new Attendance();
-							attendance.setResourceId(resourceObject.getInt("resourceId"));
-							attendance.setActivityAllocateId(resourceObject.getInt("activityAllocateId"));
-							attendance.setActivityAllocateDetId(firstHalfObject.getInt("activityAllocateDetId"));
+							attendance.setResourceId(resourceObject.getInt(RESOURCE_ID));
+							attendance.setActivityAllocateId(resourceObject.getInt(ACTIVITY_ALLOCATE_ID));
+							attendance.setActivityAllocateDetId(firstHalfObject.getInt(ACTIVITY_ALLOCATE_DET_ID));
 							attendance.setCreatedBy(1);
 							attendance.setUpdatedBy(1);
 							attendance.setAtendanceDate(finaldate);
-							attendance.setAtendanceFor(firstHalfObject.getInt("activityFor"));
+							attendance.setAtendanceFor(firstHalfObject.getInt(ACTIVITY_FOR));
 						}
-						if (firstHalfObject.getInt("isPresent") == 1) {
+						if (firstHalfObject.getInt(IS_PRESENT) == 1) {
 							flag = true;
 						} else {
 							flag = false;
