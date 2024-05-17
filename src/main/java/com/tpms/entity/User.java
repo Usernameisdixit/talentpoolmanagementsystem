@@ -42,6 +42,8 @@ public class User {
     private Integer updatedBy;
 
     private Boolean deletedFlag;
+    
+    private String signature;
 
 
 }
