@@ -6,3 +6,7 @@
     font-weight: bold;
     font-size: 1.2em; /* Adjust the font size as per your preference */
 }
+
+.add-icon {
+    color: green; /* Set the icon color to green */
+  }
