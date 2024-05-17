@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient ,HttpParams} from '@angular/common/http';
 import { AssessmentDto } from 'src/app/Model/AssessmentDto';
+import {platformUrl,assesmentDetails,getActivityDetails,checkAssessments,viewAssesmentDetails,editAssesment,updateUrl,getActivities,viewAssesmentDetailsDateWise,getAssesmentDate,saveAssement,getFromToDate} from 'src/app/apiconfig';
+
 
 @Injectable({
   providedIn: 'root'
@@ -10,25 +12,25 @@ export class AssessmentserviceService {
 
   
  
-  private platformUrl = 'http://localhost:9999/tpms/getPlatforms';
-  apiUrl = 'http://localhost:9999/tpms/api/assessment-details';
-  private baseUrl = 'http://localhost:9999/tpms';
-  private viewUrl = 'http://localhost:9999/tpms/viewAssesmentDetails';
-  private editUrl = 'http://localhost:9999/tpms/editAssessment';
-  private updateUrl = 'http://localhost:9999/tpms/updateAssessment';
-  private actUrl = 'http://localhost:9999/tpms/getActivities';
-  private viewUrlDateWise = 'http://localhost:9999/tpms/viewAssesmentDetailsDateWise';
-  private asessmentUrl = 'http://localhost:9999/tpms/assessmentDates';
+  // private platformUrl = 'http://localhost:9999/tpms/getPlatforms';
+  // apiUrl = 'http://localhost:9999/tpms/api/assessment-details';
+  // private baseUrl = 'http://localhost:9999/tpms';
+  // private viewUrl = 'http://localhost:9999/tpms/viewAssesmentDetails';
+  // private editUrl = 'http://localhost:9999/tpms/editAssessment';
+  // private updateUrl = 'http://localhost:9999/tpms/updateAssessment';
+  // private actUrl = 'http://localhost:9999/tpms/getActivities';
+  // private viewUrlDateWise = 'http://localhost:9999/tpms/viewAssesmentDetailsDateWise';
+  // private asessmentUrl = 'http://localhost:9999/tpms/assessmentDates';
   constructor(private http: HttpClient) { }
 
   getPlatforms(): Observable<any[]> {
-    return this.http.get<any[]>(this.platformUrl);
+    return this.http.get<any[]>(platformUrl);
   }
 
 
   getAssessmentDetails(activityId: number, fromDate: string, toDate: string): Observable<any[]> {
     
-    const url = `${this.apiUrl}`;
+    const url = `${assesmentDetails}`;
   
     let params = new HttpParams();
     params = params.append('activityId', activityId.toString());
@@ -39,8 +41,7 @@ export class AssessmentserviceService {
   }
 
   getActivityDetails(selectedActivity: any, formattedFromDate: string, formattedToDate: string) {
-    const url = `${this.baseUrl}/getActivityDetails`;
-  
+    const url = `${getActivityDetails}`;
     let params = new HttpParams();
     params = params.append('activityId', selectedActivity.toString());
     params = params.append('fromDate', formattedFromDate);
@@ -51,13 +52,13 @@ export class AssessmentserviceService {
 
   checkAssessments(activityId: number, fromDate: any, toDate: any): Observable<boolean> {
 
-    const url = `${this.baseUrl}`+`/checkAssessments?activityId=${activityId}&fromDate=${fromDate}&toDate=${toDate}`;
+    const url = `${checkAssessments}`+`?activityId=${activityId}&fromDate=${fromDate}&toDate=${toDate}`;
     return this.http.get<boolean>(url);
   }
 
   submitAssessments(assessments: any[]): Observable<any> {
 
-    return this.http.post<any>(`${this.baseUrl}/assessments`, assessments);
+    return this.http.post<any>(`${saveAssement}`, assessments);
   }
 
 
@@ -66,7 +67,7 @@ export class AssessmentserviceService {
 
   viewAssessmentDetails(): Observable<AssessmentDto[]> {
 
-    return this.http.get<AssessmentDto[]>(this.viewUrl);
+    return this.http.get<AssessmentDto[]>(viewAssesmentDetails);
   }
 
   viewAssessmentDetailsDateWise(assessmentDate?: string): Observable<AssessmentDto[]> {
@@ -74,7 +75,7 @@ export class AssessmentserviceService {
     const params = new HttpParams()
         .set('asesmentDate', assessmentDate); 
 
-    return this.http.get<AssessmentDto[]>(this.viewUrlDateWise, { params });
+    return this.http.get<AssessmentDto[]>(viewAssesmentDetailsDateWise, { params });
 }
 
 
@@ -82,16 +83,16 @@ export class AssessmentserviceService {
  
 
    updateAssessment(assessment: any[]): Observable<any> {
-    return this.http.put(this.updateUrl, assessment);
+    return this.http.put(updateUrl, assessment);
   }
 
   getAssessmentById(assessmentId: string): Observable<any> {
-    const url = `${this.editUrl}/${assessmentId}`;
+    const url = `${editAssesment}/${assessmentId}`;
     return this.http.get(url);
   }
 
   getActivities(fromDate: any, toDate: any): Observable<any[]> {
-    const url = `${this.actUrl}`;
+    const url = `${getActivities}`;
 
     let params = new HttpParams()
       .set('fromDate', fromDate)
@@ -101,12 +102,12 @@ export class AssessmentserviceService {
   }
 
   getAssessmentDates(): Observable<any[]> {
-    const url = `${this.asessmentUrl}`;
+    const url = `${getAssesmentDate}`;
     return this.http.get<Date[]>(url);
   }
 
   getFromToDate(): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/getFromToDate`);
+    return this.http.get<any>(`${getFromToDate}`);
   }
   
 }

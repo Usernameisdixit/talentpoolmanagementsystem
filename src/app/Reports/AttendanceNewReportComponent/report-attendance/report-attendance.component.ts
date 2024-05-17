@@ -72,7 +72,6 @@ export class ReportAttendanceComponent {
   }
 
   getUniResourNames() {
-    debugger;
     this.myControl.valueChanges.subscribe(value => {
       if (typeof value === 'string') {
         if ((value as string).length > 0) {
@@ -117,7 +116,6 @@ export class ReportAttendanceComponent {
   }
 
   fetchActivities(): void {
-    debugger;
     if (this.selectedFromDate && this.selectedToDate) {
       this.reportAttendanceService.getActivities(this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString())
         .subscribe(data => {
@@ -167,7 +165,6 @@ export class ReportAttendanceComponent {
       this.reportAttendanceService.attendanceData(this.inputType, this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString(), this.activity, this.resourceValue)
         .subscribe(data => {
           if (data.length != 0) {
-            debugger;
             //RESOURCE LOGIC PDF
             if(this.inputType=='resource'){
               
@@ -235,7 +232,6 @@ export class ReportAttendanceComponent {
       }
       this.reportAttendanceService.attendanceData(this.inputType, this.selectedFromDate?.toLocaleString(), this.selectedToDate?.toLocaleString(), this.activity, this.resourceValue)
         .subscribe(data => {
-          debugger;
           if (data.length != 0) {
 
             //START NA LOGIC
@@ -298,7 +294,6 @@ export class ReportAttendanceComponent {
   }
 
   sortActivityAttenDetails(activityAttenDetails) {
-    debugger;
     if (activityAttenDetails) {
       // Sort the array  on activityName
       activityAttenDetails.sort((a, b) => {

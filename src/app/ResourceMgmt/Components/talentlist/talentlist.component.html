@@ -1,127 +1,203 @@
 <div class="container">
+  <div class="content-box">
+    <div class="col-xxl-10">
+      <div class="row">
+        <div class="col-lg-3 col-xxl-3">
+          <div class="mb-xl-3">
+            <label class="control-label">Designation</label>
+            <select class="form-select" id="designation" aria-label="Disabled select example">
+              <option value="" selected>Select Designation</option>
+              <ng-container *ngFor="let item of getDesignationList">
+                <option value={{item}}>{{item}}</option>
+              </ng-container>
+            </select>
+          </div>
+        </div>
+        <div class="col-lg-3 col-xxl-3">  
+          <div class="mb-xl-3">
+            <label class="control-label">Location</label>
+            <select class="form-select" id="location" aria-label="Disabled select example">
+              <option value="" selected>Select Location</option>
+              <ng-container *ngFor="let item of getLocationList">
+                <option value={{item}}>{{item}}</option>
+              </ng-container>
+            </select>
 
-  <div class="top-heading position-relative">
+          </div>
+        </div>
+        <div class="col-lg-3 col-xxl-3">
+          <div class="mb-xl-3">
+            <label class="control-label">Platform</label>
+            <select class="form-select" id="platform" aria-label="Disabled select example">
+              <option value="" selected>Select Platform</option>
+              <ng-container *ngFor="let item of getPlaformList">
+                <option value={{item}}>{{item}}</option>
+              </ng-container>
+            </select>
 
-    <div class="export-buttons">
-      <button (click)="exportToPDF()" class="btn btn-icon export-btn" title="Download PDF">
-        <i class="fas fa-file-pdf fa-lg pdf-icon"></i>
-      </button>
+          </div>
+        </div>
 
-      <button (click)="exportToExcel()" class="btn btn-icon export-btn" title="Download Excel">
-        <i class="fas fa-file-excel fa-lg excel-icon"></i>
-      </button>
+        <div class="col-lg-3 col-xxl-3">
+          <div class="mb-xl-3">
+            <button type="submit" class="btn btn-primary" style="margin-top: 2ch;"
+              (click)="search(true)">Search</button>&nbsp;
+              <button type="reset" class="btn btn-secondary" style="margin-top: 2ch;"
+              (click)="reset()">Reset</button>
+          </div>
+
+        </div>
+
+        <!-- <div class="col-lg-4 col-xxl-4">
+          <div class="mb-xl-3">
+            <label class="control-label py-1">Hospital Name<span class="text-danger">*</span></label>
+            <ng-autocomplete #auto [data]="userList" placeholder="Select Hospital" (selected)="selectEvent1($event)"
+              (inputCleared)="onReset1()" [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
+              [searchKeyword]="keyword1" spellcheck="false">
+            </ng-autocomplete>
+
+            <ng-template #itemTemplate let-item>
+              <a [innerHTML]="item.hospitalName"></a>
+            </ng-template>
+
+            <ng-template #notFoundTemplate let-notFound>
+              <div [innerHTML]="notFound"></div>
+            </ng-template>
+          </div>
+        </div> -->
+
+
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="assessment-table-container mt-5">
-        <div>
-  <table>
-      <thead>
-        <tr class="text-align:center">
-  <th><!--ResourceId-->Sl No</th>
-  <th>Res. Code</th>
-  <th>Res. Name</th>
-  <th>Designation</th>
-  <th>Platform</th>
-  <th>Location</th>
-  <th>Exp.</th>
-  <th>Mobile</th>
-  <th>Email</th>
-  <th>Allocation Date</th>
-  <th>Duration</th>
-  <!-- <th>Status</th> -->
-  <th>Action</th>
-        </tr>
-  
-      </thead>
-  <tbody>
-  <tr *ngFor="let c of talent | paginate :{
+    <div class="top-heading position-relative">
+
+      <div class="export-buttons">
+        <button (click)="exportToPDF()" class="btn btn-icon export-btn" title="Download PDF">
+          <i class="fas fa-file-pdf fa-lg pdf-icon"></i>
+        </button>
+
+        <button (click)="exportToExcel()" class="btn btn-icon export-btn" title="Download Excel">
+          <i class="fas fa-file-excel fa-lg excel-icon"></i>
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="assessment-table-container mt-5">
+          <div>
+            <table>
+              <thead>
+                <tr class="text-align:center">
+                  <th>
+                    <!--ResourceId-->Sl No
+                  </th>
+                  <th>Res. Code</th>
+                  <th>Res. Name</th>
+                  <th>Designation</th>
+                  <th>Platform</th>
+                  <th>Location</th>
+                  <th>Exp.</th>
+                  <th>Mobile</th>
+                  <th>Email</th>
+                  <th>Allocation Date</th>
+                  <th>Duration</th>
+                  <!-- <th>Status</th> -->
+                  <th>Action</th>
+                </tr>
+
+              </thead>
+              <tbody>
+                <tr *ngFor="let c of talent | paginate :{
     itemsPerPage : pageSize,
     currentPage : currentPage ,
     totalItems: totalElements
     }; let i = index" class="text-align:center">
-  <td><!--{{c.resourceId}}-->{{ (currentPage - 1) * pageSize + i + 1 }}</td>
-  <td>{{c.resourceCode}}</td>
-  <td>{{c.resourceName}}</td>
-  <td>{{c.designation}}</td>
-  <td>{{c.platform}}</td>
-  <td>{{c.location}}</td>
-  <td>{{c.experience}}</td>
-  <td>{{c.phoneNo}}</td>
-  <td>{{c.email}}</td>
-   <td>{{c.allocationDate | date: 'dd-MMM-yyyy'}}</td>
-  <td>
-    <ng-container *ngIf="isAllocationDateLessThanCurrent(c)">
-    <input type="button" (click)=getDetails(c) data-bs-toggle="modal" value="{{c.duration}}" data-bs-target="#exampleModal">
-  </ng-container>
-  <ng-container *ngIf="!isAllocationDateLessThanCurrent(c)">
-    <input type="button" (click)=getDetails(c) data-bs-toggle="modal" value="0 months,0 days" data-bs-target="#exampleModal">
-  </ng-container>
-  </td>
-  <td>
-    <div class="button-container">
-      <button type="button" class="btn btn-primary btn-sm" (click)="editalent(c.resourceId)"><i class="fas fa-edit"></i></button>&nbsp;
-     <!-- <button type="button" class="btn btn-danger" (click)="deletetalent($event, c.resourceId)">Delete</button> -->
-     
-      <!-- <button *ngIf="!c.deletedFlag" class="btn btn-danger btn-sm" title="Inactive" (click)="deletetalent($event, c.resourceId);"><i class="fa-solid fa-xmark"></i></button>
+                  <td>
+                    <!--{{c.resourceId}}-->{{ (currentPage - 1) * pageSize + i + 1 }}
+                  </td>
+                  <td>{{c.resourceCode}}</td>
+                  <td>{{c.resourceName}}</td>
+                  <td>{{c.designation}}</td>
+                  <td>{{c.platform}}</td>
+                  <td>{{c.location}}</td>
+                  <td>{{c.experience}}</td>
+                  <td>{{c.phoneNo}}</td>
+                  <td>{{c.email}}</td>
+                  <td>{{c.allocationDate | date: 'dd-MMM-yyyy'}}</td>
+                  <td>
+                    <ng-container *ngIf="isAllocationDateLessThanCurrent(c)">
+                      <input type="button" (click)=getDetails(c) data-bs-toggle="modal" value="{{c.duration}}"
+                        data-bs-target="#exampleModal">
+                    </ng-container>
+                    <ng-container *ngIf="!isAllocationDateLessThanCurrent(c)">
+                      <input type="button" (click)=getDetails(c) data-bs-toggle="modal" value="0 months,0 days"
+                        data-bs-target="#exampleModal">
+                    </ng-container>
+                  </td>
+                  <td>
+                    <div class="button-container">
+                      <button type="button" class="btn btn-primary btn-sm" (click)="editalent(c.resourceId)"><i
+                          class="fas fa-edit"></i></button>&nbsp;
+                      <!-- <button type="button" class="btn btn-danger" (click)="deletetalent($event, c.resourceId)">Delete</button> -->
+
+                      <!-- <button *ngIf="!c.deletedFlag" class="btn btn-danger btn-sm" title="Inactive" (click)="deletetalent($event, c.resourceId);"><i class="fa-solid fa-xmark"></i></button>
               
       <button *ngIf="c.deletedFlag" class="btn btn-danger btn-sm" title="Active" (click)="deletetalent($event, c.resourceId);"><i class="fa-solid fa-check"></i></button> -->
-                  </div>
-                </td>
-              <tr *ngIf="talent.length===0">
-                <td colspan="12" class="text-center">
-                  <span id="lblMessage" class="no-content">No record(s) found </span>
-                </td>
-              </tr>
+                    </div>
+                  </td>
+                <tr *ngIf="talent.length===0">
+                  <td colspan="12" class="text-center">
+                    <span id="lblMessage" class="no-content">No record(s) found </span>
+                  </td>
+                </tr>
 
-            <tbody>
-          </table>
-          <div class="d-flex justify-content-end" id="pagination" *ngIf="talent.length!=0">
-            <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="getTableDataChange($event)">
-            </pagination-controls>
+              <tbody>
+            </table>
+            <div class="d-flex justify-content-end" id="pagination" *ngIf="talent.length!=0">
+              <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="getTableDataChange($event)">
+              </pagination-controls>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+
   </div>
- 
-
-</div>
 
 
 
-<!-- <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" *ngIf="showModal"> -->
-<div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <!-- Add 'bg-transparent' class to make modal content background transparent -->
-      <div class="modal-body">
-        <div>
-          <h5 class="mb-3 pb-2 border-bottom">Duration Details</h5>
-          <p>Resource Name: {{ duration?.resource_name }} &nbsp; Resource code: {{ duration?.resource_code }}</p>
+  <!-- <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" *ngIf="showModal"> -->
+  <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Add 'bg-transparent' class to make modal content background transparent -->
+        <div class="modal-body">
+          <div>
+            <h5 class="mb-3 pb-2 border-bottom">Duration Details</h5>
+            <p>Resource Name: {{ duration?.resource_name }} &nbsp; Resource code: {{ duration?.resource_code }}</p>
 
-          <table id="durationTable">
-            <thead>
-              <tr>
-                <th>Sl No</th>
-                <th>Session</th>
-                <th>Days</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let period of duration.allocation_periods; let i = index">
-                <td>{{ i + 1 }}</td>
-                <td>{{ period.start_date | date: 'dd-MMM-yyyy' }} to {{ period.end_date | date: 'dd-MMM-yyyy' }}</td>
-                <td>{{ calculateDuration(period.start_date, period.end_date) }}</td>
-              </tr>
-            </tbody>
-          </table>
+            <table id="durationTable">
+              <thead>
+                <tr>
+                  <th>Sl No</th>
+                  <th>Session</th>
+                  <th>Days</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let period of duration.allocation_periods; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ period.start_date | date: 'dd-MMM-yyyy' }} to {{ period.end_date | date: 'dd-MMM-yyyy' }}</td>
+                  <td>{{ calculateDuration(period.start_date, period.end_date) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>

@@ -9,6 +9,7 @@ import { saveAs } from 'file-saver';
 import { RouterModule, RouterEvent } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { UserService } from 'src/app/UserMgmt/Service/user.service';
+import $ from 'jquery';
 
 @Component({
   selector: 'app-talentlist',
@@ -21,9 +22,17 @@ export class TalentlistComponent implements OnInit {
   talent: any = [];
   resourceDetails:any=[];
   delmsg: string = "";
-  c: Talent[];
+  // c: Talent[];
   duration: any = [];
   listData: any = [];
+  getDesignationList: any=[];
+  getPlaformList: any=[];
+  getLocationList: any=[];
+  designation: any;
+  location: any;
+  platform: any;
+  record: any;
+  allData: any=[];
   constructor(private service: ContactService, private router: Router, private datePipe: DatePipe,
     private _userService:UserService) { }
 
@@ -34,9 +43,44 @@ export class TalentlistComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTalent();
+    this.getDesignation();
+    this.getLocation();
+    this.getPlaformListData();
+    //this.search();
   }
 
-
+getDesignation(){
+  this.location="";
+  this.service.getDesignation().subscribe((response:any)=>{
+      this.getDesignationList = response;
+  },
+    (error) => {
+     
+    });
+  
+}
+getLocation(){
+  this.designation="";
+  this.service.getLocation().subscribe((response:any)=>{
+      this.getLocationList = response;
+  },
+    (error) => {
+     
+    });
+  
+}
+getPlaformListData(){
+  this.platform="";
+  this.service.getPlaformListData().subscribe((response:any)=>{
+   
+      this.getPlaformList = response;      
+  
+  },
+    (error) => {
+      // this.swal('', 'Something went wrong.', 'error');
+    });
+  
+}
   getTalent() {
     this.service.getTalent(this.currentPage).subscribe((response:any) => {
       this.talent = response.content;
@@ -71,8 +115,43 @@ export class TalentlistComponent implements OnInit {
 
   //pagination functionality
   getTableDataChange(event: any) {
-    this.currentPage = event;
-    this.getTalent();
+   debugger;
+    this.designation=$('#designation').val();
+    this.location= $('#location').val();
+     this.platform= $('#platform').val();
+     if(this.designation!=='' && this.platform!=='' && this.location!==''){
+      this.currentPage=event;
+      this.search(false);
+    }
+    else if(this.designation!=='' && this.platform==='' && this.location===''){
+      this.currentPage=event;
+      this.search(false);
+    }
+    else if(this.designation!=='' && this.platform!=='' && this.location===''){
+      this.currentPage=event;
+      this.search(false);
+    }
+    else if(this.designation!=='' && this.platform==='' && this.location!==''){
+      this.currentPage=event;
+      this.search(false);
+    }
+    else if(this.designation==='' && this.platform!=='' && this.location===''){
+      this.currentPage=event;
+      this.search(false);
+    }
+    else if(this.designation==='' && this.platform==='' && this.location!==''){
+      this.currentPage=event;
+      this.search(false);
+    }
+    else if(this.designation==='' && this.platform!=='' && this.location!==''){
+      this.currentPage=event;
+      this.search(false);
+    }
+    else{
+     this.currentPage = event;
+     this.getTalent();
+    }
+
   }
 
   // private getResourcesForPDFAndExcel():void{
@@ -183,5 +262,46 @@ export class TalentlistComponent implements OnInit {
     const currentDate = new Date();
     return allocationDate < currentDate;
   }
+  reset(){
+    $('#designation').val('');
+    $('#location').val('');
+    $('#platform').val('');
+    // window.location.reload();
+  }
 
+  search(flag: boolean){
+     debugger;
+     if(flag){
+        this.currentPage=1;
+     }
+    
+    this.designation=$('#designation').val();
+   this.location= $('#location').val();
+    this.platform= $('#platform').val();
+    if(this.designation==undefined){
+      this.designation="";
+    }
+    if(this.location==undefined){
+      this.location="";
+    }
+    if( this.platform==undefined){
+      this.platform=0;
+    }
+    this.service.searchData(this.designation,this.location,this.platform,this.currentPage).subscribe(
+      (result:any) => {
+        if(this.designation.value==='' && this.platform.value==='' && this.location.value===''){
+          this.talent=result.content;
+          this.totalElements = result.totalElements;
+        this.pageSize=result.pageSize;
+       }
+       else{
+       this.talent = result.content;
+       this.totalElements = result.totalElements;
+       this.pageSize=result.pageSize;
+       }
+      },
+      (error) => console.log(error)
+    )
+   
+  }
 }

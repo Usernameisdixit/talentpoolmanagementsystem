@@ -1,18 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { activities, allocationDetails, deleteAllocation, fetchDataByDateRange, platforms, platformsIdByName, resource, resources, resourcesExcludeRelated, saveAllocation, saveBulkAllocation } from 'src/app/apiconfig';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AllocationService {
 
-  apiUrl = 'http://localhost:9999/tpms';
-
   constructor(private http:HttpClient) { }
 
   getPlatforms(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/platforms`);
+    let platFormsUrl=platforms;
+    return this.http.get<any[]>(`${platFormsUrl}`);
   }
 
   /**
@@ -21,11 +21,13 @@ export class AllocationService {
   * @returns Resource list with activity allocation data
   */
   getResources(activityDate: string, platformId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/resources?activityDate=${activityDate}&platformId=${platformId}`);
+    let resourcesUrl=resources;
+    return this.http.get<any[]>(`${resourcesUrl}?activityDate=${activityDate}&platformId=${platformId}`);
   }
 
   getActivities(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/activities`);
+    let activitiesUrl=activities;
+    return this.http.get<any[]>(`${activitiesUrl}`);
   }
 
   /**
@@ -33,7 +35,8 @@ export class AllocationService {
    * @description Saves activity allocation data for a resource
    */
   saveActivities(data: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/saveAllocation`,data);
+    let saveAllocationUrl=saveAllocation;
+    return this.http.post<any>(`${saveAllocationUrl}`,data);
   }
 
   /**
@@ -41,33 +44,39 @@ export class AllocationService {
   * @description format: yyyy-MM-dd
   */
   getAllocationsByResource(resourceId: number, activityDate: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/allocationDetails?id=${resourceId}&date=${activityDate}`);
+    let allocationDetailsUrl=allocationDetails;
+    return this.http.get<any>(`${allocationDetailsUrl}?id=${resourceId}&date=${activityDate}`);
   }
 
   getResourceById(resourceId: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/resource?id=${resourceId}`);
+    let resourceUrl=resource;
+    return this.http.get<any>(`${resourceUrl}?id=${resourceId}`);
   }
 
   /**
   * @returns Resource list without mapped entity data
   */
   getResourcesWithoutRelatedEntity(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/resources/exclude-related`);
+    let resourcesExclude=resourcesExcludeRelated;
+
+    return this.http.get<any[]>(`${resourcesExclude}`);
   }
 
   saveBulkAllocation(markedResources: any[], allocData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/saveBulkAllocation`, {markedResources: markedResources, allocData: allocData});
+    let saveBulkAllocationUrl=saveBulkAllocation;
+    return this.http.post<any>(`${saveBulkAllocationUrl}`, {markedResources: markedResources, allocData: allocData});
   }
 
   getPlatformIdByName(platformName: string): Observable<number> {
-    return this.http.get<any>(`${this.apiUrl}/platformsIdByName?platformName=${platformName}`);
+    let platformsIdByNameUrl=platformsIdByName;
+    return this.http.get<any>(`${platformsIdByNameUrl}?platformName=${platformName}`);
   }
 
   fetchDataByDateRange(activityFromDate: string, activityToDate: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/fetchDataByDateRange?activityFromDate=${activityFromDate}&activityToDate=${activityToDate}`);
+    return this.http.get<any[]>(`${fetchDataByDateRange}?activityFromDate=${activityFromDate}&activityToDate=${activityToDate}`);
   }
 
   deleteAllocation(activityAllocateId: number): Observable<number>{
-    return this.http.get<number>(`${this.apiUrl}/deleteAllocation?id=${activityAllocateId}`);
+    return this.http.get<number>(`${deleteAllocation}?id=${activityAllocateId}`);
   }
 }

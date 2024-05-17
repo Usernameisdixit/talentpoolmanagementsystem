@@ -4,28 +4,27 @@ import { Observable } from 'rxjs';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx-js-style';
+import { getActivityOnFromToUrl,attedanceDataReportUrl,allResourceName} from 'src/app/apiconfig';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReportAttendanceService {
 
-  private url = 'http://localhost:9999/tpms';
 
   constructor(private httpClient: HttpClient) { }
 
   getActivities(fromDate: string, toDate: string): Observable<any[]> {
-    const urlF = `${this.url}/getActivityOnFromTo`;
-    return this.httpClient.get<string[]>(`${urlF}?fromDate=${fromDate}&toDate=${toDate}`);
+    return this.httpClient.get<string[]>(`${getActivityOnFromToUrl}?fromDate=${fromDate}&toDate=${toDate}`);
   }
 
   getResource(value: string): Observable<any[]> {
-    return this.httpClient.get<any[]>(`http://localhost:9999/tpms/allResourceName?value=${encodeURIComponent(value)}`);
+    return this.httpClient.get<any[]>(`${allResourceName}?value=${encodeURIComponent(value)}`);
   }
 
 
   attendanceData(reportType: string, fromDate: string, toDate: string, activityId: string, resourceValue: string) {
-    const url = `${this.url}/attedanceDataReport`;
+    const url = `${attedanceDataReportUrl}`;
     const params = {
       reportType: reportType,
       fromDate: fromDate,
@@ -38,7 +37,6 @@ export class ReportAttendanceService {
   }
 
   generateAteendancePdf(reportType: string, attendanceData: any[], fromDate: Date, toDate: Date,activityHeadResource:any[]) {
-    debugger;
     const pdf = new jsPDF();
     let startYpos = 0;
     const formatFromDate = new Date(fromDate);
@@ -54,7 +52,6 @@ export class ReportAttendanceService {
     const formattedToDate = `${formatToday} ${formatTomonth} ${formatToyear}`;
 
     pdf.text('Attendance Report', 75, 10);
-    debugger;
     if (formatteFromdDate === formattedToDate) {
       pdf.setFontSize(10);
       pdf.text('Date : ' + formatteFromdDate, 10, 20);
@@ -428,7 +425,6 @@ export class ReportAttendanceService {
         });
       }
       }else if(reportType=='summary'){
-        debugger;
         rowData.push(
           // { v: detail.atendanceDate, s: { alignment: { wrapText: true } } },
         { v: detail.resourceCode, s: { alignment: { wrapText: true } } },

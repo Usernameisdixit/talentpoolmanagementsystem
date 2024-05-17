@@ -5,21 +5,19 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx-js-style';
 import { DatePipe } from '@angular/common';
+import { getActivityForAssesment,assesmentReportData} from 'src/app/apiconfig';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AssesmentService {
-  private url = 'http://localhost:9999/tpms';
   constructor(private httpClient: HttpClient,private datePipe: DatePipe) { }
 
   getActivitiesForAssesment(fromDate: string, toDate: string): Observable<any[]> {
-    const urlF = `${this.url}/getActivityForAssesment`;
-    return this.httpClient.get<string[]>(`${urlF}?fromDate=${fromDate}&toDate=${toDate}`);
+    return this.httpClient.get<string[]>(`${getActivityForAssesment}?fromDate=${fromDate}&toDate=${toDate}`);
   }
 
   assementData(reportType: string, fromDate: string, toDate: string, activityId: string, resourceValue: string) {
-    const url = `${this.url}/assesmentReportData`;
     const params = {
       reportType: reportType,
       fromDate: fromDate,
@@ -28,11 +26,10 @@ export class AssesmentService {
       resourceValue: resourceValue,
     };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.post<any>(url, params, { headers });
+    return this.httpClient.post<any>(assesmentReportData, params, { headers });
   }
 
   generateAssesmentPdf(reportType: string, assesmentData: any[], fromDate: Date, toDate: Date) {
-    debugger;
     const pdf = new jsPDF();
     let startYpos = 0;
     const formatFromDate = new Date(fromDate);
@@ -48,7 +45,6 @@ export class AssesmentService {
     const formattedToDate = `${formatToday} ${formatTomonth} ${formatToyear}`;
 
     pdf.text('Assesment Report', 75, 10);
-    debugger;
     if (formatteFromdDate === formattedToDate) {
       pdf.setFontSize(10);
       pdf.text('Date : ' + formatteFromdDate, 10, 20);
@@ -165,7 +161,6 @@ export class AssesmentService {
 
 
   generateAssesmentExcel(reportType: string, assesmentData: any[], fromDate: Date, toDate: Date){
-  debugger;
     const formatFromDate = new Date(fromDate);
     const formatFromday = formatFromDate.getDate();
     const formatFrommonth = formatFromDate.toLocaleString('default', { month: 'short' });

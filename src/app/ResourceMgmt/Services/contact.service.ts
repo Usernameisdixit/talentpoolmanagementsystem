@@ -4,7 +4,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { Observable, catchError, throwError } from 'rxjs';
 import { Talent } from 'src/app/Model/talent';
 import { ResourceHistory } from 'src/app/Model/ResourceHistory';
-import {getResourceDetailsWithFileName, getResourceList } from 'src/app/apiconfig';
+import {getResourceDetailsWithFileName, getResourceList,updatetalent,downloadOnResReport,getEditResource,deleteResource,durations,getActiveResorces, searchFilterData, getLocationData, getPlaformListData, getDesignationData} from 'src/app/apiconfig';
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +12,10 @@ import {getResourceDetailsWithFileName, getResourceList } from 'src/app/apiconfi
 export class ContactService {
 
 
-
-  private baseUrl = "http://localhost:9999/tpms/emp"
-
-
   constructor(private httpClient: HttpClient, ) { }
 
   createTalent(talent: Talent): Observable<string> {
-    return this.httpClient.post(`${this.baseUrl}/updatetalent`, talent, { responseType: "text" });
+    return this.httpClient.post(`${updatetalent}`, talent, { responseType: "text" });
   }
 
   getTalent(pageNumber:number) {
@@ -28,11 +24,7 @@ export class ContactService {
 
   }
 
-//  getResourceDetailsWithFileName(): Observable<ResourceHistory[]> {
 
-//     return this.httpClient.get<ResourceHistory[]>(`${this.baseUrl}/getResourceDetailsWithFileName`);
-
-//   }
   getResourceDetailsWithFileName() {
     let fullUrl = getResourceDetailsWithFileName;
     return this.httpClient.get(fullUrl);
@@ -45,7 +37,7 @@ export class ContactService {
       'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
 
-    return this.httpClient.get(`${this.baseUrl}/download/${fileName}`, {
+    return this.httpClient.get(`${downloadOnResReport}${fileName}`, {
       headers: headers,
       responseType: 'blob'
     }).pipe(
@@ -69,23 +61,47 @@ export class ContactService {
 
 
   findContactByResourceNumber(id: number): Observable<Talent> {
-    return this.httpClient.get<Talent>(`${this.baseUrl}/talent/${id}`);
+    return this.httpClient.get<Talent>(`${getEditResource}${id}`);
   }
 
-  //deleteByResourceNumber(id:number):Observable<string>{
-  // return this.httpClient.delete(`${this.baseUrl}/talent/${id}`, {responseType:"text"});
-  //}
+ 
 
   deleteByResourceNumber(id: number): Observable<string> {
-    return this.httpClient.post(`${this.baseUrl}/delete/talent/${id}`, id, { responseType: "text" });
+    return this.httpClient.post(`${deleteResource}${id}`, id, { responseType: "text" });
   }
 
   getResources(): Observable<any[]> {
-    return this.httpClient.get<any[]>('http://localhost:9999/tpms/getActiveResorces');
+    return this.httpClient.get<any[]>(getActiveResorces);
   }
 
   fetchDurations(code: string): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.baseUrl}/durations?code=${code}`);
+    return this.httpClient.get<string[]>(`${durations}?code=${code}`);
   }
 
+  getDesignation() {
+    let fullUrl = getDesignationData;
+    return this.httpClient.get(fullUrl);
+  }
+  getPlaformListData() {
+    let fullUrl = getPlaformListData;
+    return this.httpClient.get(fullUrl);
+  }
+
+  getLocation() {
+    let fullUrl = getLocationData;
+    return this.httpClient.get(fullUrl);
+  }
+
+  searchData(designation: any, location: any, platform: any,currentPage:any) {
+      let queryparams = new HttpParams()
+        .append('designation', designation)
+        .append('location', location)
+        .append('platform', platform)
+        .append('currentPage', currentPage);
+      let options = {
+        params: queryparams
+      }
+      let fullUrl = searchFilterData;
+      return this.httpClient.get(fullUrl, options)
+  }
 }

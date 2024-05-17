@@ -84,6 +84,7 @@ import { ActivityNewReportComponentComponent } from './Reports/ActivityNewReport
 import { ResourcereportComponent } from './Reports/ResourceReportComponent/resourcereport/resourcereport.component';
 import { MailactivityComponent } from './MailActivity/Component/mailactivity/mailactivity.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { allResourceName, dataActivityName, duplicateCheck, getActivities, getActivityForAuto, getActivityOnFromToUrl, getRoleDetails } from './apiconfig';
 
 defineLocale('en-gb', enGbLocale); //
 @NgModule({
@@ -168,14 +169,13 @@ defineLocale('en-gb', enGbLocale); //
     CKEditorModule,
     NgxUiLoaderHttpModule.forRoot({
       showForeground: true,
-      exclude: ["http://localhost:9999/tpms/getActivityForAuto",
-        "http://localhost:9999/tpms/dataActivityName", 
-        "http://localhost:9999/tpms/allResourceName",
-        "http://localhost:9999/tpms/getActivityOnFromTo",
-        "http://localhost:9999/tpms/getRoleDetails",
-        // "http://localhost:9999/tpms/activityByDate",
-        "http://localhost:9999/tpms/getActivities",
-        "http://localhost:9999/tpms/duplicateCheck/",
+      exclude: [getActivityForAuto,
+        dataActivityName, 
+        allResourceName,
+        getActivityOnFromToUrl,
+        getRoleDetails,
+        getActivities,
+        duplicateCheck,
         
       ]
     }),

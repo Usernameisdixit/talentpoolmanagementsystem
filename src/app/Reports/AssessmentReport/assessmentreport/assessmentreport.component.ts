@@ -84,7 +84,6 @@ export class AssessmentreportComponent {
   }
 
   getUniResourNames() {
-    debugger;
     this.myControl.valueChanges.subscribe(value => {
       if (typeof value === 'string') {
         if ((value as string).length > 0) {
@@ -222,7 +221,6 @@ export class AssessmentreportComponent {
   }
 
   sortActivityAttenDetails(activityAttenDetails) {
-    debugger;
     if (activityAttenDetails) {
       // Sort the array  on activityName
       activityAttenDetails.sort((a, b) => {

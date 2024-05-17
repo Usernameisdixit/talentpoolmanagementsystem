@@ -21,7 +21,7 @@ export class MailactivityComponent {
   selectedDateRange: string = '';
   content: any[];
   mailIds: any;
-  cc: string = '';
+  cc: any;
   subject: any ;
   description: string = '';
   public Editor = ClassicEditor;
@@ -72,7 +72,7 @@ export class MailactivityComponent {
           if (!toDate || toDateItem > toDate) {
             toDate = toDateItem;
           }
-
+          debugger;
           const dateRange = new DateRange(fromDateItem, toDateItem, this.datePipe);
           this.dateRanges.push(dateRange.toString());
           this.selectedDateRange = dateRange.toString();
@@ -81,7 +81,7 @@ export class MailactivityComponent {
         });
 
         if (this.dateRanges.length > 0) {
-          this.selectedDateRange = this.dateRanges[0];
+          this.selectedDateRange = "0";
           this.getAllActivityAllocationDetails();
           // this.fetchActivities();
         }
@@ -99,6 +99,7 @@ export class MailactivityComponent {
   }
 
   getAllActivityAllocationDetails() {
+    if(this.selectedDateRange!="0"){ 
     const dateRangeString = this.selectedDateRange;
     const dates = dateRangeString.split(' to ');
 
@@ -110,6 +111,14 @@ export class MailactivityComponent {
         this.fetchActivities();
         this.fetchEmailAndContent();
       });
+    }else{
+      this.mailIds = [];
+    this.cc = '';
+    this.description = '';
+    this.editorContent=''; 
+    this.selectedFile=null;
+
+    }
   }
 
   onInputTypeChange(): void {
@@ -118,6 +127,7 @@ export class MailactivityComponent {
       this.editorContent='';
       this.mailIds=null;
       this.statusForAttenContent=false;
+      this.selectedDateRange="0";
     }
     this.fetchEmailAndContent();
     
@@ -127,6 +137,15 @@ export class MailactivityComponent {
     debugger;
     if(this.selectedDateRange=="0"){
       this.editorContent='';
+    }
+    if(this.alocationDetails.length!=0 && this.selectedDateRange!="0"){
+      this.cc = [
+        "amit@gmail.com",
+        "lovenish@gmail.com",
+        "uvvesh@gmail.com",
+        "suraj@gmail.com"
+    ];
+
     }
    
     if(this.inputType=='allocation'){
@@ -314,7 +333,7 @@ export class MailactivityComponent {
   }
 
   sendMail() {
-    debugger;
+
     if(this.inputType=='alocation' && this.mailIds.length==0){
       Swal.fire("The message must have at least one recipient. ");
     }else if(this.inputType=='attendance' && this.mailIds==null){

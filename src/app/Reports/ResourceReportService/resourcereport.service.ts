@@ -4,7 +4,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { Observable, catchError, throwError } from 'rxjs';
 import { Talent } from 'src/app/Model/talent';
 import { ResourceHistory } from 'src/app/Model/ResourceHistory';
-import {getResourceDetailsWithFileName, getResourceList, getResourceResurceList } from 'src/app/apiconfig';
+import {getResourceDetailsWithFileName, getActiveResorces, getResourceResurceList,updatetalent,downloadOnResReport,fetchActiv,fetchDuration,findByResourceNo,deleteByResourceNo } from 'src/app/apiconfig';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx-js-style';
@@ -14,13 +14,11 @@ import * as XLSX from 'xlsx-js-style';
 })
 export class ResourcereportService {
 
-  private baseUrl = "http://localhost:9999/tpms/emp"
-
 
   constructor(private httpClient: HttpClient, ) { }
 
   createTalent(talent: Talent): Observable<string> {
-    return this.httpClient.post(`${this.baseUrl}/updatetalent`, talent, { responseType: "text" });
+    return this.httpClient.post(`${updatetalent}`, talent, { responseType: "text" });
   }
 
   getTalent(pageNumber:number) {
@@ -46,7 +44,7 @@ export class ResourcereportService {
       'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
 
-    return this.httpClient.get(`${this.baseUrl}/download/${fileName}`, {
+    return this.httpClient.get(`${downloadOnResReport}${fileName}`, {
       headers: headers,
       responseType: 'blob'
     }).pipe(
@@ -70,7 +68,7 @@ export class ResourcereportService {
 
 
   findContactByResourceNumber(id: number): Observable<Talent> {
-    return this.httpClient.get<Talent>(`${this.baseUrl}/talent/${id}`);
+    return this.httpClient.get<Talent>(`${findByResourceNo}${id}`);
   }
 
   //deleteByResourceNumber(id:number):Observable<string>{
@@ -78,24 +76,23 @@ export class ResourcereportService {
   //}
 
   deleteByResourceNumber(id: number): Observable<string> {
-    return this.httpClient.post(`${this.baseUrl}/delete/talent/${id}`, id, { responseType: "text" });
+    return this.httpClient.post(`${deleteByResourceNo}${id}`, id, { responseType: "text" });
   }
 
   getResources(): Observable<any[]> {
-    return this.httpClient.get<any[]>('http://localhost:9999/tpms/getActiveResorces');
+    return this.httpClient.get<any[]>(`${getActiveResorces}`);
   }
 
   fetchDurations(code: string): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.baseUrl}/durations?code=${code}`);
+    return this.httpClient.get<string[]>(`${fetchDuration}?code=${code}`);
   }
 
   fetchActivities(code: string): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.baseUrl}/ractive?code=${code}`);
+    return this.httpClient.get<string[]>(`${fetchActiv}?code=${code}`);
   }
 
   
   generateResourceReportPdf(attendanceData: any,  talent:any, activities:any) {
-    debugger;
     const pdf = new jsPDF();
     let startYpos = 0;
     let Active ="";
