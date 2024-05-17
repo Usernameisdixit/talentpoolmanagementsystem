@@ -1,6 +1,5 @@
 package com.tpms.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,8 +12,12 @@ import com.tpms.repository.UserRepository;
 @Service
 public class UserServiceDetails implements UserDetailsService{
 
-	@Autowired
-	UserRepository userRepository;
+	
+	private final UserRepository userRepository;
+	
+	public UserServiceDetails(UserRepository userRepository) {
+		this.userRepository=userRepository;
+	}
 
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
@@ -23,9 +26,6 @@ public class UserServiceDetails implements UserDetailsService{
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + userName);
         }
-//        else {
-//        	return new CustomUserDetails(user);
-//        }
 
         Role role=user.getRole();
       return org.springframework.security.core.userdetails.User
@@ -35,17 +35,5 @@ public class UserServiceDetails implements UserDetailsService{
                .build();
 	}
 	
-	//private List<Users> userList=new ArrayList<>();
-//	public UserService() {
-//		userList.add(new Users(UUID.randomUUID().toString(),"jiban jena","jiban@gmail.com"));
-//		userList.add(new Users(UUID.randomUUID().toString(),"ilu jena","ilu@gmail.com"));
-//		userList.add(new Users(UUID.randomUUID().toString(),"jilu jena","jilu@gmail.com"));
-//		userList.add(new Users(UUID.randomUUID().toString(),"silu jena","silu@gmail.com"));
-//		
-//	}
-	
-//	public List<Users> getUsers()
-//	{
-//		return this.userList;
-//	}
+
 }
