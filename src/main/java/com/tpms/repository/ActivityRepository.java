@@ -152,6 +152,14 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
                 or responsPerson2 like if(:activityPerson='',responsPerson2 ,CONCAT('%', :activityPerson, '%')))
                """, nativeQuery = true)
      Page<Activity> findByActivityNameAndActivityPerson(Integer activityId, String activityPerson,Pageable pageable);
+
+     
+     @Query(value="""
+             select count(aa.activityId) as isActvityPlanned from activity_allocation aa
+             join activity a on a.activityId=aa.activityId
+             where a.activityName=:activityName
+            """, nativeQuery = true)
+	Integer countByActivityId(String activityName);
 	
 	
 
