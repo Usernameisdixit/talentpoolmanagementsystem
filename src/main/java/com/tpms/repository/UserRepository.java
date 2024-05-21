@@ -14,18 +14,15 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	@Query(value = "update user set deletedFlag=:deletedFlag where userId=:userId",nativeQuery = true)
 	void deleteUser(Integer userId,Boolean deletedFlag);
 
-	@Query(value = "select count(1) from user where userName=:userName",nativeQuery = true)
-	Integer getDuplicateNameCount(String userName);
+	Integer countByUserName(String userName);
 
 	User findByUserName(String userName);
 
 	User findByEmail(String email);
 
-	@Query(value = "select count(1) from user where phoneNo=:phoneNo",nativeQuery = true)
-	Integer getDuplicatePhnNoCount(String phoneNo);
+	Integer countByPhoneNo(String phoneNo);
 
-	@Query(value = "select count(1) from user where email=:email",nativeQuery = true)
-	Integer getDuplicateEmailCount(String email);
+	Integer countByEmail(String email);
 	
 
 
