@@ -101,7 +101,7 @@ export class MailService {
   
 
     
-    //HEADING MERGED
+    //HEADING MERGED   
     const colMergerd=activityHead.length+3;
     let colMergerdResource;
    
