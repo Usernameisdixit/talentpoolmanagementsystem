@@ -18,7 +18,7 @@
 
   <!-- Accordion -->
   <div class="accordion" id="accordionExample">
-    <div *ngFor="let dateRange of assessmentDateRanges" class="accordion-item">
+    <div *ngFor="let dateRange of assessmentDateRanges;let index = index" class="accordion-item">
       <h2 class="accordion-header" [id]="'heading' + dateRange.fromDate">
         <button class="accordion-button" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#collapse' + dateRange.fromDate" aria-expanded="true" [attr.aria-controls]="'collapse' + dateRange.fromDate">
           <h3><b>Assessment evaluations for activity conducted from {{ dateRange.fromDate | date:'dd-MMM-yyyy' }} to {{ dateRange.toDate | date:'dd-MMM-yyyy' }}</b></h3>
@@ -52,13 +52,15 @@
             
               <tbody>
                 <ng-container *ngFor="let group of getResourceGroups(dateRange.assessments) | paginate :{
-                  itemsPerPage : tableSize,
-                  currentPage : page ,
-                  totalItems: count
+                  itemsPerPage : itemsPerPage,
+                  currentPage : dateRange.page,
+                  totalItems: dateRange.count,
+                  id: 'pagination-' + index
                   }; let i = index">
                   <tr *ngFor="let assessment of group.assessments; let j = index;">
                     <ng-container *ngIf="j === 0">
-                      <td [attr.rowspan]="group.rowspan">{{ (page - 1) * tableSize + i + 1 }}</td> 
+                      <!-- null check for the initial load of page with serial number data as NaN -->
+                      <td [attr.rowspan]="group.rowspan">{{ (dateRange.page==undefined)?((page - 1) * itemsPerPage + i + 1) :((dateRange.page - 1) * itemsPerPage + i + 1)}}</td> <!--for serial number --> 
                     </ng-container>
                     <ng-container *ngIf="j === 0">
                     <td [attr.rowspan]="group.rowspan">{{ assessment[0] }}</td> 
@@ -78,7 +80,7 @@
               
             </table>
             <div class="d-flex justify-content-end mt-2" id="pagination">
-              <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)= "getTableDataChange($event)"></pagination-controls>
+              <pagination-controls previousLabel="Prev" nextLabel="Next" [id]="'pagination-' + index" (pageChange)="handlePageChange($event, index)"></pagination-controls>
             </div>
           </div>
 

@@ -28,6 +28,14 @@ export class ViewassessmentComponent implements OnInit {
   assessmentDateRanges: any[] = [];
   assessmentsForDateRange: any;
   openAccordion: string | null = null;
+  totalAssessments: number = 0;
+  activeAccordionIndex: number = 0; // Initialize with the index of the active accordion
+// for pagination
+indexNumber : number = 0;
+page : number = 1;
+tableSize : number = 10;
+count : number = 0;
+pageSize: number = 10; // modify as needed
 
   constructor(private apiService: AssessmentserviceService, private datePipe: DatePipe) {
     this.bsConfig = {
@@ -403,10 +411,10 @@ getResourceGroups(assessments: any[]): any[] {
 
 
  // for pagination
- indexNumber : number = 0;
- page : number = 1;
- tableSize : number = 10;
- count : number = 0;
+//  indexNumber : number = 0;
+//  page : number = 1;
+//  tableSize : number = 10;
+//  count : number = 0;
 
 //pagination functionality
 getTableDataChange(event : any){
@@ -416,6 +424,43 @@ getTableDataChange(event : any){
  this.getResourceGroups(this.assessments);
 
 //  console.log(this.getUserDetails);
+}
+
+
+//serverside pagination
+handlePageChange(pageIndex: number, accordionIndex: number) {
+  console.log(`Page change for accordion index ${accordionIndex} to page ${pageIndex}`);
+  this.assessmentDateRanges[accordionIndex].page = pageIndex;
+  const pageSize = this.pageSize; 
+  // Passing the page index and page size to data fetching method
+  this.fetchAssessmentData(pageIndex, pageSize); 
+}
+
+
+
+fetchAssessmentData(pageIndex: number, pageSize: number) {
+  
+  
+  const asesmentDate = this.assessmentDate ? this.datePipe.transform(this.assessmentDate, 'yyyy-MM-dd') : null;
+  // handling null check for the direct view of the assesment
+  if (!asesmentDate) {
+    console.log('No assessment date selected. As we are directly viewing the asessment!');
+    return;
+  }
+
+  this.apiService.getAssessmentData(pageIndex, pageSize, asesmentDate).subscribe(
+    (data: any) => {
+      if (!data || !data.content) 
+        console.error('Invalid or empty data:', data);
+      console.log('Assessment data received:', data);
+      this.assessments = data.content;
+      this.totalAssessments = data.totalElements;
+      this.showAssessmentTable = this.assessments.length > 0;
+    },
+    error => {
+      console.error('Error fetching assessment data:', error);
+    }
+  );
 }
   
   

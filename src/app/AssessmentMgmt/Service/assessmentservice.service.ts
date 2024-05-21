@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient ,HttpParams} from '@angular/common/http';
 import { AssessmentDto } from 'src/app/Model/AssessmentDto';
-import {platformUrl,assesmentDetails,getActivityDetails,checkAssessments,viewAssesmentDetails,editAssesment,updateUrl,getActivities,viewAssesmentDetailsDateWise,getAssesmentDate,saveAssement,getFromToDate} from 'src/app/apiconfig';
+import {platformUrl,assesmentDetails,getActivityDetails,checkAssessments,viewAssesmentDetails,editAssesment,updateUrl,getActivities,viewAssesmentDetailsDateWise,getAssesmentDate,saveAssement,getFromToDate, viewAssesmentDetailsDateWisePagination} from 'src/app/apiconfig';
 
 
 @Injectable({
@@ -109,5 +109,25 @@ export class AssessmentserviceService {
   getFromToDate(): Observable<any> {
     return this.http.get<any>(`${getFromToDate}`);
   }
+
+  getAssessmentData(page: number, pageSize: number, asesmentDate: string): Observable<any> {
+    console.log('Before logging statement'); 
+
+    console.log('Fetching assessment data with Page:', page, 'PageSize:', pageSize, 'AssessmentDate:', asesmentDate);
+
+    //const url = `${this.baseUrl}/viewAssesmentDetailsDateWisePagination`;
+    const url = `${viewAssesmentDetailsDateWisePagination}`;
+
+  
+    let params = new HttpParams();
+    params = params.append('page', page.toString());
+    params = params.append('size', pageSize.toString());
+    params = params.append('assessmentDate', asesmentDate);
+
+    console.log("satyam",params)
+    return this.http.get<any>(url, { params: params });
+  }
+
+
   
 }

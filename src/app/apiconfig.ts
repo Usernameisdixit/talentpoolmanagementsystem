@@ -111,6 +111,7 @@ export const updateRole=baseUrl+'/updateRole/';
 //Assessment
 export const platformUrl=baseUrl+'/getPlatforms';
 export const assesmentDetails = baseUrl+'/api/assessment-details';
+export const viewAssesmentDetailsDateWisePagination = baseUrl+'/viewAssesmentDetailsDateWisePagination';
 export const getActivityDetails=baseUrl+'/getActivityDetails';
 export const checkAssessments=baseUrl+'/checkAssessments';
 export const viewAssesmentDetails=baseUrl+'/viewAssesmentDetails';
