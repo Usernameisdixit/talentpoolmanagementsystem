@@ -125,11 +125,11 @@ public class UserServiceImpl implements UserService{
 		String result="not Exist";
 		
 		 count=switch(colName) {
-		   case "userName"-> userRepository.getDuplicateNameCount(value);
+		   case "userName"-> userRepository.countByUserName(value);
 			 
-		   case "phoneNo"-> userRepository.getDuplicatePhnNoCount(value);
+		   case "phoneNo"-> userRepository.countByPhoneNo(value);
 			 
-		   case "email" ->  userRepository.getDuplicateEmailCount(value);
+		   case "email" ->  userRepository.countByEmail(value);
 			 
 		   default -> throw new IllegalStateException("Invalid Data!!");
         };
