@@ -7,7 +7,7 @@
         <label for="description">Activity Name:<span class="required">*</span></label>
         <div class="input-group">
             <input id="description" class="form-control" type="text" matInput [formControl]="myControl"
-                [matAutocomplete]="auto"  (blur)="click($event)"  />
+                [matAutocomplete]="auto"  (focus)="click($event)"  />
             <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                 <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
                   {{option.name}}
@@ -15,19 +15,6 @@
             </mat-autocomplete>
         </div>
     </div>
-<!-- 
-    <div class="form-group">
-      <label for="description">Activity Name:</label>
-      <div class="input-group">
-      <input class="form-control" id="description" autocomplete="off" required [(ngModel)]="activity.activityName" name="description" />
-        <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
-        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-          <mat-option *ngFor="let option of filteredOptions  | async" [value]="option">
-            {{ option }}
-          </mat-option>
-        </mat-autocomplete>
-        </div>
-    </div> -->
 
     <div class="form-group" >
       <label for="description1">Activity Description:<span class="required">*</span></label>
