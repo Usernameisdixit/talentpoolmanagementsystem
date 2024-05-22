@@ -1,16 +1,12 @@
 package com.tpms.service.impl;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tpms.dto.PageResponse;
 import com.tpms.dto.ResourcePoolHistoryDto;
-import com.tpms.entity.Platform;
 import com.tpms.entity.ResourcePool;
 import com.tpms.entity.ResourcePoolHistory;
 import com.tpms.repository.PlatformRepository;
@@ -30,16 +25,15 @@ import com.tpms.repository.ResourcePoolRepository;
 import com.tpms.utils.DateUtils;
 import com.tpms.utils.ExcelUtils;
 
-import jakarta.annotation.Resource;
 
 @Service
 public class ResourcePoolServiceImpl {
 
 	@Autowired
-	private ResourcePoolHistoryRepository tbl_resource_pool_Repository_history;
+	private ResourcePoolHistoryRepository resourcepoolRepositoryhistory;
 
 	@Autowired
-	private ResourcePoolRepository tbl_resource_pool_Repository;
+	private ResourcePoolRepository resourcepoolRepository;
 	
 	@Autowired
 	private PlatformRepository platformRepository;
@@ -47,41 +41,41 @@ public class ResourcePoolServiceImpl {
 	public void save(MultipartFile file, LocalDate allocationDate) {
 
 		try {
-			List<ResourcePoolHistory> ExcelEmp = ExcelUtils.convertExceltoListofEmployee(file.getInputStream(),
+			List<ResourcePoolHistory> resourcePoolExcel = ExcelUtils.convertExceltoListofEmployee(file.getInputStream(),
 					allocationDate);
 
-			List<ResourcePool> tbl_resource_pool = tbl_resource_pool_Repository.findAll();
+			List<ResourcePool> resourcepool = resourcepoolRepository.findAll();
 
-			List<ResourcePoolHistory> tbl_resource_poolNotMatch = new ArrayList<>(ExcelEmp.size());
+			List<ResourcePoolHistory> resourcepoolNotMatch = new ArrayList<>(resourcePoolExcel.size());
 
-			List<ResourcePool> tbl_resource_poolNotMatch1 = new ArrayList<>();
-			
-			List<ResourcePool> tbl_resource_poolMatch = new ArrayList<>((tbl_resource_pool.size()));
+			List<ResourcePool> resourcepoolNotMatchOther = new ArrayList<>();
 
-			tbl_resource_poolNotMatch.addAll(ExcelEmp);
-			tbl_resource_poolMatch.addAll(tbl_resource_pool);
+			List<ResourcePool> resourcepoolMatch = new ArrayList<>((resourcepool.size()));
 
-			if (CollectionUtils.isNotEmpty(tbl_resource_pool)) {
+			resourcepoolNotMatch.addAll(resourcePoolExcel);
+			resourcepoolMatch.addAll(resourcepool);
 
-				tblResourcePoolNotEmpty(ExcelEmp, tbl_resource_pool, tbl_resource_poolMatch, tbl_resource_poolNotMatch,
+			if (CollectionUtils.isNotEmpty(resourcepool)) {
+
+				resourcePoolNotEmpty(resourcePoolExcel, resourcepool, resourcepoolMatch, resourcepoolNotMatch,
 						allocationDate);
 
 				/***************************************
 				 * Updated Data that is not Present in Excel (Tagged Resources)
 				 ***************************************/
 
-				updatedDataNotPresentInExcel(tbl_resource_poolMatch);
+				updatedDataNotPresentInExcel(resourcepoolMatch);
 
 				/*******************************
 				 * Excel Data Uploaded that is not Matched Current Data(New Resources)
 				 *************************************/
-				additionOfNewResources(tbl_resource_poolNotMatch, tbl_resource_poolNotMatch1, allocationDate);
+				additionOfNewResources(resourcepoolNotMatch, resourcepoolNotMatchOther, allocationDate);
 
 			} else {
 				/*************
 				 * For First Time Data is Uploaded in tbl_resource_pool
 				 ***************/
-				firstTimeDataUpload_tbl_resource_pool(ExcelEmp, tbl_resource_poolNotMatch1, allocationDate);
+				firstTimeDataUploadtblresourcepool(resourcePoolExcel, resourcepoolNotMatchOther, allocationDate);
 
 			}
 
@@ -92,59 +86,59 @@ public class ResourcePoolServiceImpl {
 
 	}
 
-	public void tblResourcePoolNotEmpty(List<ResourcePoolHistory> ExcelEmp, List<ResourcePool> tbl_resource_pool,
-			List<ResourcePool> tbl_resource_poolMatch, List<ResourcePoolHistory> tbl_resource_poolNotMatch,
+	public void resourcePoolNotEmpty(List<ResourcePoolHistory> resourcePoolExcel, List<ResourcePool> resourcepool,
+			List<ResourcePool> resourcepoolMatch, List<ResourcePoolHistory> resourcepoolNotMatch,
 			LocalDate allocationDate) {
 
-		for (int i = 0; i < ExcelEmp.size(); i++) {
+		for (int i = 0; i < resourcePoolExcel.size(); i++) {
 
 			// tbl_resource_pool NotMatch=new tbl_resource_pool();
 
-			for (int j = 0; j < tbl_resource_pool.size(); j++) {
+			for (int j = 0; j < resourcepool.size(); j++) {
 
-				if (ExcelEmp.get(i).getResourceCode() != null && tbl_resource_pool.get(j).getResourceCode() != null
-						&& ExcelEmp.get(i).getResourceCode()
-								.equalsIgnoreCase(tbl_resource_pool.get(j).getResourceCode())) {
+				if (resourcePoolExcel.get(i).getResourceCode() != null && resourcepool.get(j).getResourceCode() != null
+						&& resourcePoolExcel.get(i).getResourceCode()
+								.equalsIgnoreCase(resourcepool.get(j).getResourceCode())) {
 
-					String ResourceCodeExcel = ExcelEmp.get(i).getResourceCode();
-					String ResourceCodepool = tbl_resource_pool.get(j).getResourceCode();
+					String resourceCodeExcel = resourcePoolExcel.get(i).getResourceCode();
+					String resourceCodepool = resourcepool.get(j).getResourceCode();
 					
 					/***********Matched Record Both in Excel and Table are Updated in Table************/
-					if (tbl_resource_pool.get(j).getResourceCode() != null)
+					if (resourcepool.get(j).getResourceCode() != null)
 					{
-					tbl_resource_pool.get(j).setDesignation(ExcelEmp.get(i).getDesignation());
-					tbl_resource_pool.get(j).setPlatform(ExcelEmp.get(i).getPlatform());
-					tbl_resource_pool.get(j).setEmail(ExcelEmp.get(i).getEmail());
-					tbl_resource_pool.get(j).setPhoneNo(ExcelEmp.get(i).getPhoneNo());
-					tbl_resource_pool.get(j).setLocation(ExcelEmp.get(i).getLocation());
-					tbl_resource_pool.get(j).setEngagementPlan(ExcelEmp.get(i).getEngagementPlan());
-					tbl_resource_pool.get(j).setExperience(ExcelEmp.get(i).getExperience());
+						resourcepool.get(j).setDesignation(resourcePoolExcel.get(i).getDesignation());
+						resourcepool.get(j).setPlatform(resourcePoolExcel.get(i).getPlatform());
+						resourcepool.get(j).setEmail(resourcePoolExcel.get(i).getEmail());
+						resourcepool.get(j).setPhoneNo(resourcePoolExcel.get(i).getPhoneNo());
+						resourcepool.get(j).setLocation(resourcePoolExcel.get(i).getLocation());
+						resourcepool.get(j).setEngagementPlan(resourcePoolExcel.get(i).getEngagementPlan());
+						resourcepool.get(j).setExperience(resourcePoolExcel.get(i).getExperience());
 					//tbl_resource_pool.get(j).setAllocationDate(allocationDate);
-					if(tbl_resource_pool.get(j).getDeletedFlag()== 1) {
-					  tbl_resource_pool.get(j).setAllocationDate(allocationDate);
+					if(resourcepool.get(j).getDeletedFlag()== 1) {
+						resourcepool.get(j).setAllocationDate(allocationDate);
 					}
-					tbl_resource_pool.get(j).setDeletedFlag((byte) 0);
+					resourcepool.get(j).setDeletedFlag((byte) 0);
 					
 					
 					}
-					this.tbl_resource_pool_Repository.saveAll(tbl_resource_pool);
+					this.resourcepoolRepository.saveAll(resourcepool);
 					
 					/***************************************************************************************/
 
 					/*************************
 					 * Updated List Data that is not Present in Excel (Tagged Resources)
 					 ******************/
-					if (ResourceCodepool != null) {
-						for (ResourcePool obj : tbl_resource_poolMatch) {
+					if (resourceCodepool != null) {
+						for (ResourcePool obj : resourcepoolMatch) {
 							String resourceCode = obj.getResourceCode();
-							if (resourceCode != null && resourceCode.equalsIgnoreCase(ResourceCodepool)) {
+							if (resourceCode != null && resourceCode.equalsIgnoreCase(resourceCodepool)) {
 
 								if (obj.getDeletedFlag() == 1) {
 									obj.setDeletedFlag((byte) 0);
 									obj.setAllocationDate(allocationDate);
 								}
 
-								tbl_resource_poolMatch.remove(obj);
+								resourcepoolMatch.remove(obj);
 								break;
 							}
 						}
@@ -153,10 +147,10 @@ public class ResourcePoolServiceImpl {
 					/***************
 					 * Excel Data Uploaded that is not Matched Current Data(New Resources)
 					 ******************/
-					if (ResourceCodeExcel != null) {
-						tbl_resource_poolNotMatch.removeIf(obj -> {
+					if (resourceCodeExcel != null) {
+						resourcepoolNotMatch.removeIf(obj -> {
 							String resourceCode = obj.getResourceCode();
-							return resourceCode != null && resourceCode.equalsIgnoreCase(ResourceCodeExcel);
+							return resourceCode != null && resourceCode.equalsIgnoreCase(resourceCodeExcel);
 						});
 					}
 
@@ -168,102 +162,91 @@ public class ResourcePoolServiceImpl {
 
 	}
 
-	public void updatedDataNotPresentInExcel(List<ResourcePool> tbl_resource_poolMatch) {
-		for (int j = 0; j < tbl_resource_poolMatch.size(); j++) {
-
-			SimpleDateFormat formatter = new SimpleDateFormat();
-			Date date = new Date();
-
-			// tbl_resource_poolMatch.get(j).setStatus("D");
-			tbl_resource_poolMatch.get(j).setDeletedFlag((byte) 1);
-
-			this.tbl_resource_pool_Repository.saveAll(tbl_resource_poolMatch);
+	public void updatedDataNotPresentInExcel(List<ResourcePool> resourcepoolMatch) {
+		for (int j = 0; j < resourcepoolMatch.size(); j++) {
+			resourcepoolMatch.get(j).setDeletedFlag((byte) 1);
+			this.resourcepoolRepository.saveAll(resourcepoolMatch);
 		}
 	}
 
-	public void additionOfNewResources(List<ResourcePoolHistory> tbl_resource_poolNotMatch,
-			List<ResourcePool> tbl_resource_poolNotMatch1, LocalDate allocationDate) {
-		for (int j = 0; j < tbl_resource_poolNotMatch.size(); j++) {
-			ResourcePool Emp = new ResourcePool();
+	public void additionOfNewResources(List<ResourcePoolHistory> resourcepoolNotMatch,
+			List<ResourcePool> resourcepoolNotMatchOther, LocalDate allocationDate) {
+		for (int j = 0; j < resourcepoolNotMatch.size(); j++) {
+			ResourcePool resource = new ResourcePool();
 
-			Emp.setResourceName(tbl_resource_poolNotMatch.get(j).getResourceName());
-			Emp.setDesignation(tbl_resource_poolNotMatch.get(j).getDesignation()); // Newly added Coloumn
-			Emp.setResourceCode(tbl_resource_poolNotMatch.get(j).getResourceCode());
-			Emp.setPlatform(tbl_resource_poolNotMatch.get(j).getPlatform());
-			Emp.setEmail(tbl_resource_poolNotMatch.get(j).getEmail());
-			Emp.setPhoneNo(tbl_resource_poolNotMatch.get(j).getPhoneNo());
-			Emp.setLocation(tbl_resource_poolNotMatch.get(j).getLocation());
-			Emp.setEngagementPlan(tbl_resource_poolNotMatch.get(j).getEngagementPlan());
-			Emp.setExperience(tbl_resource_poolNotMatch.get(j).getExperience());
-			Emp.setAllocationDate(allocationDate);
-			Emp.setDeletedFlag((byte) 0);
-			// Emp.setStatus("A");
-			if (Emp.getResourceCode() != null)
-				tbl_resource_poolNotMatch1.add(Emp);
+			resource.setResourceName(resourcepoolNotMatch.get(j).getResourceName());
+			resource.setDesignation(resourcepoolNotMatch.get(j).getDesignation()); // Newly added Coloumn
+			resource.setResourceCode(resourcepoolNotMatch.get(j).getResourceCode());
+			resource.setPlatform(resourcepoolNotMatch.get(j).getPlatform());
+			resource.setEmail(resourcepoolNotMatch.get(j).getEmail());
+			resource.setPhoneNo(resourcepoolNotMatch.get(j).getPhoneNo());
+			resource.setLocation(resourcepoolNotMatch.get(j).getLocation());
+			resource.setEngagementPlan(resourcepoolNotMatch.get(j).getEngagementPlan());
+			resource.setExperience(resourcepoolNotMatch.get(j).getExperience());
+			resource.setAllocationDate(allocationDate);
+			resource.setDeletedFlag((byte) 0);
+			if (resource.getResourceCode() != null)
+				resourcepoolNotMatchOther.add(resource);
 
-			this.tbl_resource_pool_Repository.saveAll(tbl_resource_poolNotMatch1);
+			this.resourcepoolRepository.saveAll(resourcepoolNotMatchOther);
 
 		}
 	}
 
 	// else --------------- 1st time upload
-	public void firstTimeDataUpload_tbl_resource_pool(List<ResourcePoolHistory> ExcelEmp,
-			List<ResourcePool> tbl_resource_poolNotMatch1, LocalDate allocationDate) {
+	public void firstTimeDataUploadtblresourcepool(List<ResourcePoolHistory> resourcePoolExcel,
+			List<ResourcePool> resourcepoolNotMatchOther, LocalDate allocationDate) {
 
-		for (int j = 0; j < ExcelEmp.size(); j++) {
-			ResourcePool Emp = new ResourcePool();
-
-			Emp.setResourceName(ExcelEmp.get(j).getResourceName());
-			Emp.setDesignation(ExcelEmp.get(j).getDesignation()); // Newly added Coloumn
-			Emp.setResourceCode(ExcelEmp.get(j).getResourceCode());
-			Emp.setPlatform(ExcelEmp.get(j).getPlatform());
-			Emp.setEmail(ExcelEmp.get(j).getEmail());
-			Emp.setPhoneNo(ExcelEmp.get(j).getPhoneNo());
-			Emp.setLocation(ExcelEmp.get(j).getLocation());
-			Emp.setEngagementPlan(ExcelEmp.get(j).getEngagementPlan());
-			Emp.setExperience(ExcelEmp.get(j).getExperience());
-			Emp.setAllocationDate(allocationDate);
-			Emp.setDeletedFlag((byte) 0);
-			// Emp.setStatus("A");
-			if (Emp.getResourceCode() != null)
-				tbl_resource_poolNotMatch1.add(Emp);
-
+		for (int j = 0; j < resourcePoolExcel.size(); j++) {
+			ResourcePool resource = new ResourcePool();
+			resource.setResourceName(resourcePoolExcel.get(j).getResourceName());
+			resource.setDesignation(resourcePoolExcel.get(j).getDesignation()); // Newly added Coloumn
+			resource.setResourceCode(resourcePoolExcel.get(j).getResourceCode());
+			resource.setPlatform(resourcePoolExcel.get(j).getPlatform());
+			resource.setEmail(resourcePoolExcel.get(j).getEmail());
+			resource.setPhoneNo(resourcePoolExcel.get(j).getPhoneNo());
+			resource.setLocation(resourcePoolExcel.get(j).getLocation());
+			resource.setEngagementPlan(resourcePoolExcel.get(j).getEngagementPlan());
+			resource.setExperience(resourcePoolExcel.get(j).getExperience());
+			resource.setAllocationDate(allocationDate);
+			resource.setDeletedFlag((byte) 0);
+			if (resource.getResourceCode() != null)
+				resourcepoolNotMatchOther.add(resource);
 		}
-
-		this.tbl_resource_pool_Repository.saveAll(tbl_resource_poolNotMatch1);
+		this.resourcepoolRepository.saveAll(resourcepoolNotMatchOther);
 
 	}
 
 	public PageResponse<ResourcePool> getAllEmploye(int pageNumber, int pageSize) {
 
-		List<ResourcePool> tbl_resource_pool = new ArrayList<>();
+		List<ResourcePool> resourcepool = new ArrayList<>();
 		Pageable pageable=PageRequest.of(pageNumber-1, pageSize,Sort.by("resourceName"));
-		Page<ResourcePool> page=tbl_resource_pool_Repository.findAllByDeletedFlag(pageable);
+		Page<ResourcePool> page=resourcepoolRepository.findAllByDeletedFlag(pageable);
 		
-		tbl_resource_pool =page.getContent(); 
+		resourcepool =page.getContent(); 
 //		List<ResourcePool> sortedList=tbl_resource_pool.stream().sorted((a,b)->a.getResourceName()
 //				.compareTo(b.getResourceName())).collect(Collectors.toList());
 		PageResponse<ResourcePool> pageResponse=new PageResponse<ResourcePool>();
-		pageResponse.setContent(tbl_resource_pool);
+		pageResponse.setContent(resourcepool);
 		pageResponse.setPageSize(page.getSize());
 		pageResponse.setTotalElements(page.getTotalElements());
 		pageResponse.setTotalPages(page.getTotalPages());
 		pageResponse.setLast(page.isLast());
 
-		List<ResourcePoolHistoryDto> tbl_resource_pooldto = new ArrayList<>();
-		List<Object[]> tbl_resource_poolfindMinMax = tbl_resource_pool_Repository_history.minMaxAllocationDate();
+		List<ResourcePoolHistoryDto> resourcepooldto = new ArrayList<>();
+		List<Object[]> resourcepoolfindMinMax = resourcepoolRepositoryhistory.minMaxAllocationDate();
 
-		for (Object[] ob : tbl_resource_poolfindMinMax) {
+		for (Object[] ob : resourcepoolfindMinMax) {
 			ResourcePoolHistoryDto rgdt = new ResourcePoolHistoryDto();
 			rgdt.setResourceCode(ob[0].toString());
 			rgdt.setResourceName(ob[1].toString());
-			String Dur = DateUtils.monthDayDifference(ob[2].toString(), ob[3].toString());
-			rgdt.setDuration(Dur);
-			tbl_resource_pooldto.add(rgdt);
+			String duration = DateUtils.monthDayDifference(ob[2].toString(), ob[3].toString());
+			rgdt.setDuration(duration);
+			resourcepooldto.add(rgdt);
 		}
 
-		for (ResourcePool resource : tbl_resource_pool) {
-			for (ResourcePoolHistoryDto resourcedto : tbl_resource_pooldto) {
+		for (ResourcePool resource : resourcepool) {
+			for (ResourcePoolHistoryDto resourcedto : resourcepooldto) {
 				if (resource.getResourceCode().equalsIgnoreCase(resourcedto.getResourceCode())) {
 					resource.setDuration(resourcedto.getDuration());
 				}
@@ -278,16 +261,14 @@ public class ResourcePoolServiceImpl {
 
 		try {
 			
-	List<ResourcePoolHistory> resourcedata	=	tbl_resource_pool_Repository_history.findByResourceName(emp.getResourceName());
+	List<ResourcePoolHistory> resourcedata	=	resourcepoolRepositoryhistory.findByResourceName(emp.getResourceName());
 	
 	List<Integer> resid = new ArrayList<Integer>();
 	for(int k=0;k<resourcedata.size();k++) {
 		resid.add(resourcedata.get(k).getResourceHistoryId());
 	}
 	
-	
 	Integer i=Collections.max(resid);
-	
 	for(int j=0;j<resourcedata.size();j++) {
 		if(resourcedata.get(j).getResourceHistoryId()==i) {
 			resourcedata.get(j).setPhoneNo(emp.getPhoneNo());
@@ -301,9 +282,9 @@ public class ResourcePoolServiceImpl {
 		}
 	}
 	
-	tbl_resource_pool_Repository_history.saveAll(resourcedata);
+	resourcepoolRepositoryhistory.saveAll(resourcedata);
 	
-	tbl_resource_pool_Repository.save(emp);
+	resourcepoolRepository.save(emp);
 			
 
 		} catch (Exception e) {
@@ -315,50 +296,50 @@ public class ResourcePoolServiceImpl {
 
 	// For Deleting Any Resource
 	public String delete(Integer id) {
-		tbl_resource_pool_Repository.deleteById(id);
+		resourcepoolRepository.deleteById(id);
 		return "Resource Deleted";
 	}
 
 	@SuppressWarnings("deprecation")
 	public ResourcePool getTalentById(Integer id) {
-		return tbl_resource_pool_Repository.findById(id).get();
+		return resourcepoolRepository.findById(id).get();
 
 	}
 
 	public void updateBitDeletedFlagById(Integer id) {
-		tbl_resource_pool_Repository.updateBitDeletedFlagById(id);
+		resourcepoolRepository.updateBitDeletedFlagById(id);
 	}
 
 	public Byte getDeletedFlagByRoleId(Integer id) {
-		return tbl_resource_pool_Repository.getDeletedFlagByRoleId(id);
+		return resourcepoolRepository.getDeletedFlagByRoleId(id);
 	}
 
 	public void updateBitDeletedFlagByFalse(Integer id) {
-		tbl_resource_pool_Repository.updateBitDeletedFlagByFalse(id);
+		resourcepoolRepository.updateBitDeletedFlagByFalse(id);
 	}
 
 	public List<Object[]> getResourceDetailsWithFileNameS() {
 
-		return tbl_resource_pool_Repository_history.getResourceDetailsWithFileNameR();
+		return resourcepoolRepositoryhistory.getResourceDetailsWithFileNameR();
 	}
 
 	public List<ResourcePool> getAllResources() {
-		List<ResourcePool> resourceList=tbl_resource_pool_Repository.findAll();
+		List<ResourcePool> resourceList=resourcepoolRepository.findAll();
 		
-		List<ResourcePoolHistoryDto> tbl_resource_pooldto = new ArrayList<>();
-		List<Object[]> tbl_resource_poolfindMinMax = tbl_resource_pool_Repository_history.minMaxAllocationDate();
+		List<ResourcePoolHistoryDto> resourcepooldto = new ArrayList<>();
+		List<Object[]> resourcepoolfindMinMax = resourcepoolRepositoryhistory.minMaxAllocationDate();
 
-		for (Object[] ob : tbl_resource_poolfindMinMax) {
+		for (Object[] ob : resourcepoolfindMinMax) {
 			ResourcePoolHistoryDto rgdt = new ResourcePoolHistoryDto();
 			rgdt.setResourceCode(ob[0].toString());
 			rgdt.setResourceName(ob[1].toString());
-			String Dur = DateUtils.monthDayDifference(ob[2].toString(), ob[3].toString());
-			rgdt.setDuration(Dur);
-			tbl_resource_pooldto.add(rgdt);
+			String duration = DateUtils.monthDayDifference(ob[2].toString(), ob[3].toString());
+			rgdt.setDuration(duration);
+			resourcepooldto.add(rgdt);
 		}
 
 		for (ResourcePool resource : resourceList) {
-			for (ResourcePoolHistoryDto resourcedto : tbl_resource_pooldto) {
+			for (ResourcePoolHistoryDto resourcedto : resourcepooldto) {
 				if (resource.getResourceCode().equalsIgnoreCase(resourcedto.getResourceCode())) {
 					resource.setDuration(resourcedto.getDuration());
 				}
@@ -370,7 +351,7 @@ public class ResourcePoolServiceImpl {
 	public List<String> getDesignation() {
 		List<String> getList=  new ArrayList<>();
 		try {
-			getList=tbl_resource_pool_Repository.findDesignationData();		
+			getList=resourcepoolRepository.findDesignationData();		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -390,7 +371,7 @@ public class ResourcePoolServiceImpl {
 	public List<String> getLocation() {
 		List<String> getList=  new ArrayList<>();
 		try {
-			getList=tbl_resource_pool_Repository.findLocationData();		
+			getList=resourcepoolRepository.findLocationData();		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -403,22 +384,22 @@ public class ResourcePoolServiceImpl {
 		Page<ResourcePool> page = null;
 		PageResponse<ResourcePool> pageResponse = new PageResponse<>();
 		try {
-			page = tbl_resource_pool_Repository.getsearchFilterData(designation, location, platform, pageable);
+			page = resourcepoolRepository.getsearchFilterData(designation, location, platform, pageable);
 			List<ResourcePool> getResouceList = page.getContent();
-			List<ResourcePoolHistoryDto> tbl_resource_pooldto = new ArrayList<>();
-			List<Object[]> tbl_resource_poolfindMinMax = tbl_resource_pool_Repository_history.minMaxAllocationDate();
+			List<ResourcePoolHistoryDto> resourcepooldto = new ArrayList<>();
+			List<Object[]> resourcepoolfindMinMax = resourcepoolRepositoryhistory.minMaxAllocationDate();
 
-			for (Object[] ob : tbl_resource_poolfindMinMax) {
+			for (Object[] ob : resourcepoolfindMinMax) {
 				ResourcePoolHistoryDto rgdt = new ResourcePoolHistoryDto();
 				rgdt.setResourceCode(ob[0].toString());
 				rgdt.setResourceName(ob[1].toString());
-				String Dur = DateUtils.monthDayDifference(ob[2].toString(), ob[3].toString());
-				rgdt.setDuration(Dur);
-				tbl_resource_pooldto.add(rgdt);
+				String duration = DateUtils.monthDayDifference(ob[2].toString(), ob[3].toString());
+				rgdt.setDuration(duration);
+				resourcepooldto.add(rgdt);
 			}
 
 			for (ResourcePool resource : getResouceList) {
-				for (ResourcePoolHistoryDto resourcedto : tbl_resource_pooldto) {
+				for (ResourcePoolHistoryDto resourcedto : resourcepooldto) {
 					if (resource.getResourceCode().equalsIgnoreCase(resourcedto.getResourceCode())) {
 						resource.setDuration(resourcedto.getDuration());
 					}
