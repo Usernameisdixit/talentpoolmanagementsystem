@@ -110,7 +110,7 @@
           </thead>
           <tbody>
             <ng-container *ngFor="let resource of resources">
-              <tr *ngIf="resource.platform.trim() == platform.platform.trim()">
+              <tr *ngIf="resource.platform.toLowerCase().trim() == platform.platform.toLowerCase().trim()">
                 <td>
                   <div class="form-check">
                     <input type="checkbox" class="form-check-input" id="resource{{resource.resourceId}}" [checked]="resource.selected" (change)="toggle($event, resource.resourceId, platform.platformId)">
