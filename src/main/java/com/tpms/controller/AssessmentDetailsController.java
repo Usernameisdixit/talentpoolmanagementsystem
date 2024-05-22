@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tpms.dto.AssessmentDto;
 import com.tpms.dto.PageResponse;
+import com.tpms.entity.Assessment;
 import com.tpms.entity.Platform;
 import com.tpms.entity.User;
 import com.tpms.repository.ActivityAllocationDetailsRepository;
@@ -199,6 +200,45 @@ public class AssessmentDetailsController {
     }
 
     
+  //server side pagination controller
+    @GetMapping("/viewAssesmentDetailsDateWisePagination")
+    public ResponseEntity<Page<Assessment>> getAssessmentsByDate(
+            @RequestParam(name = "assessmentDate", required = false) String assessmentDate,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "pageSize", defaultValue = "10") int pageSize)
+         
+    
+    {
+
+        System.out.println("Received request for assessments by date!");
+
+        if (assessmentDate == null) {
+            // Handle missing date parameter
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        Date date;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            date = sdf.parse(assessmentDate);
+        } catch (ParseException e) {
+            // Handle invalid date format
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        System.out.println("Fetching assessments for date: {}, Page: {}, PageSize: {}" +date+" "+ page+" "+ pageSize);
+
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Assessment> assessmentsPage = assessmentRepository.findByAssessmentDate(date, pageable);
+        System.out.println("Assessment data fetched for Page: {}, Total Elements: {}"+page);
+
+        if (assessmentsPage.isEmpty()) {
+            // Handle empty page response
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(assessmentsPage);
+    }
     
     
     

@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -66,6 +68,8 @@ public interface AssessmentRepository extends JpaRepository<Assessment, Integer>
 		    boolean existsByActivityIdAndDateRange(@Param("activityId") Integer activityId, @Param("fromDate") Date fromDate, @Param("toDate") Date toDate);
 
 
-		
+		    @Query("SELECT a FROM Assessment a WHERE DATE(a.asesmentDate) = DATE(:assessmentDate)")
+		    Page<Assessment> findByAssessmentDate(@Param("assessmentDate") Date assessmentDate, Pageable pageable);
+		    
 
 }
