@@ -82,7 +82,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 	@Override
 	public List<Platform> getAllPlatform() {
-		return platformRepository.getAllPlatform();
+		return platformRepository.findByDeletedFlagFalse();
 	}
 
 
