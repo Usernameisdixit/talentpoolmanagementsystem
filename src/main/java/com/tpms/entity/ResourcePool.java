@@ -15,16 +15,6 @@ import lombok.Data;
 public class ResourcePool {
 
 	public ResourcePool() {}
-	
-//	public ResourcePool(List<ActivityAllocation> activityAlloc) {
-//		this.activityAlloc = activityAlloc;
-//	}
-
-
-
-	public ResourcePool(ResourcePoolHistory employee, LocalDate allocationDate2) {
-		// TODO Auto-generated constructor stub
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
