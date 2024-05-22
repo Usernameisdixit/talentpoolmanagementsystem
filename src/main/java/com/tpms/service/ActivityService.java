@@ -67,4 +67,6 @@ public interface ActivityService {
 
 	public List<Activity> getActivityList();
 
+	public Integer getCount(String activityName);
+
 }
