@@ -361,5 +361,12 @@ public class ActivityServiceImpl implements ActivityService {
 	}
 
 
+	@Override
+	public Integer getCount(String activityName) {
+		
+		return activityRepository.countByActivityId(activityName);
+	}
+
+
 
 }

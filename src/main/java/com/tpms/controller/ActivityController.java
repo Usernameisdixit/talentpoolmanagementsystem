@@ -65,16 +65,22 @@ public class ActivityController {
 		Activity listByRespAct = activityService.findByResponsPerson1AndActivityName(activity.getResponsPerson1(),
 				activity.getActivityName());
 		Activity activeActivity = activityService.getDataByActivityName(activity.getActivityName());
+		Integer count=activityService.getCount(activity.getActivityName());
 		
 		if (listByRespAct != null) {
 			if (Boolean.TRUE.equals(listByRespAct.getDeletedFlag())) {
 				listByRespAct.setDeletedFlag(false);
 				activityServiceImpl.saveActivity(listByRespAct);
 				activeActivity.setDeletedFlag(true);
+				
 				activityServiceImpl.saveActivity(activeActivity);
 			}
 			return activityServiceImpl.saveActivity(listByRespAct);
-		} else {
+		}else if(activeActivity!=null && count==0) {
+			activity.setActivityId(activeActivity.getActivityId());
+			activity.setDeletedFlag(false);
+			return activityServiceImpl.saveActivity(activity);
+		}else {
 			if (activeActivity != null) {
 				activeActivity.setDeletedFlag(true);
 				activityServiceImpl.saveActivity(activeActivity);
@@ -83,6 +89,7 @@ public class ActivityController {
 			return activityServiceImpl.saveActivity(activity);
 
 		}
+		
 		
 	}
 
