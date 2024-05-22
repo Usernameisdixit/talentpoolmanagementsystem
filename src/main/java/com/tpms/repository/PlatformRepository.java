@@ -4,8 +4,6 @@ package com.tpms.repository;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,15 +11,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tpms.entity.Platform;
-import com.tpms.entity.ResourcePool;
 
 @Repository
 public interface PlatformRepository extends JpaRepository<Platform, Integer> {
 	
 	Platform findByPlatform(String platform);
-	
-	 @Query(value = "SELECT * FROM platforms where deletedFlag=0", nativeQuery = true)
-	    List<Platform> getAllPlatform();
 
 	 /**
 	  * @return List of active platforms
@@ -36,11 +30,9 @@ public interface PlatformRepository extends JpaRepository<Platform, Integer> {
 	@Query(value = "update platforms set deletedFlag=:deletedFlag where platformId=:platformId",nativeQuery = true)
 	void deletePlatform(Integer platformId,Boolean deletedFlag);
 	
-	@Query(value = "select count(1) from platforms where platform=:platformName",nativeQuery = true)
-	Integer getDuplicateProgramNameCount(String platformName);
+	Integer countByPlatform(String platformName);
 	
-	@Query(value = "select count(1) from platforms where platformCode=:platformCode",nativeQuery = true)
-	Integer getDuplicateProgramCodeCount(String platformCode);
+	Integer countByPlatformCode(String platformCode);
 
 	 @Query(value = "SELECT distinct  platform FROM platforms", nativeQuery = true)
 	List<String> findData();

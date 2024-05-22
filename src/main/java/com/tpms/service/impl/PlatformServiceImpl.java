@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tpms.dto.PlatformDto;
-import com.tpms.dto.UserDto;
 import com.tpms.entity.Platform;
 import com.tpms.exception.ResourceNotFoundException;
 import com.tpms.repository.PlatformRepository;
@@ -65,12 +64,12 @@ public class PlatformServiceImpl implements PlatformService {
 		
         switch(colName) {
 		   case "platform": {
-			   count=platformRepository.getDuplicateProgramNameCount(value);
+			   count=platformRepository.countByPlatform(value);
 			 
 			   break;
 		   }
 		   case "platformCode":{
-			   count=platformRepository.getDuplicateProgramCodeCount(value);
+			   count=platformRepository.countByPlatformCode(value);
 			 
 			   break;
 		   }

@@ -57,10 +57,8 @@ List<Object[]> getActivityDetails(Integer activityId, Date fromDate, Date toDate
 	List<String> getAllDistinctDateRange(String year, String month);
 
 
-	@Query("FROM ActivityAllocation alloc WHERE alloc.activityFromDate=:activityFromDate AND alloc.activityToDate=:activityToDate AND alloc.deletedFlag=false")
-	List<ActivityAllocation> fetchDataByDateRange(Date activityFromDate, Date activityToDate);
+	List<ActivityAllocation> findByActivityFromDateAndActivityToDateAndDeletedFlagFalse(Date activityFromDate, Date activityToDate);
 	
-	@Query("SELECT a.details FROM ActivityAllocation a WHERE a.activityAllocateId=:activityAllocateId")
 	List<ActivityAllocationDetails> findByActivityAllocateId(Long activityAllocateId);
 	
 	@Query(value = """

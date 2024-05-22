@@ -282,7 +282,7 @@ public class ActivityServiceImpl implements ActivityService {
 		SimpleDateFormat sdf = new SimpleDateFormat(YYYY_MM_DD);
 		try {
 			if(!"null".equals(activityFromDate) && !"null".equals(activityToDate))
-				return activityAllocRepo.fetchDataByDateRange(sdf.parse(activityFromDate),sdf.parse(activityToDate));
+				return activityAllocRepo.findByActivityFromDateAndActivityToDateAndDeletedFlagFalse(sdf.parse(activityFromDate),sdf.parse(activityToDate));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
