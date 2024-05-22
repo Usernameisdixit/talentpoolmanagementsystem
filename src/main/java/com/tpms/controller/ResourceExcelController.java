@@ -81,6 +81,9 @@ public class ResourceExcelController {
 
 	@Value("${file.directory}")
 	private String fileDirectory;
+	
+	@Value("${upload-dir}")
+	private String dirName;
 
 	@PostMapping("/upload")
 	public ResponseEntity<?> uploadExcel(@RequestParam("file") MultipartFile file,
@@ -340,18 +343,28 @@ public class ResourceExcelController {
 				sheet.autoSizeColumn(i);
 			}
 
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			workbook.write(outputStream);
-			byte[] templateBytes = outputStream.toByteArray();
+			
+            String fileName = "template.xlsx";
+            File file = new File(dirName, fileName);
 
-			ByteArrayInputStream inputStream = new ByteArrayInputStream(templateBytes);
-			InputStreamResource resource = new InputStreamResource(inputStream);
+           
+            file.getParentFile().mkdirs();
 
-			HttpHeaders headersResponse = new HttpHeaders();
-			headersResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-			headersResponse.setContentDispositionFormData("attachment", "template.xlsx");
+           
+            try (FileOutputStream fileOut = new FileOutputStream(file)) {
+                workbook.write(fileOut);
+            }
+            workbook.close();
 
-			return ResponseEntity.ok().headers(headersResponse).body(resource);
+          
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(java.nio.file.Files.readAllBytes(file.toPath()));
+            InputStreamResource resource = new InputStreamResource(inputStream);
+
+            HttpHeaders headersResponse = new HttpHeaders();
+            headersResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headersResponse.setContentDispositionFormData("attachment", fileName);
+
+            return ResponseEntity.ok().headers(headersResponse).body(resource);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return ResponseEntity.status(500).build();
