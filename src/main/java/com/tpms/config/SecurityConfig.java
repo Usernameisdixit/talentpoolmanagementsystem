@@ -29,6 +29,7 @@ public class SecurityConfig {
     @Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(CsrfConfigurer::disable)
+		.authorizeHttpRequests(auth -> auth.requestMatchers("/actuator/**").permitAll())
 				.authorizeHttpRequests(auth -> auth.requestMatchers("/login").permitAll())
 				.authorizeHttpRequests(auth->auth.requestMatchers("/getEmail").permitAll())
 				.authorizeHttpRequests(auth->auth.requestMatchers("/resetPassword").permitAll().anyRequest().authenticated())
