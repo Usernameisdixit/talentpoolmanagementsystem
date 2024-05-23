@@ -209,26 +209,29 @@ import { LoginService } from 'src/app/UserMgmt/Service/login.service';
  
 
     // for pagination
-//  indexNumber : number = 0;
-//  page : number = 1;
-//  tableSize : number = 10;
-//  count : number = 0;
-
+  indexNumber : number = 0;
+  page : number = 1;
+  tableSize : number = 10;
+  count : number = 0;
+  pageSize: number = 10;
 
 
 // //pagination functionality
-// getTableDataChange(event : any,record:any[],accordionIndex: number){
-//  debugger;
-//  this.page = event;
-//  this.indexNumber = (this.page - 1) * this.tableSize;
+ getTableDataChange(event : any,record:any[],accordionIndex: number){
+  debugger;
+ this.page = event;
+  this.indexNumber = (this.page - 1) * this.tableSize;
+
  
-// }
-onPageChange(event: number, accordionIndex: number): void {
+ }
+onPageChange(pageIndex: number, accordionIndex: number) {
   debugger;
   // Update the currentPage property of the pagination state for the corresponding accordion
-  this.resourceHisDateWise[accordionIndex].currentPage = event;
+  this.resourceHisDateWise[accordionIndex].currentPage = pageIndex;
+  
 
 }
+
 
 
   }

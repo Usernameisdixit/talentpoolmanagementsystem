@@ -46,8 +46,8 @@
                 </tr>
               </thead>
               <tbody>
-                <!-- <tr *ngFor="let record of dateRange.filteredResources | paginate: { itemsPerPage: dateRange.itemsPerPage, currentPage: dateRange.currentPage, totalItems: dateRange.count }; let i = index"> -->
-                <tr *ngFor="let record of dateRange.filteredResources; let i = index">
+                 <tr *ngFor="let record of dateRange.filteredResources | paginate: { itemsPerPage: dateRange.itemsPerPage, currentPage: dateRange.currentPage, totalItems: dateRange.count, id: 'pagination-' + accordionIndex }; let i = index"> 
+                <!--<tr *ngFor="let record of dateRange.filteredResources; let i = index">-->
                   <td>{{ (dateRange.currentPage - 1) * dateRange.itemsPerPage + i + 1 }}</td> 
                   <td>{{ record[2] }}</td>
                   <td>{{ record[1] }}</td>
@@ -61,12 +61,18 @@
                 </tr>
               </tbody>
             </table>
-            <!-- <div class="d-flex justify-content-end mt-2" [id]="'pagination' + accordionIndex" [ngClass]="{'highlighted-pagination': selectedAccordionIndex === accordionIndex}">
+          <!--   <div class="d-flex justify-content-end mt-2" [id]="'pagination' + accordionIndex" [ngClass]="{'highlighted-pagination': selectedAccordionIndex === accordionIndex}">
               <pagination-controls previousLabel="Prev" nextLabel="Next" 
                                    (pageChange)="onPageChange($event, accordionIndex)">
               </pagination-controls>
           </div> -->
           
+          <div class="d-flex justify-content-end mt-2" [id]="'pagination-' + accordionIndex" >
+			 
+            <pagination-controls previousLabel="Prev" nextLabel="Next" [id]="'pagination-' + accordionIndex"
+                                 (pageChange)="onPageChange($event, accordionIndex)">
+            </pagination-controls>
+        </div>
             
             
           </div>

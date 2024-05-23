@@ -6,7 +6,7 @@ import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
 import { UserService } from 'src/app/UserMgmt/Service/user.service';
-import { downloadTemplate, upload, uploadCheck, uploadCheckEmail, uploadCheckPhone } from 'src/app/apiconfig';
+import { downloadTemplate, upload, uploadCheck, uploadCheckEmail, uploadCheckPhone, uploadCheckResourceCode } from 'src/app/apiconfig';
 
 
 @Component({
@@ -58,6 +58,11 @@ export class FileUploadComponent {
         Swal.fire({
           icon: 'error',
           text: 'Please Upload Excel File in Required Given Format Only.'
+        }).then(function(isConfirm) {
+          // Reload the Page
+          if (isConfirm) {
+          location.reload();
+          }
         });
 
         this.selectedFile = null;
@@ -94,11 +99,17 @@ formData1.append('allocationDate', formattedDate1);
     Swal.fire({
       icon: 'error',
       text: 'Please Remove Duplicate Phone Number:' +response
+    }).then(function(isConfirm) {
+      // Reload the Page
+      if (isConfirm) {
+      location.reload();
+      }
     });
 
     this.selectedFile = null;
     this.allocationDate = null;
     this.isUploading = false;
+  
   }else{
     console.log()
   }
@@ -129,16 +140,27 @@ this.http.post(uploadCheckEmail, formData2,{ responseType: 'text'})
 
   if(!(response=="Sucess"))
  {
+
+  
     Swal.fire({
       icon: 'error',
       text: 'Please Remove Duplicate Email_ID:' +response
+    }).then(function(isConfirm) {
+      // Reload the Page
+      if (isConfirm) {
+      location.reload();
+      }
     });
+
+    
 
     this.selectedFile = null;
     this.allocationDate = null;
     this.isUploading = false;
+    
+    
   }
-
+  //window.location.reload();
 }, error => {
   console.error('Error uploading file', error);
  
@@ -150,12 +172,60 @@ this.http.post(uploadCheckEmail, formData2,{ responseType: 'text'})
   this.selectedFile = null;
   this.allocationDate = null;
   this.isUploading = false;
+ 
+  });
+
+
+///////Check For Resource Code Duplicacy ////////////////////////////////////
+const formattedDate3 = this.datePipe.transform(this.allocationDate, 'yyyy-MM-dd');
+const formData3 = new FormData();
+formData3.append('file', this.selectedFile);
+formData3.append('allocationDate', formattedDate3);
+this.http.post(uploadCheckResourceCode, formData2,{ responseType: 'text'})
+.subscribe(response => {
+  console.log('File uploaded successfully', response);
+  // Display success message using SweetAlert
+
+  if(!(response=="Sucess"))
+ {
+
+  
+    Swal.fire({
+      icon: 'error',
+      text: 'Please Remove Duplicate Resource Code:' +response
+    }).then(function(isConfirm) {
+      // Reload the Page
+      if (isConfirm) {
+      location.reload();
+      }
+    });
+
+    
+
+    this.selectedFile = null;
+    this.allocationDate = null;
+    this.isUploading = false;
+    
+    
+  }
+  //window.location.reload();
+}, error => {
+  console.error('Error uploading file', error);
+ 
+  Swal.fire({
+    icon: 'error',
+    text: 'Failed to upload file. Please try again later.'
+  });
+
+  this.selectedFile = null;
+  this.allocationDate = null;
+  this.isUploading = false;
+ 
   });
 
 
 
 
-   
 
   }
  
