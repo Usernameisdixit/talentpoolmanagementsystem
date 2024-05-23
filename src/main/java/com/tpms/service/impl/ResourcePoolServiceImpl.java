@@ -92,7 +92,6 @@ public class ResourcePoolServiceImpl {
 
 		for (int i = 0; i < resourcePoolExcel.size(); i++) {
 
-			// tbl_resource_pool NotMatch=new tbl_resource_pool();
 
 			for (int j = 0; j < resourcepool.size(); j++) {
 
@@ -113,7 +112,6 @@ public class ResourcePoolServiceImpl {
 						resourcepool.get(j).setLocation(resourcePoolExcel.get(i).getLocation());
 						resourcepool.get(j).setEngagementPlan(resourcePoolExcel.get(i).getEngagementPlan());
 						resourcepool.get(j).setExperience(resourcePoolExcel.get(i).getExperience());
-					//tbl_resource_pool.get(j).setAllocationDate(allocationDate);
 					if(resourcepool.get(j).getDeletedFlag()== 1) {
 						resourcepool.get(j).setAllocationDate(allocationDate);
 					}
@@ -221,12 +219,11 @@ public class ResourcePoolServiceImpl {
 
 		List<ResourcePool> resourcepool = new ArrayList<>();
 		Pageable pageable=PageRequest.of(pageNumber-1, pageSize,Sort.by("resourceName"));
-		Page<ResourcePool> page=resourcepoolRepository.findAllByDeletedFlag(pageable);
+		Page<ResourcePool> page=resourcepoolRepository.findByDeletedFlagFalse(pageable);
 		
 		resourcepool =page.getContent(); 
-//		List<ResourcePool> sortedList=tbl_resource_pool.stream().sorted((a,b)->a.getResourceName()
-//				.compareTo(b.getResourceName())).collect(Collectors.toList());
-		PageResponse<ResourcePool> pageResponse=new PageResponse<ResourcePool>();
+
+		PageResponse<ResourcePool> pageResponse=new PageResponse<>();
 		pageResponse.setContent(resourcepool);
 		pageResponse.setPageSize(page.getSize());
 		pageResponse.setTotalElements(page.getTotalElements());
@@ -263,7 +260,7 @@ public class ResourcePoolServiceImpl {
 			
 	List<ResourcePoolHistory> resourcedata	=	resourcepoolRepositoryhistory.findByResourceName(emp.getResourceName());
 	
-	List<Integer> resid = new ArrayList<Integer>();
+	List<Integer> resid = new ArrayList<>();
 	for(int k=0;k<resourcedata.size();k++) {
 		resid.add(resourcedata.get(k).getResourceHistoryId());
 	}

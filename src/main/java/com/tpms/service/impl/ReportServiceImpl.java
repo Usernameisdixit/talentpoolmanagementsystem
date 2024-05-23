@@ -477,7 +477,7 @@ public class ReportServiceImpl implements ReportService {
 		public PageResponse<ResourcePool> getAllEmployeResourceReport(int pageNumber, int pageSize) {
 			List<ResourcePool> tblResourcePool = new ArrayList<>();
 			Pageable pageable=PageRequest.of(pageNumber-1, pageSize,Sort.by(RESOURCE_NAME));
-			Page<ResourcePool> page=tblResourcePoolRepository.findAllByDeletedUndeletedFlag(pageable);
+			Page<ResourcePool> page=tblResourcePoolRepository.findAll(pageable);
 			
 			tblResourcePool =page.getContent(); 
 

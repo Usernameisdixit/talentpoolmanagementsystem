@@ -322,7 +322,6 @@ public static String checkExcelphoneDuplicacy(MultipartFile file) throws IOExcep
 	}
 
 	 catch (IndexOutOfBoundsException e) {
-		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
 	
@@ -351,7 +350,7 @@ public static String CheckExcelEmailDuplicacy(MultipartFile file)  throws IOExce
 	}
 
 	catch (IndexOutOfBoundsException e) {
-		// TODO Auto-generated catch block
+
 		e.printStackTrace();
 	}
 	if(ExcelEmp.size()==emailid.size()) {
@@ -360,6 +359,37 @@ public static String CheckExcelEmailDuplicacy(MultipartFile file)  throws IOExce
 	
 	return email;
 }
+
+
+//Check For Resource Code ID Duplicacy Validation
+@SuppressWarnings("resource")
+public static String checkExcelresourceidDuplicacy(MultipartFile file)  throws IOException{
+	String resourcecode=null;
+	List<ResourcePoolHistory> resourcepoolexcel = ExcelUtils.convertExceltoListofEmployeeForValidation(file.getInputStream());
+	List<String> resourceCodelist = new ArrayList<>();
+	try {
+		
+		for(int i=0;i<resourcepoolexcel.size();i++) {
+			resourcecode=resourcepoolexcel.get(i).getResourceCode();
+			if(!resourceCodelist.contains(resourcecode)) {
+				resourceCodelist.add(resourcepoolexcel.get(i).getResourceCode());}
+			else {
+				break;
+			}
+		}
+	}
+
+	catch (IndexOutOfBoundsException e) {
+
+		e.printStackTrace();
+	}
+	if(resourcepoolexcel.size()==resourceCodelist.size()) {
+		 return "Uniqueness";	
+		}
+	
+	return resourcecode;
+}
+
 
 
 private static String cellToString(Cell cell) {

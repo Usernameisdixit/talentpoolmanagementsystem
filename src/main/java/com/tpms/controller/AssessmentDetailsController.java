@@ -1,9 +1,9 @@
 package com.tpms.controller;
 
 import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 import java.time.format.DateTimeParseException;
 import java.util.Date;
 
@@ -11,11 +11,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import org.springframework.http.ResponseEntity;
@@ -32,10 +33,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import com.tpms.dto.AssessmentDto;
-import com.tpms.dto.PageResponse;
 import com.tpms.entity.Assessment;
 import com.tpms.entity.Platform;
-import com.tpms.entity.User;
 import com.tpms.repository.ActivityAllocationDetailsRepository;
 import com.tpms.repository.ActivityAllocationRepository;
 import com.tpms.repository.AssessmentRepository;
@@ -46,6 +45,9 @@ import com.tpms.service.impl.AssessmentService;
 @RestController
 @CrossOrigin
 public class AssessmentDetailsController {
+	
+	Logger logger 
+    = LoggerFactory.getLogger(AssessmentDetailsController.class); 
 
     @Autowired
     private PlatformRepository platformRepository;
@@ -151,7 +153,7 @@ public class AssessmentDetailsController {
 
     @PutMapping("/updateAssessment")
     public ResponseEntity<?> updateAssessment(@RequestBody List<AssessmentDto> updatedData) {
-    	  System.err.println(updatedData);
+        logger.info("Updated Data: {}", updatedData);
          // assessmentService.updateAssessment(updatedData);
           return assessmentService.updateAssessment(updatedData);  
       
@@ -210,7 +212,7 @@ public class AssessmentDetailsController {
     
     {
 
-        System.out.println("Received request for assessments by date!");
+        logger.info("Received request for assessments by date!");
 
         if (assessmentDate == null) {
             // Handle missing date parameter
@@ -226,11 +228,11 @@ public class AssessmentDetailsController {
             return ResponseEntity.badRequest().body(null);
         }
 
-        System.out.println("Fetching assessments for date: {}, Page: {}, PageSize: {}" +date+" "+ page+" "+ pageSize);
+        logger.info("Fetching assessments for date: {}, Page: {}, PageSize: {}", date, page, pageSize);
 
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<Assessment> assessmentsPage = assessmentRepository.findByAssessmentDate(date, pageable);
-        System.out.println("Assessment data fetched for Page: {}, Total Elements: {}"+page);
+        logger.info("Assessment data fetched for Page: {}, Total Elements: {}", page, assessmentsPage.getTotalElements());
 
         if (assessmentsPage.isEmpty()) {
             // Handle empty page response
