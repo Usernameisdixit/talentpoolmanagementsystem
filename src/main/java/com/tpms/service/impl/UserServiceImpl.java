@@ -120,11 +120,8 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public String getStatusOfDuplicacyCheck(String value,String colName) {
-		Integer count=0;
-		String result="not Exist";
-		
-		 count=switch(colName) {
+	public String getStatusOfDuplicacyCheck(String value,String colName) {		
+		long count=switch(colName) {
 		   case "userName"-> userRepository.countByUserName(value);
 			 
 		   case "phoneNo"-> userRepository.countByPhoneNo(value);
@@ -133,11 +130,7 @@ public class UserServiceImpl implements UserService{
 			 
 		   default -> throw new IllegalStateException("Invalid Data!!");
         };
-        	
-		if(count>=1)
-			result="Exist";
-		
-		return result;
+        return count > 0 ? "Exist" : "Not Exist"; 
 	}
 
 	@Override
