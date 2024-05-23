@@ -159,7 +159,23 @@ public class ResourceExcelController {
 				return "Sucess";
 			}
 	
-	
+			@PostMapping("/uploadCheckResourceCode")
+			public String uploadCheckResourceCode(@RequestParam("file") MultipartFile file) throws IOException {
+
+				String resourceCode = null;
+				if (ExcelUtils.CheckExcelFormat(file)) {
+					resourceCode = ExcelUtils.checkExcelresourceidDuplicacy(file);
+					if (resourceCode.equalsIgnoreCase("Uniqueness")) {
+						// return "Sucess";
+					} else {
+						return resourceCode;
+					}
+
+				}
+
+				return "Sucess";
+			}
+
 
 	private void createDirectoryIfNotExists(String directoryPath) throws IOException {
 		Path path = Paths.get(directoryPath);
