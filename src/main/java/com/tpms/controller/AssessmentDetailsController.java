@@ -46,7 +46,13 @@ import com.tpms.service.impl.AssessmentService;
 @CrossOrigin
 public class AssessmentDetailsController {
 	
-	Logger logger 
+	//sonar line issue->Defined a constant instead of duplicating literal "yyyy-MM-dd"
+
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+
+	
+	// implemented logger to remove system  message dependency
+     Logger logger 
     = LoggerFactory.getLogger(AssessmentDetailsController.class); 
 
     @Autowired
@@ -74,8 +80,8 @@ public class AssessmentDetailsController {
     @GetMapping("/getFromToDate")
     public List<Map<String, Date>> getFromToDate() {
     	
-    	List<Map<String, Date>>  fromToDate  = assessmentRepository.getFromToDate();
-        return fromToDate;
+    	// sonar lint issue and now consuming resource once
+        return assessmentRepository.getFromToDate();
     }
 
     @GetMapping("/getActivityDetails")
@@ -84,8 +90,8 @@ public class AssessmentDetailsController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String fromDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String toDate) {
         try {
-            Date from = new SimpleDateFormat("yyyy-MM-dd").parse(fromDate);
-            Date toDt = new SimpleDateFormat("yyyy-MM-dd").parse(toDate);
+            Date from = new SimpleDateFormat(DATE_FORMAT).parse(fromDate);
+            Date toDt = new SimpleDateFormat(DATE_FORMAT).parse(toDate);
 
             List<Object[]> activityAllocationDetails = activityallocationRepository
                     .getActivityDetails(activityId, from, toDt);
@@ -102,8 +108,8 @@ public class AssessmentDetailsController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String fromDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) String toDate) {
         try {
-            Date from = new SimpleDateFormat("yyyy-MM-dd").parse(fromDate);
-            Date toDt = new SimpleDateFormat("yyyy-MM-dd").parse(toDate);
+            Date from = new SimpleDateFormat(DATE_FORMAT).parse(fromDate);
+            Date toDt = new SimpleDateFormat(DATE_FORMAT).parse(toDate);
 
             List<Object[]> activityAllocationDetails = activityallocationRepository
                     .getAssessmentDetails(activityId, from, toDt);
@@ -136,7 +142,7 @@ public class AssessmentDetailsController {
     	 Date asesDate;
     	 List<Object[]> assessmentDetails =null;
 		try {
-			asesDate = new SimpleDateFormat("yyyy-MM-dd").parse(asesmentDate);
+			asesDate = new SimpleDateFormat(DATE_FORMAT).parse(asesmentDate);
 			assessmentDetails = assessmentRepository.findAllWithDetailsByYearAndMonth(asesDate);
 		} catch (ParseException e) {
 		
@@ -221,7 +227,7 @@ public class AssessmentDetailsController {
 
         Date date;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
             date = sdf.parse(assessmentDate);
         } catch (ParseException e) {
             // Handle invalid date format
