@@ -22,6 +22,14 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<!--fixed the SLF4J multiple bindings issue and which is due to due to a conflict between Logback and Log4j2	
+hence we are excluding spring-boot-starter-logging-->
+			<exclusions>
+            <exclusion>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-logging</artifactId>
+            </exclusion>
+        </exclusions>
 		</dependency>
 
 		<dependency>
@@ -31,12 +39,11 @@
 		</dependency>
 		
 	<!--	logging -->
-		
-				
-<dependency> 
-    <groupId>org.springframework.boot</groupId> 
-    <artifactId>spring-boot-starter-log4j2</artifactId> 
-</dependency>
+			
+<dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-log4j2</artifactId>
+    </dependency>
 
 
 		<!--		 For reloading if any changes -->
