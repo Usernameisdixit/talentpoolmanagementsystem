@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -159,7 +160,23 @@ public class ResourceExcelController {
 				return "Sucess";
 			}
 	
-	
+			@PostMapping("/uploadCheckResourceCode")
+			public String uploadCheckResourceCode(@RequestParam("file") MultipartFile file) throws IOException {
+
+				String resourceCode = null;
+				if (ExcelUtils.CheckExcelFormat(file)) {
+					resourceCode = ExcelUtils.checkExcelresourceidDuplicacy(file);
+					if (resourceCode.equalsIgnoreCase("Uniqueness")) {
+						// return "Sucess";
+					} else {
+						return resourceCode;
+					}
+
+				}
+
+				return "Sucess";
+			}
+
 
 	private void createDirectoryIfNotExists(String directoryPath) throws IOException {
 		Path path = Paths.get(directoryPath);
@@ -318,57 +335,57 @@ public class ResourceExcelController {
 
 	@GetMapping("/downloadTemplate")
 	public ResponseEntity<InputStreamResource> downloadExcelTemplate() {
-		try {
+	   
+	    try {
 
-			Workbook workbook = new XSSFWorkbook();
-			Sheet sheet = workbook.createSheet("ResourceData");
+	    Workbook workbook = new XSSFWorkbook();
+	    Sheet sheet = workbook.createSheet("ResourceData");
 
-			Font boldFont = workbook.createFont();
-			boldFont.setBold(true);
-			boldFont.setFontName("Arial");
-			boldFont.setFontHeightInPoints((short) 12);
-			CellStyle boldStyle = workbook.createCellStyle();
-			boldStyle.setFont(boldFont);
+	    Font boldFont = workbook.createFont();
+	    boldFont.setBold(true);
+	    boldFont.setFontName("Arial");
+	    boldFont.setFontHeightInPoints((short) 12);
+	    CellStyle boldStyle = workbook.createCellStyle();
+	    boldStyle.setFont(boldFont);
+	    
 
-			Row headerRow = sheet.createRow(0);
-			String[] headers = { "SL No", "Employee Code", "Employee Name", "Designation", "Technology", "Email",
-					"PhoneNo", "Location", "Engagement Plan", "Exp." };
-			for (int i = 0; i < headers.length; i++) {
-				Cell cell = headerRow.createCell(i);
-				cell.setCellValue(headers[i]);
-				cell.setCellStyle(boldStyle);
-			}
+	    CellStyle textStyle = workbook.createCellStyle();
+	    DataFormat fmt=workbook.createDataFormat();
+	    textStyle.setDataFormat(fmt.getFormat("@"));
+	    String[] headers = { "SL No", "Employee Code", "Employee Name", "Designation", "Technology", "Email",
+	    "PhoneNo", "Location", "Engagement Plan", "Exp." };
+	    for(int i=0;i<headers.length;i++)
+	    sheet.setDefaultColumnStyle(i, textStyle);
+	    
+	    Row headerRow = sheet.createRow(0);
+	    for (int i = 0; i < headers.length; i++) {
+	    Cell cell = headerRow.createCell(i);
+	    cell.setCellValue(headers[i]);
+	    cell.setCellStyle(boldStyle);
+	    }
 
-			for (int i = 0; i < headers.length; i++) {
-				sheet.autoSizeColumn(i);
-			}
+	    for (int i = 0; i < headers.length; i++) {
+	    sheet.autoSizeColumn(i);
+	    }
+	   
 
-			
-            String fileName = "template.xlsx";
-            File file = new File(dirName, fileName);
+	    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	    workbook.write(outputStream);
+	    byte[] templateBytes = outputStream.toByteArray();
 
-           
-            file.getParentFile().mkdirs();
+	    ByteArrayInputStream inputStream = new ByteArrayInputStream(templateBytes);
+	    InputStreamResource resource = new InputStreamResource(inputStream);
 
-           
-            try (FileOutputStream fileOut = new FileOutputStream(file)) {
-                workbook.write(fileOut);
-            }
-            workbook.close();
+	    HttpHeaders headersResponse = new HttpHeaders();
+	    headersResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+	    headersResponse.setContentDispositionFormData("attachment", "template.xlsx");
 
-          
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(java.nio.file.Files.readAllBytes(file.toPath()));
-            InputStreamResource resource = new InputStreamResource(inputStream);
-
-            HttpHeaders headersResponse = new HttpHeaders();
-            headersResponse.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            headersResponse.setContentDispositionFormData("attachment", fileName);
-
-            return ResponseEntity.ok().headers(headersResponse).body(resource);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return ResponseEntity.status(500).build();
-		}
+	    return ResponseEntity.ok().headers(headersResponse).body(resource);
+	    } catch (IOException e) {
+	    e.printStackTrace();
+	    return ResponseEntity.status(500).build();
+	   
+	    }
 	}
 
 	// Duration count
