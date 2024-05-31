@@ -1,4 +1,4 @@
-import { Component ,ViewChild} from '@angular/core';
+import { Component ,ViewChild,ElementRef} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BsDatepickerConfig, BsLocaleService,BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import Swal from 'sweetalert2';
@@ -19,6 +19,12 @@ export class FileUploadComponent {
   @ViewChild('dp') datepicker: BsDatepickerDirective;
   bsConfig: Partial<BsDatepickerConfig>;
 
+ // @ViewChild('fileInput',{static:true})fileInput:ElementRef<HTMLInputElement>;
+ // ngAfterViewInit(): void {
+ //   this.fileInput.nativeElement.value='';
+ // }
+
+
   selectedFile: File;
   allocationDate: Date;
   isUploading: boolean;
@@ -35,9 +41,9 @@ export class FileUploadComponent {
   onFileSelected(event): void {
     
     this.selectedFile = event.target.files[0];
-    if (!this.selectedFile.name.endsWith('.xlsx')) {
+    if (!(this.selectedFile.name.endsWith('.xlsx')||this.selectedFile.name.endsWith('.xls'))) {
       let fileFormat = '';
-      fileFormat = 'Unsupported file type. Please select a .xlsx file.\n';
+      fileFormat = 'Unsupported file type. Please select a .xlsx and xls file.\n';
       if (fileFormat) {
         Swal.fire( fileFormat);
         return;
@@ -58,12 +64,12 @@ export class FileUploadComponent {
         Swal.fire({
           icon: 'error',
           text: 'Please Upload Excel File in Required Given Format Only.'
-        }).then(function(isConfirm) {
+        })//.then(function(isConfirm) {
           // Reload the Page
-          if (isConfirm) {
-          location.reload();
-          }
-        });
+         // if (isConfirm) {
+         // location.reload();
+         // }
+       // });
 
         this.selectedFile = null;
         this.allocationDate = null;
@@ -99,12 +105,12 @@ formData1.append('allocationDate', formattedDate1);
     Swal.fire({
       icon: 'error',
       text: 'Please Remove Duplicate Phone Number:' +response
-    }).then(function(isConfirm) {
+    })//.then(function(isConfirm) {
       // Reload the Page
-      if (isConfirm) {
-      location.reload();
-      }
-    });
+      //if (isConfirm) {
+      //location.reload();
+     // }
+    //});
 
     this.selectedFile = null;
     this.allocationDate = null;
@@ -145,12 +151,12 @@ this.http.post(uploadCheckEmail, formData2,{ responseType: 'text'})
     Swal.fire({
       icon: 'error',
       text: 'Please Remove Duplicate Email_ID:' +response
-    }).then(function(isConfirm) {
+    })//.then(function(isConfirm) {
       // Reload the Page
-      if (isConfirm) {
-      location.reload();
-      }
-    });
+      //if (isConfirm) {
+    //  location.reload();
+    //  }
+   // });
 
     
 
@@ -193,18 +199,20 @@ this.http.post(uploadCheckResourceCode, formData2,{ responseType: 'text'})
     Swal.fire({
       icon: 'error',
       text: 'Please Remove Duplicate Resource Code:' +response
-    }).then(function(isConfirm) {
+    })//.then(function(isConfirm) {
       // Reload the Page
-      if (isConfirm) {
-      location.reload();
-      }
-    });
+     // if (isConfirm) {
+     // location.reload();
+     // }
+   // });
 
     
 
     this.selectedFile = null;
     this.allocationDate = null;
     this.isUploading = false;
+    //this.fileInput.nativeElement.value='';
+    //$("#fileInput").val('');
     
     
   }
@@ -256,8 +264,11 @@ this.http.post(uploadCheckResourceCode, formData2,{ responseType: 'text'})
     }
 
 
-    if (!this.selectedFile.name.endsWith('.xlsx')) {
-      fileFormat = 'Unsupported file type. Please select a .xlsx file.\n';
+   //if(!this.selectedFile.name.endsWith('.xls')){
+    // fileFormat = 'Unsupported file type. Please select a .xlsx and xls file.\n';
+   //}else-->
+   if (!(this.selectedFile.name.endsWith('.xlsx') || this.selectedFile.name.endsWith('.xls')) ) {
+      fileFormat = 'Unsupported file type. Please select a .xlsx and xls file.\n';
     }
     
     if (fileFormat) {
