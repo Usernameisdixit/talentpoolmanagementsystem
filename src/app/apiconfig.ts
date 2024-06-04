@@ -125,6 +125,7 @@ export const getFromToDate=baseUrl+'/getFromToDate';
 
 // file upload
 export const uploadCheck=baseUrl+'/uploadCheck';
+export const uploadCheckPhoneEmailCount=baseUrl+'/uploadCheckPhoneEmailCount';
 export const uploadCheckPhone=baseUrl+'/uploadCheckPhone';
 export const uploadCheckEmail=baseUrl+'/uploadCheckEmail';
 export const uploadCheckResourceCode=baseUrl+'/uploadCheckResourceCode';

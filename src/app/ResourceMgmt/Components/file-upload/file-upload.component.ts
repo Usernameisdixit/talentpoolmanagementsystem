@@ -6,7 +6,7 @@ import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
 import { UserService } from 'src/app/UserMgmt/Service/user.service';
-import { downloadTemplate, upload, uploadCheck, uploadCheckEmail, uploadCheckPhone, uploadCheckResourceCode } from 'src/app/apiconfig';
+import { downloadTemplate, upload, uploadCheck, uploadCheckEmail, uploadCheckPhone, uploadCheckResourceCode, uploadCheckPhoneEmailCount } from 'src/app/apiconfig';
 
 
 @Component({
@@ -88,6 +88,10 @@ export class FileUploadComponent {
       this.allocationDate = null;
       this.isUploading = false;
       });
+
+
+
+   //   if(!((Obj.Email.length==0)||(Obj.Phone.length==0))){
 
 ////For Phone Number Check /////////////////////////////////////
 const formattedDate1 = this.datePipe.transform(this.allocationDate, 'yyyy-MM-dd');
@@ -181,13 +185,65 @@ this.http.post(uploadCheckEmail, formData2,{ responseType: 'text'})
  
   });
 
+//} 
+
+//// Getting number duplicate phone numbers and Email in Excel
+let Obj =null;
+const formattedDate4 = this.datePipe.transform(this.allocationDate, 'yyyy-MM-dd');
+const formData4 = new FormData();
+formData4.append('file', this.selectedFile);
+formData4.append('allocationDate', formattedDate4);
+this.http.post(uploadCheckPhoneEmailCount, formData4,{ responseType: 'text'})
+.subscribe(response => {
+  console.log('File uploaded successfully', response);
+  // Display success message using SweetAlert
+
+  Obj =JSON.parse(response);
+  console.log('File uploaded successfully', Obj);
+   
+
+
+  if(!((Obj.Email.length==0)||(Obj.Phone.length==0)))
+ {
+
+    Swal.fire({
+      icon: 'error',
+      text: 'Duplicate Email Present in Excel::('+Obj.Email +')   \n\n'+'Duplicate Phone No Present in Excel::(' +Obj.Phone+')'
+    })//.then(function(isConfirm) {
+      // Reload the Page
+     // if (isConfirm) {
+     // location.reload();
+     // }
+   // });
+
+    this.selectedFile = null;
+    this.allocationDate = null;
+    this.isUploading = false;
+  }
+
+}, error => {
+  console.error('Error uploading file', error);
+ 
+  Swal.fire({
+    icon: 'error',
+    text: 'Failed to upload file. Please try again later.'
+  });
+
+  this.selectedFile = null;
+  this.allocationDate = null;
+  this.isUploading = false;
+  });
+
+
+
+
 
 ///////Check For Resource Code Duplicacy ////////////////////////////////////
 const formattedDate3 = this.datePipe.transform(this.allocationDate, 'yyyy-MM-dd');
 const formData3 = new FormData();
 formData3.append('file', this.selectedFile);
 formData3.append('allocationDate', formattedDate3);
-this.http.post(uploadCheckResourceCode, formData2,{ responseType: 'text'})
+this.http.post(uploadCheckResourceCode, formData3,{ responseType: 'text'})
 .subscribe(response => {
   console.log('File uploaded successfully', response);
   // Display success message using SweetAlert
