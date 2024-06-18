@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ../../backend_TPMS/tp
+      dockerfile: Dockerfile
+    ports:
+      - "9990:9990"
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_DB_NAME: tpms
+      MYSQL_USER: root
+      MYSQL_PASSWORD: csmpl@123
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - tpmsnetwork
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysqlcontainer
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_DATABASE: tpms
+      MYSQL_ROOT_PASSWORD: csmpl@123
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - tpmsnetwork
+
+
+
+networks:
+  tpmsnetwork:
+    driver: bridge
